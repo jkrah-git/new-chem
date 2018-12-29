@@ -1,0 +1,59 @@
+
+
+Notes
+Chem Conc Engine
+
+* Main Clock / FB
+  - update interval
+    - variable (sub processes) ?
+
+* chem 
+  - 2d structure but expandable to (N`d)
+  - chem structure + physical map
+  - periodic table  = affiliation strengths?
+  
+  - active sites ??
+
+* ?? active sites  ??
+  ?? reactive site representation ? O-clash ???
+    OK if O never matches O .. but not accept.
+    Subsite matches.. (other chems active sites)
+  - AS can be ANY / ALL .. 
+  - each AS has physical map
+
+* Cells 
+  -  (isolated) mix of conc's
+  - expandable & nestable (organelle's vs skeletal)
+  - chem process (reactions)
+
+* chem process
+  - (core) has full access to cell energy + chems
+  - expander class's 
+    - (size,pos) - relative to parent cell ?
+    - 
+  - multiple match reactants (O),(A,B,C ..)
+  - chem ops on cell
+
+* chem ops (core)
+  - conditional on (A,B,C ..) / cell.energy
+  - scale on (A,B,C ..) / cell.energy
+  - split (ABCD)= AD+BC
+  - join  (A,B,C..) = ABC.. (or ACB?)
+  - endo (J)/exo (S) thermic? (energy not temp)
+
+  
+  
+-----------------------------
+TODO 1. chem structure
+ -----------------------------
+  - 2d but expandable to (N`d)
+  - chem structure 
+  - physical map  
+    - periodic table  = affiliation strengths?
+  
+  - active sites (representation) ??
+    - each AS has physical (sub) map
+ 
+  - multiple match reactants (O),(A,B,C ..)
+  - chem ops on cell
+   
