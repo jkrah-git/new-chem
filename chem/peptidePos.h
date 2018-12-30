@@ -20,6 +20,9 @@ public:
 	peptidePos();
 	virtual ~peptidePos();
 	void		dump(void);
+	bool operator =(const peptidePos& p);
+	bool operator ==(const peptidePos& p);
+
 	void		test(void);
 };
 // ----------------------------------------------

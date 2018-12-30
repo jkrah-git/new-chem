@@ -31,7 +31,7 @@ public:
 			next = NULL;
 		}
 		void 		dump(void) {
-			printf("::mylist_item[0x%X].dump::item[0x%X].next[0x%X]..\n",
+			printf("::mylist_item[0x%zX].dump::item[0x%zX].next[0x%zX] ->\n",
 					(long unsigned int) this,
 					(long unsigned int) item,
 					(long unsigned int) next);
@@ -57,6 +57,7 @@ public:
 	// ---
 	mylist();
 	virtual ~mylist();
+	void		clear(void);
 	void 		dump(void);
 	int			add(T *element);
 	void 		test(T *e1, T *e2, T *e3);
@@ -66,9 +67,20 @@ template <class T> mylist<T>::mylist() {
 	head = NULL;
 	tail = NULL;
 };
-
+//----
 template <class T> mylist<T>::~mylist() {
-	head = NULL;
+	clear();
+};
+// --------------------------
+template <class T> void mylist<T>::clear() {
+
+	mylist_item<T>	*item = head;
+	while (item !=NULL) {
+		head = item-> next;
+		printf("::mylist.clear.free[0x%zX]\n", (long unsigned int) item);
+		free(item);
+		item = head;
+	}
 	tail = NULL;
 };
 // --------------------------
@@ -76,6 +88,9 @@ template <class T> int mylist<T>::add(T *element) {
 	if (element == NULL) return -1;
 
 	mylist_item<T> *new_item = (mylist_item<T> *) malloc (sizeof(mylist_item<T>));
+	printf("::mylist.add.maloc[0x%zX]\n", (long unsigned int) new_item);
+
+
 	if (new_item ==NULL) return -2;
 
 	new_item-> item = element;
@@ -94,14 +109,13 @@ template <class T> int mylist<T>::add(T *element) {
 };
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-	printf("::mylist[0x%X].dump.head[0x%X].tail[0x%X]\n",
+	printf("::mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail );
 
 	mylist_item<T>	*item = head;
 	while (item !=NULL) {
-		//printf("[0x%X].", (long unsigned int) item);
 		item-> dump(); 	printf("\n");
 		item = item-> next;
 	}
@@ -110,13 +124,18 @@ template <class T> void mylist<T>::dump(void) {
 // --------------------------
 template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: == START ==\n");
-	printf("mylist.test: pre: ");	dump(); printf("\n");
+	printf("mylist.test: pre: ");	dump(); //printf("\n");
 	//------------
+	printf("mylist.test:add(&e1) = [%d]\n", add(e1));
+	printf("mylist.test:add(&e2) = [%d]\n", add(e2));
+	printf("mylist.test:add(&e3) = [%d]\n", add(e3));
+	dump(); // printf("\n");
 
+	printf("mylist.test:clear..\n");
+	clear(); dump();
 
 	//------------
-	printf("mylist.test: post: ");	dump(); printf("\n");
-
+	printf("mylist.test: post: ");	dump(); // printf("\n");
 
 }
 //==========================================================

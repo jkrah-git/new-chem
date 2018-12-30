@@ -7,21 +7,27 @@
 
 #ifndef CHEM_H_
 #define CHEM_H_
-
 // -------------------------------// -------------------------------
 /*
  * chem = list of peptides
  *
  */
+// -------------------------------
+#include "../mylist.h"
+#include "peptide.h"
+
 
 // -------------------------------
-class chem {
+class molecule {
 public:
+	mylist<peptide> 	pep_list;
 	// ----
-	chem();
-	virtual ~chem();
+	molecule();
+	virtual ~molecule();
 	// ---
 	void		dump(void);
+	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos *testpos);
+	int			addpep(peptide *pep, char rotation);
 	void		test(void);
 
 };

@@ -49,10 +49,14 @@ void peptide::dump(void){
 	if ((sig>31) && (sig<128))
 		txtsig = sig;
 
+	printf("::peptide[0x%zX].dump =>", (long unsigned int) this);
+
+
 	if (txtsig==0) printf("sig(0x%X()).status(0x%x)", sig, status);
 	else printf("sig(0x%X(%c)).status(0x%x)", sig, txtsig, status);
 
-	printf(".Pos."); pos.dump();
+	//printf(".Pos.");
+	pos.dump();
 
 }
 // ---------------------
