@@ -29,7 +29,7 @@ molecule::molecule() {	// TODO Auto-generated constructor stub
 }
 
 molecule::~molecule() {
-	pep_list.clear();
+	clear();
 }
 // -------------------------------
 void molecule::dump(void){
@@ -66,26 +66,82 @@ mylist<peptide>::mylist_item<peptide>   *molecule::test_pos(peptidePos *testpos)
 	return found_item;
 }
 // -------------------------------
+void molecule::clear(void) {
+
+	mylist<peptide>::mylist_item<peptide> *next_item = pep_list.head;
+	if (next_item ==NULL) return;
+
+	while (next_item != NULL) {
+		if (next_item-> item != NULL) {
+			printf("::molecule::clear.free.peptide[0x%zX]..\n", (size_t) next_item-> item);
+			delete next_item-> item;
+			next_item-> item = NULL;
+		}
+		//---
+		next_item = next_item-> next;
+	}
+
+	pep_list.clear();
+
+
+}
+// -------------------------------
+int molecule::addpep(PepSig sig, char rotation) {
+	//peptide *pep = (peptide*) malloc(sizeof(peptide));
+	peptide *pep = new peptide;
+	if (pep==NULL) return -1;
+	if (pep-> pos.dim ==NULL) return -2;
+	if (rotation >3) return -3;
+	//----
+	pep->set(sig, 0);
+	printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
+
+/*	!! we MUST now manage pep+dim memory
+ *
+	int r = addpep(pep, rotation);
+	if (r<0) {
+		free(pep);
+		return 100-r;
+	}
+	return 0;
+
+}
+// -------------------------------
 int molecule::addpep(peptide *pep, char rotation) {
 	if (pep==NULL) return -1;
 	if (pep-> pos.dim ==NULL) return -2;
 	if (rotation >3) return -3;
-
+*/
 
 	mylist<peptide>::mylist_item<peptide> *last_item = pep_list.tail;
+
+	// add to head ??
 	if (last_item==NULL) {
 		pep-> pos.dim[0] = 0;
 		pep-> pos.dim[1] = 0;
-		//printf("!!!!!!!::molecule.addpep.addtotail =>\n"); pep-> dump(); printf("\n");
-		return pep_list.add(pep);
+		//printf("::molecule.addpep.addtotail pep =>\n"); pep-> dump(); printf("\n");
+		//return pep_list.add(pep);
+		int r = pep_list.add(pep);
+		//printf("::molecule.addpep.addtotail res = %d\n", r);
+		pep_list.dump();
+		if (r<0) {
+			delete pep;
+			return 100-r;
+		}
+		return 0;
+	} // else add to tail
 
-	}
 
 	// make sure tail has a chem
-	if (last_item-> item ==NULL)
+	if (last_item-> item ==NULL) {
+		delete pep;
 		return -10;
+	}
+
+
 
 	peptidePos newpos;
+	//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
 
 	newpos = last_item-> item-> pos;
 	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
@@ -99,8 +155,10 @@ int molecule::addpep(peptide *pep, char rotation) {
 	//printf("!!!!!** ::molecule.addpep.newpos(with_rot) =>"); newpos.dump(); printf("\n");
 
 	mylist<peptide>::mylist_item<peptide>  *testpos = test_pos(&newpos);
-	if (testpos != NULL)
+	if (testpos != NULL) {
+		delete pep;
 		return -11;
+	}
 
 	// copy new pos
 	//bool r = (pep-> pos = newpos);
@@ -119,26 +177,14 @@ void molecule::test(void){
 	printf("molecule.test: == START ==\n");
 	printf("molecule.test: pre: ");	dump();
 	//------------
-	peptide A,B,C;
-	A.set('A', 1);
-	B.set('B', 2);
-//	C.set('C', 3);
-//	printf("molecule.test.peptide A -> ");	A.dump(); printf("\n");
-//	printf("molecule.test.peptide B -> ");	B.dump(); printf("\n");
-//	printf("molecule.test.peptide C -> ");	C.dump(); printf("\n");
-	printf("molecule.test:add(&A) = [%d]\n", addpep(&A, 0));
-	printf("molecule.test:add(&A) = [%d]\n", addpep(&A, 0));
-
-
-
-//	mylist<peptide>::mylist_item<peptide>  *testpos = test_pos(&C.pos);
-//	printf("molecule.test.testpos.C = [0x%zX]\n", (unsigned long int) testpos);
-//	if (testpos==NULL) printf("NULL\n");
-//	else { testpos-> dump(); printf ("\n"); }
-
+	printf("molecule.test:add(A) = [%d]\n", addpep('A', 0));
+	printf("molecule.test:add(B) = [%d]\n", addpep('B', 0));
+	printf("molecule.test:add(C) = [%d]\n", addpep('C', 1));
+	printf("molecule.test:add(D) = [%d]\n", addpep('D', 2));
+	printf("molecule.test:add(E) = [%d]\n", addpep('E', 2));
 	//------------
-	printf("molecule.test: final: ");	dump(); printf("\n");
-	pep_list.clear();
+	printf("molecule.test: final: ");	dump(); // printf("\n");
+	//clear();
 	printf("molecule.test: == END ==\n");
 }
 // -------------------------------

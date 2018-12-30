@@ -88,10 +88,9 @@ template <class T> int mylist<T>::add(T *element) {
 	if (element == NULL) return -1;
 
 	mylist_item<T> *new_item = (mylist_item<T> *) malloc (sizeof(mylist_item<T>));
-	printf("::mylist.add.maloc[0x%zX]\n", (long unsigned int) new_item);
-
-
+	printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
 	if (new_item ==NULL) return -2;
+
 
 	new_item-> item = element;
 	new_item-> next = NULL;
@@ -104,7 +103,7 @@ template <class T> int mylist<T>::add(T *element) {
 		tail = new_item;
 
 	}
-
+	//printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
 	return 0;
 };
 // --------------------------

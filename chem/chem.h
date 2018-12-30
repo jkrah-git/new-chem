@@ -28,6 +28,8 @@ public:
 	void		dump(void);
 	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos *testpos);
 	int			addpep(peptide *pep, char rotation);
+	int			addpep(PepSig sig, char rotation);
+	void		clear(void);
 	void		test(void);
 
 };
