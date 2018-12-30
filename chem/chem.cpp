@@ -24,7 +24,27 @@ public:
 };
 // -------------------------------
  */
+void printb(char val) {
+	char str[16];
+	sprintb(str, val);
+	printf("%s", str);
+}
+//-----------------
+void sprintb(char *str, char val) {
+	sprintb(str, val, '.');
+}
+void sprintb(char *str, char val, char zero){
 
+	char mask = 1;
+	for (int i=0; i<8; i++) {
+		if (val & mask)		str[7-i] = '1';
+		else				str[7-i] = zero;
+		mask *=2;
+	}
+	str[8] = '\0';
+}
+
+// -------------------------------// -------------------------------
 molecule::molecule() {	// TODO Auto-generated constructor stub
 }
 
@@ -86,6 +106,54 @@ void molecule::clear(void) {
 
 }
 // -------------------------------
+int molecule::addpep(PepSig sig) {
+	return -1;
+
+
+}
+ // =============================
+int		molecule::getrot(PepSig sig1, PepSig sig2){
+	int res[] = { 0,0,0,0 };
+	int div = 1;
+	int mask = 3;
+	for (int i=0; i<4; i++) {
+//		printf("::molecule::getrot.sig1[0x%x] =>", sig1); printb(sig1); printf("\n");	printf("\n");
+
+		/*
+		int r;
+					printb(sig1); printf("=sig1[0x%02x], ", sig1);
+					printb(mask); printf("=mask[0x%02x], ", mask);
+	r = sig1 & mask; printb(r);   printf("=&s1 [0x%02x], ", r);
+					printb(div);  printf("= div[0x%02x], ", div);
+	r = r /div; 	printb(r);    printf("=/div[0x%02x]\n", r);
+
+					printb(sig2); printf("=sig2[0x%02x], ", sig2);
+					printb(mask); printf("=mask[0x%02x], ", mask);
+	r = sig2 & mask; printb(r);   printf("=&s2 [0x%02x], ", r);
+					printb(div);  printf("= div[0x%02x], ", div);
+	r = r /div; 	printb(r);    printf("=/div[0x%02x]\n", r);
+		*/
+
+
+		printb(sig1); printf("=sig1[0x%02x], ", sig1);
+		printb(sig2); printf("=sig2[0x%02x], ", sig2);
+		printb(mask); printf("=mask[0x%02x]\n", mask);
+
+
+
+		res[i] = ( ((sig1 & mask)/div) + ((sig2 & mask)/div) );
+		printf("res[%d] = %d\n", i, res[i]);
+		//----
+		div = div * 4;
+		mask = mask *4;
+	}
+	int rot = 0;
+
+
+	return 0;
+}
+// =============================
+// -------------------------------
 int molecule::addpep(PepSig sig, char rotation) {
 	//peptide *pep = (peptide*) malloc(sizeof(peptide));
 	peptide *pep = new peptide;
@@ -120,6 +188,22 @@ int molecule::addpep(PepSig sig, char rotation) {
 		return -4;
 	}
 
+	// =========== try tp calc rotion
+	/*** rot masks --
+		r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 /1= xx
+		r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
+		r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
+		r4 1100 0000 =(64+128) = 192 & P1 & P2 /64 = xx
+
+		- Max r wins .. if tie then 0
+	 ***/
+	//char r0 = (3 && last_item-> item->getsig()) + (3 & pep-> getsig());
+
+
+
+
+
+	// ============ ^^
 	peptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
 	newpos = last_item-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
 
@@ -129,12 +213,20 @@ int molecule::addpep(PepSig sig, char rotation) {
 		case 2: 	newpos.dim[1] --; break;	// 2 = (0,-1)
 		case 3:		newpos.dim[0] --; break;	// 3 = (-1,0)
 	}
-	//printf("!!!!!** ::molecule.addpep.newpos(with_rot) =>"); newpos.dump(); printf("\n");
+	//printf("molecule.addpep.newpos(with_rot)(%d) =>", rotation); newpos.dump(); printf("\n");
 
-	mylist<peptide>::mylist_item<peptide>  *testpos = test_pos(&newpos);
-	if (testpos != NULL) {
-		delete pep;
-		return -11;
+
+	 mylist<peptide>::mylist_item<peptide>  *testpos = test_pos(&newpos);
+
+	 if (testpos != NULL) {
+		printf("molecule.addpep.newpos clashed with->\n");
+		testpos-> dump();
+		if (testpos-> item != NULL) {
+			testpos-> item-> dump();
+		}
+		//--  alow chashes.. dont abort for now..
+	// 	delete pep;
+	// 	return -11;
 	}
 
 	// copy new pos
@@ -152,7 +244,7 @@ void molecule::test(void){
 	printf("molecule.test:add(B) = [%d]\n", addpep('B', 0));
 	printf("molecule.test:add(C) = [%d]\n", addpep('C', 1));
 	printf("molecule.test:add(D) = [%d]\n", addpep('D', 2));
-	printf("molecule.test:add(E) = [%d]\n", addpep('E', 2));
+	printf("molecule.test:add(E) = [%d]\n", addpep('E', 3));
 	//------------
 	printf("molecule.test: final: ");	dump(); // printf("\n");
 	//clear();

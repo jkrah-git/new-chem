@@ -48,6 +48,11 @@ summary()
 {
 	grep -v ^:: $FILE
 }
+# ------------------------------ 
+detail()
+{
+	egrep -v 'malloc|free' $FILE
+}
 # ------------------------------------------------- 
 test_func()
 {
@@ -64,7 +69,8 @@ test_func()
 # ===============================================================
 ## --  MAIN 
 
-	FUNCLIST="run summary memtest"
+	#FUNCLIST="run summary detail memtest"
+	FUNCLIST="run memtest detail summary"
 
 	if [ "$1" = "list" ]; then
 		test_func
@@ -73,7 +79,7 @@ test_func()
 
 	RUNFUNCS="$*"
 	if [ -z "$RUNFUNCS" ]; then
-		RUNFUNCS="summary memtest"
+		RUNFUNCS=$FUNCLIST
 		echo "Running ALL tasks [$ALLFUNCS]"
 	else
 		echo "Running  subtasks [$RUNFUNCS]"

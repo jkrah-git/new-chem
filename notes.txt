@@ -46,11 +46,33 @@ Chem Conc Engine
 -----------------------------
 TODO 1. chem structure
  -----------------------------
-  - 2d but expandable to (N`d)
-  - chem structure 
-  - physical map  
-    - periodic table  = affiliation strengths?
+  D- 2d but expandable to (N`d)
+  D- chem structure 
+  D- physical map  
+  -----------------------------------
+  NEXT..
   
+  ? - periodic table  = affiliation strengths (for rotation)
+		-- rot masks --
+		r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 = xx
+		r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
+		r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
+		r4 1100 0000 = (128+64)= 192 & P1 & P2 /64 = xx
+		
+		- Max r wins .. if tie then 0
+		
+		
+  
+  		(r)    3     2     1     0  
+  		sig  11:11 11:00 00:11 00:00
+  		src 00 00 00 00
+  		dst 11 11 11 11
+  		00:00 
+  		
+  		
+  ? - peps sharing position - with energy penalty
+  ? - rebuild function
+  -----------------------------------
   - active sites (representation) ??
     - each AS has physical (sub) map
  

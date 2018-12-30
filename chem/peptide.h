@@ -25,7 +25,7 @@ public:
 };
 */
 
-typedef char PepSig;
+typedef unsigned char PepSig;
 typedef char PepStatus;
 
 // -----------------------
@@ -45,6 +45,7 @@ public:
 	void 		setstatus(PepStatus newval);
 	PepStatus 	getstatus();
 	void		set(PepSig newsig, PepStatus newstatus);
+	int			rebuild(void);
 	// ---
 	void		dump(void);
 	void		test(void);

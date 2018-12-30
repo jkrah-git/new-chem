@@ -90,8 +90,33 @@ int test_mylist()
 int test_chem()
 {
 
-	//peptidePos pos;	pos.test();	return 0;
-	molecule Mole;		Mole.test(); return 0;
+
+	molecule Mole;
+	//Mole.test(); return 0;
+	int r[4];
+	printf("test_chem:: ..\n");
+	for (int i=0; i<4; i++) {
+		//printf("R%d = [%d]\n", i, r[i]);
+		r[i] = 0;
+	}
+
+	printf("test_chem:: ..\n");
+
+	for (int a=0; a<256; a++) {
+		for (int b=0; b<256; b++)
+		{
+			int t = Mole.getrot(a, b);
+			printf("test_chem:: Mole.getrot[0x%02x, 0x%02x] = %d\n",  a,b, t);
+			if (t>3) t=0;
+			r[t]++;
+
+		}
+	}
+
+	for (int i=0; i<4; i++)
+		printf("tally R%d = [%d]\n", i, r[i]);
+
+	return 0;
 }
 
 

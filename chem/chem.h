@@ -16,7 +16,9 @@
 #include "../mylist.h"
 #include "peptide.h"
 
-
+void sprintb(char *str, char val, char zero);
+void sprintb(char *str, char val);
+void printb(char val);
 // -------------------------------
 class molecule {
 public:
@@ -27,8 +29,10 @@ public:
 	// ---
 	void		dump(void);
 	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos *testpos);
-	int			addpep(peptide *pep, char rotation);
+	//int			addpep(peptide *pep, char rotation);
 	int			addpep(PepSig sig, char rotation);
+	int			getrot(PepSig sig1, PepSig sig2);
+	int			addpep(PepSig sig);
 	void		clear(void);
 	void		test(void);
 

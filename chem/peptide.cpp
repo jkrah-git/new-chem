@@ -64,6 +64,8 @@ void peptide::set(PepSig newsig, PepStatus newstatus) {
 	sig = newsig;
 	status = newstatus;
 }
+
+
 // ---------------------
 void  peptide::setsig(PepSig newval) { sig = newval; }
 PepSig peptide::getsig(){	return sig;	};
