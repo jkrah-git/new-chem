@@ -96,22 +96,7 @@ int molecule::addpep(PepSig sig, char rotation) {
 	pep->set(sig, 0);
 	printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
 
-/*	!! we MUST now manage pep+dim memory
- *
-	int r = addpep(pep, rotation);
-	if (r<0) {
-		free(pep);
-		return 100-r;
-	}
-	return 0;
-
-}
-// -------------------------------
-int molecule::addpep(peptide *pep, char rotation) {
-	if (pep==NULL) return -1;
-	if (pep-> pos.dim ==NULL) return -2;
-	if (rotation >3) return -3;
-*/
+//	!! we MUST now manage pep+dim memory
 
 	mylist<peptide>::mylist_item<peptide> *last_item = pep_list.tail;
 
@@ -119,14 +104,11 @@ int molecule::addpep(peptide *pep, char rotation) {
 	if (last_item==NULL) {
 		pep-> pos.dim[0] = 0;
 		pep-> pos.dim[1] = 0;
-		//printf("::molecule.addpep.addtotail pep =>\n"); pep-> dump(); printf("\n");
-		//return pep_list.add(pep);
 		int r = pep_list.add(pep);
-		//printf("::molecule.addpep.addtotail res = %d\n", r);
-		pep_list.dump();
+		//printf("::molecule.addpep.addtotail res = %d\n", r);		pep_list.dump();
 		if (r<0) {
 			delete pep;
-			return 100-r;
+			return r-10;
 		}
 		return 0;
 	} // else add to tail
@@ -135,16 +117,11 @@ int molecule::addpep(peptide *pep, char rotation) {
 	// make sure tail has a chem
 	if (last_item-> item ==NULL) {
 		delete pep;
-		return -10;
+		return -4;
 	}
 
-
-
-	peptidePos newpos;
-	//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
-
-	newpos = last_item-> item-> pos;
-	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
+	peptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
+	newpos = last_item-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
 
 	switch(rotation) {
 		case 0:		newpos.dim[1] ++; break;	// 0 = (0,1)
@@ -161,12 +138,6 @@ int molecule::addpep(peptide *pep, char rotation) {
 	}
 
 	// copy new pos
-	//bool r = (pep-> pos = newpos);
-	//printf("E!!!!** ::molecule.addpep.newpos(post test) =>"); newpos.dump(); printf("\n");
-	//printf("!!!!!!! ::molecule.addpep.(pep-> pos = newpos) =>");	if (r) printf("Ok\n");	else printf("Err\n");
-	//printf("!!!!!** ::molecule.addpep.newpos =>"); newpos.dump(); printf("\n");
-	//printf("!!!!!** ::molecule.addpep.pep-> pos =>"); pep-> pos.dump(); printf("\n");
-	//printf("!!!!!!! ::molecule::final(preadd).pep =>\n"); pep-> dump();
 	pep-> pos = newpos;
 	return pep_list.add(pep);
 
