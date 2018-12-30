@@ -68,14 +68,17 @@ void peptide::setstatus(PepStatus newval) { status = newval; }
 PepStatus peptide::getstatus(){	return status;	}
 // ---------------------
 void peptide::test(void){
+
 	printf("peptide.test: == START ==\n");
 	printf("peptide.test: pre: ");	dump(); printf("\n");
 	//------------
 	printf("peptide.test: running pos.test: ");
 	pos.test();
 
-	printf("peptide.test: running set(10,20) ...\n");
-	set(10,20);
+	PepSig a = 'A';
+	PepStatus b = 127;
+	printf("peptide.test: set(0x%x, 0x%x) ...\n", a, b);
+	set(a,b);
 	//------------
 
 	printf("peptide.test: post: ");	dump(); printf("\n");

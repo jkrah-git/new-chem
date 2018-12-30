@@ -1,8 +1,8 @@
 // -------------------
 #include <iostream>
-#include <stdio.h>
 #include "chem/peptide.h"
 #include "chem/chem.h"
+#include <stdio.h>
 
 // ------------------- basic templates
 using namespace std;
@@ -22,9 +22,7 @@ int main2 () {
 }
 // -------------------
 // -------------------  class templates
-#include <iostream>
 using namespace std;
-
 template <class T> class mypair {
     T a, b;
   public:
@@ -67,10 +65,11 @@ public:
   	  T retval;
  */
 //----------------------------------
+/*
 template <class T> class mylist_item {
 public:
-	T			*item;
-	mylist_item	*next;
+	T				*item;
+	mylist_item<T>	*next;
 
 	mylist_item();
 	virtual ~mylist_item();
@@ -82,11 +81,17 @@ template <class T> mylist_item<T>::mylist_item() {
 	item = NULL;
 	next = NULL;
 }
+template <class T> mylist_item<T>::~mylist_item() {
+	item = NULL;
+	next = NULL;
+}
 
 template <class T> void mylist_item<T>::dump () {
 	printf("mylist_item::dump..\n");
 	T::dump();
 }
+
+*/
 //----------------------------------
 /*
 //=================================================
@@ -106,10 +111,35 @@ public:
 };
  */
 // --------------------------
+// ========================= MYLIST
+/*
 template <class T> class mylist {
 public:
-	T 			*head;
-	T 			*tail;
+	//---------------
+	template <class U> class mylist_item;
+
+	template <class U> class mylist_item {
+	public:
+		U					*item;
+		mylist_item<U>		*next;
+
+		mylist_item() {
+			item = NULL;
+			next = NULL;
+		}
+		virtual ~mylist_item(){
+			item = NULL;
+			next = NULL;
+		}
+		void 		dump(void) {
+			printf("mylist_item::dump..\n");
+			dump();
+		}
+
+	};
+	//---------------
+	mylist_item<T>		*head;
+	mylist_item<T>		*tail;
 	// ---
 	mylist();
 	virtual ~mylist();
@@ -133,25 +163,48 @@ mylist<T>::~mylist() {
 template <class T>
 void mylist<T>::dump(void) {
 
-	printf("::mylist.dump,,\n");
-	T *item = head;
+	printf("::mylist.dump..\n");
+
+	mylist_item<T>	*item = head;
 	while (item !=NULL) {
+		printf("[0x%X].", (long unsigned int) item);
 		item-> dump();
 		item = item-> next;
 	}
 }
+*/
+// ========================= MYLIST
 
-typedef mylist_item<peptide> pep_listitem;
+//typedef mylist_item<peptide> pep_listitem;
 //----------------------------------
+#include "mylist.h"
+
 int test_mylist()
 {
-	// nested templates
 
-	// template <class T>
-	// void mylist_item<T>::dump
+	peptide A,B,C;
+	//A.test();
+	A.set('A', 1);	A.pos.dim[0] = 0; B.pos.dim[1] = 1;
+	printf("### peptide A -> ");	A.dump(); printf("\n");
 
-	mylist<pep_listitem> 	pep_list;
-	pep_list.dump();
+	B.set('B', 2);	B.pos.dim[0] = 16; B.pos.dim[1] = 17;
+	printf("### peptide B -> ");	B.dump(); printf("\n");
+
+	C.set('C', 3);	C.pos.dim[0] = 32; C.pos.dim[1] = 33;
+	printf("### peptide C -> ");	C.dump(); printf("\n");
+
+	mylist<peptide> 	pep_list;
+	//----
+
+//	mylist<peptide>::mylist_item<peptide>  list_item;
+//	list_item.test(&A);
+//	pep_list.head = &list_item;
+	printf("## pep_list.add(&A) = [%d]\n", pep_list.add(&A)); 	pep_list.dump(); printf("\n");
+	printf("## pep_list.add(&B) = [%d]\n", pep_list.add(&B));	pep_list.dump(); printf("\n");
+	printf("## pep_list.add(&C) = [%d]\n", pep_list.add(&C));	pep_list.dump(); printf("\n");
+
+//	printf("== pep_list dump ==\n");
+//	pep_list.dump();
 
 	return 0;
 }
