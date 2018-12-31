@@ -121,12 +121,12 @@ int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	int mask = 3;
 
 	// invert sig1 - does not change % but better @small numbers..
-	sig2 = ~sig2;
+	PepSig sig2i = ~sig2;
 
 	for (int i=0; i<4; i++) {
 
 		int v1 = ((sig1 & mask)/div);
-		int v2 = ((sig2 & mask)/div);
+		int v2 = ((sig2i & mask)/div);
 
 		// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[17.88], tallyR[3]=%[21.63],
 		res[i] = ((v1 + v2));
