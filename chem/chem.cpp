@@ -112,45 +112,69 @@ int molecule::addpep(PepSig sig) {
 
 }
  // =============================
-int		molecule::getrot(PepSig sig1, PepSig sig2){
+int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
+	/*
+	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+	 */
 	int res[] = { 0,0,0,0 };
 	int div = 1;
 	int mask = 3;
+
+	// invert sig1 - does not change % but better @small numbers..
+	sig1 = ~sig1;
+
 	for (int i=0; i<4; i++) {
-//		printf("::molecule::getrot.sig1[0x%x] =>", sig1); printb(sig1); printf("\n");	printf("\n");
 
+		int v1 = ((sig1 & mask)/div);
+		int v2 = ((sig2 & mask)/div);
+		res[i] = ((v1 + v2));
 		/*
-		int r;
-					printb(sig1); printf("=sig1[0x%02x], ", sig1);
-					printb(mask); printf("=mask[0x%02x], ", mask);
-	r = sig1 & mask; printb(r);   printf("=&s1 [0x%02x], ", r);
-					printb(div);  printf("= div[0x%02x], ", div);
-	r = r /div; 	printb(r);    printf("=/div[0x%02x]\n", r);
-
-					printb(sig2); printf("=sig2[0x%02x], ", sig2);
-					printb(mask); printf("=mask[0x%02x], ", mask);
-	r = sig2 & mask; printb(r);   printf("=&s2 [0x%02x], ", r);
-					printb(div);  printf("= div[0x%02x], ", div);
-	r = r /div; 	printb(r);    printf("=/div[0x%02x]\n", r);
+		printf("%d:", res[i]);		printf("------------------[ %d ]-------------------\n", i);
+		printf("%d:", res[i]);		printb(sig1); printf("=sig1[0x%02x], ", sig1);
+		printf("%d:", res[i]);		printb(sig2); printf("=sig2[0x%02x]\n", sig2);
+		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x], ", mask);
+		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x]\n", mask);
+		//printf("%d:", res[i]);		printf("------------------------------------------\n");
+		printf("\n");
+		printf("%d:", res[i]);		printb(v1);   printf("   v1[0x%02x], ", v1);
+		printf("%d:", res[i]);		printb(v2);   printf("   v2[0x%02x]\n", v2);
+		printf("%d:", res[i]);		printf("------------------------------------------\n");
 		*/
 
+		//-------------------
+		// count bits ?? - nice concept - but bad disto
+		// before: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+		//  after: tallyR[0]=%[39.80], tallyR[1]=%[26.66], tallyR[2]=%[19.12], tallyR[3]=%[14.42],
+		/*
+		switch(v1) {
+			case 2: v1 = 1; break;
+			case 3:	v1 = 2; break;
+		}
+		switch(v2) {
+			case 2: v2 = 1; break;
+			case 3:	v2 = 2; break;
+		}
+		 */ 	//---------------------------------------------------
 
-		printb(sig1); printf("=sig1[0x%02x], ", sig1);
-		printb(sig2); printf("=sig2[0x%02x], ", sig2);
-		printb(mask); printf("=mask[0x%02x]\n", mask);
-
-
-
-		res[i] = ( ((sig1 & mask)/div) + ((sig2 & mask)/div) );
-		printf("res[%d] = %d\n", i, res[i]);
 		//----
 		div = div * 4;
 		mask = mask *4;
 	}
+
+	// find max
 	int rot = 0;
+	for (int i=1; i<4; i++)
+		if (res[i] > res[rot])
+			rot = i;
+	// final tally.. now remap (swap 2 and 3)
+	// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+	switch(rot) {
+		case 2: rot = 3; break;
+		case 3:	rot = 2; break;
+	}
 
 
-	return 0;
+	return rot;
 }
 // =============================
 // -------------------------------
