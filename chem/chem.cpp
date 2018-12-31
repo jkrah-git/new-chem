@@ -105,14 +105,8 @@ void molecule::clear(void) {
 
 
 }
-// -------------------------------
-int molecule::addpep(PepSig sig) {
-	return -1;
-
-
-}
  // =============================
-int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
+char		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	/*
 	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
 	 */
@@ -181,21 +175,20 @@ int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	}
 
 
-	return rot;
+	return (char) rot;
 }
-// =============================
 // -------------------------------
-int molecule::addpep(PepSig sig, char rotation) {
+// -------------------------------
+int molecule::addpep(PepSig sig){ //, char rotation) {
 	//peptide *pep = (peptide*) malloc(sizeof(peptide));
 	peptide *pep = new peptide;
 	if (pep==NULL) return -1;
 	if (pep-> pos.dim ==NULL) return -2;
-	if (rotation >3) return -3;
+	//if (rotation >3) return -3;
 	//----
 	pep->set(sig, 0);
 	printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
-
-//	!! we MUST now manage pep+dim memory
+	//	!! we MUST now manage pep+dim memory
 
 	mylist<peptide>::mylist_item<peptide> *last_item = pep_list.tail;
 
@@ -230,9 +223,10 @@ int molecule::addpep(PepSig sig, char rotation) {
 	 ***/
 	//char r0 = (3 && last_item-> item->getsig()) + (3 & pep-> getsig());
 
+	// pep = new peptide
+	// last_item-> item = orignal peptide
 
-
-
+	char rotation = getrot(last_item-> item->getsig(), pep-> getsig());
 
 	// ============ ^^
 	peptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
@@ -267,18 +261,63 @@ int molecule::addpep(PepSig sig, char rotation) {
 
 }
 // -------------------------------
-void molecule::test(void){
+void molecule::test(stringstream *logstr){
+
 	printf("molecule.test: == START ==\n");
 	printf("molecule.test: pre: ");	dump();
 	//------------
-	printf("molecule.test:add(A) = [%d]\n", addpep('A', 0));
-	printf("molecule.test:add(B) = [%d]\n", addpep('B', 0));
-	printf("molecule.test:add(C) = [%d]\n", addpep('C', 1));
-	printf("molecule.test:add(D) = [%d]\n", addpep('D', 2));
-	printf("molecule.test:add(E) = [%d]\n", addpep('E', 3));
+
+	printf("molecule.test:add(A) 0 (0,0) = [%d]\n", addpep('A'));
+	printf("molecule.test:add(A) 0 (0,1) = [%d]\n", addpep('A'));
+	printf("molecule.test:add(B) 1 (1,1) = [%d]\n", addpep('B'));
+	printf("molecule.test:add(W) 2 (1,0) = [%d]\n", addpep('W'));
+	printf("molecule.test:add(7) 2 (1,-1) = [%d]\n", addpep('7'));
+	printf("molecule.test:add(A) 3 (0,-1) = [%d]\n", addpep('A'));
+
 	//------------
-	printf("molecule.test: final: ");	dump(); // printf("\n");
-	//clear();
+	printf("molecule.test: final: ");
+	dump(); // printf("\n");
+
+	printf("molecule.test: clearing..\n");
+	clear();
+	printf("molecule.test: postclear: ");
+	dump(); // printf("\n");
+
 	printf("molecule.test: == END ==\n");
+
+	*logstr << "molecule.test: == STREAM ==\n";
+}
+// -------------------------------
+void molecule::testrot(void){
+	// count of each score (and c[4] = sum/total count)
+	int c[5];
+	// reset results..
+	for (int i=0; i<5; i++)
+		c[i] = 0;
+
+	char ca, cb;
+	// --- calc all posibilities
+	for (int a=0; a<256; a++) {
+		for (int b=0; b<256; b++)
+		{
+			int t = getrot(a, b); //, smooth);
+			ca = 32; cb=32;
+			if ((a>32) && (a<127))	ca = a;
+			if ((b>32) && (b<127))	cb = b;
+
+
+
+			printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
+			if ((t<0) || (t>3)) t=0;
+			c[t]++;
+			c[4]++;
+		}
+	}
+
+	for (int i=0; i<4; i++)
+		printf("tallyR[%d]=%%[%2.2f], ", i, (100.0 * c[i]/c[4]) );
+	//	printf("tallyR[%d]= [%d]%%[%2.2f], ", i, c[i], (100.0 * c[i]/c[4]) );
+	printf("\n");
+
 }
 // -------------------------------

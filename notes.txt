@@ -62,14 +62,7 @@ TODO 1. chem structure
 		- Max r wins .. if tie then 0
 		
 		
-  
-  		(r)    3     2     1     0  
-  		sig  11:11 11:00 00:11 00:00
-  		src 00 00 00 00
-  		dst 11 11 11 11
-  		00:00 
-  		
-  		
+	- streams based log handler  		
   ? - peps sharing position - with energy penalty
   ? - rebuild function
   -----------------------------------
@@ -79,3 +72,59 @@ TODO 1. chem structure
   - multiple match reactants (O),(A,B,C ..)
   - chem ops on cell
    
+   
+   
+   
+
+molecule.testrot: [0x41 0x41](A,A) =0
+molecule.testrot: [0x41 0x42](A,B) =1
+molecule.testrot: [0x41 0x43](A,C) =1
+molecule.testrot: [0x41 0x44](A,D) =0
+molecule.testrot: [0x41 0x45](A,E) =0
+molecule.testrot: [0x41 0x46](A,F) =3
+molecule.testrot: [0x41 0x47](A,G) =3
+molecule.testrot: [0x41 0x48](A,H) =0
+molecule.testrot: [0x41 0x49](A,I) =0
+molecule.testrot: [0x41 0x4a](A,J) =3
+molecule.testrot: [0x41 0x4b](A,K) =3
+molecule.testrot: [0x41 0x4c](A,L) =0
+molecule.testrot: [0x41 0x4d](A,M) =0
+molecule.testrot: [0x41 0x4e](A,N) =3
+molecule.testrot: [0x41 0x4f](A,O) =3
+molecule.testrot: [0x41 0x50](A,P) =0
+molecule.testrot: [0x41 0x51](A,Q) =0
+molecule.testrot: [0x41 0x52](A,R) =1
+molecule.testrot: [0x41 0x53](A,S) =1
+molecule.testrot: [0x41 0x54](A,T) =0
+molecule.testrot: [0x41 0x55](A,U) =0
+molecule.testrot: [0x41 0x56](A,V) =2
+molecule.testrot: [0x41 0x57](A,W) =2
+molecule.testrot: [0x41 0x58](A,X) =0
+molecule.testrot: [0x41 0x59](A,Y) =0
+...
+molecule.testrot: [0x41 0x41](A,A) =0
+molecule.testrot: [0x42 0x41](B,A) =0
+molecule.testrot: [0x43 0x41](C,A) =0
+molecule.testrot: [0x44 0x41](D,A) =1
+molecule.testrot: [0x45 0x41](E,A) =1
+molecule.testrot: [0x46 0x41](F,A) =0
+molecule.testrot: [0x47 0x41](G,A) =0
+molecule.testrot: [0x48 0x41](H,A) =1
+molecule.testrot: [0x49 0x41](I,A) =1
+molecule.testrot: [0x4a 0x41](J,A) =1
+molecule.testrot: [0x4b 0x41](K,A) =0
+molecule.testrot: [0x4c 0x41](L,A) =1
+molecule.testrot: [0x4d 0x41](M,A) =1
+molecule.testrot: [0x4e 0x41](N,A) =1
+molecule.testrot: [0x4f 0x41](O,A) =1
+molecule.testrot: [0x50 0x41](P,A) =3
+molecule.testrot: [0x51 0x41](Q,A) =3
+molecule.testrot: [0x52 0x41](R,A) =0
+molecule.testrot: [0x53 0x41](S,A) =0
+molecule.testrot: [0x54 0x41](T,A) =1
+molecule.testrot: [0x55 0x41](U,A) =1
+molecule.testrot: [0x56 0x41](V,A) =0
+molecule.testrot: [0x57 0x41](W,A) =0
+molecule.testrot: [0x58 0x41](X,A) =1
+molecule.testrot: [0x59 0x41](Y,A) =1
+molecule.testrot: [0x5a 0x41](Z,A) =1

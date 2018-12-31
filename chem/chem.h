@@ -13,6 +13,10 @@
  *
  */
 // -------------------------------
+#include <iostream>
+#include <sstream>
+using namespace std;
+
 #include "../mylist.h"
 #include "peptide.h"
 
@@ -21,6 +25,9 @@ void sprintb(char *str, char val);
 void printb(char val);
 // -------------------------------
 class molecule {
+private:
+	char		getrot(PepSig sig1, PepSig sig2); //, float *smooth);
+
 public:
 	mylist<peptide> 	pep_list;
 	// ----
@@ -30,11 +37,13 @@ public:
 	void		dump(void);
 	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos *testpos);
 	//int			addpep(peptide *pep, char rotation);
-	int			addpep(PepSig sig, char rotation);
-	int			getrot(PepSig sig1, PepSig sig2); //, float *smooth);
+	//int			addpep(PepSig sig, char rotation);
 	int			addpep(PepSig sig);
 	void		clear(void);
+
 	void		test(void);
+	void		test(stringstream *logstr);
+	void		testrot(void);
 
 };
 // -------------------------------

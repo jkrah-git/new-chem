@@ -90,34 +90,17 @@ int test_mylist()
 int test_chem()
 {
 	printf("test_chem:: ..\n");
+	stringstream logstream(ios::in|ios::out);
 
 	molecule Mole;
-	//Mole.test(); return 0;
+	Mole.test(&logstream);
+	//Mole.testrot();
 
-	// count of each score (and c[4] = sum/total count)
-	int c[5];
-	// reset results..
-	for (int i=0; i<5; i++)
-		c[i] = 0;
-
-	// --- calc all posibilities
-	for (int a=0; a<256; a++) {
-		for (int b=0; b<256; b++)
-		{
-			int t = Mole.getrot(a, b); //, smooth);
-			printf("test_chem:: Mole.getrot[0x%02x, 0x%02x] = %d\n",  a,b, t);
-			if ((t<0) || (t>3)) t=0;
-			c[t]++;
-			c[4]++;
-		}
-	}
-
-	for (int i=0; i<4; i++)
-		printf("tallyR[%d]=%%[%2.2f], ", i, (100.0 * c[i]/c[4]) );
-	//	printf("tallyR[%d]= [%d]%%[%2.2f], ", i, c[i], (100.0 * c[i]/c[4]) );
-	printf("\n");
+	std::string new_val = logstream.str();
+	cout << new_val;
 
 	return 0;
+
 }
 
 
