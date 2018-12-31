@@ -121,13 +121,19 @@ int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	int mask = 3;
 
 	// invert sig1 - does not change % but better @small numbers..
-	sig1 = ~sig1;
+	sig2 = ~sig2;
 
 	for (int i=0; i<4; i++) {
 
 		int v1 = ((sig1 & mask)/div);
 		int v2 = ((sig2 & mask)/div);
+
+		// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[17.88], tallyR[3]=%[21.63],
 		res[i] = ((v1 + v2));
+
+		//tallyR[0]=%[39.62], tallyR[1]=%[24.15], tallyR[2]=%[16.40], tallyR[3]=%[19.83],
+		//res[i] = (((sig1 & sig2) & mask)/div);
+
 		/*
 		printf("%d:", res[i]);		printf("------------------[ %d ]-------------------\n", i);
 		printf("%d:", res[i]);		printb(sig1); printf("=sig1[0x%02x], ", sig1);
@@ -166,6 +172,7 @@ int		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	for (int i=1; i<4; i++)
 		if (res[i] > res[rot])
 			rot = i;
+
 	// final tally.. now remap (swap 2 and 3)
 	// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
 	switch(rot) {
