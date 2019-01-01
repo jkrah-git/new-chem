@@ -5,8 +5,8 @@
  *      Author: jkrah
  */
 
-#ifndef CHEM_H_
-#define CHEM_H_
+#ifndef MOLECULE_H_
+#define MOLECULE_H_
 // -------------------------------// -------------------------------
 /*
  * chem = list of peptides
@@ -14,7 +14,7 @@
  */
 // -------------------------------
 #include "../mylist.h"
-#include "peptide.h"
+#include "Peptide.h"
 
 // -------------------------------
 
@@ -48,4 +48,4 @@ public:
 // -------------------------------
 
 // -------------------------------// -------------------------------
-#endif /* CHEM_H_ */
+#endif /* MOLECULE_H_ */

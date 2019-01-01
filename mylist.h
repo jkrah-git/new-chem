@@ -5,12 +5,26 @@
  *      Author: jkrah
  */
 
+
 #ifndef MYLIST_H_
 #define MYLIST_H_
 //==========================================================
 #include <stdio.h>
 #include <stdlib.h>
 
+//#define DEBUG
+#include "chem/debug.h"
+
+
+//#ifdef LOG
+//#undef LOG
+//#endif
+
+//#ifdef DEBUG
+//#define LOG printf("##-- %s.", __PRETTY_FUNCTION__); printf
+//#else
+//#define LOG if (false) printf
+//#endif
 //---------------------------------------------
 template <class T> class mylist {
 public:
@@ -31,7 +45,7 @@ public:
 			next = NULL;
 		}
 		void 		dump(void) {
-			printf("::mylist_item[0x%zX].dump::item[0x%zX].next[0x%zX] ->\n",
+			printf("mylist_item[0x%zX].dump::item[0x%zX].next[0x%zX] ->\n",
 					(long unsigned int) this,
 					(long unsigned int) item,
 					(long unsigned int) next);
@@ -77,7 +91,8 @@ template <class T> void mylist<T>::clear() {
 	mylist_item<T>	*item = head;
 	while (item !=NULL) {
 		head = item-> next;
-		printf("::mylist.clear.free[0x%zX]\n", (long unsigned int) item);
+		//printf("::mylist.clear.free[0x%zX]\n", (long unsigned int) item);
+		LOG("free[0x%zX]\n", (long unsigned int) item);
 		free(item);
 		item = head;
 	}
@@ -88,7 +103,8 @@ template <class T> int mylist<T>::add(T *element) {
 	if (element == NULL) return -1;
 
 	mylist_item<T> *new_item = (mylist_item<T> *) malloc (sizeof(mylist_item<T>));
-	printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
+	//printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
+	LOG("malloc[0x%zX]\n", (long unsigned int) new_item);
 	if (new_item ==NULL) return -2;
 
 
@@ -108,7 +124,7 @@ template <class T> int mylist<T>::add(T *element) {
 };
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-	printf("::mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
+	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail );

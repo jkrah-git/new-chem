@@ -1,8 +1,9 @@
 // -------------------
-#include <iostream>
-#include "chem/peptide.h"
-#include "chem/chem.h"
 #include <stdio.h>
+#include <iostream>
+
+#include "chem/Peptide.h"
+#include "chem/Molecule.h"
 
 // ------------------- basic templates
 using namespace std;

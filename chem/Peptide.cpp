@@ -4,11 +4,18 @@
  *  Created on: Dec 29, 2018
  *      Author: jkrah
  */
-
-#include "peptide.h"
+//-----
 #include <stdio.h>
 #include <stdlib.h>
 //using namespace std;
+
+#include "Peptide.h"
+//-----
+//#define DEBUG
+//#include "common.h"
+
+
+
 // ----------------------------------------------
 
 /*
@@ -49,7 +56,7 @@ void Peptide::dump(void){
 	if ((sig>31) && (sig<128))
 		txtsig = sig;
 
-	printf("::peptide[0x%zX].dump =>", (long unsigned int) this);
+	printf("peptide[0x%zX].dump =>", (long unsigned int) this);
 
 
 	if (txtsig==0) printf("sig(0x%X()).status(0x%x)", sig, status);

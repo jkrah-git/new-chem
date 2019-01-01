@@ -8,25 +8,10 @@
 #ifndef PEPTIDE_H_
 #define PEPTIDE_H_
 // ----------------------- // -----------------------
-#include "peptidePos.h"
-
-//---------------
-/*
-typedef int PepPosVec;
-#define PepPosVecDim (int) 2
-
-class peptidePos {
-public:
-//	PepPosVec	dim[PepPosVecDim];
-	PepPosVec	*dim;
-	peptidePos();
-	virtual ~peptidePos();
-	void		dump(void);
-};
-*/
+#include "PeptidePos.h"
 
 typedef unsigned char PepSig;
-typedef char PepStatus;
+typedef unsigned char PepStatus;
 
 // -----------------------
 class Peptide {

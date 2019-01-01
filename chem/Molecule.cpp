@@ -4,11 +4,14 @@
  *  Created on: Dec 30, 2018
  *      Author: jkrah
  */
-#include "chem.h"
-#include "peptide.h"
+
+
+#include "Molecule.h"
+#include "Peptide.h"
 //-----
-#define DEBUG
-#include "common.h"
+#undef DEBUG
+//#define DEBUG
+#include "debug.h"
 
 //
 // -------------------------------------
@@ -42,8 +45,7 @@ Molecule::~Molecule() {
 }
 // -------------------------------
 void Molecule::dump(void){
-	printf("::chem[0x%zX].dump\n",	(long unsigned int) this);
-	printf("::chem.pep_list =>\n");
+	printf("Molecule[0x%zX].dump\n",	(long unsigned int) this);
 	pep_list.dump();
 
 }
@@ -58,19 +60,18 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 			(current_item !=NULL) &&
 			(found_item==NULL)) {
 		//current_item-> dump(); 	printf("\n");
-		printf("::molecule::test_pos.testpos => \n");	testpos-> dump(); printf("\n");
-
+#ifdef DEBUG
+		LOG("testpos = "); testpos-> dump(); NL
+#endif
 
 		if ((current_item-> item != NULL) &&
 			(current_item-> item-> pos == *testpos)) {
 			found_item = current_item;
 			break;
 		}
-
 		//--
 		current_item = current_item-> next;
 	}
-
 
 	return found_item;
 }
@@ -82,7 +83,7 @@ void Molecule::clear(void) {
 
 	while (next_item != NULL) {
 		if (next_item-> item != NULL) {
-			printf("::molecule::clear.free.peptide[0x%zX]..\n", (size_t) next_item-> item);
+			LOG("free.peptide[0x%zX]..\n", (size_t) next_item-> item);
 			delete next_item-> item;
 			next_item-> item = NULL;
 		}
@@ -176,7 +177,12 @@ int Molecule::addpep(PepSig sig){ //, char rotation) {
 	//if (rotation >3) return -3;
 	//----
 	pep->set(sig, 0);
-	printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
+	//printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
+#ifdef DEBUG
+	LOG("malloc.peptide[0x%zX]..\n", (size_t) pep);
+	pep-> dump(); NL
+#endif
+
 	//	!! we MUST now manage pep+dim memory
 
 	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.tail;
@@ -238,7 +244,7 @@ int Molecule::addpep(PepSig sig){ //, char rotation) {
 		if (testpos-> item != NULL) {
 			testpos-> item-> dump();
 		}
-		//--  alow chashes.. dont abort for now..
+		//--  TODO: allow clashes.. dont abort for now..
 	// 	delete pep;
 	// 	return -11;
 	}

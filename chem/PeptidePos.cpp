@@ -5,14 +5,14 @@
  *      Author: jkrah
  */
 
-#include "peptidePos.h"
+#include "PeptidePos.h"
 #include "common.h"
 #include <stdlib.h>
 #include <stdio.h>
 //-----
 #undef DEBUG
-#define DEBUG
-#include "common.h"
+//#define DEBUG
+#include "debug.h"
 
 
 
