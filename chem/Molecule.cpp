@@ -20,17 +20,31 @@
 
 /*
 // -------------------------------
-class molecule {
-public:
-	mylist<peptide> 	pep_list;
-	// ----
-	molecule();
-	virtual ~molecule();
+class Molecule {
+private:
+	mylist<Peptide> 	pep_list;
 	// ---
-	void		dump(void);
-	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos testpos);
-	int			add(peptide *pep, char rotation);
+	char		getrot(PepSig sig1, PepSig sig2);
+	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
+
+public:
+
+	// ----
+	Molecule();
+	virtual ~Molecule();
+	bool operator ==(const Peptide& p);
+
+	// --- *pepSig's ..
+	//int			set(PepSig *sig_list);
+	//PepSig		*get(void);
+
+	// -- build
+	int			addpep(PepSig sig);
+	void		clear(void);
+
 	void		test(void);
+	void		testrot(void);
+	void		dump(void);
 
 };
 // -------------------------------
@@ -44,8 +58,31 @@ Molecule::~Molecule() {
 	clear();
 }
 // -------------------------------
+
+bool Molecule::operator ==(const Molecule& p){
+#ifdef DEBUG
+	LOG("\npep_list => ");
+	pep_list.dump();;
+
+	LOG("\np.pep_list => ");
+	//p.pep_list.dump();
+
+	//if (pep_list == p.pep_list) {
+	if (false) {
+		LOG("\npep_list == p.pep_list\n");
+	}
+	else {
+		LOG("\npep_list != p.pep_list\n");
+	}
+#endif
+
+	return (pep_list == p.pep_list);
+
+}
+
+// -------------------------------
 void Molecule::dump(void){
-	printf("Molecule[0x%zX].dump\n",	(long unsigned int) this);
+	printf("Molecule[0x%zX]..",	(long unsigned int) this);
 	pep_list.dump();
 
 }
@@ -169,21 +206,21 @@ char		Molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 }
 // -------------------------------
 // -------------------------------
-int Molecule::addpep(PepSig sig){ //, char rotation) {
+int Molecule::addpep(PepSig sig){
+
 	//peptide *pep = (peptide*) malloc(sizeof(peptide));
 	Peptide *pep = new Peptide;
+	//---
 	if (pep==NULL) return -1;
 	if (pep-> pos.dim ==NULL) return -2;
-	//if (rotation >3) return -3;
-	//----
-	pep->set(sig, 0);
-	//printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
+//----
+	pep->set(sig);
 #ifdef DEBUG
 	LOG("malloc.peptide[0x%zX]..\n", (size_t) pep);
 	pep-> dump(); NL
 #endif
 
-	//	!! we MUST now manage pep+dim memory
+	// !! we MUST now manage pep+dim memory
 
 	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.tail;
 
@@ -221,7 +258,7 @@ int Molecule::addpep(PepSig sig){ //, char rotation) {
 	// pep = new peptide
 	// last_item-> item = orignal peptide
 
-	char rotation = getrot(last_item-> item->getsig(), pep-> getsig());
+	char rotation = getrot(last_item-> item->get(), pep-> get());
 
 	// ============ ^^
 	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
@@ -270,19 +307,17 @@ void Molecule::test(void){
 	printf("molecule.test:add(A) 3 (0,-1) = [%d]\n", addpep('A'));
 
 	//------------
-	printf("molecule.test: final: ");
-	dump(); // printf("\n");
+	printf("molecule.test: final:\n");
+	dump();
 
+	/*
 	printf("molecule.test: clearing..\n");
 	clear();
 	printf("molecule.test: postclear: ");
 	dump(); // printf("\n");
+	*/
 
 	printf("molecule.test: == END ==\n");
-	//printf("my function name is %s..\n", __FUNCTION__ );
-	//printf("my pretty  name is %s..\n", __PRETTY_FUNCTION__ );
-	//LOG("Hellow World");
-
 
 }
 // -------------------------------

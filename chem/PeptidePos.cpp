@@ -1,5 +1,5 @@
 /*
- * peptidePos.cpp
+ * PeptidePos.cpp
  *
  *  Created on: Dec 29, 2018
  *      Author: jkrah
@@ -18,15 +18,15 @@
 
 /*
 // ----------------------------------------------
-class peptidePos {
+class PeptidePos {
 public:
 	PepPosVecType	*dim;
 
-	peptidePos();
-	virtual ~peptidePos();
+	PeptidePos();
+	virtual ~PeptidePos();
 	void		dump(void);
-	bool operator =(const peptidePos& p);
-	bool operator ==(const peptidePos& p);
+	bool operator =(const PeptidePos& p);
+	bool operator ==(const PeptidePos& p);
 
 	void		test(void);
 };
@@ -46,13 +46,13 @@ PeptidePos::PeptidePos() {
 }
 // ---------------------
 PeptidePos::~PeptidePos() {
-	//printf("::peptidePos.free[0x%zX]\n",  (long unsigned int) dim);
+	//printf("::PeptidePos.free[0x%zX]\n",  (long unsigned int) dim);
 	LOG("free[0x%zX]\n",  (long unsigned int) dim);
 	if (dim!=NULL)  free(dim);
 }
 // ---------------------
 void PeptidePos::dump(void){
-	printf("peptidePos[0x%zX].", (long unsigned int) this);
+	printf("PeptidePos[0x%zX].", (long unsigned int) this);
 
 	if (dim==NULL) {
 		printf("NULL");
@@ -89,39 +89,40 @@ bool PeptidePos::operator ==(const PeptidePos& p) {
 }
 // ---------------------
 void PeptidePos::test(void){
-	printf("peptidePos.test: == START ==\n");
-	printf("peptidePos.test: pre: ");	dump(); printf("\n");
+	printf("PeptidePos.test: == START ==\n");
+	printf("PeptidePos.test: pre: ");	dump(); printf("\n");
 	//------------
-	printf("peptidePos.test1: setting [%d] elements to [i+1]\n", PepPosVecMax);
+	printf("PeptidePos.test1: setting [%d] elements to [i+1]\n", PepPosVecMax);
 	for (int i=0; i<PepPosVecMax; i++) {	dim[i] = i+1; }
 	dump(); printf("\n");
 
-	printf("peptidePos.test2: setting pos2 [%d] elements to [i*2]\n", PepPosVecMax);
+	printf("PeptidePos.test2: setting pos2 [%d] elements to [i*2]\n", PepPosVecMax);
 	PeptidePos pos2, pos3;
 	for (int i=0; i<PepPosVecMax; i++) {
 		pos2.dim[i] = i*2;
 	}
-	printf("peptidePos.test2:pos2 => "); pos2.dump(); printf("\n");
-	printf("peptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
+	printf("PeptidePos.test2:pos2 => "); pos2.dump(); printf("\n");
+	printf("PeptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
 
-	printf("peptidePos.test2: setting pos3 = pos2\n");
+	printf("PeptidePos.test2: setting pos3 = pos2\n");
 	pos3 = pos2;
 
-	printf("peptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
+	printf("PeptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
 
-	printf("peptidePos.test2: cmp.pos2==pos3 ?; ");
+	printf("PeptidePos.test2: cmp.pos2==pos3 ?; ");
 	if (pos2==pos3) printf("true\n");
 	else  printf("false\n");
 
-	printf("peptidePos.test3:pos3.[0] = +10\n");
+	printf("PeptidePos.test3:pos3.[0] = +10\n");
 	pos3.dim[0] += 10;
-	printf("peptidePos.test3:pos3 => "); pos3.dump(); printf("\n");
+	printf("PeptidePos.test3:pos3 => "); pos3.dump(); printf("\n");
 
-	printf("peptidePos.test3: cmp.pos2==pos3 ?; ");
+	printf("PeptidePos.test3: cmp.pos2==pos3 ?; ");
 	if (pos2==pos3) printf("true\n");
 	else  printf("false\n");
 
 	//------------
+	printf("PeptidePos.test: == END ==\n");
 
 }
 // ---------------------

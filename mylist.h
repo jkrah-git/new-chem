@@ -64,6 +64,23 @@ public:
 
 		}
 
+		bool operator ==(const mylist_item<U>& p) {
+			// we ignore nextitem - make sence
+
+#ifdef DEBUG
+	//		LOG("list_item.cmp [==] \n");
+	//		LOG("list_item.cmp: item \n ");			DUMP(item); NL NL
+	//		LOG("list_item.cmp: p.item \n ");		DUMP(p.item); NL NL
+
+			LOG("list_item.cmp: result:\n");
+
+			if (item == p.item) printf("[==]\n");
+			else				printf("[!=]\n");
+#endif
+			return (item == p.item);
+		}
+
+
 	};
 	//---------------
 	mylist_item<T>		*head;
@@ -75,6 +92,9 @@ public:
 	void 		dump(void);
 	int			add(T *element);
 	void 		test(T *e1, T *e2, T *e3);
+	//bool 		operator ==(const T& p);
+	mylist_item<T>		*search(T *element);
+	bool 		operator ==(const mylist<T>& p);
 };
 //---------------------------------------------
 template <class T> mylist<T>::mylist() {
@@ -124,33 +144,80 @@ template <class T> int mylist<T>::add(T *element) {
 };
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
+	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]..",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail );
 
-	mylist_item<T>	*item = head;
-	while (item !=NULL) {
-		item-> dump(); 	printf("\n");
-		item = item-> next;
+	if (head!=NULL) {
+		printf("\n");
+		mylist_item<T>	*item = head;
+		while (item !=NULL) {
+			item-> dump(); 	printf("\n");
+			item = item-> next;
+		}
+		printf("\n");
 	}
 
 };
+
+template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
+	if (head==NULL) return (p.head ==NULL);
+
+	LOG("mylist.start:..:\n");
+	mylist_item<T>		*item1 = head;
+	mylist_item<T>		*item2 = p.head;
+
+	//-----------------
+	// while at least one item is not null
+	while ((item1!=NULL) || (item2!=NULL)) {
+
+		// if other is NULL return False
+		if ((item1==NULL) ||  (item2==NULL))
+			return false;
+
+//#ifdef DEBUG
+		LOG("item1 -> \n"); item1-> dump(); NL
+		LOG("item2 -> \n"); item2-> dump(); NL
+//#endif
+
+		if (*item1 ==*item2) {
+			;
+			LOG("RESULT: item1 == item2\n");
+		} else {
+			LOG("RESULT: item1 != item2\n");
+			return false;
+		}
+
+		item1 = item1-> next;
+		item2 = item2-> next;
+		if ((item1==NULL) &&  (item2==NULL))
+			return true;
+
+	}
+
+	return false;
+
+}
 // --------------------------
 template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: == START ==\n");
-	printf("mylist.test: pre: ");	dump(); //printf("\n");
+
+	printf("mylist.test: pre: ");	dump(); printf("\n");
 	//------------
 	printf("mylist.test:add(&e1) = [%d]\n", add(e1));
 	printf("mylist.test:add(&e2) = [%d]\n", add(e2));
 	printf("mylist.test:add(&e3) = [%d]\n", add(e3));
-	dump(); // printf("\n");
 
+	/*
+	dump(); // printf("\n");
 	printf("mylist.test:clear..\n");
 	clear(); dump();
+	 */
 
 	//------------
-	printf("mylist.test: post: ");	dump(); // printf("\n");
+	printf("mylist.test: post: ");	dump(); printf("\n");
+	printf("mylist.test: == END ==\n");
 
 }
 //==========================================================

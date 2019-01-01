@@ -4,7 +4,7 @@
 
 #include "chem/Peptide.h"
 #include "chem/Molecule.h"
-
+/*
 // ------------------- basic templates
 using namespace std;
 template <class T> T GetMax (T a, T b) {
@@ -45,72 +45,162 @@ int main3 () {
   cout << myobject.getmax();
   return 0;
 }
-
+*/
 // --------------------------
+void test_peptide()
+{
+	Peptide A,B,C;
+	A.test();
+	B.test();
+	if (A==B)	printf("A==B\n");
+	else		printf("A!=B\n");
+
+	B.pos.dim[0] --;
+	if (A==B)	printf("A==B\n");
+	else		printf("A!=B\n");
+
+	A.pos.dim[0] --;
+	if (A==B)	printf("A==B\n");
+	else		printf("A!=B\n");
+
+	A.set('X');
+	if (A==B)	printf("A==B\n");
+	else		printf("A!=B\n");
+
+}
 
 #include "mylist.h"
-
-int test_mylist()
+void test_mylist()
 {
-
+	printf("=== running test_mylist.. basic compares..\n");
 	Peptide A,B,C;
-	//A.test();
-	A.set('A', 1);	A.pos.dim[0] = 0; A.pos.dim[1] = 1;
+	A.set('A');		A.pos.dim[0] = 0; 	A.pos.dim[1] = 1;
 	printf("### peptide A -> ");	A.dump(); printf("\n");
 
-	B.set('B', 2);	B.pos.dim[0] = 16; B.pos.dim[1] = 17;
+	B.set('B');		B.pos.dim[0] = 16; 	B.pos.dim[1] = 17;
 	printf("### peptide B -> ");	B.dump(); printf("\n");
 
-	C.set('C', 3);	C.pos.dim[0] = 32; C.pos.dim[1] = 33;
+	C.set('C');		C.pos.dim[0] = 32; C.pos.dim[1] = 33;
 	printf("### peptide C -> ");	C.dump(); printf("\n");
-
+	//==============
 	mylist<Peptide> 	pep_list;
+
 	pep_list.test(&A, &B, &C);
-	pep_list.test(&B, &C, &A);
-	//----
+	if (A==C) { 	printf("### peptide A == C\n");  }
+	else { 			printf("### peptide A != C\n");  }
 
-//	mylist<peptide>::mylist_item<peptide>  list_item;
-//	list_item.test(&A);
-//	pep_list.head = &list_item;
-//	printf("## pep_list.add(&A) = [%d]\n", pep_list.add(&A)); 	pep_list.dump(); printf("\n");
-//	printf("## pep_list.add(&B) = [%d]\n", pep_list.add(&B));	pep_list.dump(); printf("\n");
-//	printf("## pep_list.add(&C) = [%d]\n", pep_list.add(&C));	pep_list.dump(); printf("\n");
+	C.set(A.get());
+	if (A==C) { 	printf("### peptide A == C\n");  }
+	else { 			printf("### peptide A != C\n");  }
 
-//	printf("== pep_list dump ==\n");
-//	pep_list.dump();
+	C.pos = A.pos;
+	if (A==C) { 	printf("### peptide A == C\n");  }
+	else { 			printf("### peptide A != C\n");  }
 
-	//pep_list.test(&B, &C, &A);
-
-
-	return 0;
+	C.pos.dim[0] = 32; C.pos.dim[1] = 33;
+	C.set('C');
+	if (A==C) { 	printf("### peptide A == C\n");  }
+	else { 			printf("### peptide A != C\n");  }
 }
-
-
-//----------------------------------
-
-int test_chem()
+void test_mylist2()
 {
-	printf("test_chem:: ..\n");
-	//stringstream logstream(ios::in|ios::out);
+	printf("=== running test_mylist2.. list compare..\n");
+	Peptide A,B,C;
+	A.set('A');		A.pos.dim[0] = 0; 	A.pos.dim[1] = 1;
+	printf("### peptide A -> ");	A.dump(); printf("\n");
 
-	Molecule Mole;
-	Mole.test();
-	//Mole.testrot();
+	B.set('B');		B.pos.dim[0] = 16; 	B.pos.dim[1] = 17;
+	printf("### peptide B -> ");	B.dump(); printf("\n");
 
-	//std::string new_val = logstream.str();
-	//cout << new_val;
+	C.set('C');		C.pos.dim[0] = 32; C.pos.dim[1] = 33;
+	printf("### peptide C -> ");	C.dump(); printf("\n");
+	mylist<Peptide> 	pep_list1, pep_list2;
 
-	return 0;
+	//------------
+	printf("### setup duplicate pep_lists..\n");
+	pep_list1.test(&A, &B, &C);
+	pep_list2.test(&A, &B, &C);
+
+	printf("### final compare (pep_lists..)\n");
+	if (pep_list1 == pep_list2) printf("pep_list1 == pep_list2\n");
+	else printf("pep_list1 != pep_list2\n");
+//------------
+	printf("### setup non-duplicate pep_lists..\n");
+	pep_list1.clear();
+	pep_list2.clear();
+	pep_list1.test(&A, &B, &C);
+	pep_list2.test(&A, &A, &C);
+
+	printf("### final compare (pep_lists..)\n");
+	if (pep_list1 == pep_list2) printf("pep_list1 == pep_list2\n");
+	else printf("pep_list != pep_list2\n");
 
 }
 
+/*
+#include "chem/Concentration.h"
+void test_mylist3()
+{
+	printf("=== running test_mylist3.. search..\n");
+	printf("### building m1..)\n");
+	Molecule m1;
+	m1.test();
+	printf("### building m2..)\n");
+	Molecule m2;
+	m2.test();
+	printf("### building c1..)\n");
+	Concentration	c1(&m1);
+	c1.dump();
+
+
+}
+*/
+//----------------------------------
+#include "chem/mybuffer.h"
+void test_buffer() {	MyBuffer<float> 	buf;	buf.test();		}
+void test_mole(){ 	Molecule Mole;		Mole.test();	}
 
 //----------------------------------
+#include "chem/Concentration.h"
+void test_conc(){
+	printf("#### running (m) mole test ####\n");
+	Molecule m;
+	m.test();
+
+	printf("#### running conc_vol.test(m);  ####\n");
+	Concentration conc(&m);
+	conc.test();
+
+	printf("#### running conc_vol.search(m);  ####\n");
+
+
+}
+// -----------
+void test_conc_vol() {
+	ConcentrationVolume conc_vol;
+
+	printf("########## running (mole) m test() ####\n");	Molecule m;		m.test();
+	printf("########## running (conc) c1.test() ####\n");	Concentration c1(&m);	c1.test();
+	Concentration c2(NULL);
+	Concentration c3(NULL);
+	printf("########## running conc_vol.test(&c1, &c2, &c3);  ####\n");
+	conc_vol.test(&c1, &c2, &c3);
+
+	printf("########## building  m2  ####\n");
+	Molecule m2;
+	m2.test();
+	printf("########## running searching m2  ####\n");
+	Concentration *c4 = NULL;
+	c4 = conc_vol.search (&m2);
+	DUMP(c4)
+}
+
+
 //---------------------------------- //----------------------------------
 int main()
 {
-	//return main3();
-	return test_chem();
+	//test_mylist3();
+	test_conc_vol();
 	return 0;
-
 }
+//----------------------------------

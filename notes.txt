@@ -49,23 +49,20 @@ TODO 1. chem structure
   D- 2d but expandable to (N`d)
   D- chem structure 
   D- physical map  
-  -----------------------------------
-  NEXT..
-  
   ? - periodic table  = affiliation strengths (for rotation)
-		-- rot masks --
-		r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 = xx
-		r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
-		r4 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
-		r3 1100 0000 = (128+64)= 192 & P1 & P2 /64 = xx
-		
-		- Max r wins .. if tie then 0
-		
-		
-	- streams based log handler  		
-  ? - peps sharing position - with energy penalty
-  ? - rebuild function
+		- rot masks
+  D- Base Concentration - buffer Template
   -----------------------------------
+  Later..				
+	- streams based log handler  		
+    - peps sharing position - with energy penalty
+  -----------------------------------
+  Next
+  - ConcentrationVolume 
+  - think about matches ..
+  
+  
+  ==================================
   - active sites (representation) ??
     - each AS has physical (sub) map
  
