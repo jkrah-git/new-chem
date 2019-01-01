@@ -36,15 +36,15 @@ public:
 // -----------------------
 */
 // -----------------------
-peptide::peptide() {
+Peptide::Peptide() {
 	sig = 0;
 	status = 0;
 }
 
-peptide::~peptide() {	// TODO Auto-generated destructor stub
+Peptide::~Peptide() {	// TODO Auto-generated destructor stub
 }
 // ---------------------
-void peptide::dump(void){
+void Peptide::dump(void){
 	PepSig txtsig = 0;
 	if ((sig>31) && (sig<128))
 		txtsig = sig;
@@ -60,20 +60,20 @@ void peptide::dump(void){
 
 }
 // ---------------------
-void peptide::set(PepSig newsig, PepStatus newstatus) {
+void Peptide::set(PepSig newsig, PepStatus newstatus) {
 	sig = newsig;
 	status = newstatus;
 }
 
 
 // ---------------------
-void  peptide::setsig(PepSig newval) { sig = newval; }
-PepSig peptide::getsig(){	return sig;	};
+void  Peptide::setsig(PepSig newval) { sig = newval; }
+PepSig Peptide::getsig(){	return sig;	};
 // ---------------------
-void peptide::setstatus(PepStatus newval) { status = newval; }
-PepStatus peptide::getstatus(){	return status;	}
+void Peptide::setstatus(PepStatus newval) { status = newval; }
+PepStatus Peptide::getstatus(){	return status;	}
 // ---------------------
-void peptide::test(void){
+void Peptide::test(void){
 
 	printf("peptide.test: == START ==\n");
 	printf("peptide.test: pre: ");	dump(); printf("\n");

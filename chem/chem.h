@@ -13,37 +13,36 @@
  *
  */
 // -------------------------------
-#include <iostream>
-#include <sstream>
-using namespace std;
-
 #include "../mylist.h"
 #include "peptide.h"
 
-void sprintb(char *str, char val, char zero);
-void sprintb(char *str, char val);
-void printb(char val);
 // -------------------------------
-class molecule {
+
+// -------------------------------
+class Molecule {
 private:
-	char		getrot(PepSig sig1, PepSig sig2); //, float *smooth);
+	mylist<Peptide> 	pep_list;
+	//
+	char		getrot(PepSig sig1, PepSig sig2);
+	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
-	mylist<peptide> 	pep_list;
+
 	// ----
-	molecule();
-	virtual ~molecule();
-	// ---
-	void		dump(void);
-	mylist<peptide>::mylist_item<peptide>  *test_pos(peptidePos *testpos);
-	//int			addpep(peptide *pep, char rotation);
-	//int			addpep(PepSig sig, char rotation);
+	Molecule();
+	virtual ~Molecule();
+
+	// --- *pepSig's ..
+	//int			set(PepSig *sig_list);
+	//PepSig		*get(void);
+
+	// -- build
 	int			addpep(PepSig sig);
 	void		clear(void);
 
 	void		test(void);
-	void		test(stringstream *logstr);
 	void		testrot(void);
+	void		dump(void);
 
 };
 // -------------------------------

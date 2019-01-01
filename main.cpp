@@ -52,7 +52,7 @@ int main3 () {
 int test_mylist()
 {
 
-	peptide A,B,C;
+	Peptide A,B,C;
 	//A.test();
 	A.set('A', 1);	A.pos.dim[0] = 0; A.pos.dim[1] = 1;
 	printf("### peptide A -> ");	A.dump(); printf("\n");
@@ -63,7 +63,7 @@ int test_mylist()
 	C.set('C', 3);	C.pos.dim[0] = 32; C.pos.dim[1] = 33;
 	printf("### peptide C -> ");	C.dump(); printf("\n");
 
-	mylist<peptide> 	pep_list;
+	mylist<Peptide> 	pep_list;
 	pep_list.test(&A, &B, &C);
 	pep_list.test(&B, &C, &A);
 	//----
@@ -90,14 +90,14 @@ int test_mylist()
 int test_chem()
 {
 	printf("test_chem:: ..\n");
-	stringstream logstream(ios::in|ios::out);
+	//stringstream logstream(ios::in|ios::out);
 
-	molecule Mole;
-	Mole.test(&logstream);
+	Molecule Mole;
+	Mole.test();
 	//Mole.testrot();
 
-	std::string new_val = logstream.str();
-	cout << new_val;
+	//std::string new_val = logstream.str();
+	//cout << new_val;
 
 	return 0;
 

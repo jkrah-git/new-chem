@@ -6,6 +6,14 @@
  */
 #include "chem.h"
 #include "peptide.h"
+//-----
+#define DEBUG
+#include "common.h"
+
+//
+// -------------------------------------
+
+
 
 /*
 // -------------------------------
@@ -24,47 +32,28 @@ public:
 };
 // -------------------------------
  */
-void printb(char val) {
-	char str[16];
-	sprintb(str, val);
-	printf("%s", str);
-}
-//-----------------
-void sprintb(char *str, char val) {
-	sprintb(str, val, '.');
-}
-void sprintb(char *str, char val, char zero){
-
-	char mask = 1;
-	for (int i=0; i<8; i++) {
-		if (val & mask)		str[7-i] = '1';
-		else				str[7-i] = zero;
-		mask *=2;
-	}
-	str[8] = '\0';
-}
-
 // -------------------------------// -------------------------------
-molecule::molecule() {	// TODO Auto-generated constructor stub
+// -------------------------------// -------------------------------
+Molecule::Molecule() {	// TODO Auto-generated constructor stub
 }
 
-molecule::~molecule() {
+Molecule::~Molecule() {
 	clear();
 }
 // -------------------------------
-void molecule::dump(void){
+void Molecule::dump(void){
 	printf("::chem[0x%zX].dump\n",	(long unsigned int) this);
 	printf("::chem.pep_list =>\n");
 	pep_list.dump();
 
 }
 // -------------------------------
-mylist<peptide>::mylist_item<peptide>   *molecule::test_pos(peptidePos *testpos) {
+mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos) {
 
 	// tetspos is being overwritten
 
-	mylist<peptide>::mylist_item<peptide> *found_item = NULL;
-	mylist<peptide>::mylist_item<peptide> *current_item = pep_list.head;
+	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
+	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.head;
 	while ( (testpos != NULL) &&
 			(current_item !=NULL) &&
 			(found_item==NULL)) {
@@ -86,9 +75,9 @@ mylist<peptide>::mylist_item<peptide>   *molecule::test_pos(peptidePos *testpos)
 	return found_item;
 }
 // -------------------------------
-void molecule::clear(void) {
+void Molecule::clear(void) {
 
-	mylist<peptide>::mylist_item<peptide> *next_item = pep_list.head;
+	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.head;
 	if (next_item ==NULL) return;
 
 	while (next_item != NULL) {
@@ -106,7 +95,7 @@ void molecule::clear(void) {
 
 }
  // =============================
-char		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
+char		Molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 	/*
 	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
 	 */
@@ -179,9 +168,9 @@ char		molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
 }
 // -------------------------------
 // -------------------------------
-int molecule::addpep(PepSig sig){ //, char rotation) {
+int Molecule::addpep(PepSig sig){ //, char rotation) {
 	//peptide *pep = (peptide*) malloc(sizeof(peptide));
-	peptide *pep = new peptide;
+	Peptide *pep = new Peptide;
 	if (pep==NULL) return -1;
 	if (pep-> pos.dim ==NULL) return -2;
 	//if (rotation >3) return -3;
@@ -190,7 +179,7 @@ int molecule::addpep(PepSig sig){ //, char rotation) {
 	printf("::molecule::addpep.malloc.peptide[0x%zX]..\n", (size_t) pep);	pep-> dump(); printf("\n");
 	//	!! we MUST now manage pep+dim memory
 
-	mylist<peptide>::mylist_item<peptide> *last_item = pep_list.tail;
+	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.tail;
 
 	// add to head ??
 	if (last_item==NULL) {
@@ -229,7 +218,7 @@ int molecule::addpep(PepSig sig){ //, char rotation) {
 	char rotation = getrot(last_item-> item->getsig(), pep-> getsig());
 
 	// ============ ^^
-	peptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
+	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
 	newpos = last_item-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
 
 	switch(rotation) {
@@ -241,7 +230,7 @@ int molecule::addpep(PepSig sig){ //, char rotation) {
 	//printf("molecule.addpep.newpos(with_rot)(%d) =>", rotation); newpos.dump(); printf("\n");
 
 
-	 mylist<peptide>::mylist_item<peptide>  *testpos = test_pos(&newpos);
+	 mylist<Peptide>::mylist_item<Peptide>  *testpos = test_pos(&newpos);
 
 	 if (testpos != NULL) {
 		printf("molecule.addpep.newpos clashed with->\n");
@@ -261,7 +250,7 @@ int molecule::addpep(PepSig sig){ //, char rotation) {
 
 }
 // -------------------------------
-void molecule::test(stringstream *logstr){
+void Molecule::test(void){
 
 	printf("molecule.test: == START ==\n");
 	printf("molecule.test: pre: ");	dump();
@@ -284,11 +273,14 @@ void molecule::test(stringstream *logstr){
 	dump(); // printf("\n");
 
 	printf("molecule.test: == END ==\n");
+	//printf("my function name is %s..\n", __FUNCTION__ );
+	//printf("my pretty  name is %s..\n", __PRETTY_FUNCTION__ );
+	//LOG("Hellow World");
 
-	*logstr << "molecule.test: == STREAM ==\n";
+
 }
 // -------------------------------
-void molecule::testrot(void){
+void Molecule::testrot(void){
 	// count of each score (and c[4] = sum/total count)
 	int c[5];
 	// reset results..
@@ -316,7 +308,7 @@ void molecule::testrot(void){
 
 	for (int i=0; i<4; i++)
 		printf("tallyR[%d]=%%[%2.2f], ", i, (100.0 * c[i]/c[4]) );
-	//	printf("tallyR[%d]= [%d]%%[%2.2f], ", i, c[i], (100.0 * c[i]/c[4]) );
+
 	printf("\n");
 
 }

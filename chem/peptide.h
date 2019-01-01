@@ -29,16 +29,16 @@ typedef unsigned char PepSig;
 typedef char PepStatus;
 
 // -----------------------
-class peptide {
+class Peptide {
 private:
 	char	sig;
 	int 	status;
 public:
-	peptidePos	pos;
+	PeptidePos	pos;
 
 	//--------------
-	peptide();
-	virtual ~peptide();
+	Peptide();
+	virtual ~Peptide();
 
 	void 		setsig(PepSig newval);
 	PepSig		getsig();

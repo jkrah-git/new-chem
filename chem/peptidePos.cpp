@@ -6,8 +6,16 @@
  */
 
 #include "peptidePos.h"
+#include "common.h"
 #include <stdlib.h>
 #include <stdio.h>
+//-----
+#undef DEBUG
+#define DEBUG
+#include "common.h"
+
+
+
 /*
 // ----------------------------------------------
 class peptidePos {
@@ -25,10 +33,10 @@ public:
 // ----------------------------------------------
 
  */
-peptidePos::peptidePos() {
+PeptidePos::PeptidePos() {
 
 	dim = (PepPosVecType*) malloc (sizeof(PepPosVecType) * PepPosVecMax);
-	printf("::peptidePos.malloc[0x%zX]\n",  (long unsigned int) dim);
+	LOG("malloc[0x%zX]\n",  (long unsigned int) dim);
 
 	if (dim!=NULL) {
 		for (int i=0; i<PepPosVecMax; i++) {
@@ -37,13 +45,15 @@ peptidePos::peptidePos() {
 	}
 }
 // ---------------------
-peptidePos::~peptidePos() {
-	printf("::peptidePos.free[0x%zX]\n",  (long unsigned int) dim);
+PeptidePos::~PeptidePos() {
+	//printf("::peptidePos.free[0x%zX]\n",  (long unsigned int) dim);
+	LOG("free[0x%zX]\n",  (long unsigned int) dim);
 	if (dim!=NULL)  free(dim);
 }
 // ---------------------
-void peptidePos::dump(void){
-	printf("::peptidePos[0x%zX]", (long unsigned int) this);
+void PeptidePos::dump(void){
+	printf("peptidePos[0x%zX].", (long unsigned int) this);
+
 	if (dim==NULL) {
 		printf("NULL");
 	}
@@ -56,7 +66,7 @@ void peptidePos::dump(void){
 	}
 }
 // ---------------------
-bool peptidePos::operator =(const peptidePos& p) {
+bool PeptidePos::operator =(const PeptidePos& p) {
 	if ((dim==NULL) || (p.dim==NULL)) return false;
 
 	for (int i=0; i<PepPosVecMax; i++){
@@ -67,7 +77,7 @@ bool peptidePos::operator =(const peptidePos& p) {
 
 	return true;
 }// ---------------------
-bool peptidePos::operator ==(const peptidePos& p) {
+bool PeptidePos::operator ==(const PeptidePos& p) {
 	if ((dim==NULL) || (p.dim==NULL)) return false;
 
 	for (int i=0; i<PepPosVecMax; i++) {
@@ -78,7 +88,7 @@ bool peptidePos::operator ==(const peptidePos& p) {
 	return true;
 }
 // ---------------------
-void peptidePos::test(void){
+void PeptidePos::test(void){
 	printf("peptidePos.test: == START ==\n");
 	printf("peptidePos.test: pre: ");	dump(); printf("\n");
 	//------------
@@ -87,7 +97,7 @@ void peptidePos::test(void){
 	dump(); printf("\n");
 
 	printf("peptidePos.test2: setting pos2 [%d] elements to [i*2]\n", PepPosVecMax);
-	peptidePos pos2, pos3;
+	PeptidePos pos2, pos3;
 	for (int i=0; i<PepPosVecMax; i++) {
 		pos2.dim[i] = i*2;
 	}

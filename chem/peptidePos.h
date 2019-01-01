@@ -13,15 +13,15 @@ typedef int PepPosVecType;
 #define 	PepPosVecMax (int) 2
 
 // ----------------------------------------------
-class peptidePos {
+class PeptidePos {
 public:
 	PepPosVecType	*dim;
 
-	peptidePos();
-	virtual ~peptidePos();
+	PeptidePos();
+	virtual ~PeptidePos();
 	void		dump(void);
-	bool operator =(const peptidePos& p);
-	bool operator ==(const peptidePos& p);
+	bool operator =(const PeptidePos& p);
+	bool operator ==(const PeptidePos& p);
 
 	void		test(void);
 };
