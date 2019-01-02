@@ -101,9 +101,15 @@ void Peptide::test(void){
 // ---------------------
 
 bool Peptide::operator ==(const Peptide& p) {
-	if ((sig == p.sig) && (pos==p.pos))
-		return true;
-	return false;
+/*
+						printf("Peptide::operator ??\n");
+	if (sig == p.sig) 	printf("Peptide:: sig == p.sig\n");
+	else 				printf("Peptide:: sig != p.sig\n");
+
+	if (pos == p.pos) 	printf("Peptide:: pos == p.pos\n");
+	else 				printf("Peptide:: pos != p.pos");
+*/
+	return ((sig == p.sig) && (pos==p.pos));
 }
 // ---------------------
 

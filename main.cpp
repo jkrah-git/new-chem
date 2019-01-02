@@ -7,53 +7,11 @@
 #include "chem/Concentration.h"
 #include "mylist.h"
 #include "chem/mybuffer.h"
-/*
-// ------------------- basic templates
-using namespace std;
-template <class T> T GetMax (T a, T b) {
-  return (a>b?a:b);
-}
-//----
-int main2 () {
 
-  int i=5, j=6, k;
-  long l=10, m=5, n;
-  k=GetMax(i,j);
-  n=GetMax(l,m);
-  cout << k << endl;
-  cout << n << endl;
-  return 0;
-}
-// -------------------
-// -------------------  class templates
-using namespace std;
-template <class T> class mypair {
-    T a, b;
-  public:
-    mypair (T first, T second)
-      {a=first; b=second;}
-    T getmax ();
-};
-
-
-template <class T> T mypair<T>::getmax ()
-{
-  T retval;
-  retval = a>b? a : b;
-  return retval;
-}
-// ------------
-int main3 () {
-  mypair <int> myobject (100, 75);
-  cout << myobject.getmax();
-  return 0;
-}
-*/
 // --------------------------
 void test_peptide()
 {
 	Peptide A,B,C;
-
 	A.test();
 	B.test();
 	if (A==B)	printf("A==B\n");
@@ -70,10 +28,9 @@ void test_peptide()
 	A.set('X');
 	if (A==B)	printf("A==B\n");
 	else		printf("A!=B\n");
-
 }
 
-void test_mylist1()
+void test_mylist()
 {
 	printf("==========================================\n");
 	printf("=== running test_mylist.. basic compares..\n");
@@ -214,41 +171,44 @@ void test_conc_vol() {
 	Concentration *c4 = NULL;
 	ConcentrationVolume conc_vol;
 
+
+	printf("==========================================\n");
+	printf("###  running test_conc_vol ...\n");
+	printf("==========================================\n");
+
 	printf("########## \n");
 	printf("########## \n");
 	printf("########## running (mole) m test() ####\n");
 	Molecule m;
 	m.test();
+	printf("########## \n");
 
 	printf("########## \n");
-	printf("########## \n");
-	printf("########## running (conc) c1.test() ####\n");
-	Concentration c1(&m);	c1.test();
-	//Concentration c2(NULL);
-	//Concentration c3(NULL);
-
+	printf("########## running (conc) c1.test()..\n");
+	Concentration c1(&m);	c1.test();	//Concentration c2(NULL);	//Concentration c3(NULL);
+	printf("########## finshed (conc) c1.test().\n");
 	printf("########## \n");
 	printf("########## \n");
-	printf("########## running conc_vol.test(&c1, &c2, &c3);  ####\n");
+	printf("########## running conc_vol.test(&c1, NULL, NULL); \n");
 	// note: c2,3 are NULL moles..
 	//conc_vol.test(&c1, &c2, &c3);
 	conc_vol.test(&c1, NULL, NULL);
+	printf("########## finshed conc_vol.test(&c1, NULL, NULL);.\n");
+	printf("########## \n");
 	//return;
 
-	printf("########## \n");
-	printf("########## \n");
+	printf("==========================================\n");
+	printf("==========================================\n");
 	printf("########## building  m2  ####\n");
 	Molecule m2;	m2.test();
-
-	printf("########## \n");
-	printf("########## \n");
+	printf("==========================================\n");
 	printf("########## final  m2 conc_vol  ####\n");
 	conc_vol.dump();
-
-	printf("########## \n");
-	printf("########## \n");
+	printf("==========================================\n");
 	printf("########## running searching m2  ####\n");
+	printf("==========================================\n");
 	c4 = conc_vol.search (&m2);
+	printf("==========================================\n");
 	printf("########## search result = ");
 	DUMP(c4) NL
 
@@ -260,11 +220,9 @@ void test_conc_vol() {
 int main()
 {
 	printf("main.start..\n");
-	mylist<Peptide> 	pep_list;
 
-	test_mylist1();
-
-	//test_conc_vol();
+	//test_mylist();
+	test_conc_vol();
 
 	printf("main.end..\n");
 }

@@ -75,7 +75,13 @@ bool Molecule::operator ==(const Molecule& p){
 		LOG("\npep_list != p.pep_list\n");
 	}
 #endif
-
+/*
+	printf("Molecule::operator == :: ??\n");
+	bool r = (pep_list == p.pep_list);
+	if (r) {	printf("Molecule::operator == ::  == \n");	}
+	else {		printf("Molecule::operator == :: != \n");	}
+	return (r);
+	*/
 	return (pep_list == p.pep_list);
 
 }

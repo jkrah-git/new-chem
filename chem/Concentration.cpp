@@ -77,7 +77,7 @@ void ConcentrationVolume::dump(){
 //--------------
 Concentration	*ConcentrationVolume::search(Molecule	*m){
 
-	printf("########## ########## search(m) : ");
+	printf("########## ########## ConcentrationVolume::search.m. ..\n");
 	DUMP(m)
 
 	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
@@ -87,12 +87,13 @@ Concentration	*ConcentrationVolume::search(Molecule	*m){
 	LOG("Searching..");
 
 	while (item!=NULL) {
-		printf("########## ########## item ...\n");
-		item-> dump();
-		printf("########## ########## ...\n");
+		printf("########## ConcentrationVolume::search.item ...\n");
+		DUMP(item-> item->  getmole())
+		printf("##########  \n");
 
-		if (item-> item-> getmole() == m)
+		if (*item-> item-> getmole() == *m)
 			return item-> item;
+
 		item = item-> next;
 	}
 	return NULL;

@@ -60,19 +60,27 @@ public:
 		}
 		// --------------------------------------
 		bool operator ==(const mylist_item<U>& p) {
-			// we ignore nextitem - make sence
+			// we ignore next-item -
 
 #ifdef DEBUG
 	//		LOG("list_item.cmp [==] \n");
 	//		LOG("list_item.cmp: item \n ");			DUMP(item); NL NL
 	//		LOG("list_item.cmp: p.item \n ");		DUMP(p.item); NL NL
+	//		LOG("list_item.cmp: result:\n");
+			printf("---------------------------\n");
+			printf("mylist_item:: operator [==]\n");
+			printf("---------------------------\n");
+			printf("mylist_item:: item ="); item-> dump(); NL
+			//printf("mylist_item:: p.item ="); p-> item-> dump(); NL
 
-			LOG("list_item.cmp: result:\n");
-
-			if (item == p.item) printf("[==]\n");
-			else				printf("[!=]\n");
+			bool r = (*item == *p.item);
+			if (r)	printf("mylist_item:: operator [==]\n");
+			else	printf("mylist_item:: operator [!=]\n");
+			printf("---------------------------\n");
+			return (r);
 #endif
-			return (item == p.item);
+
+			return (*item == *p.item);
 		}
 
 
@@ -195,26 +203,17 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 		head = del_item-> next;
 		parent = NULL;
 	} else { // not head
-
-	//if (del_item!=head) {
 		parent = getpar(del_item);
-
 		if (parent==NULL) {
 			printf("!!! Warning - del_item's parent not found in list...\n");
 			return NULL;
 		}
 	}
 
-	if (del_item==tail) {
-		tail = parent;
-		//printf("++++++++++   FULL DUMP  ++++++++++\n");		dump(); NL		printf("++++++++++--------------++++++++++\n");
-
-	}
-
+	// re-tail list
+	if (del_item==tail) { tail = parent; }
 	//--  fix parent
-	if (parent!=NULL) {
-		parent-> next = del_item-> next;
-	}
+	if (parent!=NULL) { parent-> next = del_item-> next; }
 
 	// --------------
 	// clear sub item
@@ -227,11 +226,9 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 		}
 	}
 	// --------------
-	printf("++++++++++--------------++++++++++\n");
 
 	LOG("free[0x%zX]\n", (long unsigned int) del_item);
 	delete del_item;
-
 	return parent;
 
 }
@@ -257,7 +254,6 @@ template <class T> void mylist<T>::dump(void) {
 template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
 	if (head==NULL) return (p.head ==NULL);
 
-	LOG("mylist.start:..:\n");
 	mylist_item<T>		*item1 = head;
 	mylist_item<T>		*item2 = p.head;
 
@@ -269,25 +265,27 @@ template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
 		if ((item1==NULL) ||  (item2==NULL))
 			return false;
 
-//#ifdef DEBUG
-		LOG("item1 -> \n"); item1-> dump(); NL
-		LOG("item2 -> \n"); item2-> dump(); NL
-//#endif
-
-		if (*item1 ==*item2) {
-			;
-			LOG("RESULT: item1 == item2\n");
-		} else {
-			LOG("RESULT: item1 != item2\n");
-			return false;
+/*
+		printf("mylist<T>::operator::item1 -> \n");
+		item1-> dump(); NL
+		printf("mylist<T>::operator::item2 -> \n");
+		item2-> dump(); NL
+*/
+		LOG("operator ??\n");
+		bool r = (*item1 ==*item2);
+		if (r){		LOG("operator ==\n");
+					;
+		} else {	LOG("operator !=\n");
+					return false;
 		}
 
+		// next item(s)
 		item1 = item1-> next;
 		item2 = item2-> next;
 		if ((item1==NULL) &&  (item2==NULL))
 			return true;
-
 	}
+	//-------------
 
 	return false;
 
