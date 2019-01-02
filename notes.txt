@@ -59,9 +59,10 @@ TODO 1. chem structure
   -----------------------------------
   Next
   - ConcentrationVolume 
-  - think about matches ..
-  
-  
+    - add/test/take chemicals
+
+  ==================================
+  - think about matches ..  
   ==================================
   - active sites (representation) ??
     - each AS has physical (sub) map

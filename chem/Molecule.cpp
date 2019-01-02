@@ -337,10 +337,11 @@ void Molecule::test2(void){
 	printf("molecule.test: pre: ");	dump();
 	//------------
 
-//	3.0   4.1
-//	2.0   5.2
-//	1.0	  6.2
-
+//	molecule.test:add(A) 0 (0,1) = [0]
+//	molecule.test:add(A) 0 (0,2) = [0]
+//	molecule.test:add(B) 1 (1,2) = [0]
+//	molecule.test:add(g) 2 (1,1) = [0]
+//	molecule.test:add(?) 2 (1,0) = [0]
 
 	printf("molecule.test:add(A) 0 (0,0) = [%d]\n", addpep('A'));
 	printf("molecule.test:add(A) 0 (0,1) = [%d]\n", addpep('A'));
@@ -348,7 +349,6 @@ void Molecule::test2(void){
 	printf("molecule.test:add(B) 1 (1,2) = [%d]\n", addpep('B'));
 	printf("molecule.test:add(g) 2 (1,1) = [%d]\n", addpep('g'));
 	printf("molecule.test:add(?) 2 (1,0) = [%d]\n", addpep('?'));
-	//printf("molecule.test:add(#) 1 (2,0) = [%d]\n", addpep('#'));
 
 
 	//------------

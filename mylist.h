@@ -101,6 +101,7 @@ public:
 
 	// --------------------
 	void		clear(bool do_subitem);
+	mylist_item<T> 	*add(void);
 	mylist_item<T> 	*add(T *element, bool do_subitem);
 	mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
 	// --------------------
@@ -166,7 +167,20 @@ template <class T> void mylist<T>::clear(bool do_subitem) {
 	tail = NULL;
 };
 // --------------------------	// --------------------------
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
+	T *element = new T;
+	LOG("malloc[0x%zX]\n", (long unsigned int) element);
+
+	mylist_item<T>  *item = add(element, false);
+	if (item==NULL) {
+		delete element;
+		LOG("free[0x%zX]\n", (long unsigned int) element);
+	}
+	return item;
+}
+// --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool do_subitem) {
+
 	if (element == NULL) return NULL;
 
 	mylist_item<T> *new_item = new mylist_item<T>;

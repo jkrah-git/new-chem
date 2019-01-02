@@ -37,6 +37,7 @@ public:
 	Molecule	*getmole(void);
 	//---
 	ConcLevelType	get(void) { return buf.get(); };
+	void			commit(void) { return buf.commit(); };
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(ConcAdjustType adj);
 	ConcLevelType	put(ConcLevelType amount);
@@ -48,10 +49,9 @@ public:
 // -------------------------------
 class ConcentrationVolume {
 private:
+	mylist<Concentration> 	conc_list;
 
 public:
-	//class Concentration;
-	mylist<Concentration> 	conc_list;
 
 	// ---
 	ConcentrationVolume();
@@ -68,6 +68,7 @@ public:
 
 	//----
 	void test(Concentration *c1, Concentration *c2, Concentration *c3);
+	void test2(void);
 };
 // -------------------------------
 

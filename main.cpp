@@ -233,15 +233,30 @@ void test_conc_vol() {
 }
 void test_conc_vol2()
 {
+	ConcentrationVolume conc_vol;
 	printf("==========================================\n");
 	printf("########## test_conc_vol2  ####\n");
-	printf("test_conc_vol2: build n test mole\n");
 	printf("==========================================\n");
-	Molecule m1;	m1.test2(); m1.test2();
+
+	printf("########## test_conc_vol2: conc_vol.test2()\n");
+	printf("==========================================\n");
+	conc_vol.test2();
+	printf("==========================================\n");
 	return;
-	printf("test_conc_vol2: test x2\n");
+
+	printf("########## test_conc_vol2: build m1 (test x1)\n");
+	printf("########## m1...\n");
+	Molecule m1;	m1.test2();
 	printf("==========================================\n");
-	m1.test();
+	printf("########## test_conc_vol2: build m2 (test x2)\n");
+	printf("########## m2...\n");
+	Molecule m2;	m2.test2();	m2.test2();
+	printf("==========================================\n");
+	printf("########## test_conc_vol2: build m3 (test x3)\n");
+	printf("########## m2...\n");
+	Molecule m3;	m3.test2(); m3.test2(); m3.test2();
+	printf("==========================================\n");
+
 	printf("==========================================\n");
 
 	//ConcentrationVolume conc_vol;
