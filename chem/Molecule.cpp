@@ -331,6 +331,40 @@ void Molecule::test(void){
 
 }
 // -------------------------------
+void Molecule::test2(void){
+
+	printf("molecule.test: == START ==\n");
+	printf("molecule.test: pre: ");	dump();
+	//------------
+
+//	3.0   4.1
+//	2.0   5.2
+//	1.0	  6.2
+
+
+	printf("molecule.test:add(A) 0 (0,0) = [%d]\n", addpep('A'));
+	printf("molecule.test:add(A) 0 (0,1) = [%d]\n", addpep('A'));
+	printf("molecule.test:add(A) 0 (0,2) = [%d]\n", addpep('A'));
+	printf("molecule.test:add(B) 1 (1,2) = [%d]\n", addpep('B'));
+	printf("molecule.test:add(g) 2 (1,1) = [%d]\n", addpep('g'));
+	printf("molecule.test:add(?) 2 (1,0) = [%d]\n", addpep('?'));
+	//printf("molecule.test:add(#) 1 (2,0) = [%d]\n", addpep('#'));
+
+
+	//------------
+	printf("molecule.test: final:\n");
+	dump();
+
+	/*
+	printf("molecule.test: clearing..\n");
+	clear();
+	printf("molecule.test: postclear: ");
+	dump(); // printf("\n");
+	*/
+
+	printf("molecule.test: == END ==\n");
+
+}// -------------------------------
 void Molecule::testrot(void){
 	// count of each score (and c[4] = sum/total count)
 	int c[5];

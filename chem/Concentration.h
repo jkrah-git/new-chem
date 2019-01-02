@@ -17,12 +17,14 @@
 #include "../mylist.h"
 #include "mybuffer.h"
 // -------------
-typedef float ConcLevel;
+typedef float ConcLevelType;
+typedef double ConcAdjustType;
+
 
 // -------------------------------
 class Concentration {
 private:
-	MyBuffer<ConcLevel> 	buf;
+	MyBuffer<ConcLevelType> 	buf;
 	Molecule				*mole;
 	// ---
 
@@ -30,12 +32,16 @@ public:
 	// ---
 	Concentration(Molecule	*m);
 	virtual ~Concentration();
-	void dump();
-
+	void 		dump();
+	//--------
 	Molecule	*getmole(void);
+	//---
+	ConcLevelType	get(void) { return buf.get(); };
+	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
+	ConcLevelType	take(ConcAdjustType adj);
+	ConcLevelType	put(ConcLevelType amount);
 
 	void test();
-
 };
 // -------------------------------
 
@@ -52,8 +58,13 @@ public:
 	virtual ~ConcentrationVolume();
 	// ----
 	void dump();
-
+	// ---------
 	Concentration	*search(Molecule	*m);
+	ConcLevelType	get(Molecule	*m);
+	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
+	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
+	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
+	// ---------
 
 	//----
 	void test(Concentration *c1, Concentration *c2, Concentration *c3);

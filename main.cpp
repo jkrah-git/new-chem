@@ -153,15 +153,41 @@ void test_mole(){ 	Molecule Mole;		Mole.test();	}
 
 //----------------------------------
 void test_conc(){
-	printf("#### running (m) mole test ####\n");
-	Molecule m;
-	m.test();
+		printf("==========================================\n");
+		printf("#### running (m) mole test ####\n");
+		printf("==========================================\n");
+		Molecule m;
+		m.test();
 
-	printf("#### running conc_vol.test(m);  ####\n");
-	Concentration conc(&m);
-	conc.test();
+		ConcLevelType v,w;
+		printf("==========================================\n");
+		printf("#### running conc_vol.test(m);  ####\n");
+		Concentration conc(&m);
+		conc.test();
+		printf("==========================================\n");
+		v = conc.get();		printf("#### conc.get = [%3.3f]\n", v);
+		printf("==========================================\n");
 
-	printf("#### running conc_vol.search(m);  ####\n");
+		ConcAdjustType adj = 0.5;
+		printf("==========================================\n");
+		printf("#### conc.take(%3.3f)...\n", adj);
+		w = conc.take(adj);
+		conc.dump();
+		printf("#### conc.take = [%3.3f]\n", w);
+		printf("==========================================\n");
+		v = conc.get();		printf("#### conc.get = [%3.3f]\n", v);
+		printf("==========================================\n");
+		v = 1.234;
+
+		printf("==========================================\n");
+		printf("#### conc_vol.conc.put(%3.3f)...\n", v);
+		w = conc.put(v);
+		conc.dump();
+		printf("#### conc.put = [%3.3f]\n", w);
+		printf("==========================================\n");
+		v = conc.get();		printf("#### conc.get = [%3.3f]\n", v);
+		printf("==========================================\n");
+
 
 
 }
@@ -175,29 +201,20 @@ void test_conc_vol() {
 	printf("==========================================\n");
 	printf("###  running test_conc_vol ...\n");
 	printf("==========================================\n");
-
-	printf("########## \n");
-	printf("########## \n");
 	printf("########## running (mole) m test() ####\n");
 	Molecule m;
 	m.test();
-	printf("########## \n");
-
-	printf("########## \n");
+	printf("########## ########## \n");
 	printf("########## running (conc) c1.test()..\n");
-	Concentration c1(&m);	c1.test();	//Concentration c2(NULL);	//Concentration c3(NULL);
+	Concentration c1(&m);	c1.test();
 	printf("########## finshed (conc) c1.test().\n");
-	printf("########## \n");
-	printf("########## \n");
+	printf("########## ########## \n");
 	printf("########## running conc_vol.test(&c1, NULL, NULL); \n");
-	// note: c2,3 are NULL moles..
-	//conc_vol.test(&c1, &c2, &c3);
 	conc_vol.test(&c1, NULL, NULL);
 	printf("########## finshed conc_vol.test(&c1, NULL, NULL);.\n");
-	printf("########## \n");
+	printf("########## ########## \n");
 	//return;
 
-	printf("==========================================\n");
 	printf("==========================================\n");
 	printf("########## building  m2  ####\n");
 	Molecule m2;	m2.test();
@@ -214,7 +231,24 @@ void test_conc_vol() {
 
 	printf("########## END  ####\n");
 }
+void test_conc_vol2()
+{
+	printf("==========================================\n");
+	printf("########## test_conc_vol2  ####\n");
+	printf("test_conc_vol2: build n test mole\n");
+	printf("==========================================\n");
+	Molecule m1;	m1.test2(); m1.test2();
+	return;
+	printf("test_conc_vol2: test x2\n");
+	printf("==========================================\n");
+	m1.test();
+	printf("==========================================\n");
 
+	//ConcentrationVolume conc_vol;
+
+
+
+}
 
 //---------------------------------- //----------------------------------
 int main()
@@ -222,7 +256,7 @@ int main()
 	printf("main.start..\n");
 
 	//test_mylist();
-	test_conc_vol();
+	test_conc_vol2();
 
 	printf("main.end..\n");
 }

@@ -22,8 +22,9 @@ rungrep()
 	cat $FILE |  grep "($A," | grep ",$B)" | grep "=$R$" 
 }
 (
-	echo "#### " cat $FILE |  grep "($A," | grep ",$B)" | grep "=$R$" 
-	rungrep
+	echo "#####################"
 	echo "#### found [`rungrep | wc -l`] lines"
+	echo "### cat $FILE |  grep \"($A,\" | grep \",$B)\" | grep \"=$R$\" "
+	rungrep
 ) 
 

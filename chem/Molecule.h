@@ -42,6 +42,7 @@ public:
 	void		clear(void);
 
 	void		test(void);
+	void		test2(void);
 	void		testrot(void);
 	void		dump(void);
 
