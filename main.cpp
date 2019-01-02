@@ -4,6 +4,9 @@
 
 #include "chem/Peptide.h"
 #include "chem/Molecule.h"
+#include "chem/Concentration.h"
+#include "mylist.h"
+#include "chem/mybuffer.h"
 /*
 // ------------------- basic templates
 using namespace std;
@@ -50,6 +53,7 @@ int main3 () {
 void test_peptide()
 {
 	Peptide A,B,C;
+
 	A.test();
 	B.test();
 	if (A==B)	printf("A==B\n");
@@ -69,11 +73,14 @@ void test_peptide()
 
 }
 
-#include "mylist.h"
-void test_mylist()
+void test_mylist1()
 {
+	printf("==========================================\n");
 	printf("=== running test_mylist.. basic compares..\n");
+	printf("==========================================\n");
 	Peptide A,B,C;
+	mylist<Peptide>::mylist_item<Peptide> *p1,*p2,*p3,*p4;
+
 	A.set('A');		A.pos.dim[0] = 0; 	A.pos.dim[1] = 1;
 	printf("### peptide A -> ");	A.dump(); printf("\n");
 
@@ -84,16 +91,18 @@ void test_mylist()
 	printf("### peptide C -> ");	C.dump(); printf("\n");
 	//==============
 	mylist<Peptide> 	pep_list;
+	pep_list.clear();
 
 	pep_list.test(&A, &B, &C);
 	if (A==C) { 	printf("### peptide A == C\n");  }
 	else { 			printf("### peptide A != C\n");  }
 
-	C.set(A.get());
+	//C.set(A.get());
+	C=A;
 	if (A==C) { 	printf("### peptide A == C\n");  }
 	else { 			printf("### peptide A != C\n");  }
 
-	C.pos = A.pos;
+	//C.pos = A.pos;
 	if (A==C) { 	printf("### peptide A == C\n");  }
 	else { 			printf("### peptide A != C\n");  }
 
@@ -101,21 +110,12 @@ void test_mylist()
 	C.set('C');
 	if (A==C) { 	printf("### peptide A == C\n");  }
 	else { 			printf("### peptide A != C\n");  }
-}
-void test_mylist2()
-{
+
+	printf("==========================================\n");
 	printf("=== running test_mylist2.. list compare..\n");
-	Peptide A,B,C;
-	A.set('A');		A.pos.dim[0] = 0; 	A.pos.dim[1] = 1;
-	printf("### peptide A -> ");	A.dump(); printf("\n");
+	printf("==========================================\n");
 
-	B.set('B');		B.pos.dim[0] = 16; 	B.pos.dim[1] = 17;
-	printf("### peptide B -> ");	B.dump(); printf("\n");
-
-	C.set('C');		C.pos.dim[0] = 32; C.pos.dim[1] = 33;
-	printf("### peptide C -> ");	C.dump(); printf("\n");
 	mylist<Peptide> 	pep_list1, pep_list2;
-
 	//------------
 	printf("### setup duplicate pep_lists..\n");
 	pep_list1.test(&A, &B, &C);
@@ -135,33 +135,66 @@ void test_mylist2()
 	if (pep_list1 == pep_list2) printf("pep_list1 == pep_list2\n");
 	else printf("pep_list != pep_list2\n");
 
+	printf("==========================================\n");
+	printf("=== running test_mylist3.. add/dels ..\n");
+	printf("==========================================\n");
+	pep_list.clear();	p1 = pep_list.add(&A);	p2 = pep_list.add(&B);	p3 = pep_list.add(&C);
+	printf("### add ABC..\n");	pep_list.dump();	printf("\n");
+	printf("### --------------------------------------\n");
+	// ----
+	printf("### -------------------\n");
+	p4 = pep_list.del(p2);	printf("### p4 = del(p2) =>");	DUMP(p4); NL
+	printf("### -- post ->");	pep_list.dump();
+	printf("### -------------------\n");
+	p4 = pep_list.del(p3);	printf("### p4 = del(p3) =>");	DUMP(p4);NL
+	printf("### -- post ->");	pep_list.dump();
+	printf("### -------------------\n");
+	p4 = pep_list.del(p1);	printf("### p4 = del(p3) =>");	DUMP(p4); NL
+	printf("### -- post ->");	pep_list.dump();
+
+
+	printf("==========================================\n");
+	printf("###  running test_mylist4 deleteing heads...\n");
+	printf("==========================================\n");
+	pep_list.clear();	p1 = pep_list.add(&A);	p2 = pep_list.add(&B);	p3 = pep_list.add(&C);
+	printf("### add ABC..\n");	pep_list.dump();	printf("\n");
+	printf("### --------------------------------------\n");
+	printf("### deleting heads.. \n ");
+
+	while (pep_list.gethead()!=NULL) {
+		printf("### -------------------\n");
+		p4 = pep_list.del(pep_list.gethead());
+		printf("### p4 = del(head) =>");	DUMP(p4); NL
+		printf("### post-del.. \n");	pep_list.dump();	printf("\n");
+	}
+	printf("### -------------------\n");
+	printf("### post delete heads..\n ");	pep_list.dump();	printf("\n");
+	printf("### -------------------\n");
+
+	printf("==========================================\n");
+	printf("###  running test_mylist4 deleting tails...\n");
+	printf("==========================================\n");
+	pep_list.clear();	p1 = pep_list.add(&A);	p2 = pep_list.add(&B);	p3 = pep_list.add(&C);
+	printf("### add ABC..\n");	pep_list.dump();	printf("\n");
+	printf("### --------------------------------------\n");
+	printf("### deleting tails.. \n ");
+	printf("### -------------------\n");
+	while (pep_list.gettail()!=NULL) {
+		printf("### -------------------\n");
+		p4 = pep_list.del(pep_list.gettail());
+		printf("### p4 = del(tail) =>");	DUMP(p4); NL
+		printf("### post-del.. \n");	pep_list.dump();	printf("\n");
+	}
+	printf("### -------------------\n");
+	printf("### post delete tails..\n ");	pep_list.dump();	printf("\n");
+	printf("### -------------------\n");
+
 }
-
-/*
-#include "chem/Concentration.h"
-void test_mylist3()
-{
-	printf("=== running test_mylist3.. search..\n");
-	printf("### building m1..)\n");
-	Molecule m1;
-	m1.test();
-	printf("### building m2..)\n");
-	Molecule m2;
-	m2.test();
-	printf("### building c1..)\n");
-	Concentration	c1(&m1);
-	c1.dump();
-
-
-}
-*/
 //----------------------------------
-#include "chem/mybuffer.h"
 void test_buffer() {	MyBuffer<float> 	buf;	buf.test();		}
 void test_mole(){ 	Molecule Mole;		Mole.test();	}
 
 //----------------------------------
-#include "chem/Concentration.h"
 void test_conc(){
 	printf("#### running (m) mole test ####\n");
 	Molecule m;
@@ -177,30 +210,62 @@ void test_conc(){
 }
 // -----------
 void test_conc_vol() {
+
+	Concentration *c4 = NULL;
 	ConcentrationVolume conc_vol;
 
-	printf("########## running (mole) m test() ####\n");	Molecule m;		m.test();
-	printf("########## running (conc) c1.test() ####\n");	Concentration c1(&m);	c1.test();
-	Concentration c2(NULL);
-	Concentration c3(NULL);
-	printf("########## running conc_vol.test(&c1, &c2, &c3);  ####\n");
-	conc_vol.test(&c1, &c2, &c3);
+	printf("########## \n");
+	printf("########## \n");
+	printf("########## running (mole) m test() ####\n");
+	Molecule m;
+	m.test();
 
+	printf("########## \n");
+	printf("########## \n");
+	printf("########## running (conc) c1.test() ####\n");
+	Concentration c1(&m);	c1.test();
+	//Concentration c2(NULL);
+	//Concentration c3(NULL);
+
+	printf("########## \n");
+	printf("########## \n");
+	printf("########## running conc_vol.test(&c1, &c2, &c3);  ####\n");
+	// note: c2,3 are NULL moles..
+	//conc_vol.test(&c1, &c2, &c3);
+	conc_vol.test(&c1, NULL, NULL);
+	//return;
+
+	printf("########## \n");
+	printf("########## \n");
 	printf("########## building  m2  ####\n");
-	Molecule m2;
-	m2.test();
+	Molecule m2;	m2.test();
+
+	printf("########## \n");
+	printf("########## \n");
+	printf("########## final  m2 conc_vol  ####\n");
+	conc_vol.dump();
+
+	printf("########## \n");
+	printf("########## \n");
 	printf("########## running searching m2  ####\n");
-	Concentration *c4 = NULL;
 	c4 = conc_vol.search (&m2);
-	DUMP(c4)
+	printf("########## search result = ");
+	DUMP(c4) NL
+
+	printf("########## END  ####\n");
 }
 
 
 //---------------------------------- //----------------------------------
 int main()
 {
-	//test_mylist3();
-	test_conc_vol();
-	return 0;
+	printf("main.start..\n");
+	mylist<Peptide> 	pep_list;
+
+	test_mylist1();
+
+	//test_conc_vol();
+
+	printf("main.end..\n");
 }
 //----------------------------------

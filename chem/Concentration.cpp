@@ -27,10 +27,10 @@ public:
 };
 // -------------------------------
  */
-Concentration::Concentration(Molecule	*m) {
-	mole = m;
-}
-Concentration::~Concentration() {	}
+Concentration::Concentration(Molecule	*m) {	mole = m;	}
+Concentration::~Concentration() 			{	mole = NULL; }
+Molecule	*Concentration::getmole(void)	{	return mole;	}
+
 // -------------------------------
 void Concentration::dump(){
 	printf("Concentration[0x%zX].",	(long unsigned int) this);
@@ -43,7 +43,6 @@ void Concentration::test(){
 	printf("Concentration.test: == START ==\n");
 	printf("Concentration.test: PRE: ");	dump();
 	//------------
-
 	printf("Concentration.test: buf.test: "); buf.test();
 	printf("Concentration.test: POST: ");	dump();
 	// -------------
@@ -74,19 +73,25 @@ void ConcentrationVolume::dump(){
 	printf("ConcentrationVolume[0x%zX].",	(long unsigned int) this);
 	conc_list.dump();
 }
+
 //--------------
 Concentration	*ConcentrationVolume::search(Molecule	*m){
 
-	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.head;
+	printf("########## ########## search(m) : ");
+	DUMP(m)
+
+	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
 
 	//Concentration *result = NULL;
 
 	LOG("Searching..");
 
 	while (item!=NULL) {
+		printf("########## ########## item ...\n");
 		item-> dump();
+		printf("########## ########## ...\n");
 
-		if (*item-> item-> mole	== *m)
+		if (item-> item-> getmole() == m)
 			return item-> item;
 		item = item-> next;
 	}
@@ -106,9 +111,6 @@ void ConcentrationVolume::test(Concentration *c1, Concentration *c2, Concentrati
 	printf("ConcentrationVolume.test: POST: ");	dump();
 	// -------------
 	printf("ConcentrationVolume.test: == END ==\n");
-
-
-
 
 }
 

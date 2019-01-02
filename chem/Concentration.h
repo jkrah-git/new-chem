@@ -22,14 +22,18 @@ typedef float ConcLevel;
 // -------------------------------
 class Concentration {
 private:
-
-public:
 	MyBuffer<ConcLevel> 	buf;
 	Molecule				*mole;
+	// ---
+
+public:
 	// ---
 	Concentration(Molecule	*m);
 	virtual ~Concentration();
 	void dump();
+
+	Molecule	*getmole(void);
+
 	void test();
 
 };

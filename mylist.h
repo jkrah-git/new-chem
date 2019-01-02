@@ -27,23 +27,18 @@
 //#endif
 //---------------------------------------------
 template <class T> class mylist {
+
 public:
 	//---------------
 	template <class U> class mylist_item;
-
 	template <class U> class mylist_item {
 	public:
 		U					*item;
 		mylist_item<U>		*next;
 
-		mylist_item() {
-			item = NULL;
-			next = NULL;
-		}
-		virtual ~mylist_item(){
-			item = NULL;
-			next = NULL;
-		}
+		mylist_item() {				item = NULL; next = NULL; }
+		virtual ~mylist_item(){		item = NULL; next = NULL; }
+		// --------------------------------------
 		void 		dump(void) {
 			printf("mylist_item[0x%zX].dump::item[0x%zX].next[0x%zX] ->\n",
 					(long unsigned int) this,
@@ -52,7 +47,7 @@ public:
 			if (item==NULL) printf("NULL");
 			else item-> dump();
 		}
-
+		// --------------------------------------
 		void	test(U *testitem) {
 			printf("mylist_item.test: == START ==\n");
 			printf("mylist_item.test: pre: ");	dump(); printf("\n");
@@ -63,7 +58,7 @@ public:
 
 
 		}
-
+		// --------------------------------------
 		bool operator ==(const mylist_item<U>& p) {
 			// we ignore nextitem - make sence
 
@@ -82,52 +77,94 @@ public:
 
 
 	};
+//	mylist_item<T>		*head;
+//	mylist_item<T>		*tail;
+
+
 	//---------------
-	mylist_item<T>		*head;
-	mylist_item<T>		*tail;
 	// ---
 	mylist();
 	virtual ~mylist();
-	void		clear(void);
+	mylist_item<T>	*gethead(void){ return head; };
+	mylist_item<T>	*gettail(void){ return tail; };
+	mylist_item<T>	*getpar(mylist_item<T> *list_item);
+
 	void 		dump(void);
-	int			add(T *element);
-	void 		test(T *e1, T *e2, T *e3);
-	//bool 		operator ==(const T& p);
-	mylist_item<T>		*search(T *element);
-	bool 		operator ==(const mylist<T>& p);
+
+	// --------------------
+	void		clear(bool do_subitem);
+	mylist_item<T> 	*add(T *element, bool do_subitem);
+	mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
+	// --------------------
+	void			clear(void)  { clear(false); };
+	mylist_item<T> 	*add(T *element){ 			return add(element, false);	}
+	mylist_item<T> 	*del(mylist_item<T> *item){	return del(item, false);	}
+	// --------------------
+
+	void 			test(T *e1, T *e2, T *e3);
+	mylist_item<T>	*search(T *element);
+	bool 			operator ==(const mylist<T>& p);
+
+private:
+	mylist_item<T>	*head;
+	mylist_item<T>	*tail;
+
+
 };
 //---------------------------------------------
-template <class T> mylist<T>::mylist() {
-	head = NULL;
-	tail = NULL;
-};
-//----
-template <class T> mylist<T>::~mylist() {
-	clear();
-};
-// --------------------------
-template <class T> void mylist<T>::clear() {
+template <class T> mylist<T>::mylist() {	head = NULL;	tail = NULL;	};
+template <class T> mylist<T>::~mylist() {	clear();	};
 
-	mylist_item<T>	*item = head;
-	while (item !=NULL) {
-		head = item-> next;
-		//printf("::mylist.clear.free[0x%zX]\n", (long unsigned int) item);
-		LOG("free[0x%zX]\n", (long unsigned int) item);
-		free(item);
-		item = head;
+// --------------------------
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::getpar( mylist<T>::mylist_item<T>	*list_item){
+	mylist_item<T> *parent = NULL;
+	mylist_item<T> *item = head;
+
+	while(item!=NULL) {
+		if (item-> next == list_item) {
+			parent = item;
+			break;
+		}
+		// ----
+		item = item-> next;
+	}
+	return parent;
+}
+// --------------------------
+
+// --------------------------
+template <class T> void mylist<T>::clear(bool do_subitem) {
+
+	mylist_item<T>	*del_item = head;
+	while (del_item !=NULL) {
+		head = del_item-> next;
+		LOG("free[0x%zX]\n", (long unsigned int) del_item);
+		//del(item, false);
+
+		// delete sub item
+		if (del_item-> item != NULL) {
+			if (do_subitem)	{
+				LOG("free.subitem[0x%zX]\n", (long unsigned int) del_item-> item);
+				delete del_item-> item;
+			} else {
+				del_item-> item = NULL;
+			}
+		}
+		// delete item..
+		LOG("free[0x%zX]\n", (long unsigned int) del_item);
+		delete del_item;
+		del_item = head;
 	}
 	tail = NULL;
 };
-// --------------------------
-template <class T> int mylist<T>::add(T *element) {
-	if (element == NULL) return -1;
+// --------------------------	// --------------------------
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool do_subitem) {
+	if (element == NULL) return NULL;
 
-	mylist_item<T> *new_item = (mylist_item<T> *) malloc (sizeof(mylist_item<T>));
-	//printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
+	mylist_item<T> *new_item = new mylist_item<T>;
 	LOG("malloc[0x%zX]\n", (long unsigned int) new_item);
-	if (new_item ==NULL) return -2;
 
-
+	if (new_item ==NULL) return NULL;
 	new_item-> item = element;
 	new_item-> next = NULL;
 
@@ -139,9 +176,65 @@ template <class T> int mylist<T>::add(T *element) {
 		tail = new_item;
 
 	}
-	//printf("::mylist.add.malloc[0x%zX]\n", (long unsigned int) new_item);
-	return 0;
+	return new_item;
 };
+
+// --------------------------	// --------------------------
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item, bool do_subitem) {
+
+
+	if (del_item==NULL)
+		return NULL;
+
+	//printf("++++++++++   DELETE ITEM ++++++++++\n");	del_item-> dump(); NL
+
+	mylist_item<T> *parent = NULL;
+
+	// head / root node
+	if (del_item==head) {
+		head = del_item-> next;
+		parent = NULL;
+	} else { // not head
+
+	//if (del_item!=head) {
+		parent = getpar(del_item);
+
+		if (parent==NULL) {
+			printf("!!! Warning - del_item's parent not found in list...\n");
+			return NULL;
+		}
+	}
+
+	if (del_item==tail) {
+		tail = parent;
+		//printf("++++++++++   FULL DUMP  ++++++++++\n");		dump(); NL		printf("++++++++++--------------++++++++++\n");
+
+	}
+
+	//--  fix parent
+	if (parent!=NULL) {
+		parent-> next = del_item-> next;
+	}
+
+	// --------------
+	// clear sub item
+	if (del_item-> item != NULL) {
+		if (do_subitem)	{
+			LOG("free.subitem[0x%zX]\n", (long unsigned int) del_item-> item);
+			delete del_item-> item;
+		} else {
+			del_item-> item = NULL;
+		}
+	}
+	// --------------
+	printf("++++++++++--------------++++++++++\n");
+
+	LOG("free[0x%zX]\n", (long unsigned int) del_item);
+	delete del_item;
+
+	return parent;
+
+}
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
 	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]..",
@@ -160,7 +253,7 @@ template <class T> void mylist<T>::dump(void) {
 	}
 
 };
-
+// --------------------------
 template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
 	if (head==NULL) return (p.head ==NULL);
 
@@ -205,9 +298,10 @@ template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 
 	printf("mylist.test: pre: ");	dump(); printf("\n");
 	//------------
-	printf("mylist.test:add(&e1) = [%d]\n", add(e1));
-	printf("mylist.test:add(&e2) = [%d]\n", add(e2));
-	printf("mylist.test:add(&e3) = [%d]\n", add(e3));
+	mylist_item<T> *newitem = NULL;
+	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) }
+	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) }
+	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) }
 
 	/*
 	dump(); // printf("\n");

@@ -92,7 +92,7 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 	// tetspos is being overwritten
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
-	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.head;
+	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
 	while ( (testpos != NULL) &&
 			(current_item !=NULL) &&
 			(found_item==NULL)) {
@@ -115,7 +115,7 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 // -------------------------------
 void Molecule::clear(void) {
 
-	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.head;
+	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	if (next_item ==NULL) return;
 
 	while (next_item != NULL) {
@@ -221,18 +221,19 @@ int Molecule::addpep(PepSig sig){
 #endif
 
 	// !! we MUST now manage pep+dim memory
-
-	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.tail;
+	// NOTE The full qual name below..
+	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.gettail();
+	mylist<Peptide>::mylist_item<Peptide> *new_item = NULL;
 
 	// add to head ??
 	if (last_item==NULL) {
 		pep-> pos.dim[0] = 0;
 		pep-> pos.dim[1] = 0;
-		int r = pep_list.add(pep);
+		new_item = pep_list.add(pep);
 		//printf("::molecule.addpep.addtotail res = %d\n", r);		pep_list.dump();
-		if (r<0) {
+		if (new_item==NULL) {
 			delete pep;
-			return r-10;
+			return -3;
 		}
 		return 0;
 	} // else add to tail
@@ -288,9 +289,12 @@ int Molecule::addpep(PepSig sig){
 
 	// copy new pos
 	pep-> pos = newpos;
-	return pep_list.add(pep);
-
-
+	new_item = pep_list.add(pep);
+	if (new_item==NULL) {
+		delete pep;
+		return -5;
+	}
+	return 0;
 }
 // -------------------------------
 void Molecule::test(void){
