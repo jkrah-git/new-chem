@@ -102,12 +102,11 @@ public:
 	// --------------------
 	void		clear(bool do_subitem);
 	mylist_item<T> 	*add(void);
-	mylist_item<T> 	*add(T *element, bool do_subitem);
+	mylist_item<T> 	*add(T *element);
 	mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
+	mylist_item<T> 	*del(mylist_item<T> *item){	return del(item, false);	}
 	// --------------------
 	void			clear(void)  { clear(false); };
-	mylist_item<T> 	*add(T *element){ 			return add(element, false);	}
-	mylist_item<T> 	*del(mylist_item<T> *item){	return del(item, false);	}
 	// --------------------
 
 	void 			test(T *e1, T *e2, T *e3);
@@ -145,12 +144,11 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::getpar( mylist<T>::myli
 template <class T> void mylist<T>::clear(bool do_subitem) {
 
 	mylist_item<T>	*del_item = head;
+
 	while (del_item !=NULL) {
 		head = del_item-> next;
-		LOG("free[0x%zX]\n", (long unsigned int) del_item);
-		//del(item, false);
 
-		// delete sub item
+		// 1. delete sub item..
 		if (del_item-> item != NULL) {
 			if (do_subitem)	{
 				LOG("free.subitem[0x%zX]\n", (long unsigned int) del_item-> item);
@@ -159,7 +157,7 @@ template <class T> void mylist<T>::clear(bool do_subitem) {
 				del_item-> item = NULL;
 			}
 		}
-		// delete item..
+		// 2. delete item..
 		LOG("free[0x%zX]\n", (long unsigned int) del_item);
 		delete del_item;
 		del_item = head;
@@ -169,22 +167,24 @@ template <class T> void mylist<T>::clear(bool do_subitem) {
 // --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
 	T *element = new T;
-	LOG("malloc[0x%zX]\n", (long unsigned int) element);
+	if (element==NULL)
+		return NULL;
+	LOG("malloc[0x%zX].subitem\n", (long unsigned int) element);
 
-	mylist_item<T>  *item = add(element, false);
+	mylist_item<T>  *item = add(element);
 	if (item==NULL) {
 		delete element;
-		LOG("free[0x%zX]\n", (long unsigned int) element);
+		LOG("free[0x%zX].subitem\n", (long unsigned int) element);
 	}
 	return item;
 }
 // --------------------------	// --------------------------
-template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool do_subitem) {
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element){
 
 	if (element == NULL) return NULL;
 
 	mylist_item<T> *new_item = new mylist_item<T>;
-	LOG("malloc[0x%zX]\n", (long unsigned int) new_item);
+	LOG("malloc[0x%zX].listitem\n", (long unsigned int) new_item);
 
 	if (new_item ==NULL) return NULL;
 	new_item-> item = element;
@@ -241,7 +241,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	}
 	// --------------
 
-	LOG("free[0x%zX]\n", (long unsigned int) del_item);
+	LOG("free[0x%zX].listitem\n", (long unsigned int) del_item);
 	delete del_item;
 	return parent;
 

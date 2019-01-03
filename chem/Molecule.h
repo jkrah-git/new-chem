@@ -23,7 +23,6 @@ class Molecule {
 private:
 	mylist<Peptide> 	pep_list;
 	// ---
-	char		getrot2(PepSig sig1, PepSig sig2);
 	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
@@ -35,6 +34,7 @@ public:
 
 	// -- build
 	int			addpep(PepSig sig);
+	int			addpep2(PepSig sig);
 	void		clear(void);
 
 	void		test(void);

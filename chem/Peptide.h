@@ -28,7 +28,7 @@ public:
 
 	void 		set(PepSig newval);
 	PepSig		get();
-	bool operator ==(const Peptide& p);
+	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
 	// ---
 	void		dump(void);

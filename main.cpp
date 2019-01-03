@@ -235,12 +235,7 @@ void test_conc_vol()
 int main()
 {
 	printf("main.start..\n");
-	//Molecule m;		m.testrot();	return 0;
-	Molecule m;
-	m.test2();	m.render(21,11);
-	m.test2();	m.render(21,11);
-	//test_mylist();
-	//test_conc_vol();
+	test_conc_vol();
 	//test_rot();
 	printf("main.end..\n");
 }

@@ -91,21 +91,20 @@ void Molecule::dump(void){
 
 	printf("Molecule[0x%zX]..",	(long unsigned int) this);
 	pep_list.dump();
+	render(21,11);
 
 }
 // -------------------------------
 mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos) {
-
-	// tetspos is being overwritten
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
 	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
 	while ( (testpos != NULL) &&
 			(current_item !=NULL) &&
 			(found_item==NULL)) {
-		//current_item-> dump(); 	printf("\n");
 #ifdef DEBUG
 		LOG("testpos = "); testpos-> dump(); NL
+		LOG("current_item = "); current_item-> dump(); 	printf("\n");
 #endif
 
 		if ((current_item-> item != NULL) &&
@@ -122,6 +121,8 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 // -------------------------------
 void Molecule::clear(void) {
 
+	pep_list.clear(true);
+	return;
 	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	if (next_item ==NULL) return;
 
@@ -135,100 +136,123 @@ void Molecule::clear(void) {
 		next_item = next_item-> next;
 	}
 
-	pep_list.clear();
+	//pep_list.clear();
 
 
 }
- // =============================
-char		Molecule::getrot2(PepSig sig1, PepSig sig2){//, float *smooth){
-	/*
-	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-	 */
-	int res[] = { 0,0,0,0 };
-	int div = 1;
-	int mask = 3;
 
-	// invert sig1 - does not change % but better @small numbers..
-	PepSig sig2i = ~sig2;
-
-	for (int i=0; i<4; i++) {
-
-		int v1 = ((sig1 & mask)/div);
-		int v2 = ((sig2i & mask)/div);
-
-		// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[17.88], tallyR[3]=%[21.63],
-		res[i] = ((v1 + v2));
-
-		//tallyR[0]=%[39.62], tallyR[1]=%[24.15], tallyR[2]=%[16.40], tallyR[3]=%[19.83],
-		//res[i] = (((sig1 & sig2) & mask)/div);
-
-		/*
-		printf("%d:", res[i]);		printf("------------------[ %d ]-------------------\n", i);
-		printf("%d:", res[i]);		printb(sig1); printf("=sig1[0x%02x], ", sig1);
-		printf("%d:", res[i]);		printb(sig2); printf("=sig2[0x%02x]\n", sig2);
-		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x], ", mask);
-		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x]\n", mask);
-		//printf("%d:", res[i]);		printf("------------------------------------------\n");
-		printf("\n");
-		printf("%d:", res[i]);		printb(v1);   printf("   v1[0x%02x], ", v1);
-		printf("%d:", res[i]);		printb(v2);   printf("   v2[0x%02x]\n", v2);
-		printf("%d:", res[i]);		printf("------------------------------------------\n");
-		*/
-
-		//-------------------
-		// count bits ?? - nice concept - but bad disto
-		// before: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-		//  after: tallyR[0]=%[39.80], tallyR[1]=%[26.66], tallyR[2]=%[19.12], tallyR[3]=%[14.42],
-		/*
-		switch(v1) {
-			case 2: v1 = 1; break;
-			case 3:	v1 = 2; break;
-		}
-		switch(v2) {
-			case 2: v2 = 1; break;
-			case 3:	v2 = 2; break;
-		}
-		 */ 	//---------------------------------------------------
-
-		//----
-		div = div * 4;
-		mask = mask *4;
-	}
-
-	// find max
-	int rot = 0;
-	for (int i=1; i<4; i++)
-		if (res[i] > res[rot])
-			rot = i;
-
-	// final tally.. now remap (swap 2 and 3)
-	// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-	switch(rot) {
-		case 2: rot = 3; break;
-		case 3:	rot = 2; break;
-	}
-
-
-	return (char) rot;
-}
 // -------------------------------
-// -------------------------------
+
+
 int Molecule::addpep(PepSig sig){
-
-	//peptide *pep = (peptide*) malloc(sizeof(peptide));
+/*
+	// !! we MUST now manage pep+dim memory
 	Peptide *pep = new Peptide;
 	//---
 	if (pep==NULL) return -1;
-	if (pep-> pos.dim ==NULL) return -2;
-//----
+	if (pep-> pos.dim ==NULL) {
+		delete pep;
+		return -2;
+	}
+	pep->set(sig);
+#ifdef DEBUG
+	LOG("malloc.peptide[0x%zX]..\n", (size_t) pep);
+	pep-> dump(); NL
+#endif
+*/
+
+	printf("Molecule::addpep..\n");
+	//return -1;
+
+
+
+	//----
+	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
+	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
+
+	if (new_item==NULL)
+		return -1;
+
+	Peptide *pep =new_item-> item;
+	if (pep==NULL) {
+		 pep_list.del(new_item);
+		 return -2;
+	}
+
+	pep->set(sig);
+	// simple add to head ??
+	if (tail==NULL) {
+		pep-> pos.dim[0] = 0;
+		pep-> pos.dim[1] = 0;
+		return 0;
+	} // else add to tail
+
+	// first make sure new_item has a chem
+	if (tail-> item ==NULL) {
+		 pep_list.del(new_item);
+		return -3;
+	}
+
+
+	// =========== try tp calc rotion
+	/*** rot masks --
+		r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 /1= xx
+		r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
+		r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
+		r4 1100 0000 =(64+128) = 192 & P1 & P2 /64 = xx
+
+		- Max r wins .. if tie then 0
+	 ***/
+	PepRot rotation = tail-> item->getrot(pep-> get());
+
+	// ============
+	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
+	newpos = tail-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
+
+	switch(rotation) {
+		case 0:		newpos.dim[1] ++; break;	// 0 = (0,1)
+		case 1:		newpos.dim[0] ++; break;	// 1 = (1,0)
+		case 2: 	newpos.dim[1] --; break;	// 2 = (0,-1)
+		case 3:		newpos.dim[0] --; break;	// 3 = (-1,0)
+	}
+	//printf("molecule.addpep.newpos(with_rot)(%d) =>", rotation); newpos.dump(); printf("\n");
+
+
+	 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
+	 if (testpep != NULL) {
+		printf("molecule.addpep.newpos clashed with->\n");
+		testpep-> dump();
+		if (testpep-> item != NULL) {
+			testpep-> item-> dump();
+		}
+		//--  TODO: allow clashes.. dont abort for now..
+	// 	delete pep;
+	// 	return -11;
+	}
+
+	// copy new pos
+	pep-> pos = newpos;
+	return 0;
+}
+// -------------------------------
+// -------------------------------
+int Molecule::addpep2(PepSig sig){
+
+	// !! we MUST now manage pep+dim memory
+	Peptide *pep = new Peptide;
+	//---
+	if (pep==NULL) return -1;
+	if (pep-> pos.dim ==NULL) {
+		delete pep;
+		return -2;
+	}
 	pep->set(sig);
 #ifdef DEBUG
 	LOG("malloc.peptide[0x%zX]..\n", (size_t) pep);
 	pep-> dump(); NL
 #endif
 
-	// !! we MUST now manage pep+dim memory
-	// NOTE The full qual name below..
+	//----
 	mylist<Peptide>::mylist_item<Peptide> *last_item = pep_list.gettail();
 	mylist<Peptide>::mylist_item<Peptide> *new_item = NULL;
 
@@ -261,17 +285,9 @@ int Molecule::addpep(PepSig sig){
 
 		- Max r wins .. if tie then 0
 	 ***/
-	//char r0 = (3 && last_item-> item->getsig()) + (3 & pep-> getsig());
+	PepRot rotation = last_item-> item->getrot(pep-> get());
 
-	// pep = new peptide
-	// last_item-> item = orignal peptide
-
-//	char rotation = getrot(last_item-> item->get(), pep-> get());
-	//	PepRot rotation = pep-> getrot(last_item-> item->get());
-		PepRot rotation = last_item-> item->getrot(pep-> get());
-
-
-	// ============ ^^
+	// ============
 	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
 	newpos = last_item-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
 
@@ -284,13 +300,13 @@ int Molecule::addpep(PepSig sig){
 	//printf("molecule.addpep.newpos(with_rot)(%d) =>", rotation); newpos.dump(); printf("\n");
 
 
-	 mylist<Peptide>::mylist_item<Peptide>  *testpos = test_pos(&newpos);
+	 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
 
-	 if (testpos != NULL) {
+	 if (testpep != NULL) {
 		printf("molecule.addpep.newpos clashed with->\n");
-		testpos-> dump();
-		if (testpos-> item != NULL) {
-			testpos-> item-> dump();
+		testpep-> dump();
+		if (testpep-> item != NULL) {
+			testpep-> item-> dump();
 		}
 		//--  TODO: allow clashes.. dont abort for now..
 	// 	delete pep;
@@ -323,14 +339,6 @@ void Molecule::test(void){
 	//------------
 	printf("molecule.test: final:\n");
 	dump();
-
-	/*
-	printf("molecule.test: clearing..\n");
-	clear();
-	printf("molecule.test: postclear: ");
-	dump(); // printf("\n");
-	*/
-
 	printf("molecule.test: == END ==\n");
 
 }
@@ -338,14 +346,8 @@ void Molecule::test(void){
 void Molecule::test2(void){
 
 	printf("molecule.test: == START ==\n");
-	printf("molecule.test: pre: ");	dump();
+	//printf("molecule.test: pre: ");	dump();
 	//------------
-
-//	molecule.test:add(A) 0 (0,1) = [0]
-//	molecule.test:add(A) 0 (0,2) = [0]
-//	molecule.test:add(B) 1 (1,2) = [0]
-//	molecule.test:add(g) 2 (1,1) = [0]
-//	molecule.test:add(?) 2 (1,0) = [0]
 
 	printf("molecule.test:add(A) 0 (0,0) = [%d]\n", addpep('A'));
 	printf("molecule.test:add(A) 0 (0,1) = [%d]\n", addpep('A'));
@@ -354,18 +356,9 @@ void Molecule::test2(void){
 	printf("molecule.test:add(g) 2 (1,1) = [%d]\n", addpep('g'));
 	printf("molecule.test:add(?) 2 (1,0) = [%d]\n", addpep('?'));
 
-
 	//------------
 	printf("molecule.test: final:\n");
 	dump();
-
-	/*
-	printf("molecule.test: clearing..\n");
-	clear();
-	printf("molecule.test: postclear: ");
-	dump(); // printf("\n");
-	*/
-
 	printf("molecule.test: == END ==\n");
 
 }
@@ -406,12 +399,11 @@ void Molecule::testrot(void){
 void Molecule::render(int x, int y){
 
 	char *txt = (char*) malloc(sizeof(char)*x*y);
-
 	if (txt==NULL)  { printf("Molecule::render malloc failed]\n"); return;	}
+
 	for (int i=0; i<(x*y); i++)
 		txt[i] = '?';
 
-		printf("-- RENDER [%d x %d] --\n", x, y);
 
 	for (int b=0; b<y; b++) {
 		for (int a=0; a<x; a++) {
@@ -445,8 +437,8 @@ void Molecule::render(int x, int y){
 		next_item = next_item-> next;
 	}
 
+	printf("== Molecule[0x%zX]..(%dx%d) == \n",	(long unsigned int) this, x, y);
 
-	printf("== Molecule[0x%zX]..== \n",	(long unsigned int) this);
 	for (int b=0; b<y; b++) {
 		for (int a=0; a<x; a++) {
 
@@ -458,6 +450,7 @@ void Molecule::render(int x, int y){
 		printf("\n");
 	}
 
+	//-------------
 	free(txt);
 }
 // -------------------------------

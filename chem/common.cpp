@@ -14,12 +14,8 @@ void printb(char val) {
 	sprintb(str, val);
 	printf("%s", str);
 }
-
 //-----------------
-void sprintb(char *str, char val) {
-	sprintb(str, val, '.');
-}
-
+void sprintb(char *str, char val) {	sprintb(str, val, '.');	}
 //-----------------
 void sprintb(char *str, char val, char zero){
 
