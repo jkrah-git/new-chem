@@ -6,6 +6,13 @@
  */
 
 #include "Concentration.h"
+#undef DEBUG
+//#define DEBUG
+#include "debug.h"
+
+
+
+
 // -------------------
 /*
  // -------------
@@ -127,17 +134,26 @@ ConcLevelType	ConcentrationVolume::take(Molecule	*m, ConcAdjustType adj){
 //--------------
 ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	Concentration *conc = search(m);
-	printf("::ConcentrationVolume::put.. search ="); DUMP(conc); NL
+#ifdef DEBUG
+	LOG("search =");
+	DUMP(conc); NL
+#endif
 	if (conc==NULL) {
 		mylist<Concentration>::mylist_item<Concentration> *item = NULL;
 		conc = new  Concentration(m);
 		LOG("malloc[0x%zX]\n", (long unsigned int) conc);
-		printf("::ConcentrationVolume::put.. create ="); DUMP(conc) NL;
+#ifdef DEBUG
+		LOG("create =");
+		DUMP(conc) NL;
+#endif
 		if (conc==NULL)
 			return -1.0;
 
 		item = conc_list.add(conc);
-		printf("::ConcentrationVolume::put.. list.create ="); DUMP(item) NL;
+#ifdef DEBUG
+		LOG("::ConcentrationVolume::put.. list.create =");
+		DUMP(item) NL;
+#endif
 	}
 	return conc->put(amount);
 }
@@ -192,6 +208,7 @@ void ConcentrationVolume::test(void){
 	w = .5;
 
 	printf("======================================\n");
+	printf("ConcentrationVolume.test2: M1 put/search..\n");
 	printf("======================================\n");
 	v = put(&M1, w);		printf("ConcentrationVolume.test2: put(M1, %3.3f) = %3.3f\n", w, v);
 	conc = search(&M1);		printf("ConcentrationVolume.test2: search conc.M1 = ");	DUMP(conc); NL
@@ -199,20 +216,44 @@ void ConcentrationVolume::test(void){
 	v = put(&M1, w);		printf("ConcentrationVolume.test2: put(M1, %3.3f) = %3.3f\n", w, v);
 	conc = search(&M1);		printf("ConcentrationVolume.test2: search conc.M1 = ");	DUMP(conc); NL
 	printf("======================================\n");
-	printf("ConcentrationVolume.test2: commit()..\n");
-	if (conc!=NULL) conc->commit();		dump();
-	printf("======================================\n");
+	if (conc==NULL) {
+		printf("ConcentrationVolume.test2: NULL conc. !! Can't Commit !!\n");
+		printf("======================================\n");
+	} else {
+		printf("ConcentrationVolume.test2: commit()..\n");
+		conc->commit();
+		printf("======================================\n");
+		conc-> dump();
+		printf("======================================\n");
+	}
+
 	printf("======================================\n");
 	v = take(&M1, w);		printf("ConcentrationVolume.test2: take(M1, %3.3f) = %3.3f\n", w, v);
 	conc = search(&M1);		printf("ConcentrationVolume.test2: search conc.M1 = ");	DUMP(conc); NL
 	printf("======================================\n");
 
 	if (conc!=NULL) {
+		printf("======================================\n");
 		printf("ConcentrationVolume.test2: conc.test();\n");
+		printf("======================================\n");
 		conc-> test();
 	}
+	printf("======================================\n");
+	printf("ConcentrationVolume.test2: M2 put..\n");
+	printf("======================================\n");
+	conc = search(&M2);		printf("ConcentrationVolume.test2: search conc.M2 = ");	DUMP(conc); NL
+	v = put(&M2, w);		printf("ConcentrationVolume.test2: put(M2, %3.3f) = %3.3f\n", w, v);
+	conc = search(&M2);		printf("ConcentrationVolume.test2: search conc.M2 = ");	DUMP(conc); NL
+	printf("======================================\n");
+	v = put(&M2, w);		printf("ConcentrationVolume.test2: put(M2, %3.3f) = %3.3f\n", w, v);
+	conc = search(&M2);		printf("ConcentrationVolume.test2: search conc.M2 = ");	DUMP(conc); NL
+	printf("======================================\n");
 
+
+	printf("======================================\n");
 	printf("ConcentrationVolume.test2: POST.fulldump()\n");
+	printf("======================================\n");
+	dump();
 
 	printf("======================================\n");
 	printf("ConcentrationVolume.test2: == END ==\n");
