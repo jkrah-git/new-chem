@@ -99,6 +99,79 @@ void Peptide::test(void){
 
 }
 // ---------------------
+PepRot		Peptide::getrot(PepSig parentSig){
+
+	/*
+	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+	 */
+	int res[] = { 0,0,0,0 };
+	int div = 1;
+	int mask = 3;
+
+	// invert sig1 - does not change % but better @small numbers..
+	PepSig parentSigi = ~parentSig;
+
+	for (int i=0; i<4; i++) {
+
+		int v1 = ((sig & mask)/div);
+		int v2 = ((parentSigi & mask)/div);
+
+		// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[17.88], tallyR[3]=%[21.63],
+		res[i] = ((v1 + v2));
+
+		//tallyR[0]=%[39.62], tallyR[1]=%[24.15], tallyR[2]=%[16.40], tallyR[3]=%[19.83],
+		//res[i] = (((sig1 & parentSig) & mask)/div);
+
+		/*
+		printf("%d:", res[i]);		printf("------------------[ %d ]-------------------\n", i);
+		printf("%d:", res[i]);		printb(sig1); printf("=sig1[0x%02x], ", sig1);
+		printf("%d:", res[i]);		printb(parentSig); printf("=parentSig[0x%02x]\n", parentSig);
+		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x], ", mask);
+		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x]\n", mask);
+		//printf("%d:", res[i]);		printf("------------------------------------------\n");
+		printf("\n");
+		printf("%d:", res[i]);		printb(v1);   printf("   v1[0x%02x], ", v1);
+		printf("%d:", res[i]);		printb(v2);   printf("   v2[0x%02x]\n", v2);
+		printf("%d:", res[i]);		printf("------------------------------------------\n");
+		*/
+
+		//-------------------
+		// count bits ?? - nice concept - but bad disto
+		// before: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+		//  after: tallyR[0]=%[39.80], tallyR[1]=%[26.66], tallyR[2]=%[19.12], tallyR[3]=%[14.42],
+		/*
+		switch(v1) {
+			case 2: v1 = 1; break;
+			case 3:	v1 = 2; break;
+		}
+		switch(v2) {
+			case 2: v2 = 1; break;
+			case 3:	v2 = 2; break;
+		}
+		 */ 	//---------------------------------------------------
+
+		//----
+		div = div * 4;
+		mask = mask *4;
+	}
+
+	// find max
+	int rot = 0;
+	for (int i=1; i<4; i++)
+		if (res[i] > res[rot])
+			rot = i;
+
+	// final tally.. now remap (swap 2 and 3)
+	// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
+	switch(rot) {
+		case 2: rot = 3; break;
+		case 3:	rot = 2; break;
+	}
+
+
+	return (char) rot;
+}
+// -------------------------------
 
 bool Peptide::operator ==(const Peptide& p) {
 /*

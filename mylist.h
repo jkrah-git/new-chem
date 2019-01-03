@@ -40,11 +40,11 @@ public:
 		virtual ~mylist_item(){		item = NULL; next = NULL; }
 		// --------------------------------------
 		void 		dump(void) {
-			printf("mylist_item[0x%zX].dump::item[0x%zX].next[0x%zX] ->\n",
+			printf("mylist_item[0x%zX].item[0x%zX].next[0x%zX] ->",
 					(long unsigned int) this,
 					(long unsigned int) item,
 					(long unsigned int) next);
-			if (item==NULL) printf("NULL");
+			if (item==NULL) printf("NULL\n");
 			else item-> dump();
 		}
 		// --------------------------------------

@@ -34,13 +34,12 @@ public:
 	virtual ~Concentration();
 	void 		dump();
 	//--------
-	Molecule	*getmole(void);
-	//---
+	Molecule		*getmole(void);
 	ConcLevelType	get(void) { return buf.get(); };
-	void			commit(void) { return buf.commit(); };
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(ConcAdjustType adj);
 	ConcLevelType	put(ConcLevelType amount);
+	void			commit(void) { return buf.commit(); };
 
 	void test();
 };
@@ -67,8 +66,8 @@ public:
 	// ---------
 
 	//----
-	void test(Concentration *c1, Concentration *c2, Concentration *c3);
-	void test2(void);
+	//void test(Concentration *c1, Concentration *c2, Concentration *c3);
+	void test(void);
 };
 // -------------------------------
 

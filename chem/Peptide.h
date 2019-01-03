@@ -11,13 +11,14 @@
 #include "PeptidePos.h"
 
 typedef unsigned char PepSig;
+typedef unsigned char PepRot;
 //typedef unsigned char PepStatus;
 
 // -----------------------
 class Peptide {
 private:
-	char	sig;
-//	int 	status;
+	PepSig	sig;
+
 public:
 	PeptidePos	pos;
 
@@ -28,7 +29,7 @@ public:
 	void 		set(PepSig newval);
 	PepSig		get();
 	bool operator ==(const Peptide& p);
-
+	PepRot		getrot(PepSig parentSig);
 	// ---
 	void		dump(void);
 	void		test(void);

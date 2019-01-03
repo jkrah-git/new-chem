@@ -23,7 +23,7 @@ class Molecule {
 private:
 	mylist<Peptide> 	pep_list;
 	// ---
-	char		getrot(PepSig sig1, PepSig sig2);
+	char		getrot2(PepSig sig1, PepSig sig2);
 	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
@@ -33,10 +33,6 @@ public:
 	virtual ~Molecule();
 	bool operator ==(const Molecule& p);
 
-	// --- *pepSig's ..
-	//int			set(PepSig *sig_list);
-	//PepSig		*get(void);
-
 	// -- build
 	int			addpep(PepSig sig);
 	void		clear(void);
@@ -45,6 +41,8 @@ public:
 	void		test2(void);
 	void		testrot(void);
 	void		dump(void);
+	void		render(int x, int y);
+
 
 };
 // -------------------------------

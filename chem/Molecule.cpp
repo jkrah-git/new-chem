@@ -88,6 +88,7 @@ bool Molecule::operator ==(const Molecule& p){
 
 // -------------------------------
 void Molecule::dump(void){
+
 	printf("Molecule[0x%zX]..",	(long unsigned int) this);
 	pep_list.dump();
 
@@ -139,7 +140,7 @@ void Molecule::clear(void) {
 
 }
  // =============================
-char		Molecule::getrot(PepSig sig1, PepSig sig2){//, float *smooth){
+char		Molecule::getrot2(PepSig sig1, PepSig sig2){//, float *smooth){
 	/*
 	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
 	 */
@@ -265,7 +266,10 @@ int Molecule::addpep(PepSig sig){
 	// pep = new peptide
 	// last_item-> item = orignal peptide
 
-	char rotation = getrot(last_item-> item->get(), pep-> get());
+//	char rotation = getrot(last_item-> item->get(), pep-> get());
+	//	PepRot rotation = pep-> getrot(last_item-> item->get());
+		PepRot rotation = last_item-> item->getrot(pep-> get());
+
 
 	// ============ ^^
 	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
@@ -364,7 +368,8 @@ void Molecule::test2(void){
 
 	printf("molecule.test: == END ==\n");
 
-}// -------------------------------
+}
+// -------------------------------
 void Molecule::testrot(void){
 	// count of each score (and c[4] = sum/total count)
 	int c[5];
@@ -372,17 +377,18 @@ void Molecule::testrot(void){
 	for (int i=0; i<5; i++)
 		c[i] = 0;
 
+	Peptide p;
 	char ca, cb;
 	// --- calc all posibilities
 	for (int a=0; a<256; a++) {
 		for (int b=0; b<256; b++)
 		{
-			int t = getrot(a, b); //, smooth);
+			//int t = getrot(a, b);
+			p.set(a);
+			int t = p.getrot(b);
 			ca = 32; cb=32;
 			if ((a>32) && (a<127))	ca = a;
 			if ((b>32) && (b<127))	cb = b;
-
-
 
 			printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
 			if ((t<0) || (t>3)) t=0;
@@ -395,6 +401,63 @@ void Molecule::testrot(void){
 		printf("tallyR[%d]=%%[%2.2f], ", i, (100.0 * c[i]/c[4]) );
 
 	printf("\n");
+}
+// -------------------------------
+void Molecule::render(int x, int y){
 
+	char *txt = (char*) malloc(sizeof(char)*x*y);
+
+	if (txt==NULL)  { printf("Molecule::render malloc failed]\n"); return;	}
+	for (int i=0; i<(x*y); i++)
+		txt[i] = '?';
+
+		printf("-- RENDER [%d x %d] --\n", x, y);
+
+	for (int b=0; b<y; b++) {
+		for (int a=0; a<x; a++) {
+			char *c = &txt[a+b*x];
+			*c = ' ';
+			if ((a==x/2) || (b==y/2)) c[0] = '.';
+			if ((a==x-1) || (b==y-1)) c[0] = '.';
+			if ((a==0) ||(a==x-1)) {
+				if ((b>0) && (b<y-1)) 	c[0] = '0' + (abs((y/2) - b) % 10);
+			}
+			if ((b==0) ||(b==y-1)) {
+				if ((a>0) && (a<x-1)) 	c[0] = '0' + (abs((x/2) - a) % 10);
+			}
+			//if (*c != ' ') printf("%d/%d,%d/%d=[%d/%d] = [%c]\n", a, x, b, y, a+b*x, x*y, *c);
+		}
+	}
+
+
+
+	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
+	while (next_item !=NULL) {
+		if (next_item-> item !=NULL) {
+			int a =  next_item-> item-> pos.dim[0] + (x/2);
+			int b =  - next_item-> item-> pos.dim[1] + (y/2);
+
+			if((a>=0) && (a<x) && (b>=0) && (b<y)) {
+				txt[a+b*x] = next_item-> item-> get();
+				//printf(".. (%d,%d)[%d]=[0x%x]\n", a, b, a+b*x, txt[a+b*x]);
+			}
+		}
+		next_item = next_item-> next;
+	}
+
+
+	printf("== Molecule[0x%zX]..== \n",	(long unsigned int) this);
+	for (int b=0; b<y; b++) {
+		for (int a=0; a<x; a++) {
+
+			char c = txt[a+b*x];
+			if ((c<32)||(c>127)) c = '?';
+			//c='+';
+			printf("%c", c);
+		}
+		printf("\n");
+	}
+
+	free(txt);
 }
 // -------------------------------

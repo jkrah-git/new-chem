@@ -64,8 +64,10 @@ TODO 1. chem structure
   ==================================
   - think about matches ..  
   ==================================
-  - active sites (representation) ??
-    - each AS has physical (sub) map
+  - peptide pair interacton - eg : void Molecule::testrot(void)
+  - match pep vs exec peps?
+  - active sites (representation) ?? - each AS has physical (sub) map
+  - list active sites ..
  
   - multiple match reactants (O),(A,B,C ..)
   - chem ops on cell

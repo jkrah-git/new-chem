@@ -142,37 +142,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	return conc->put(amount);
 }
 //--------------
-void ConcentrationVolume::test(Concentration *c1, Concentration *c2, Concentration *c3){
-	printf("ConcentrationVolume.test: == START ==\n");
-	printf("------------\n");
-	printf("ConcentrationVolume.test: pre: ");	dump(); //printf("\n");
-	printf("------------\n");
-
-//	printf("ConcentrationVolume.test:
-//	printf("ConcentrationVolume.test: conc_list.test..\n");
-//	conc_list.test(c1, c2, c3);
-	//printf("ConcentrationVolume.test:
-	Molecule 	m1;
-
-	printf("------------\n");
-	printf("ConcentrationVolume.test: m1.test..\n");
-	printf("------------\n");
-	m1.test2();
-	printf("------------\n");
-	return;
-
-	printf("------------\n");
-	m1.test();
-	printf("------------\n");
-	return;
-
-	printf("------------\n");
-	printf("ConcentrationVolume.test: POST: ");	dump();
-	// -------------
-	printf("ConcentrationVolume.test: == END ==\n");
-}
-//--------------
-void ConcentrationVolume::test2(void){
+void ConcentrationVolume::test(void){
 	printf("======================================\n");
 	printf("ConcentrationVolume.test2: == START ==\n");
 	printf("======================================\n");
@@ -219,7 +189,8 @@ void ConcentrationVolume::test2(void){
 	printf("======================================\n");
 
 	ConcLevelType v,w;
-	w = 1.5;
+	w = .5;
+
 	printf("======================================\n");
 	printf("======================================\n");
 	v = put(&M1, w);		printf("ConcentrationVolume.test2: put(M1, %3.3f) = %3.3f\n", w, v);
@@ -236,7 +207,10 @@ void ConcentrationVolume::test2(void){
 	conc = search(&M1);		printf("ConcentrationVolume.test2: search conc.M1 = ");	DUMP(conc); NL
 	printf("======================================\n");
 
-
+	if (conc!=NULL) {
+		printf("ConcentrationVolume.test2: conc.test();\n");
+		conc-> test();
+	}
 
 	printf("ConcentrationVolume.test2: POST.fulldump()\n");
 
