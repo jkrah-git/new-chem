@@ -59,7 +59,7 @@ void PeptidePos::dump(void){
 	}
 	else {
 		for (int i=0; i<PepPosVecMax; i++) {
-			printf("[0x%x]", dim[i]);
+			printf("[%d]", dim[i]);
 			if ((i+1) <PepPosVecMax)
 				printf(".");
 		}

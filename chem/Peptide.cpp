@@ -71,12 +71,24 @@ void Peptide::dump(void){
 
 }
 // ---------------------
+void Peptide::print(void){
+	if ((sig>31) && (sig<128))
+		printf("%c", sig);
+	else
+		printf("(0x%2X)", sig);
+
+}
+// ---------------------
 //void Peptide::set(PepSig newsig, PepStatus newstatus) {	sig = newsig;	status = newstatus;}
 
 
 // ---------------------
+/*
 void  Peptide::set(PepSig newval) { sig = newval; }
 PepSig Peptide::get(){	return sig;	};
+PepSig Peptide::rand(void) { return rand(0,255); };
+*/
+//PepSig Peptide::rand(PepSig min, PepSig max) {	return (PepSig) (rand() % (max-min) + min);}
 // ---------------------
 //void Peptide::setstatus(PepStatus newval) { status = newval; }
 //PepStatus Peptide::getstatus(){	return status;	}

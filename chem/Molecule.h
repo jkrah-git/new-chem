@@ -34,12 +34,17 @@ public:
 
 	// -- build
 	int			addpep(PepSig sig);
-	int			addpep2(PepSig sig);
+	//int			addpep2(PepSig sig);
 	void		clear(void);
-
+	int			rand(int count) { return rand(count, 1, 0, 255); };
+	int			rand(int count, int tries, PepSig min, PepSig max);
+	void		print(void);
 	void		test(void);
 	void		test2(void);
 	void		testrot(void);
+	void		getbounds(PeptidePos *min, PeptidePos *max);
+	void		render(void);
+
 	void		dump(void);
 	void		render(int x, int y);
 

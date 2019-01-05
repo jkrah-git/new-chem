@@ -22,7 +22,6 @@ public:
 	void		dump(void);
 	bool operator =(const PeptidePos& p);
 	bool operator ==(const PeptidePos& p);
-
 	void		test(void);
 };
 // ----------------------------------------------

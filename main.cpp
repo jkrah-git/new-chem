@@ -199,6 +199,7 @@ void test_conc(){
 // -----------
 void test_conc_vol()
 {
+	/*
 	ConcentrationVolume conc_vol;
 	printf("==========================================\n");
 	printf("########## test_conc_vol2  ####\n");
@@ -209,11 +210,32 @@ void test_conc_vol()
 	conc_vol.test();
 	printf("==========================================\n");
 	return;
+*/
+	Molecule m1;
+	//m1.test();	m1.test2();	Peptide p;	p.randsig('A', 'Z');	p.dump();
+	int c=0;
+	while(c++<10) {
+	//printf("==========================================\n");
+	//printf("########## m1.rand .. ");
+	printf("########## m1.rand .. %d\n", m1.rand(50, 10 , 'A', 'Z'));
+	//printf("==========================================\n");
+	//printf("########## test_conc_vol2: build m2 (test x2)\n");
+//	m1.print(); NL
+//	m1.render(30,30);
+//	m1.test2();
 
-	printf("########## test_conc_vol2: build m1 (test x1)\n");
-	printf("########## m1...\n");
-	Molecule m1;	m1.test2();
+//	m1.clear();	m1.addpep('A'); m1.addpep('A');	m1.addpep('B'); m1.render();
+//	m1.clear();	m1.addpep('A'); m1.addpep('A');	m1.addpep('F'); m1.render();
+//	break;
+	m1.render();
+	m1.clear();
+	//break;
+	}
+
 	printf("==========================================\n");
+
+	return;
+
 	printf("########## test_conc_vol2: build m2 (test x2)\n");
 	printf("########## m2...\n");
 	Molecule m2;	m2.test2();	m2.test2();
