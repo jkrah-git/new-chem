@@ -1,17 +1,36 @@
 // -------------------
-#include <stdio.h>
-#include <iostream>
 
 #include "chem/Peptide.h"
 #include "chem/Molecule.h"
 #include "chem/Concentration.h"
-#include "mylist.h"
 #include "chem/mybuffer.h"
+#include "chem/MoleculeMatchPos.h"
+#include "mylist.h"
+
+
+#include <string.h>
+#include <stdio.h>
+#include <iostream>
 
 // --------------------------
 void test_rot(void) {
 	Molecule m;
 	m.testrot();
+}
+
+void test_match_pos() {
+
+
+	printf("========= test_match_pos =======\n");
+
+	MoleculeMatchPos matchpos;
+	matchpos.test();
+
+
+
+
+
+
 }
 
 void test_peptide()
@@ -254,11 +273,40 @@ void test_conc_vol()
 }
 
 //---------------------------------- //----------------------------------
-int main()
+/*
+ * [jkrah@desktop new-chem]$ grep 'void' main.cpp
+void test_rot(void) {
+void test_peptide()
+void test_mylist()
+void test_buffer() {    MyBuffer<float>         buf;    buf.test();             }
+void test_mole(){       Molecule Mole;          Mole.test();    }
+void test_conc(){
+void test_conc_vol()
+[jkrah@desktop new-chem]$
+ *
+ *
+ *
+ */
+int main(int argc, char **argv)
 {
 	printf("main.start..\n");
-	test_conc_vol();
-	//test_rot();
+
+	if (argc>1) {
+		printf("CMD = [%s]\n", argv[1]);
+		if ( (strcmp(argv[1], "test_rot")==0))			test_rot();
+		if ( (strcmp(argv[1], "test_peptide")==0))		test_peptide();
+		if ( (strcmp(argv[1], "test_mylist")==0))		test_mylist();
+		if ( (strcmp(argv[1], "test_buffer")==0))		test_buffer();
+		if ( (strcmp(argv[1], "test_mole")==0))			test_mole();
+		if ( (strcmp(argv[1], "test_conc")==0))			test_conc();
+		if ( (strcmp(argv[1], "test_conc_vol")==0))		test_conc_vol();
+
+
+
+	} else {
+		test_match_pos();
+	}
+
 	printf("main.end..\n");
 }
 //----------------------------------

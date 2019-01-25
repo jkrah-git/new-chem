@@ -18,18 +18,21 @@
 
 /*
 // ----------------------------------------------
+// ----------------------------------------------
 class PeptidePos {
 public:
 	PepPosVecType	*dim;
 
 	PeptidePos();
 	virtual ~PeptidePos();
-	void		dump(void);
+	void		init();
+	void		dump();
 	bool operator =(const PeptidePos& p);
 	bool operator ==(const PeptidePos& p);
-
-	void		test(void);
+	void		test();
 };
+// ----------------------------------------------
+
 // ----------------------------------------------
 
  */
@@ -37,7 +40,10 @@ PeptidePos::PeptidePos() {
 
 	dim = (PepPosVecType*) malloc (sizeof(PepPosVecType) * PepPosVecMax);
 	LOG("malloc[0x%zX]\n",  (long unsigned int) dim);
-
+	init();
+}
+// ---------------------
+void PeptidePos::init() {
 	if (dim!=NULL) {
 		for (int i=0; i<PepPosVecMax; i++) {
 			dim[i] = 0;
@@ -51,7 +57,7 @@ PeptidePos::~PeptidePos() {
 	if (dim!=NULL)  free(dim);
 }
 // ---------------------
-void PeptidePos::dump(void){
+void PeptidePos::dump(){
 	printf("PeptidePos[0x%zX].", (long unsigned int) this);
 
 	if (dim==NULL) {
@@ -88,7 +94,7 @@ bool PeptidePos::operator ==(const PeptidePos& p) {
 	return true;
 }
 // ---------------------
-void PeptidePos::test(void){
+void PeptidePos::test(){
 	printf("PeptidePos.test: == START ==\n");
 	printf("PeptidePos.test: pre: ");	dump(); printf("\n");
 	//------------

@@ -60,9 +60,10 @@ TODO 1. chem structure
 	- streams based log handler  		
     - peps sharing position - with energy penalty
   -----------------------------------
-  - active elements ... 0b1sss tttt  .. match 0b0sss eett 
-  - sss = match.strength = 0-7
-  - eett = match.delta E/T = 0-3 = -1,0,1,2  
+  - ?? 0bX..... = 2x127 sets  (OR) 0bXX.... = 4x64 sets 
+  - active elements ... 0bXXsstttt  .. match 0bYYsseett 
+  - ss = match.strength = 0-3
+  - eett = match. energy/temp deltas = (0-3) = { -1,0,1,2 }  
   ==================================
   - think about matches ..  
   ==================================

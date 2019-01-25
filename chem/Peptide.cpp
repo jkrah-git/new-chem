@@ -12,7 +12,7 @@
 #include "Peptide.h"
 //-----
 //#define DEBUG
-//#include "common.h"
+#include "common.h"
 
 
 
@@ -41,7 +41,7 @@ public:
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
-	PepMatch	getrot(PepSig MatchSig);
+	PepMatch	getmatch(PepSig MatchSig);
 
 	// ---
 	void 		print(void);
@@ -101,24 +101,6 @@ PepSig Peptide::rand(void) { return rand(0,255); };
 // ---------------------
 //void Peptide::setstatus(PepStatus newval) { status = newval; }
 //PepStatus Peptide::getstatus(){	return status;	}
-// ---------------------
-void Peptide::test(void){
-
-	printf("Peptide.test: == START ==\n");
-	printf("Peptide.test: pre: ");	dump(); printf("\n");
-	//------------
-	printf("Peptide.test: running pos.test: ");
-	pos.test();
-
-	PepSig a = 'A';
-	//PepStatus b = 127;
-	printf("Peptide.test: set(0x%x)(%c) ...\n", a, a);	set(a);
-	//------------
-
-	printf("Peptide.test: post: ");	dump(); printf("\n");
-	printf("Peptide.test: == END ==\n");
-
-}
 // ---------------------
 PepRot		Peptide::getrot(PepSig parentSig){
 
@@ -193,6 +175,40 @@ PepRot		Peptide::getrot(PepSig parentSig){
 	return (char) rot;
 }
 // -------------------------------
+bool Peptide::match(PepSig MatchSig){
+	/*
+  - ?? 0bX..... = 2x127 sets  (OR)
+  - Match = 0bXXsseett.... = 4x64 sets
+  - active elements ... 0bXXsstttt  .. match 0bYYsseett
+  - ss = match.strength = 0-3
+  - eett = match. energy/temp deltas = (0-3) = { 0,1,2 ,-1 }
+	 */
+	// 128+64  =192    = 1100 0000 = 0xC0
+	// 256 - 192 = 63  = 0011 1111 = 0x3F
+	PepSig m1,m2;
+	// test top 2 bits (inverse)
+	m1 = sig &  0xc0;
+	m2 = ~MatchSig;
+	m2 = m2 &  0xc0;
+#ifdef DEBUG
+	char bin0[32], bin1[32];
+	sprintb(bin0, m1);
+	sprintb(bin1, m2); printf("Peptide::match1 [%s]->[%s]\n", bin0, bin1);
+#endif
+	if (m1 != m2) return false;
+
+	// test bottom 6 bits
+	m1 = sig &  0x3f;
+	m2 = MatchSig &  0x3f ;
+#ifdef DEBUG
+	sprintb(bin0, m1); 	sprintb(bin1, m2); printf("Peptide::match2 [%s]->[%s]\n", bin0, bin1);
+#endif
+	if (m1 != m2) return false;
+
+	return true;
+}
+
+
 
 bool Peptide::operator ==(const Peptide& p) {
 /*
@@ -204,6 +220,41 @@ bool Peptide::operator ==(const Peptide& p) {
 	else 				printf("Peptide:: pos != p.pos");
 */
 	return ((sig == p.sig) && (pos==p.pos));
+}
+// ---------------------
+void Peptide::test(void){
+
+	printf("Peptide.test: == START ==\n");
+	printf("Peptide.test: pre: ");	dump(); printf("\n");
+	//------------
+	printf("Peptide.test: running pos.test: ");
+	pos.test();
+
+	PepSig a;
+	a = 'A';
+	printf("Peptide.test: set(0x%x)(%c) ...\n", a, a);	set(a);
+	printf("Peptide.test: get = (0x%x)(%c) ...\n", get(), get());
+
+	// - Match = 0bXXsseett.... = 4x64 sets
+	// 11 01 01 01 01
+	set( (128+64) +16+4+1 );
+	a = (0+0) +16+4+1;
+
+	char bin0[32], bin1[32];
+	sprintb(bin0, sig);
+	sprintb(bin1, a);
+
+	printf("Peptide.test: match (0x%x)->(0x%x).. ", sig, a);
+	printf("\n%s\n%s ==>", bin0,bin1);
+
+	if (match(a)) {	printf("MATCH\n");	}
+	else {	printf("no match\n");	}
+
+	//------------
+
+	printf("Peptide.test: post: ");	dump(); printf("\n");
+	printf("Peptide.test: == END ==\n");
+
 }
 // ---------------------
 

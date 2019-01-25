@@ -17,12 +17,14 @@ class PeptidePos {
 public:
 	PepPosVecType	*dim;
 
-	PeptidePos();
-	virtual ~PeptidePos();
-	void		dump(void);
+	//----
+	void		init();
+	void		dump();
+	void		test();
 	bool operator =(const PeptidePos& p);
 	bool operator ==(const PeptidePos& p);
-	void		test(void);
+	PeptidePos();
+	virtual ~PeptidePos();
 };
 // ----------------------------------------------
 

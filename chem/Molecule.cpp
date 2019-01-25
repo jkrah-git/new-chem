@@ -6,16 +6,14 @@
  */
 
 
-#include "Molecule.h"
 #include "Peptide.h"
+#include "Molecule.h"
+#include "MoleculeMatchPos.h"
 //-----
 #undef DEBUG
 //#define DEBUG
 #include "debug.h"
 #include "common.h"
-//
-// -------------------------------------
-
 
 
 /*
@@ -24,7 +22,6 @@ class Molecule {
 private:
 	mylist<Peptide> 	pep_list;
 	// ---
-	char		getrot(PepSig sig1, PepSig sig2);
 	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
@@ -32,20 +29,26 @@ public:
 	// ----
 	Molecule();
 	virtual ~Molecule();
-	bool operator ==(const Peptide& p);
-
-	// --- *pepSig's ..
-	//int			set(PepSig *sig_list);
-	//PepSig		*get(void);
+	bool operator ==(const Molecule& p);
 
 	// -- build
 	int			addpep(PepSig sig);
+	//----------- matching
+	MoleculeMatchPos	*startmatch(Molecule *matchmole);
+	int			nextmatch(Molecule *matchmole, MoleculeMatchPos *matchpos);
+	//------------
 	void		clear(void);
-
+	int			rand(int count) { return rand(count, 1, 0, 255); };
+	int			rand(int count, int tries, PepSig min, PepSig max);
+	void		print(void);
 	void		test(void);
+	void		test2(void);
 	void		testrot(void);
-	void		dump(void);
+	void		getbounds(PeptidePos *min, PeptidePos *max);
+	void		render(void);
 
+	void		dump(void);
+	void		render(int x, int y);
 };
 // -------------------------------
  */
@@ -56,6 +59,23 @@ Molecule::Molecule() {	// TODO Auto-generated constructor stub
 
 Molecule::~Molecule() {
 	clear();
+}
+// -------------------------------
+
+bool Molecule::operator =(const Molecule& p){
+#ifdef DEBUG
+	LOG("\npep_list => ");
+	pep_list.dump();;
+
+	LOG("\np.pep_list => ");
+	p.pep_list.dump();
+
+	}
+#endif
+
+
+
+	return 0;
 }
 // -------------------------------
 
@@ -86,7 +106,7 @@ bool Molecule::operator ==(const Molecule& p){
 
 }
 
-// -------------------------------
+// -------------------------------// -------------------------------
 void Molecule::dump(void){
 
 	PeptidePos min, max;
@@ -226,6 +246,37 @@ int Molecule::addpep(PepSig sig){
 	return 0;
 }
 // -------------------------------
+//----------- matching
+MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){
+	if (matchmole ==NULL) return NULL;
+
+	MoleculeMatchPos *matchpos = new MoleculeMatchPos;
+	if (matchpos ==NULL) return NULL;
+
+	// new get bounds of this and match-mole
+	PeptidePos mina, maxa;
+	PeptidePos minb, maxb;
+	getbounds(&mina, &maxa);
+	matchmole-> getbounds(&minb, &maxb);
+
+//	getbounds(matchpos-> start_pos, matchpos-> start_pos);
+
+
+	return NULL;
+}
+// -------------------------------
+int	Molecule::nextmatch(Molecule *matchmole, MoleculeMatchPos *matchpos){
+	if ((matchmole ==NULL) || (matchpos==NULL)) return -10;
+
+	// copy mole
+
+
+	return -1;
+}
+//------------
+
+
+// -------------------------------
 int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 	if (max<1) return -1;
 
@@ -313,12 +364,13 @@ void Molecule::testrot(void){
 		c[i] = 0;
 
 	char bina[16], binb[16];
+	char match[16];
 
 	Peptide p;
 	char ca, cb;
 	// --- calc all posibilities
-	for (int a=0; a<256; a++) {
-		for (int b=0; b<256; b++)
+	for (int a=0; a<=255; a++) {
+		for (int b=0; b<=255; b++)
 		{
 			//int t = getrot(a, b);
 			p.set(a);
@@ -332,7 +384,10 @@ void Molecule::testrot(void){
 			sprintb(binb, b, '0');
 
 		//	printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
-			printf("molecule.testrot: [0x%02x 0x%02x][0b%s,0b%s](%c,%c) =%d\n",  a,b, bina, binb, ca,cb,  t);
+			if (p.match(b)) { sprintf(match, "(Match)"); }
+			else { sprintf(match, "()"); }
+			printf("molecule.testrot: [0x%02x 0x%02x][0b%s,0b%s](%c,%c)%s=%d\n",  a,b, bina, binb, ca,cb, match, t);
+
 			if ((t<0) || (t>3)) t=0;
 			c[t]++;
 			c[4]++;

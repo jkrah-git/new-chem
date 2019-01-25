@@ -38,7 +38,7 @@ public:
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
-	PepMatch	getrot(PepSig MatchSig);
+	bool		match(PepSig MatchSig);
 
 	// ---
 	void 		print(void);
