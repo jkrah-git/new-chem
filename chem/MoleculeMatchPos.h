@@ -13,11 +13,11 @@
 //----------------------------------
 class MoleculeMatchPos {
 private:
-	PeptidePos 	*start_pos;
-	PeptidePos 	*end_pos;
+	PeptidePos 	start_pos;
+	PeptidePos 	end_pos;
 
 public:
-	PeptidePos 	last_pos;
+	PeptidePos 	current_pos;
 	//---------
 	void		init(PeptidePos *start, PeptidePos *end);
 	int			nextpos();

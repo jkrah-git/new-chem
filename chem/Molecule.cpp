@@ -304,44 +304,109 @@ void Molecule::testmatch(void){
 	printf("molecule.testmatch: == START ==\n");
 
 	test2();
-	PRINT("start .. (self)=\n"); dump();
+	/*
+	 *   1012
+	 *  2 .  2
+	 *  1 AB 1
+	 *  0.AW.0
+	 *  1 A7 1
+	 *  2 .  2
+	 *   1012
+	 *
+	 */
+	printf("molecule.testmatch: \n");
+	printf("molecule.testmatch: start .. (self)=\n"); dump();
+	printf("molecule.testmatch: ---------------- \n");
 
+	MoleculeMatchPos matchpos; // = new MoleculeMatchPos;
+	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
+	printf("molecule.testmatch: ---------------- \n");
 
-	MoleculeMatchPos *matchpos = new MoleculeMatchPos;
-	if (matchpos ==NULL) return;
-	PRINT("new matchpos = \n"); matchpos-> dump();
-
+	/*
 	Molecule m;
 	PepRot rot = 1;
-
 	rotate(rot, &m);
 	PRINT("copyout.m = \n"); m.dump();
-
-
-
-
-
+`	*/
+	Molecule m2;
+	PepSig s;
+	s = 0x81;	printf("molecule.testmatch: add(0x%x) 0 (0,0) = [%d]\n",s,  m2.addpep(s));
+	//s = 0x82;	printf("molecule.testmatch: add(0x%x) 0 (0,0) = [%d]\n",s,  m2.addpep(s));
+	printf("molecule.testmatch: ---------------- \n");
+	printf("molecule.testmatch: M2 = \n"); m2.dump();
+	printf("molecule.testmatch: ---------------- \n");
+	// -------------
+	printf("molecule.testmatch: testmatchpos = [%d] \n", nextmatchpos(&m2, &matchpos));
 	// -------------
 	printf("molecule.testmatch: == END ==\n");
 }
+
 // -------------------------------
 int	Molecule::nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos){
 	if ((testmole ==NULL) || (matchpos==NULL)) return -10;
 
-	// copy mole
-	//Molecule testmole; 	copyout(&testmole);
-	//PRINT("testmole"); testmole.dump();
+	PRINT("molecule.testmatch:");
+	//  - Match = 0bXXsseett.... = 4x64 sets
 
-	// rotate all pos
+	int r = -10;
 
-	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
-	while(current_item!=NULL) {
+	//--------------------------------------
+	// this.base = molecule
+	// testmole = (translated mole to check for collisions)
+	//--------------------------------------
+	// for each test-pep = *test_item
+	mylist<Peptide>::mylist_item<Peptide>
+		*test_item  = testmole-> pep_list.gethead();
+
+
+	while((test_item!=NULL)&&(test_item-> item!=NULL)) {
+		//PepSig s1 = current_item-> item-> get();
+		r = -1;
+
+		PeptidePos testpos;
+
+		testpos.dim[0] = test_item-> item-> pos.dim[0] + matchpos-> current_pos.dim[0];
+		testpos.dim[1] = test_item-> item-> pos.dim[1] + matchpos-> current_pos.dim[1];
+		PRINT("=============================\n");
+		PRINT("=============================\n");
+		PRINT("testpos ==>");		testpos.dump(); NL
+
+		// test the traslated pos on 'this' (root)  molecole
+		mylist<Peptide>::mylist_item<Peptide>  *test_pep = test_pos(&testpos);
+		if (test_pep!=NULL) {
+
+
+			PRINT("found pep[0x%x]..\n]", test_pep-> item-> get() );
+			//----------------
+			if (test_pep-> item-> match( test_item-> item-> get())) {
+				PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
+
+			}
+		}
+
+
+		/*
+		PRINT("pos1 : "); NL
+		test_item-> item-> pos.dump(); NL
+		PeptidePos  pos1 = test_item-> item-> pos;	pos1.dump(); NL
+
+		PRINT("pos2 : "); NL
+		matchpos-> current_pos.dump(); NL
+		PeptidePos  pos2 = matchpos-> current_pos; pos2.dump(); NL
+
+		//= matchpos-> current_pos)
+
+		PeptidePos  pos3 = pos1+ pos2;
+		PRINT("pos3: "); NL
+		pos3.dump(); NL
+*/
 
 
 
-		//---
-		current_item = current_item-> next;
-	}
+
+		//----
+		test_item = test_item-> next;
+	} // next current_item
 
 	return 0;
 }
@@ -389,13 +454,14 @@ void Molecule::test(void){
 	//------------
 	printf("molecule.test: final:\n");
 	dump();
-	return;
+	//return;
 
 	Molecule m2;
 	printf("molecule.test: m2=new:\n");	m2.dump();
-
-	rotate(1, &m2);
-	printf("molecule.test: copyout(m2):\n");	m2.dump();
+	for (int i=0; i<4; i++) {
+		rotate(i, &m2);
+		printf("molecule.test: rotate(%d) = (m2):\n", i);	m2.dump();
+	}
 
 	printf("molecule.test: == END ==\n");
 

@@ -21,8 +21,9 @@ public:
 	void		init();
 	void		dump();
 	void		test();
-	bool operator =(const PeptidePos& p);
-	bool operator ==(const PeptidePos& p);
+	PeptidePos& operator +(const PeptidePos& p);
+	PeptidePos& operator =(const PeptidePos& p);
+	       bool operator ==(const PeptidePos& p);
 	PeptidePos();
 	virtual ~PeptidePos();
 };

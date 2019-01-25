@@ -188,8 +188,8 @@ bool Peptide::match(PepSig MatchSig){
 	PepSig m1,m2;
 	// test top 2 bits (inverse)
 	m1 = sig &  0xc0;
-	m2 = ~MatchSig;
-	m2 = m2 &  0xc0;
+	m2 = (~MatchSig) &  0xc0;
+	//m2 &= 0xc0;
 #ifdef DEBUG
 	char bin0[32], bin1[32];
 	sprintb(bin0, m1);
