@@ -12,7 +12,7 @@
 #undef DEBUG
 //#define DEBUG
 #include "debug.h"
-
+#include "common.h"
 //
 // -------------------------------------
 
@@ -94,10 +94,10 @@ void Molecule::dump(void){
 	printf("Molecule[0x%zX].. ",	(long unsigned int) this);
 	printf("Min: "); min.dump();
 	printf(", Max: "); max.dump(); NL
-	print();
-	NL
+	//print();	NL
 	pep_list.dump();
 //	render(21,11);
+	render();
 
 }
 // -------------------------------
@@ -312,6 +312,8 @@ void Molecule::testrot(void){
 	for (int i=0; i<5; i++)
 		c[i] = 0;
 
+	char bina[16], binb[16];
+
 	Peptide p;
 	char ca, cb;
 	// --- calc all posibilities
@@ -325,7 +327,12 @@ void Molecule::testrot(void){
 			if ((a>32) && (a<127))	ca = a;
 			if ((b>32) && (b<127))	cb = b;
 
-			printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
+			//void sprintb(char *str, char val, char zero);
+			sprintb(bina, a, '0');
+			sprintb(binb, b, '0');
+
+		//	printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
+			printf("molecule.testrot: [0x%02x 0x%02x][0b%s,0b%s](%c,%c) =%d\n",  a,b, bina, binb, ca,cb,  t);
 			if ((t<0) || (t>3)) t=0;
 			c[t]++;
 			c[4]++;
@@ -338,6 +345,7 @@ void Molecule::testrot(void){
 	printf("\n");
 }
 // -------------------------------
+/*
 void Molecule::render(int x, int y){
 
 	char *txt = (char*) malloc(sizeof(char)*x*y);
@@ -395,6 +403,7 @@ void Molecule::render(int x, int y){
 	//-------------
 	free(txt);
 }
+*/
 // -------------------------------
 // -------------------------------
 void Molecule::getbounds(PeptidePos *min, PeptidePos *max){

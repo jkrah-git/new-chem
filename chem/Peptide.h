@@ -12,6 +12,8 @@
 
 typedef unsigned char PepSig;
 typedef unsigned char PepRot;
+typedef unsigned char PepMatch;
+
 //typedef unsigned char PepStatus;
 #include <stdlib.h>
 // -----------------------
@@ -36,6 +38,8 @@ public:
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
+	PepMatch	getrot(PepSig MatchSig);
+
 	// ---
 	void 		print(void);
 	void		dump(void);

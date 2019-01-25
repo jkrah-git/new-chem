@@ -46,32 +46,71 @@ Chem Conc Engine
 -----------------------------
 TODO 1. chem structure
  -----------------------------
-  D- 2d but expandable to (N`d)
-  D- chem structure 
-  D- physical map  
-  ? - periodic table  = affiliation strengths (for rotation)
+ Done
+   - 2d but expandable to (N`d)
+   - chem structure 
+   - physical map  
+    - periodic table  = affiliation strengths (for rotation)
 		- rot masks
-  D- Base Concentration - buffer Template
+    - Base Concentration - buffer Template
+    - ConcentrationVolume 
+      - add/test/take chemicals
   -----------------------------------
   Later..				
 	- streams based log handler  		
     - peps sharing position - with energy penalty
   -----------------------------------
-  Next
-  - ConcentrationVolume 
-    - add/test/take chemicals
-
+  - active elements ... 0b1sss tttt  .. match 0b0sss eett 
+  - sss = match.strength = 0-7
+  - eett = match.delta E/T = 0-3 = -1,0,1,2  
   ==================================
   - think about matches ..  
   ==================================
+  - thermodynamics = energy,temp
+  - conc.volume-> match.CACHE (strength,delta energy/temp)
+    - clean .. check each A/B .. if not in CV then remove from cache
+  - conc.root.process
+    -- for all other -> conc.match
+
+    =======================
+  - conc.match (c2); (M1, M2)
+    =======================
+    - for each (pos,rot) = 
+    - collis.map = (each cell=) empty, (exposed/active) = matched /unmatched , inactive/hidden
+      - check collis, check both have active cells 
+      - for each peptite 
+        - peptide.match (A,B)
+        - endo/exo thermic ?
+        - pep match strength/energy
+      - overall M1-M2 reaction  = strength, delta energy, delta temp  (cached) 
+        - M1-M2 reactioe.threshold ?? (use TEMPERATURE ??)
+        - eg. mole.reac.streanth = 10  (temp > -10)   
+        
+    =======================
   - peptide pair interacton - eg : void Molecule::testrot(void)
-  - match pep vs exec peps?
-  - active sites (representation) ?? - each AS has physical (sub) map
-  - list active sites ..
- 
+    =======================
+  - pep reaction/interaction : activ temperature, dela enrgy, delta temp
+  - activ temp (AT) = sum pep.match
+  
+  - ?? match pep vs code peps ??
   - multiple match reactants (O),(A,B,C ..)
-  - chem ops on cell
+    - sub (match) process..
    
+ 
+  ============================
+  - IPC / multithread
+  - multi-conc or multi-vols ??
+  ============================
+  - shmem - pages
+    - *object = *page, (OBJ) *obj
+    - page.mutex / open.r/w close.r/w
+
+  - mult-vol
+  - each conc = is it own thread - and shared mem with conv.vol
+  - conc = <pageitem> (page, (conc*) list.head)
+  	- ie.. each ConcVol has its own r/w mutx ??
+    - conc.vol commit = main shm/write
+    - 
    
    
    

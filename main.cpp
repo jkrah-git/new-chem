@@ -199,7 +199,7 @@ void test_conc(){
 // -----------
 void test_conc_vol()
 {
-	/*
+
 	ConcentrationVolume conc_vol;
 	printf("==========================================\n");
 	printf("########## test_conc_vol2  ####\n");
@@ -210,7 +210,7 @@ void test_conc_vol()
 	conc_vol.test();
 	printf("==========================================\n");
 	return;
-*/
+
 	Molecule m1;
 	//m1.test();	m1.test2();	Peptide p;	p.randsig('A', 'Z');	p.dump();
 	int c=0;

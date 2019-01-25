@@ -22,8 +22,8 @@
 // -----------------------
 class Peptide {
 private:
-	char	sig;
-	int 	status;
+	PepSig	sig;
+
 public:
 	PeptidePos	pos;
 
@@ -31,16 +31,25 @@ public:
 	Peptide();
 	virtual ~Peptide();
 
-	void 		setsig(PepSig newval);
-	PepSig		getsig();
-	void 		setstatus(PepStatus newval);
-	PepStatus 	getstatus();
-	void		set(PepSig newsig, PepStatus newstatus);
+	void  set(PepSig newval) { sig = newval; };
+	PepSig get(){	return sig;	};
+	void randsig(void) { randsig(0,255); };
 
+//	void 		set(PepSig newval);
+//	PepSig		get();
+//	PepSig		rand(void);
+	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
+	bool 		operator ==(const Peptide& p);
+	PepRot		getrot(PepSig parentSig);
+	PepMatch	getrot(PepSig MatchSig);
+
+	// ---
+	void 		print(void);
 	void		dump(void);
 	void		test(void);
 };
 // -----------------------
+
 */
 // -----------------------
 Peptide::Peptide() {
