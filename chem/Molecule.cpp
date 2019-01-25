@@ -62,22 +62,6 @@ Molecule::~Molecule() {
 }
 // -------------------------------
 
-bool Molecule::operator =(const Molecule& p){
-#ifdef DEBUG
-	LOG("\npep_list => ");
-	pep_list.dump();;
-
-	LOG("\np.pep_list => ");
-	p.pep_list.dump();
-
-	}
-#endif
-
-
-
-	return 0;
-}
-// -------------------------------
 
 bool Molecule::operator ==(const Molecule& p){
 #ifdef DEBUG
@@ -120,7 +104,8 @@ void Molecule::dump(void){
 	render();
 
 }
-// -------------------------------
+
+// -------------------------------// -------------------------------
 mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos) {
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
@@ -145,41 +130,85 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 	return found_item;
 }
 // -------------------------------
-void Molecule::clear(void) {
+void Molecule::clear(void) {	pep_list.clear(true);	}
+// -------------------------------
+/*bool Molecule::operator =(const Molecule& p){
+#ifdef DEBUG
+	LOG("\npep_list => ");
+	pep_list.dump();;
 
-	pep_list.clear(true);
-	return;
-	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
-	if (next_item ==NULL) return;
+	LOG("\np.pep_list => ");
+	p.pep_list.dump();
 
-	while (next_item != NULL) {
-		if (next_item-> item != NULL) {
-			LOG("free.peptide[0x%zX]..\n", (size_t) next_item-> item);
-			delete next_item-> item;
-			next_item-> item = NULL;
+	}
+#endif
+*/
+int Molecule::rotate(PepRot rotation, Molecule *dest) {
+	if (dest==NULL) return 1;
+
+	dest-> clear();
+
+	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
+	while  ((current_item != NULL) && (current_item-> item !=NULL)){
+
+		// new_item
+		//mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
+
+		mylist<Peptide>::mylist_item<Peptide> *new_item = dest-> pep_list.add();
+		if (new_item==NULL)	break;
+
+		// check new list ite.payload
+		Peptide *pep =new_item-> item;
+		if (pep==NULL) {
+			 pep_list.del(new_item);
+			 break;
 		}
+		// new_item is OK
+		// set pep..
+		pep-> set(current_item-> item->get());
+
+		// set pos
+		if (rotation==0) {
+			pep-> pos = current_item-> item->pos;
+		} else {
+
+			switch(rotation) {
+			case 1:		// x'=y, y'=-x
+				pep-> pos.dim[0] =   current_item-> item->pos.dim[1];
+				pep-> pos.dim[1] = - current_item-> item->pos.dim[0];
+				break;
+
+			case 2: 	// x'=x , y= -y
+				pep-> pos.dim[0] =   current_item-> item->pos.dim[0];
+				pep-> pos.dim[1] = - current_item-> item->pos.dim[1];
+				break;
+			case 3:   // x' = =y, y' = -x
+				pep-> pos.dim[0] = - current_item-> item->pos.dim[1];
+				pep-> pos.dim[1] = - current_item-> item->pos.dim[0];
+				break;
+			}
+		}
+
 		//---
-		next_item = next_item-> next;
+		current_item = current_item-> next;
 	}
 
-	//pep_list.clear();
-
-
+	return 0;
 }
-
 // -------------------------------
-
 
 int Molecule::addpep(PepSig sig){
 	LOG("Molecule::addpep..\n");
-
+	//return -10;
 	//----
 	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
 	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
 
+	// check new list item
 	if (new_item==NULL)
 		return -1;
 
+	// check new list ite.payload
 	Peptide *pep =new_item-> item;
 	if (pep==NULL) {
 		 pep_list.del(new_item);
@@ -187,6 +216,7 @@ int Molecule::addpep(PepSig sig){
 	}
 
 	pep->set(sig);
+
 	// simple add to head ??
 	if (tail==NULL) {
 		pep-> pos.dim[0] = 0;
@@ -246,12 +276,18 @@ int Molecule::addpep(PepSig sig){
 	return 0;
 }
 // -------------------------------
+
 //----------- matching
-MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){
+/*
+ MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){
 	if (matchmole ==NULL) return NULL;
 
 	MoleculeMatchPos *matchpos = new MoleculeMatchPos;
 	if (matchpos ==NULL) return NULL;
+
+	// copy mole
+	Molecule testmole;
+	copyout(&testmole);
 
 	// new get bounds of this and match-mole
 	PeptidePos mina, maxa;
@@ -260,18 +296,54 @@ MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){
 	matchmole-> getbounds(&minb, &maxb);
 
 //	getbounds(matchpos-> start_pos, matchpos-> start_pos);
-
-
 	return NULL;
 }
+*/
 // -------------------------------
-int	Molecule::nextmatch(Molecule *matchmole, MoleculeMatchPos *matchpos){
-	if ((matchmole ==NULL) || (matchpos==NULL)) return -10;
+void Molecule::testmatch(void){
+	printf("molecule.testmatch: == START ==\n");
+
+	test2();
+	PRINT("start .. (self)=\n"); dump();
+
+
+	MoleculeMatchPos *matchpos = new MoleculeMatchPos;
+	if (matchpos ==NULL) return;
+	PRINT("new matchpos = \n"); matchpos-> dump();
+
+	Molecule m;
+	PepRot rot = 1;
+
+	rotate(rot, &m);
+	PRINT("copyout.m = \n"); m.dump();
+
+
+
+
+
+	// -------------
+	printf("molecule.testmatch: == END ==\n");
+}
+// -------------------------------
+int	Molecule::nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos){
+	if ((testmole ==NULL) || (matchpos==NULL)) return -10;
 
 	// copy mole
+	//Molecule testmole; 	copyout(&testmole);
+	//PRINT("testmole"); testmole.dump();
+
+	// rotate all pos
+
+	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
+	while(current_item!=NULL) {
 
 
-	return -1;
+
+		//---
+		current_item = current_item-> next;
+	}
+
+	return 0;
 }
 //------------
 
@@ -299,21 +371,6 @@ int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 	return c;
 
 }
-// -------------------------------
-
-// -------------------------------
-void Molecule::print(void){
-	mylist<Peptide>::mylist_item<Peptide> *item = pep_list.gethead();
-
-	while (item!=NULL) {
-		if (item-> item !=NULL)
-			item-> item-> print();
-		item = item-> next;
-	}
-
-
-}
-// -------------------------------
 
 // -------------------------------
 void Molecule::test(void){
@@ -332,6 +389,14 @@ void Molecule::test(void){
 	//------------
 	printf("molecule.test: final:\n");
 	dump();
+	return;
+
+	Molecule m2;
+	printf("molecule.test: m2=new:\n");	m2.dump();
+
+	rotate(1, &m2);
+	printf("molecule.test: copyout(m2):\n");	m2.dump();
+
 	printf("molecule.test: == END ==\n");
 
 }
@@ -400,70 +465,13 @@ void Molecule::testrot(void){
 	printf("\n");
 }
 // -------------------------------
-/*
-void Molecule::render(int x, int y){
-
-	char *txt = (char*) malloc(sizeof(char)*x*y);
-	if (txt==NULL)  { printf("Molecule::render malloc failed]\n"); return;	}
-
-	for (int i=0; i<(x*y); i++)
-		txt[i] = '?';
-
-
-	for (int b=0; b<y; b++) {
-		for (int a=0; a<x; a++) {
-			char *c = &txt[a+b*x];
-			*c = ' ';
-			if ((a==x/2) || (b==y/2)) c[0] = '.';
-			if ((a==x-1) || (b==y-1)) c[0] = '.';
-			if ((a==0) ||(a==x-1)) {
-				if ((b>0) && (b<y-1)) 	c[0] = '0' + (abs((y/2) - b) % 10);
-			}
-			if ((b==0) ||(b==y-1)) {
-				if ((a>0) && (a<x-1)) 	c[0] = '0' + (abs((x/2) - a) % 10);
-			}
-			//if (*c != ' ') printf("%d/%d,%d/%d=[%d/%d] = [%c]\n", a, x, b, y, a+b*x, x*y, *c);
-		}
-	}
-
-
-
-	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
-	while (next_item !=NULL) {
-		if (next_item-> item !=NULL) {
-			int a =  next_item-> item-> pos.dim[0] + (x/2);
-			int b =  - next_item-> item-> pos.dim[1] + (y/2);
-
-			if((a>=0) && (a<x) && (b>=0) && (b<y)) {
-				txt[a+b*x] = next_item-> item-> get();
-				//printf(".. (%d,%d)[%d]=[0x%x]\n", a, b, a+b*x, txt[a+b*x]);
-			}
-		}
-		next_item = next_item-> next;
-	}
-
-	printf("== Molecule[0x%zX]..(%dx%d) == \n",	(long unsigned int) this, x, y);
-
-	for (int b=0; b<y; b++) {
-		for (int a=0; a<x; a++) {
-
-			char c = txt[a+b*x];
-			if ((c<32)||(c>127)) c = '?';
-			//c='+';
-			printf("%c", c);
-		}
-		printf("\n");
-	}
-
-	//-------------
-	free(txt);
-}
-*/
 // -------------------------------
 // -------------------------------
 void Molecule::getbounds(PeptidePos *min, PeptidePos *max){
 	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	while (next_item !=NULL) {
+		//PRINT("item="); DUMP(next_item-> item); NL
+
 		if (next_item-> item !=NULL) {
 			if (min != NULL) {
 				for (int i=0; i<PepPosVecMax; i++)
@@ -485,7 +493,19 @@ void Molecule::getbounds(PeptidePos *min, PeptidePos *max){
 	}
 
 }
+// -------------------------------
+void Molecule::print(void){
+	mylist<Peptide>::mylist_item<Peptide> *item = pep_list.gethead();
 
+	while (item!=NULL) {
+		if (item-> item !=NULL)
+			item-> item-> print();
+		item = item-> next;
+	}
+
+
+}
+// -------------------------------
 
 void Molecule::render(void){
 	PeptidePos min, max;
@@ -494,6 +514,7 @@ void Molecule::render(void){
 	printf("Min: "); min.dump(); printf(", Max: "); max.dump(); NL
 	print();	NL
 
+	// offset
 	int ox = 2;
 	int oy = 2;
 
@@ -510,17 +531,19 @@ void Molecule::render(void){
 		txt[i] = '?';
 
 
+	// centre lines and borders (a,b in pep space)
 	for (int b=0; b<y; b++) {
 		for (int a=0; a<x; a++) {
 			char *c = &txt[a+b*x];
 			*c = ' ';
 			// eg if p=-3 , u =-3 +a
-			// a,b in pep space
-			int u =      a + min.dim[0] -ox;
-			int v =   	 b + min.dim[1] -oy;
+			int u =      (a + min.dim[0] -ox);
+			int v =      (b + min.dim[1] -oy);
 
+			// center line
 			if ((u==0) || (v==0)) c[0] = '.';
-			//if ((a==x-1) || (b==y-1)) c[0] = '.';
+
+			// borders
 			if ((a==0) ||(a==x-1)) {
 				if ((b>0) && (b<y-1)) 	c[0] = '0' + (abs(v) % 10);
 			}
@@ -533,12 +556,12 @@ void Molecule::render(void){
 	}
 
 
-
+	// fill in peps (a,b in pep space)
 	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	while (next_item !=NULL) {
 		if (next_item-> item !=NULL) {
-			int a =    (next_item-> item-> pos.dim[0] - min.dim[0]+ox) ;
-			int b =    (next_item-> item-> pos.dim[1] - min.dim[1]+oy) ;
+			int a =  (next_item-> item-> pos.dim[0] - min.dim[0]+ox) ;
+			int b =  (next_item-> item-> pos.dim[1] - min.dim[1]+oy) ;
 
 			if((a>=0) && (a<x) && (b>=0) && (b<y)) {
 				txt[a+b*x] = next_item-> item-> get();
@@ -549,11 +572,11 @@ void Molecule::render(void){
 	}
 
 	printf("== Molecule[0x%zX]..(%dx%d) == \n",	(long unsigned int) this, x, y);
-
+	// render (in screen space
 	for (int b=0; b<y; b++) {
 		for (int a=0; a<x; a++) {
 
-			char c = txt[a+b*x];
+			char c = txt[a+(y-b-1)*x];
 			if ((c<32)||(c>127)) c = '?';
 			//c='+';
 			printf("%c", c);

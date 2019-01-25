@@ -30,14 +30,15 @@ public:
 	// ----
 	Molecule();
 	virtual ~Molecule();
-	bool operator =(const Molecule& p);
+	//bool operator =(const Molecule& p);
+	int rotate(PepRot rotation, Molecule *dest);
 	bool operator ==(const Molecule& p);
 
 	// -- build
 	int			addpep(PepSig sig);
 	//----------- matching
 	MoleculeMatchPos	*startmatch(Molecule *matchmole);
-	int			nextmatch(Molecule *matchmole, MoleculeMatchPos *matchpos);
+	int			nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos);
 	//------------
 	void		clear(void);
 	void		getbounds(PeptidePos *min, PeptidePos *max);
@@ -49,6 +50,7 @@ public:
 	void		test(void);
 	void		test2(void);
 	void		testrot(void);
+	void		testmatch(void);
 	void		print(void);
 	void		render(void);
 	void		render(int x, int y);

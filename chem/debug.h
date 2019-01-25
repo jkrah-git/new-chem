@@ -9,11 +9,17 @@
 #undef LOG
 #endif
 
+#ifndef PRINT
+#define PRINT printf("::%s.", __PRETTY_FUNCTION__); printf
+#endif
+
 #ifdef DEBUG
-#define LOG printf("::%s.", __PRETTY_FUNCTION__); printf
+#define LOG PRINT
 #else
 #define LOG if (false) printf
 #endif
+
+
 
 //--------------------------
 #ifndef DEBUG_H_

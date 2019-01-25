@@ -173,7 +173,11 @@ void test_mylist()
 }
 //----------------------------------
 void test_buffer() {	MyBuffer<float> 	buf;	buf.test();		}
-void test_mole(){ 	Molecule Mole;		Mole.test();	}
+void test_mole(){
+	Molecule Mole;
+	//Mole.test();
+	Mole.testmatch();
+}
 
 //----------------------------------
 void test_conc(){
