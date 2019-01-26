@@ -276,7 +276,8 @@ void test_conc_vol()
 void test_cli() {
 	ConcentrationVolume vol;
 	Concentration_CLI cli(vol);
-	cli.test();
+	//cli.test();
+	cli.load_commands();
 
 	char *line = NULL;
 

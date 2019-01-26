@@ -76,7 +76,7 @@ TODO 1. chem structure
     =======================
   - console
     =======================
-	(top) cv ..
+	- stack -  push|pop  pep|mole|conc
 
     =======================
   - conc.match (c2); (M1, M2)

@@ -49,10 +49,10 @@ public:
 class ConcentrationVolume {
 private:
 	mylist<Molecule> 	mole_list;
-	mylist<Concentration> 	conc_list;
 
 
 public:
+	mylist<Concentration> 	conc_list;
 
 	// ---
 	ConcentrationVolume();
@@ -61,7 +61,7 @@ public:
 	void dump();
 	void dumpmoles() { mole_list.dump(); }
 	// ---------
-	Concentration	*search(Molecule	*m);
+	Concentration	*molesearch(Molecule	*m);
 	ConcLevelType	get(Molecule	*m);
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);

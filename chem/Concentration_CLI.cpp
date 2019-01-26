@@ -13,22 +13,44 @@
 // -------------------
 //---------------------------------//---------------------------------
 /*
+//---------------------------------//---------------------------------
 class Concentration_CLI {
-private:
-	ConcentrationVolume 								*concvol;
-	mylist<Concentration>::mylist_item<Concentration>	*conc;
-	Molecule											*mole;
-
-	mylist<Concentration_Command>						cmdlist;
-
 public:
-	Concentration_CLI();
+	ConcentrationVolume 		*concvol;
+	Concentration				*conc;
+	Molecule					*mole;
+	mylist<CLI_Command>			base_cmdlist;
+	mylist<CLI_Command>			dump_cmdlist;
+	mylist<CLI_Command>			load_cmdlist;
+
+
+	Concentration_CLI(ConcentrationVolume &cvol);
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();
 	void 	test();
+
+	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
+	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
+	int		run(mylist<CLI_Command> *cmd_list, char *line);
+	Concentration	*search_conc(char *name);
 };
+//---------------------------------
 */
+//---------------------------------
+void Concentration_CLI::dump() {
+
+	printf("Concentration_CLI[0x%zX]:: concvol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
+			(long unsigned int) this,
+			(long unsigned int) concvol,
+			(long unsigned int) conc,
+			(long unsigned int) mole );
+	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
+	printf("'Base' Commands..\n");	base_cmdlist.dump();
+	printf("'dump' Commands..\n");	dump_cmdlist.dump();
+	printf("'load' Commands..\n");	load_cmdlist.dump();
+
+}
 //---------------------------------
 
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol) {
@@ -39,21 +61,7 @@ Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol) {
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}
-//---------------------------------
-void Concentration_CLI::dump() {
 
-	printf("Concentration_CLI[0x%zX]:: concvol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
-			(long unsigned int) this,
-			(long unsigned int) concvol,
-			(long unsigned int) conc,
-			(long unsigned int) mole );
-	printf("Concentration_CLI[0x%zX]::", (long unsigned int) this);
-	printf("BaseCommands..\n");
-	base_cmdlist.dump();
-	printf("Concentration Commands..\n");
-	dump_cmdlist.dump();
-
-}
 //---------------------------------
 void Concentration_CLI::test() {
 	PRINT(" .. START .. \n");
@@ -90,77 +98,6 @@ void Concentration_CLI::test() {
 	PRINT(" .. END ..\n");
 }
 //---------------------------------
-int	Concentration_CLI::run2(char *line){
-	if (line==NULL) return -100;
-
-	char	*word, *argv[MAX_ARGS];
-	int c = 0;
-	word = strtok (line," \n");
-	if (word!=NULL) {
-		for (int i=0; i<MAX_ARGS; i++) {
-			c++;
-			argv[i] = word;
-			word = strtok (NULL," \n");
-			if (word==NULL) break;
-		}
-	}
-	// check split results
-	if (c<1) {
-		//printf("line read error\n");
-		return -10;
-	}
-
-	return run(&base_cmdlist, c, argv);
-}
-//---------------------------------
-/*
-int	Concentration_CLI::run2(int argc, char **argv){
-	if ((argc<1) || (argv==NULL)) return -100;
-
-	//mylist<CLI_Command>::mylist_item<CLI_Command>  *cmd = cmdlist.add();
-
-	// search for argv[0]
-	CLI_Command  *cmd = NULL;
-	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = base_cmdlist.gethead();
-	while ((next_item!=NULL) && (next_item-> item != NULL)) {
-		int r = strcmp(argv[0], next_item-> item->name);
-		if (r==0) {
-			cmd = next_item-> item;
-			break;
-		}
-		// ---
-		next_item = next_item->next;
-	}
-	if (cmd==NULL) {
-		printf("[%s].Command Not Found\n", argv[0]);
-		return -101;
-	}
-	if (cmd-> operation==NULL) {
-		printf("[%s].Command.operation NULL\n", argv[0]);
-		return -102;
-	}
-
-	int r = cmd-> operation(this, argc-1, &argv[1]);
-	LOG("[%s].[%d]\n", argv[0], r);
-	return r;
-}
-//---------------------------------
-int	Concentration_CLI::addcmd2(int 	(*op)(Concentration_CLI*, int, char**), char *name){
-	if ((op==NULL)||(name==NULL)) return -1;
-
-	mylist<CLI_Command>::mylist_item<CLI_Command>  *cmd = base_cmdlist.add();
-	if (cmd==NULL) return -10;
-	if (cmd-> item ==NULL) return -11;
-
-	cmd-> item-> operation = op;
-	sprintf(cmd-> item-> name, "%s", name);
-	return 0;
-}
-
-
-
-*/
-
 //---------------------------------//---------------------------------//---------------------------------
 int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name){
 	if ((op==NULL)||(name==NULL)||(cmd_list==NULL)) return -1;
@@ -217,11 +154,11 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 	}
 	if (cmd==NULL) {
 		printf("[%s].Command Not Found\n", argv[0]);
-		return -101;
+		return -110;
 	}
 	if (cmd-> operation==NULL) {
 		printf("[%s].Command.operation NULL\n", argv[0]);
-		return -102;
+		return -111;
 	}
 
 	int r = cmd-> operation(this, argc-1, &argv[1]);
@@ -229,31 +166,14 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 	return r;
 }
 //---------------------------------
+//---------------------------------//---------------------------------
+void Concentration_CLI::load_commands() { 	cli_load_commands(this, 0, NULL);	}
 
 //---------------------------------//---------------------------------
-//#define CLI_ADD_CMD(PFX) sprintf(name, #PFX); r = addcmd(cli_#PFX, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r)
-//---------------------------------//---------------------------------
-void Concentration_CLI::load_commands() {
-	// int	load_commands(Concentration_CLI *cli, int argc, char **argv){
-	cli_load_commands(this, 0, NULL);
-	return;
-/*
-	int r;
-	char name[32];
-	cmdlist.clear();
-	//sprintf(name, "list"); r = addcmd(cli_list, (char*) name);
-	sprintf(name, "quit"); 				r = addcmd(cli_quit, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "help"); 				r = addcmd(cli_help, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "ping"); 				r = addcmd(cli_ping, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "dump"); 				r = addcmd(cli_dump, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "dump"); 				r = addcmd(cli_dump, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "dumpmoles"); 		r = addcmd(cli_dumpmoles, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-	sprintf(name, "concvol_test"); 		r = addcmd(cli_concvol_test, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-
-
-	// dump cmds
-	sprintf(name, "test"); 		r = addcmd(cli_concvol_test, (char*) name);	PRINT("addcmd[%s] = [%d]\n", name, r);
-*/
-
+Concentration	*Concentration_CLI::search_conc(char *name) {
+	Concentration *result  = NULL;
+	// TODO cli.search.conc
+	// TODO mylist search by id
+	return result;
 }
 

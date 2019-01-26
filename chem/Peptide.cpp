@@ -52,13 +52,8 @@ public:
 
 */
 // -----------------------
-Peptide::Peptide() {
-	sig = 0;
-//	status = 0;
-}
-
-Peptide::~Peptide() {	// TODO Auto-generated destructor stub
-}
+Peptide::Peptide() {	sig = 0;}
+Peptide::~Peptide() {	}
 // ---------------------
 void Peptide::dump(void){
 	PepSig txtsig = 0;

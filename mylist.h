@@ -200,7 +200,23 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element){
 	}
 	return new_item;
 };
+// --------------------------
+// 	mylist_item<T>	*search(T *element);
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::search(T *e1) {
+	mylist<T>::mylist_item<T> *result = NULL;
+	mylist<T>::mylist_item<T> *current_item = gethead();
 
+	while (current_item !=NULL) {
+		if (current_item-> item == e1) {
+			result = current_item;
+			break;
+		}
+
+		current_item = current_item-> next;
+	}
+
+	return result;
+}
 // --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item, bool do_subitem) {
 
@@ -304,6 +320,7 @@ template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
 	return false;
 
 }
+
 // --------------------------
 template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: == START ==\n");

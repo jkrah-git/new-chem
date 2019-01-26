@@ -54,12 +54,8 @@ public:
  */
 // -------------------------------// -------------------------------
 // -------------------------------// -------------------------------
-Molecule::Molecule() {	// TODO Auto-generated constructor stub
-}
-
-Molecule::~Molecule() {
-	clear();
-}
+Molecule::Molecule() {}
+Molecule::~Molecule() {	clear();}
 // -------------------------------
 
 
@@ -266,7 +262,7 @@ int Molecule::addpep(PepSig sig){
 	//		testpep-> item-> dump();
 	//	}
 #endif
-		//--  TODO: allow clashes.. dont abort for now..
+		//--  TODO: pep clashes..
 		pep_list.del(new_item, true);
 		return -9;
 	}
