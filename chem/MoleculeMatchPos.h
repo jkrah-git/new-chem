@@ -4,25 +4,35 @@
  *  Created on: Jan 25, 2019
  *      Author: jkrah
  */
-
 #ifndef MOLECULEMATCH_H_
 #define MOLECULEMATCH_H_
 #include "Peptide.h"
+#include "Molecule.h"
 
+
+class Molecule;
 
 //----------------------------------
 class MoleculeMatchPos {
 private:
+	void		rotatemole();
+public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
-
-public:
 	PeptidePos 	current_pos;
+	PepRot		rotation;
+	Molecule	*basemole;
+	Molecule	*matchmole;
+	Molecule	*rotmole;
 	//---------
-	void		init(PeptidePos *start, PeptidePos *end);
-	int			nextpos();
+	void		init2(PeptidePos *start, PeptidePos *end);
 
-	MoleculeMatchPos();
+	// nextpos returns 0=ok, 1=new rot, -1
+	int			nextpos();
+	//Molecule	*gettestmole(void) { return testmole; }
+	//PepRot		getrotation(void) { return rotation; }
+
+	MoleculeMatchPos(Molecule *base, Molecule *match);
 	virtual ~MoleculeMatchPos();
 	void	dump();
 	void 	test();

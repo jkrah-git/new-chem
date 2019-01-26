@@ -5,6 +5,8 @@
 #include "chem/Concentration.h"
 #include "chem/mybuffer.h"
 #include "chem/MoleculeMatchPos.h"
+#include "chem/Concentration_CLI.h"
+#include "chem/CLI_Command.h"
 #include "mylist.h"
 
 
@@ -23,11 +25,8 @@ void test_match_pos() {
 
 	printf("========= test_match_pos =======\n");
 
-	MoleculeMatchPos matchpos;
+	MoleculeMatchPos matchpos(NULL, NULL);
 	matchpos.test();
-
-
-
 
 
 
@@ -275,9 +274,21 @@ void test_conc_vol()
 
 
 }
-
+void test_cli() {
+	Concentration_CLI cli;
+	cli.test();
+}
 //---------------------------------- //----------------------------------
 /*
+ * [jkrah@desktop new-chem]$ grep void main.cpp
+void test_rot(void) {
+void test_match_pos() {
+void test_peptide()
+void test_mylist()
+void test_buffer() {    MyBuffer<float>         buf;    buf.test();             }
+void test_mole(){
+void test_conc(){
+void test_conc_vol()
  * [jkrah@desktop new-chem]$ grep 'void' main.cpp
 void test_rot(void) {
 void test_peptide()
@@ -298,17 +309,19 @@ int main(int argc, char **argv)
 	if (argc>1) {
 		printf("CMD = [%s]\n", argv[1]);
 		if ( (strcmp(argv[1], "test_rot")==0))			test_rot();
+		if ( (strcmp(argv[1], "test_match_pos")==0))	test_match_pos();
 		if ( (strcmp(argv[1], "test_peptide")==0))		test_peptide();
 		if ( (strcmp(argv[1], "test_mylist")==0))		test_mylist();
 		if ( (strcmp(argv[1], "test_buffer")==0))		test_buffer();
 		if ( (strcmp(argv[1], "test_mole")==0))			test_mole();
 		if ( (strcmp(argv[1], "test_conc")==0))			test_conc();
 		if ( (strcmp(argv[1], "test_conc_vol")==0))		test_conc_vol();
+		if ( (strcmp(argv[1], "test_cli")==0))			test_cli();
 
 
 
 	} else {
-		test_match_pos();
+		test_cli();
 	}
 
 	printf("main.end..\n");

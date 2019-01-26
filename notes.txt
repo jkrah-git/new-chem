@@ -74,6 +74,11 @@ TODO 1. chem structure
     -- for all other -> conc.match
 
     =======================
+  - console
+    =======================
+	(top) cv ..
+
+    =======================
   - conc.match (c2); (M1, M2)
     =======================
     - for each (pos,rot) = 

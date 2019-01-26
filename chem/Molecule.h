@@ -16,7 +16,8 @@
 #include "../mylist.h"
 #include "Peptide.h"
 #include "MoleculeMatchPos.h"
-
+#include "Molecule.h"
+class MoleculeMatchPos;
 
 // -------------------------------
 class Molecule {
@@ -38,11 +39,12 @@ public:
 	int			addpep(PepSig sig);
 	//----------- matching
 	MoleculeMatchPos	*startmatch(Molecule *matchmole);
-	int			nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos);
+	int			nextmatch(MoleculeMatchPos *matchpos);
 	//------------
 	void		clear(void);
 	void		getbounds(PeptidePos *min, PeptidePos *max);
-	void		dump(void);
+	void		dump(void) { dump(false); }
+	void		dump(bool dorender);
 
 	// move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };

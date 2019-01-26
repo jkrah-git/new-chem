@@ -8,7 +8,7 @@
 
 #include "Peptide.h"
 #include "Molecule.h"
-#include "MoleculeMatchPos.h"
+//#include "MoleculeMatchPos.h"
 //-----
 #undef DEBUG
 //#define DEBUG
@@ -91,7 +91,7 @@ bool Molecule::operator ==(const Molecule& p){
 }
 
 // -------------------------------// -------------------------------
-void Molecule::dump(void){
+void Molecule::dump(bool dorender){
 
 	PeptidePos min, max;
 	getbounds(&min, &max);
@@ -101,7 +101,7 @@ void Molecule::dump(void){
 	//print();	NL
 	pep_list.dump();
 //	render(21,11);
-	render();
+	if (dorender) render();
 
 }
 
@@ -278,27 +278,7 @@ int Molecule::addpep(PepSig sig){
 // -------------------------------
 
 //----------- matching
-/*
- MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){
-	if (matchmole ==NULL) return NULL;
-
-	MoleculeMatchPos *matchpos = new MoleculeMatchPos;
-	if (matchpos ==NULL) return NULL;
-
-	// copy mole
-	Molecule testmole;
-	copyout(&testmole);
-
-	// new get bounds of this and match-mole
-	PeptidePos mina, maxa;
-	PeptidePos minb, maxb;
-	getbounds(&mina, &maxa);
-	matchmole-> getbounds(&minb, &maxb);
-
-//	getbounds(matchpos-> start_pos, matchpos-> start_pos);
-	return NULL;
-}
-*/
+// MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){}
 // -------------------------------
 void Molecule::testmatch(void){
 	printf("molecule.testmatch: == START ==\n");
@@ -314,20 +294,12 @@ void Molecule::testmatch(void){
 	 *   1012
 	 *
 	 */
-	printf("molecule.testmatch: \n");
-	printf("molecule.testmatch: start .. (self)=\n"); dump();
+//	printf("molecule.testmatch: \n");
+//	printf("molecule.testmatch: start .. (self)=\n"); dump();
 	printf("molecule.testmatch: ---------------- \n");
 
-	MoleculeMatchPos matchpos; // = new MoleculeMatchPos;
-	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
-	printf("molecule.testmatch: ---------------- \n");
 
-	/*
-	Molecule m;
-	PepRot rot = 1;
-	rotate(rot, &m);
-	PRINT("copyout.m = \n"); m.dump();
-`	*/
+
 	Molecule m2;
 	PepSig s;
 	s = 0x81;	printf("molecule.testmatch: add(0x%x) 0 (0,0) = [%d]\n",s,  m2.addpep(s));
@@ -336,27 +308,42 @@ void Molecule::testmatch(void){
 	printf("molecule.testmatch: M2 = \n"); m2.dump();
 	printf("molecule.testmatch: ---------------- \n");
 	// -------------
-	printf("molecule.testmatch: testmatchpos = [%d] \n", nextmatchpos(&m2, &matchpos));
+	printf("molecule.testmatch: ------------------------------- \n");
+	MoleculeMatchPos matchpos(this, &m2);
+	printf("molecule.testmatch: ------------------------------- \n");
+	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
+	printf("molecule.testmatch: ------------------------------- \n");
+	printf("molecule.testmatch: ------------------------------- \n");
+	int r = nextmatch(&matchpos);
+	printf("molecule.testmatch: ------------------------------- \n");
+	printf("molecule.testmatch: next matchpos = [%d] \n", r); matchpos.dump();
+	printf("molecule.testmatch: ---------------- \n");
+
 	// -------------
 	printf("molecule.testmatch: == END ==\n");
 }
 
 // -------------------------------
-int	Molecule::nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos){
-	if ((testmole ==NULL) || (matchpos==NULL)) return -10;
+int	Molecule::nextmatch(MoleculeMatchPos *matchpos){
 
-	PRINT("molecule.testmatch:");
+	PRINT("molecule.nextmatch..\n");
+	 if (matchpos ==NULL) return -10;
+	 if (matchpos-> rotmole ==NULL) return -11;
+
+	 int r =  matchpos->nextpos();
+	 if (r<0) return r;
+
+	 // new rotoation
+	 //if (r>0) {  rotate(matchpos-> rotation, matchpos-> rotmole); }
+
 	//  - Match = 0bXXsseett.... = 4x64 sets
-
-	int r = -10;
-
 	//--------------------------------------
 	// this.base = molecule
 	// testmole = (translated mole to check for collisions)
 	//--------------------------------------
 	// for each test-pep = *test_item
 	mylist<Peptide>::mylist_item<Peptide>
-		*test_item  = testmole-> pep_list.gethead();
+		*test_item  = matchpos-> rotmole-> pep_list.gethead();
 
 
 	while((test_item!=NULL)&&(test_item-> item!=NULL)) {
@@ -368,15 +355,16 @@ int	Molecule::nextmatchpos(Molecule *testmole, MoleculeMatchPos *matchpos){
 		testpos.dim[0] = test_item-> item-> pos.dim[0] + matchpos-> current_pos.dim[0];
 		testpos.dim[1] = test_item-> item-> pos.dim[1] + matchpos-> current_pos.dim[1];
 		PRINT("=============================\n");
+		PRINT("testpos ==>");	testpos.dump(); NL
+		PRINT("matchpos==>");	matchpos-> dump(); NL
 		PRINT("=============================\n");
-		PRINT("testpos ==>");		testpos.dump(); NL
 
 		// test the traslated pos on 'this' (root)  molecole
 		mylist<Peptide>::mylist_item<Peptide>  *test_pep = test_pos(&testpos);
 		if (test_pep!=NULL) {
 
 
-			PRINT("found pep[0x%x]..\n]", test_pep-> item-> get() );
+			PRINT("found pep[0x%x]..\n", test_pep-> item-> get() );
 			//----------------
 			if (test_pep-> item-> match( test_item-> item-> get())) {
 				PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
