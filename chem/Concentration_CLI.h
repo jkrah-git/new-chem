@@ -21,35 +21,37 @@
  *
  */
 
-
+#define MAX_ARGS 16
 class Concentration_CLI;
 //=================================================
 
 
 //---------------------------------//---------------------------------
 class Concentration_CLI {
-private:
+public:
 	ConcentrationVolume 								*concvol;
 	mylist<Concentration>::mylist_item<Concentration>	*conc;
 	Molecule											*mole;
+	mylist<CLI_Command>									base_cmdlist;
+	mylist<CLI_Command>									dump_cmdlist;
 
-	mylist<CLI_Command>									cmdlist;
 
-public:
-	Concentration_CLI();
+	Concentration_CLI(ConcentrationVolume &cvol);
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();
 	void 	test();
-	int		addcmd(int 	(*operation)(Concentration_CLI*, int, char**), char *name);
-	int		run(int argc, char **argv);
+	//int		addcmd2(int 	(*operation)(Concentration_CLI*, int, char**), char *name);
+	//int		run2(int argc, char **argv);
+	int		run2(char *line);
+	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
+	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
+	int		run(mylist<CLI_Command> *cmd_list, char *line);
 };
 
 
 //---------------------------------
-//Result	opcode_debug(Concentration_Engine *eng,		Concentration_Unit *exe_unit); 	// debug = T
-int		cli_help(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump(Concentration_CLI *cli, int argc, char **argv);
+// int		cli_quit(Concentration_CLI *cli, int argc, char **argv);
 //---------------------------------
 
 

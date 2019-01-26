@@ -48,7 +48,9 @@ public:
 // -------------------------------
 class ConcentrationVolume {
 private:
+	mylist<Molecule> 	mole_list;
 	mylist<Concentration> 	conc_list;
+
 
 public:
 
@@ -57,6 +59,7 @@ public:
 	virtual ~ConcentrationVolume();
 	// ----
 	void dump();
+	void dumpmoles() { mole_list.dump(); }
 	// ---------
 	Concentration	*search(Molecule	*m);
 	ConcLevelType	get(Molecule	*m);
@@ -68,6 +71,7 @@ public:
 	//----
 	//void test(Concentration *c1, Concentration *c2, Concentration *c3);
 	void test(void);
+	void test2(ConcentrationVolume *cvol);
 };
 // -------------------------------
 

@@ -29,7 +29,6 @@ void test_match_pos() {
 	matchpos.test();
 
 
-
 }
 
 void test_peptide()
@@ -275,8 +274,25 @@ void test_conc_vol()
 
 }
 void test_cli() {
-	Concentration_CLI cli;
+	ConcentrationVolume vol;
+	Concentration_CLI cli(vol);
 	cli.test();
+
+	char *line = NULL;
+
+
+	while(true) {
+		free(line); line = NULL;
+		printf("#> ");
+		size_t size;
+		if (getline(&line, &size, stdin) == -1) {
+			printf("No line\n");
+		} //else {		printf("[%d][%s]", (int) size, line);	}
+
+		int r = cli.run(&cli.base_cmdlist, line);
+		printf("Run = [%d]\n", r);
+	}
+
 }
 //---------------------------------- //----------------------------------
 /*
