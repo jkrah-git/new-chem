@@ -122,6 +122,7 @@ void test_mylist()
 	printf("### --------------------------------------\n");
 	// ----
 	printf("### -------------------\n");
+	printf("###  delete p2..\n");
 	p4 = pep_list.del(p2);	printf("### p4 = del(p2) =>");	DUMP(p4); NL
 	printf("### -- post ->");	pep_list.dump();
 	printf("### -------------------\n");
@@ -161,8 +162,8 @@ void test_mylist()
 	while (pep_list.gettail()!=NULL) {
 		printf("### -------------------\n");
 		p4 = pep_list.del(pep_list.gettail());
-		printf("### p4 = del(tail) =>");	DUMP(p4); NL
-		printf("### post-del.. \n");	pep_list.dump();	printf("\n");
+		printf("### p4 = del(tail) =>"); NL 	DUMP(p4); NL
+		printf("### post-del.. \n"); NL	pep_list.dump();	printf("\n");
 	}
 	printf("### -------------------\n");
 	printf("### post delete tails..\n ");	pep_list.dump();	printf("\n");
@@ -282,22 +283,26 @@ void test_cli() {
 	//cli.test();
 	cli.load_commands();
 
-	char	cmd[64];
 
 	int r;
+	if (false) {
+		char	cmd[64];
+		sprintf(cmd, "concvol_test\n");  r = cli.run(&cli.base_cmdlist, cmd);	printf("Run = [%d]\n", r);
+	}
+
 	char *line = NULL;
-
-	sprintf(cmd, "concvol_test\n");  r = cli.run(&cli.base_cmdlist, cmd);	printf("Run = [%d]\n", r);
-
 	while(true) {
 		free(line); line = NULL;
 		printf("#> ");
 		size_t size;
 		if (getline(&line, &size, stdin) == -1) {
 			printf("No line\n");
-		} //else {		printf("[%d][%s]", (int) size, line);	}
+		} //else {		printf("[%d][%s]", (int) strlen(line), line);	}
 
-		r = cli.run(&cli.base_cmdlist, line);	printf("Run = [%d]\n", r);
+		if (strlen(line)>1) {
+			r = cli.run(&cli.base_cmdlist, line);
+			if (r!=0) printf("Run = [%d]\n", r);
+		}
 	}
 
 }

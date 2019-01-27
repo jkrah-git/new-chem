@@ -35,15 +35,17 @@ public:
 	public:
 		U					*item;
 		mylist_item<U>		*next;
+		mylist_item<U>		*prev;
 
-		mylist_item() {				item = NULL; next = NULL; }
-		virtual ~mylist_item(){		item = NULL; next = NULL; }
+		mylist_item() {				item = NULL; prev = NULL; next = NULL; }
+		virtual ~mylist_item(){		item = NULL; prev = NULL; next = NULL; }
 		// --------------------------------------
 		void 		dump(void) {
-			printf("mylist_item[0x%zX].item[0x%zX].next[0x%zX] ->",
+			printf("mylist_item[0x%zX].item[0x%zX].next[0x%zX].prev[0x%zX] ->",
 					(long unsigned int) this,
 					(long unsigned int) item,
-					(long unsigned int) next);
+					(long unsigned int) next,
+					(long unsigned int) prev);
 			if (item==NULL) printf("NULL\n");
 			else item-> dump();
 		}
@@ -95,7 +97,8 @@ public:
 	virtual ~mylist();
 	mylist_item<T>	*gethead(void){ return head; };
 	mylist_item<T>	*gettail(void){ return tail; };
-	mylist_item<T>	*getpar(mylist_item<T> *list_item);
+	//mylist_item<T>	*getpar(mylist_item<T> *list_item);
+
 
 	void 		dump(void);
 
@@ -105,6 +108,8 @@ public:
 	mylist_item<T> 	*add(T *element);
 	mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
 	mylist_item<T> 	*del(mylist_item<T> *item){	return del(item, false);	}
+	mylist_item<T>	*offset(int steps){ return offset(NULL, steps); }
+	mylist_item<T>	*offset(mylist_item<T> *start, int steps);
 	// --------------------
 	void			clear(void)  { clear(false); };
 	// --------------------
@@ -124,21 +129,26 @@ template <class T> mylist<T>::mylist() {	head = NULL;	tail = NULL;	};
 template <class T> mylist<T>::~mylist() {	clear();	};
 
 // --------------------------
-template <class T> mylist<T>::mylist_item<T> *mylist<T>::getpar( mylist<T>::mylist_item<T>	*list_item){
+/*template <class T> mylist<T>::mylist_item<T> *mylist<T>::getpar( mylist<T>::mylist_item<T>	*list_item){
 	mylist_item<T> *parent = NULL;
 	mylist_item<T> *item = head;
 
 	while(item!=NULL) {
 		if (item-> next == list_item) {
 			parent = item;
+			if (list_item-> prev != item) { PRINT("ERROR!! [0x%zx].prev[0x%zx] != [0x%zx] !!\n",
+					(size_t) list_item, (size_t) list_item-> prev, (size_t) item);
+			}
 			break;
 		}
 		// ----
 		item = item-> next;
 	}
+
+
 	return parent;
 }
-// --------------------------
+*/// --------------------------
 
 // --------------------------
 template <class T> void mylist<T>::clear(bool do_subitem) {
@@ -193,8 +203,11 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element){
 	if ((head==NULL) || (tail==NULL)) {
 		head = new_item;
 		tail = new_item;
+		new_item-> prev = NULL;
+
 	} else {
 		tail-> next = new_item;
+		new_item-> prev = tail;
 		tail = new_item;
 
 	}
@@ -224,26 +237,41 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	if (del_item==NULL)
 		return NULL;
 
-	//printf("++++++++++   DELETE ITEM ++++++++++\n");	del_item-> dump(); NL
+//	PRINT("++++++++++   DELETE ITEM ++++++++++\n");
+//	del_item-> dump(); NL
+//	PRINT(". Start Delete[0x%zX]..\n",  (long unsigned int) del_item);
 
+	// of not head then deal with parent
 	mylist_item<T> *parent = NULL;
 
 	// head / root node
 	if (del_item==head) {
 		head = del_item-> next;
+		if (head!=NULL) {
+			head-> prev = NULL;
+		}
 		parent = NULL;
 	} else { // not head
-		parent = getpar(del_item);
+		parent = del_item-> prev;
 		if (parent==NULL) {
-			printf("!!! Warning - del_item's parent not found in list...\n");
+			PRINT("!!! Warning - del_item's parent not found in list...\n");
 			return NULL;
 		}
 	}
+	//---------------------
+	//PRINT(". Parent[0x%zX]..\n",  (long unsigned int) parent);
 
 	// re-tail list
 	if (del_item==tail) { tail = parent; }
-	//--  fix parent
-	if (parent!=NULL) { parent-> next = del_item-> next; }
+
+	//--  fix parent (NULL for head)
+	if (parent != NULL) {
+		parent-> next = del_item-> next;
+		if (del_item-> next != NULL) {
+			del_item-> next-> prev = parent;
+		}
+	}
+
 
 	// --------------
 	// clear sub item
@@ -262,6 +290,34 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	return parent;
 
 }
+// --------------------------
+
+// template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item, bool do_subitem) {
+
+
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *start, int steps){
+	if (steps==0) return start;
+	mylist_item<T> *item = NULL;
+    int c = steps;
+
+	if (steps<0) {
+		if (start==NULL) start = tail;
+		item = start;
+		while ((item!=NULL) && (c++<0)) {
+			item = item-> prev;
+		}
+	} else {
+		// steps>0
+		if (start==NULL) start = head;
+		item = start;
+		while ((item!=NULL) && (c-->0)) {
+			item = item-> next;
+		}
+	}
+	return item;
+}
+
+
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
 	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]..",

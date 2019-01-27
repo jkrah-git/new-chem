@@ -42,7 +42,7 @@ public:
 	//------------
 	void		clear(void);
 	void		getbounds(PeptidePos *min, PeptidePos *max);
-	void		dump(void) { dump(false); }
+	void		dump(void) { dump(true); }
 	void		dump(bool dorender);
 
 	// move to helper
