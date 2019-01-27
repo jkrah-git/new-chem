@@ -108,7 +108,12 @@ int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	printf("===\n");
+	printf("===============\n");
+	printf("====  Core ====\n");
+	printf("===============\n");
 	cli-> core-> dump();
+	printf("===============\n");
 	return 0;
 }
 //---------------------------------//---------------------------------
@@ -661,6 +666,76 @@ int	cli_conc(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
+int	cli_conc_push(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+
+	mylist<Concentration>::mylist_item<Concentration>  *new_item = NULL;
+
+	// ../chem/Concentration.h:33: note: candidates are: Concentration::Concentration(Molecule*)
+	new_item = cli-> core->concentration_stack.add();
+	if (new_item ==NULL) return -10;
+	if (new_item-> item ==NULL) return -11;
+
+	// if nothing selected - (select new) (and leave entry blank)
+	if (cli-> core-> conc==NULL) {	   // (or use current mole)
+		if (cli-> core-> mole != NULL) {
+			new_item-> item->setmole(cli-> core-> mole);
+		}
+		cli-> core-> conc = new_item-> item;	// select
+	} else { // copy in selected to new
+		*new_item-> item = *cli-> core-> conc;
+	}
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_conc_pop(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	//-------
+	// PRINT(": argc[%d]", argc);
+	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	// printf("\n");
+	//-------
+	mylist<Concentration>::mylist_item<Concentration>  *tail = cli-> core-> concentration_stack.gettail();
+	if (tail ==NULL) return -10;
+	if (tail-> item ==NULL) return -11;
+
+	//*cli-> core-> pep = *tail-> item;
+	if (cli-> core-> conc == tail-> item) {
+		cli-> core-> conc = NULL;
+	}
+	cli-> core-> concentration_stack.del(tail);
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_conc_ld(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+
+	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
+
+	if (argc<1) {
+		item = cli-> core-> concentration_stack.gettail();
+	} else {
+		int off;
+		if ( sscanf(argv[0], "%d", &off) <0) {
+			printf("bad offset [%s].\n", argv[0]);
+			return -20;
+		}
+		//printf("..load [%d]\n", off);
+		item = cli-> core-> concentration_stack.offset(off);
+	}
+
+	// ----------- save
+	if (item ==NULL) return -10;
+	if (item-> item ==NULL) return -11;
+	cli-> core-> conc = item-> item;
+
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
 
 //=======================
 //---------------------------------//---------------------------------
@@ -742,7 +817,9 @@ int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
 	// 'conc' commands
 	cli-> conc_cmdlist.clear();
 	sprintf(name, "conc");	 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_conc, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
-	//  sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	  sprintf(name, "push"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_push, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	  sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_pop, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	  sprintf(name, "ld"); 			r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_ld, (char*) name);			PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 
 	return 0;
 }

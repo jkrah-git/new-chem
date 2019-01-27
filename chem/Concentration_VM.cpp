@@ -41,7 +41,7 @@ Concentration_VM::Concentration_VM() {
 Concentration_VM::~Concentration_VM() { }
 //-------------------------------------
 void Concentration_VM::dumpregs(){
-	printf("Concentration_VM[0x%zX]::", (long unsigned int) this);
+	printf("Concentration_VM[0x%zX].REGS -> ", (long unsigned int) this);
 	printf("pep[0x%zX] mole[0x%zX] conc[0x%zX] vol[0x%zX]\n",
 			(long unsigned int) pep,
 			(long unsigned int) mole,
@@ -52,7 +52,7 @@ void Concentration_VM::dumpregs(){
 //-------------------------------------
 //-------------------------------------
 void Concentration_VM::dumpstacks(){
-	printf("Concentration_VM[0x%zX].dumpstacks..\n", (long unsigned int) this);
+	printf("Concentration_VM[0x%zX].(stacks) ->\n", (long unsigned int) this);
 	printf("peptide_stack: "); peptide_stack.dump(); NL
 	printf("molecule_stack: "); molecule_stack.dump(); NL
 	printf("concentration_stack: "); concentration_stack.dump(); NL
@@ -60,18 +60,6 @@ void Concentration_VM::dumpstacks(){
 }
 //-------------------------------------
 void Concentration_VM::dump(){
-	/*
-	printf("Concentration_VM[0x%zX]::", (long unsigned int) this);
-	printf("pep[0x%zX] mole[0x%zX] conc[0x%zX] vol[0x%zX]\n",
-			(long unsigned int) pep,
-			(long unsigned int) mole,
-			(long unsigned int) conc,
-			(long unsigned int) concvol	);
-
-	printf("peptide_stack: "); peptide_stack.dump(); NL
-	printf("molecule_stack:"); molecule_stack.dump(); NL
-	printf("concentration_stack:"); concentration_stack.dump(); NL
-	*/
 	dumpregs();
 	dumpstacks();
 }

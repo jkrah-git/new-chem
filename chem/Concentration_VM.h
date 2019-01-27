@@ -12,7 +12,7 @@
 #include "Peptide.h"
 #undef DEBUG
 //#define DEBUG
-#include "debug.h"
+#include "../include/debug.h"
 
 //-------------------------------------
 class Concentration_VM {

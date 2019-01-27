@@ -6,13 +6,13 @@
  */
 
 #include "PeptidePos.h"
-#include "common.h"
 #include <stdlib.h>
 #include <stdio.h>
 //-----
 #undef DEBUG
 //#define DEBUG
-#include "debug.h"
+#include "../include/debug.h"
+#include "../include/common.h"
 
 
 

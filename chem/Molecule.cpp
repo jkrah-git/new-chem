@@ -12,8 +12,8 @@
 //-----
 #undef DEBUG
 //#define DEBUG
-#include "debug.h"
-#include "common.h"
+#include "../include/debug.h"
+#include "../include/common.h"
 
 
 /*

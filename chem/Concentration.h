@@ -14,7 +14,7 @@
  */
 // -------------------------------
 #include "Molecule.h"
-#include "../mylist.h"
+#include "../include/mylist.h"
 #include "mybuffer.h"
 // -------------
 typedef float ConcLevelType;
@@ -28,14 +28,24 @@ private:
 	Molecule				*mole;
 	// ---
 
+	/*
+	 * 	Concentration::Concentration() {	mole = NULL;	}
+		Concentration::Concentration(Molecule *m) {	mole = m;	}
+		Concentration::~Concentration() 			{	mole = NULL; }
+		Molecule	*Concentration::getmole(void)	{	return mole;	}
+	 */
+
 public:
 	// ---
-	Concentration(Molecule	*m);
-	virtual ~Concentration();
-	void 		dump();
+	Concentration(){	mole = NULL;	}
+	Concentration(Molecule	*m){	mole = m;	}
+	~Concentration(){	mole = NULL; };
+	Molecule		*getmole(){	return mole;	}
+	void			setmole(Molecule	*m){ mole = m; }
+	ConcLevelType	get() { return buf.get(); };
+	void 			dump();
+
 	//--------
-	Molecule		*getmole(void);
-	ConcLevelType	get(void) { return buf.get(); };
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(ConcAdjustType adj);
 	ConcLevelType	put(ConcLevelType amount);

@@ -12,7 +12,7 @@
 #include "Peptide.h"
 //-----
 //#define DEBUG
-#include "common.h"
+#include "../include/common.h"
 
 
 

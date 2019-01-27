@@ -8,7 +8,7 @@
 #include "Concentration.h"
 #undef DEBUG
 //#define DEBUG
-#include "debug.h"
+#include "../include/debug.h"
 
 
 
@@ -34,13 +34,16 @@ public:
 };
 // -------------------------------
  */
+/*
+Concentration::Concentration() {	mole = NULL;	}
 Concentration::Concentration(Molecule *m) {	mole = m;	}
 Concentration::~Concentration() 			{	mole = NULL; }
 Molecule	*Concentration::getmole(void)	{	return mole;	}
-
+*/
+// -------------------------------
 // -------------------------------
 void Concentration::dump(){
-	printf("Concentration[0x%zX].",	(long unsigned int) this);
+	printf("Concentration[0x%zX].mole[0x%zX]::",	(long unsigned int) this, (long unsigned int) mole);
 	buf.dump(); NL
 	//mole.dump();
 	DUMP(mole);

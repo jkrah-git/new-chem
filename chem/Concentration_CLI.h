@@ -14,7 +14,7 @@
 
 #undef DEBUG
 //#define DEBUG
-#include "debug.h"
+#include "../include/debug.h"
 
 /*  == cmds ==
  *  list (available nodes)

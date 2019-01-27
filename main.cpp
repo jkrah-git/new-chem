@@ -7,7 +7,7 @@
 #include "chem/MoleculeMatchPos.h"
 #include "chem/Concentration_CLI.h"
 #include "chem/CLI_Command.h"
-#include "mylist.h"
+#include "include/mylist.h"
 
 
 #include <string.h>

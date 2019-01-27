@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 //#define DEBUG
-#include "chem/debug.h"
+#include "../include/debug.h"
 
 
 //#ifdef LOG
