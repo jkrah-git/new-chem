@@ -53,7 +53,7 @@ int		cli_file(Concentration_CLI *cli, int argc, char **argv){
     while (fgets(str, MAXCHAR, fp) != NULL) {
    	   	printf("%s", str);
 
-		if (strlen(str)>0) {
+		if (strlen(str)>1) {
 			int r = cli-> run(&cli-> base_cmdlist, str);
 			if (r!=0) printf("Run = [%d]\n", r);
 		}
