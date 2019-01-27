@@ -19,10 +19,15 @@ public:
 	ConcentrationVolume 		*concvol;
 	Concentration				*conc;
 	Molecule					*mole;
+
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;
 	mylist<CLI_Command>			load_cmdlist;
+	mylist<CLI_Command>			stack_cmdlist;
 
+	mylist<Peptide>				peptide_stack;
+	mylist<Molecule>			molecul_stack;
+	mylist<Concentration>		concentration_stack;
 
 	Concentration_CLI(ConcentrationVolume &cvol);
 	virtual ~Concentration_CLI();
@@ -40,24 +45,24 @@ public:
 //---------------------------------
 void Concentration_CLI::dump() {
 
-	printf("Concentration_CLI[0x%zX]:: concvol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
-			(long unsigned int) this,
-			(long unsigned int) concvol,
-			(long unsigned int) conc,
-			(long unsigned int) mole );
+//	printf("Concentration_CLI[0x%zX]:: concvol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
+//			(long unsigned int) this,
+//			(long unsigned int) concvol,
+//			(long unsigned int) conc,
+//			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
 	printf("'Base' Commands..\n");	base_cmdlist.dump();
 	printf("'dump' Commands..\n");	dump_cmdlist.dump();
 	printf("'load' Commands..\n");	load_cmdlist.dump();
+	printf("'stack' Commands..\n");	stack_cmdlist.dump();
 
 }
 //---------------------------------
 
-Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol) {
-	concvol  = &cvol;
-	conc = NULL;
-	mole = NULL;
-
+Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
+	core = &vm;
+	if (core!=NULL)
+		core-> concvol = &cvol;
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}
@@ -170,10 +175,9 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 void Concentration_CLI::load_commands() { 	cli_load_commands(this, 0, NULL);	}
 
 //---------------------------------//---------------------------------
+/*
 Concentration	*Concentration_CLI::search_conc(char *name) {
 	Concentration *result  = NULL;
-	// TODO cli.search.conc
-	// TODO mylist search by id
 	return result;
 }
-
+*/

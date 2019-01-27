@@ -22,12 +22,11 @@ class MoleculeMatchPos;
 // -------------------------------
 class Molecule {
 private:
-	mylist<Peptide> 	pep_list;
 	// ---
 	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
-
+	mylist<Peptide> 	pep_list;
 	// ----
 	Molecule();
 	virtual ~Molecule();

@@ -47,11 +47,9 @@ public:
 
 // -------------------------------
 class ConcentrationVolume {
-private:
-	mylist<Molecule> 	mole_list;
-
 
 public:
+	mylist<Molecule> 	mole_list;
 	mylist<Concentration> 	conc_list;
 
 	// ---

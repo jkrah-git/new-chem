@@ -274,13 +274,20 @@ void test_conc_vol()
 
 }
 void test_cli() {
+	Concentration_VM vm;
 	ConcentrationVolume vol;
-	Concentration_CLI cli(vol);
+	//vm.dump();	return;
+
+	Concentration_CLI cli(vol, vm);
 	//cli.test();
 	cli.load_commands();
 
+	char	cmd[64];
+
+	int r;
 	char *line = NULL;
 
+	sprintf(cmd, "concvol_test\n");  r = cli.run(&cli.base_cmdlist, cmd);	printf("Run = [%d]\n", r);
 
 	while(true) {
 		free(line); line = NULL;
@@ -290,8 +297,7 @@ void test_cli() {
 			printf("No line\n");
 		} //else {		printf("[%d][%s]", (int) size, line);	}
 
-		int r = cli.run(&cli.base_cmdlist, line);
-		printf("Run = [%d]\n", r);
+		r = cli.run(&cli.base_cmdlist, line);	printf("Run = [%d]\n", r);
 	}
 
 }
