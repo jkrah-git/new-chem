@@ -187,10 +187,10 @@ int	MoleculeMatchPos::nextmatch(void){
 		PeptidePos testpos;
 		testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
 		testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
-		PRINT("=============================\n");
-		PRINT("testpos ==>");	testpos.dump(); NL
-		PRINT("matchpos==>");	dump(); NL
-		PRINT("=============================\n");
+	//	PRINT("=============================\n");
+	//	PRINT("testpos ==>");	testpos.dump(); NL
+	//	PRINT("matchpos==>");	dump(); NL
+	//	PRINT("=============================\n");
 
 		// test the traslated pos on 'this' (root)  molecole
 		mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> test_pos(&testpos);

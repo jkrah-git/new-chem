@@ -830,9 +830,30 @@ int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
 		printf("usage: var set name value\n");
 		return -1;
 	}
-	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], argv[1]);
+	//-------
+	 PRINT(": argc[%d]", argc);
+	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	 printf("\n");
+	//-------
+
+	char buf[KEYVAL_MAX_VAL];
+	buf[0] = '\0';
+	int c=0;
+	for (int i=1; i<argc; i++) {
+		if ((strlen(buf) + strlen(argv[i]+1) < KEYVAL_MAX_VAL)) {
+
+			printf("arg[%d][%s] -> buf[%d][%s]\n", i, argv[i], c, buf);
+			if (i>1) buf[c++] = ' ';
+			strcpy(&buf[c], argv[i]);
+			c += strlen(argv[i]);
+			//buf[c+1] = '\0';
+		}
+	}
+	printf("set [%s]=[%s]\n", argv[0], buf);
+
+	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], buf);
 	if (item==NULL) {
-		printf("failed to set var[%s]\n", argv[0]);
+		printf("failed to set var[%s]\n", buf);
 		return -2;
 	}
 	return 0;

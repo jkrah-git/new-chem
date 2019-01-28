@@ -320,7 +320,7 @@ void Molecule::testmatch(void){
 	// -------------
 	printf("molecule.testmatch: == END ==\n");
 }
-// todo: nextmatch
+//
 // -------------------------------
 /*
 int	Molecule::nextmatch(MoleculeMatchPos *matchpos){

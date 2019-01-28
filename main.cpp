@@ -300,6 +300,13 @@ void test_cli() {
 			r = cli.run(&cli.base_cmdlist, line);
 			if (r!=0) printf("Run = [%d]\n", r);
 		}
+
+		char *autocmd_tag = "autoexec\0";
+		char *autocmd_val = cli.var_list.get(autocmd_tag);
+		if (autocmd_val!=NULL) {
+			 cli.run(&cli.base_cmdlist, autocmd_val);
+		}
+
 	}
 
 }
