@@ -76,7 +76,17 @@ TODO 1. chem structure
     =======================
   - console
     =======================
+    Done
 	- stack -  dump|push|pop|clear  pep|mole|conc
+	Todo
+	- finish matches
+	- dump() formatting.. (mole dump/render)
+	Later..
+	- autocmd (think bash prompt) - displ, clear etc
+	- cmdlist
+	
+
+
 
     =======================
   - conc.match (c2); (M1, M2)

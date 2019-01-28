@@ -23,7 +23,6 @@ class MoleculeMatchPos;
 class Molecule {
 private:
 	// ---
-	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 public:
 	mylist<Peptide> 	pep_list;
@@ -38,13 +37,14 @@ public:
 	int			addpep(PepSig sig);
 	// todo finish matching
 	//----------- matching
-	MoleculeMatchPos	*startmatch(Molecule *matchmole);
-	int			nextmatch(MoleculeMatchPos *matchpos);
+	//MoleculeMatchPos	*startmatch(Molecule *matchmole);
+	//int			nextmatch(MoleculeMatchPos *matchpos);
 	//------------
 	void		clear(void);
 	void		getbounds(PeptidePos *min, PeptidePos *max);
 	void		dump(void) { dump(true); }
 	void		dump(bool dorender);
+	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
 
 	// move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };

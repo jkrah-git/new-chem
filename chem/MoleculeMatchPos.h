@@ -27,11 +27,14 @@ public:
 	//---------
 	//void		init2(PeptidePos *start, PeptidePos *end);
 	void		clear(){ mole1 = NULL; mole2 = NULL; }
+	void		setM1(Molecule *_mole){ mole1 = _mole; }
+	void		setM2(Molecule *_mole){ mole2 = _mole; }
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 
 	// nextpos returns 0=ok, 1=new rot, -1
 	int			nextpos();
-
+	//nextmatch = <0 error / done,
+	int			nextmatch();
 	//MoleculeMatchPos(Molecule *base, Molecule *match);
 	MoleculeMatchPos();
 	virtual ~MoleculeMatchPos();

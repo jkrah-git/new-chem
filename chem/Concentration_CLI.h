@@ -44,6 +44,7 @@ public:
 	mylist<CLI_Command>			mole_cmdlist;
 	mylist<CLI_Command>			conc_cmdlist;
 	mylist<CLI_Command>			var_cmdlist;
+	mylist<CLI_Command>			match_cmdlist;
 
 	KeyValList					var_list;
 
@@ -68,6 +69,8 @@ public:
 	void	mole_cmdlist_dump(void) { printf ("'mole' Commands => ");  mole_cmdlist.dump(); }
 	void	conc_cmdlist_dump(void) { printf ("'conc' Commands => ");  	conc_cmdlist.dump(); }
 	void	var_cmdlist_dump(void) { printf ("'var' Commands => ");  	var_cmdlist.dump(); }
+	void	match_cmdlist_dump(void) { printf ("'match' Commands=> "); 	match_cmdlist.dump(); }
+
 	void	var_list_dump(void) { printf ("'Variables' => ");  			var_list.dump(); }
 
 };

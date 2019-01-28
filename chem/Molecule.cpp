@@ -312,7 +312,7 @@ void Molecule::testmatch(void){
 	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
 	printf("molecule.testmatch: ------------------------------- \n");
 	printf("molecule.testmatch: ------------------------------- \n");
-	int r = nextmatch(&matchpos);
+	int r = matchpos.nextmatch();
 	printf("molecule.testmatch: ------------------------------- \n");
 	printf("molecule.testmatch: next matchpos = [%d] \n", r); matchpos.dump();
 	printf("molecule.testmatch: ---------------- \n");
@@ -320,8 +320,9 @@ void Molecule::testmatch(void){
 	// -------------
 	printf("molecule.testmatch: == END ==\n");
 }
-
+// todo: nextmatch
 // -------------------------------
+/*
 int	Molecule::nextmatch(MoleculeMatchPos *matchpos){
 
 	PRINT("molecule.nextmatch..\n");
@@ -371,31 +372,13 @@ int	Molecule::nextmatch(MoleculeMatchPos *matchpos){
 		}
 
 
-		/*
-		PRINT("pos1 : "); NL
-		test_item-> item-> pos.dump(); NL
-		PeptidePos  pos1 = test_item-> item-> pos;	pos1.dump(); NL
-
-		PRINT("pos2 : "); NL
-		matchpos-> current_pos.dump(); NL
-		PeptidePos  pos2 = matchpos-> current_pos; pos2.dump(); NL
-
-		//= matchpos-> current_pos)
-
-		PeptidePos  pos3 = pos1+ pos2;
-		PRINT("pos3: "); NL
-		pos3.dump(); NL
-*/
-
-
-
-
 		//----
 		test_item = test_item-> next;
 	} // next current_item
 
 	return 0;
 }
+*/
 //------------
 
 

@@ -105,13 +105,15 @@ int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 
 	if (argc<1) {
-		if (cli->core-> concvol != NULL) {
-			cli->core-> concvol-> dump();
-			return 0;
-		} //else
-		return -1;
+
+	//	if (cli->core-> concvol != NULL) {
+	//		cli->core-> concvol-> dump();
+	//		return 0;
+	//	} //else
+	//	return -1;
+		cli-> dump();
 		//cli-> dump_cmdlist_dump();
-		//return 0;
+		return 0;
 	}
 	// else
 	return 	cli-> run(&cli-> dump_cmdlist, argc,  &argv[0]);
@@ -128,6 +130,13 @@ int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){
 int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	cli-> dump();
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------//---------------------------------//---------------------------------
+int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	cli-> core-> dump();
 	return 0;
 }
 //---------------------------------//---------------------------------
@@ -357,9 +366,10 @@ int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_help, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "cli"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_cli, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "core"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_core, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "stacks"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_stacks, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "moles"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_moles, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
-//	 sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "regs"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_regs, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "vol"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_vol, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "conc"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_conc, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);

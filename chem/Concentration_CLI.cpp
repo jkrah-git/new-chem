@@ -13,6 +13,7 @@
 
 #include "Concentration_CLI.Commands/base.cpp"
 #include "Concentration_CLI.Commands/vars.cpp"
+#include "Concentration_CLI.Commands/match.cpp"
 
 // -------------------
 //---------------------------------//---------------------------------
@@ -200,6 +201,7 @@ void Concentration_CLI::load_commands() {
 	//cli_load_commands(this, 0, NULL);
 	cli_load_base(this, 0, NULL);
 	cli_load_vars(this, 0, NULL);
+	cli_load_match(this, 0, NULL);
 }
 
 //---------------------------------//---------------------------------
