@@ -72,6 +72,8 @@ void Concentration_VM::dumpstacks(){
 void Concentration_VM::dump(){
 	dumpregs();
 	dumpstacks();
+	matchpos.dump();
+
 }
 /*
 //-------------------------------------

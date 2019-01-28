@@ -9,7 +9,11 @@
 #include <string.h>
 
 // -------------------
-#include "Concentration_CLI_External_Commands.cpp"
+//#include "Concentration_CLI_External_Commands.cpp"
+
+#include "Concentration_CLI.Commands/base.cpp"
+#include "Concentration_CLI.Commands/vars.cpp"
+
 // -------------------
 //---------------------------------//---------------------------------
 /*
@@ -192,7 +196,11 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 }
 //---------------------------------
 //---------------------------------//---------------------------------
-void Concentration_CLI::load_commands() { 	cli_load_commands(this, 0, NULL);	}
+void Concentration_CLI::load_commands() {
+	//cli_load_commands(this, 0, NULL);
+	cli_load_base(this, 0, NULL);
+	cli_load_vars(this, 0, NULL);
+}
 
 //---------------------------------//---------------------------------
 /*

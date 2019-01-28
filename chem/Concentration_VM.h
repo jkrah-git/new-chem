@@ -7,9 +7,11 @@
 
 #ifndef CONCENTRATION_VM_H_
 #define CONCENTRATION_VM_H_
-#include "Concentration.h"
-#include "CLI_Command.h"
 #include "Peptide.h"
+#include "Concentration.h"
+#include "MoleculeMatchPos.h"
+#include "CLI_Command.h"
+//-------------
 #undef DEBUG
 //#define DEBUG
 #include "../include/debug.h"
@@ -25,6 +27,9 @@ public:
 	Molecule					*mole;
 	Concentration				*conc;
 	ConcentrationVolume 		*concvol;
+
+	MoleculeMatchPos			matchpos;
+
 
 	//-----------
 	Concentration_VM();

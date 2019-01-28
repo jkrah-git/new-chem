@@ -235,7 +235,6 @@ int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 // Molecule[0x17C4670]
-// todo: marker -> load_mole
 int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 
@@ -647,8 +646,6 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 //===  MOLE commands  ===
 //=======================
 //=======================
-
-//TODO - stack -  dump|push|pop|clear  pep|mole|conc
 //---------------------------------//---------------------------------
 int	cli_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
@@ -1102,7 +1099,6 @@ int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
 	if (item-> item == NULL) return -11;
 	cli->core-> conc = item-> item;
 
- 	// todo marker fromvar
 
 	return 0;
 }

@@ -305,7 +305,9 @@ void Molecule::testmatch(void){
 	printf("molecule.testmatch: ---------------- \n");
 	// -------------
 	printf("molecule.testmatch: ------------------------------- \n");
-	MoleculeMatchPos matchpos(this, &m2);
+	//MoleculeMatchPos matchpos(this, &m2);
+	MoleculeMatchPos matchpos;
+	matchpos.set(this, &m2);
 	printf("molecule.testmatch: ------------------------------- \n");
 	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
 	printf("molecule.testmatch: ------------------------------- \n");

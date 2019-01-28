@@ -19,38 +19,35 @@
 class MoleculeMatchPos {
 private:
 	void		rotatemole();
+	Molecule	*mole1;
+	Molecule	*mole2;
 public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
 	PepRot		rotation;
-	Molecule	*basemole;
-	Molecule	*matchmole;
 	Molecule	*rotmole;
 	//---------
-	void		init2(PeptidePos *start, PeptidePos *end);
+	//void		init2(PeptidePos *start, PeptidePos *end);
+	void		clear(){ mole1 = NULL; mole2 = NULL; }
+	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 
 	// nextpos returns 0=ok, 1=new rot, -1
 	int			nextpos();
-	//Molecule	*gettestmole(void) { return testmole; }
-	//PepRot		getrotation(void) { return rotation; }
 
-	MoleculeMatchPos();
+	MoleculeMatchPos(Molecule *base, Molecule *match);
 	virtual ~MoleculeMatchPos();
 	void	dump();
 	void 	test();
 };
 //----------------------------------
-
  */
 //----------------------------------
 //----------------------------------
-MoleculeMatchPos::MoleculeMatchPos(Molecule *base, Molecule *match) {
-	basemole = base;
-	matchmole = match;
+MoleculeMatchPos::MoleculeMatchPos() {
 	rotmole = new Molecule;
 	rotation = -1;
-	//init(NULL, NULL);
+	clear();
 }
 MoleculeMatchPos::~MoleculeMatchPos() {
 	if (rotmole != NULL ) {
@@ -64,19 +61,18 @@ void MoleculeMatchPos::dump(){
 	printf("MoleculeMatchPos:: last_pos"); current_pos.dump(); NL
 	printf("MoleculeMatchPos:: start_pos"); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos"); end_pos.dump();  NL
-	printf("MoleculeMatchPos:: basemole :"); DUMP(basemole) if (basemole==NULL) NL
-	printf("MoleculeMatchPos:: matchmole :"); DUMP(matchmole) if (matchmole==NULL) NL
+	printf("MoleculeMatchPos:: M1 :"); DUMP(mole1) if (mole1==NULL) NL
+	printf("MoleculeMatchPos:: M2 :"); DUMP(mole2) if (mole2==NULL) NL
 	printf("MoleculeMatchPos:: rotmole :"); DUMP(rotmole)
 }
 
 //----------------------------------
 void MoleculeMatchPos::rotatemole() {
-	if (basemole==NULL) return;
-	if (matchmole==NULL) return;
+	if ((mole1==NULL)||(mole2==NULL)) return;
 	PeptidePos min1, max1, min2, max2;
 
-	matchmole-> rotate(rotation, rotmole);
-	basemole-> getbounds(&min1, &max1);
+	mole2-> rotate(rotation, rotmole);
+	mole1-> getbounds(&min1, &max1);
 	rotmole-> getbounds(&min2, &max2);
 
 	PRINT(":: min1, max1 : "); min1.dump(); max1.dump(); NL

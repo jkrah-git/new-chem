@@ -38,7 +38,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -1116,7 +1116,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -24,13 +24,10 @@ void test_match_pos() {
 
 
 	printf("========= test_match_pos =======\n");
-
-	MoleculeMatchPos matchpos(NULL, NULL);
+	MoleculeMatchPos matchpos;
 	matchpos.test();
-
-
 }
-
+//==============
 void test_peptide()
 {
 	Peptide A,B,C;

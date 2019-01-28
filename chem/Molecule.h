@@ -36,6 +36,7 @@ public:
 
 	// -- build
 	int			addpep(PepSig sig);
+	// todo finish matching
 	//----------- matching
 	MoleculeMatchPos	*startmatch(Molecule *matchmole);
 	int			nextmatch(MoleculeMatchPos *matchpos);

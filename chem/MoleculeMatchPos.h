@@ -16,23 +16,24 @@ class Molecule;
 class MoleculeMatchPos {
 private:
 	void		rotatemole();
+	Molecule	*mole1;
+	Molecule	*mole2;
 public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
 	PepRot		rotation;
-	Molecule	*basemole;
-	Molecule	*matchmole;
 	Molecule	*rotmole;
 	//---------
-	void		init2(PeptidePos *start, PeptidePos *end);
+	//void		init2(PeptidePos *start, PeptidePos *end);
+	void		clear(){ mole1 = NULL; mole2 = NULL; }
+	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 
 	// nextpos returns 0=ok, 1=new rot, -1
 	int			nextpos();
-	//Molecule	*gettestmole(void) { return testmole; }
-	//PepRot		getrotation(void) { return rotation; }
 
-	MoleculeMatchPos(Molecule *base, Molecule *match);
+	//MoleculeMatchPos(Molecule *base, Molecule *match);
+	MoleculeMatchPos();
 	virtual ~MoleculeMatchPos();
 	void	dump();
 	void 	test();
