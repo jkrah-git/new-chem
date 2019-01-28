@@ -1,0 +1,19 @@
+# basic 1U mole
+mole push
+pep push 0x41 0x41 0x41 0x42 0x67 0x3f
+mole build
+mole tovar M1
+stack clear pep
+
+# new conc
+conc push
+conc adj 1 0
+conc tovar C1
+
+clear all
+conc fromvar C1
+conc tovol
+
+clear all
+mole fromvar M1
+conc fromvol

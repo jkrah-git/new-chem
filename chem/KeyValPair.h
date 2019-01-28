@@ -33,6 +33,7 @@ public:
 	//------
 	mylist<KeyValPair>::mylist_item<KeyValPair>  *search(char *searchkey);
 	char 	*get(char *searchkey);
+	mylist<KeyValPair>::mylist_item<KeyValPair>  *set(char *searchkey, char *newval);
 };
 //-------------------------------
 

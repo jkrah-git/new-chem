@@ -53,9 +53,19 @@ void Concentration_VM::dumpregs(){
 //-------------------------------------
 void Concentration_VM::dumpstacks(){
 	printf("Concentration_VM[0x%zX].(stacks) ->\n", (long unsigned int) this);
-	printf("==> peptide_stack: "); peptide_stack.dump();
-	printf("==> molecule_stack: "); molecule_stack.dump();
-	printf("==> concentration_stack: "); concentration_stack.dump();
+	printf("==============================\n");
+	if (peptide_stack.gettail()!= NULL) {		printf("==============================\n");	}
+	printf("==> peptide_stack: ");
+	peptide_stack.dump();
+
+	if (molecule_stack.gettail()!=NULL) {		printf("==============================\n");	}
+	printf("==> molecule_stack: ");
+	molecule_stack.dump();
+
+	if (concentration_stack.gettail()!=NULL) {		printf("==============================\n");	}
+	printf("==> concentration_stack: ");
+	concentration_stack.dump();
+	printf("==============================\n");
 
 }
 //-------------------------------------

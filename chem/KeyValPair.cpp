@@ -71,3 +71,16 @@ char 	*KeyValList::get(char *searchkey){
 	  if ((item==NULL) ||  (item-> item ==NULL)) return NULL;
 	  return item-> item-> val;
 }
+mylist<KeyValPair>::mylist_item<KeyValPair>  *KeyValList::set(char *searchkey, char *newval){
+		if (searchkey==NULL) return NULL;
+
+		mylist<KeyValPair>::mylist_item<KeyValPair>  *item = search(searchkey);
+		if (item==NULL) {
+		  item = keyvalues.add();		  if ((item==NULL) ||  (item-> item ==NULL)) return NULL;
+		  strncpy(item-> item-> key, searchkey, KEYVAL_MAX_KEY);
+		}
+		if ((item==NULL) ||  (item-> item ==NULL)) return NULL;
+
+		strncpy(item-> item-> val, newval, KEYVAL_MAX_VAL);
+		return item;
+}
