@@ -108,7 +108,6 @@ Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
 	//printf("########## ########## ConcentrationVolume::search.m. ..\n");	DUMP(m)
 
 	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
-
 	while (item!=NULL) {
 		//printf("########## ConcentrationVolume::search.item ...\n");
 		//DUMP(item-> item->  getmole())
@@ -119,6 +118,13 @@ Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
 		item = item-> next;
 	}
 	return NULL;
+}
+//--------------
+void	ConcentrationVolume::set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta){
+	Concentration *conc = molesearch(m);
+	if (conc!=NULL) {
+		conc-> set(new_val, new_delta);
+	}
 }
 //--------------
 ConcLevelType	ConcentrationVolume::get(Molecule	*m){
@@ -140,7 +146,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	Concentration *conc = molesearch(m);
 #ifdef DEBUG
 	LOG("search =");
-	DUMP(conc); NL
+	//DUMP(conc); NL
 #endif
 	if (conc==NULL) {
 		mylist<Concentration>::mylist_item<Concentration> *item = NULL;
@@ -155,7 +161,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 
 #ifdef DEBUG
 		LOG("create =");
-		DUMP(conc) NL;
+		//DUMP(conc) NL;
 #endif
 		if (conc==NULL)
 			return -2.0;
@@ -163,7 +169,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 		item = conc_list.add(conc);
 #ifdef DEBUG
 		LOG("::ConcentrationVolume::put.. list.create =");
-		DUMP(item) NL;
+		//DUMP(item) NL;
 #endif
 	}
 	return conc->put(amount);

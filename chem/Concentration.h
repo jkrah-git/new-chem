@@ -43,6 +43,8 @@ public:
 	Molecule		*getmole(){	return mole;	}
 	void			setmole(Molecule	*m){ mole = m; }
 	ConcLevelType	get() { return buf.get(); };
+	void			set(ConcLevelType new_val, ConcLevelType new_delta) { return buf.set(new_val, new_delta); };
+	ConcLevelType	getdelta() { return buf.getdelta(); };
 	void 			dump();
 
 	//--------
@@ -71,6 +73,7 @@ public:
 	// ---------
 	Concentration	*molesearch(Molecule	*m);
 	ConcLevelType	get(Molecule	*m);
+	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
 	ConcLevelType	put(Molecule	*m, ConcLevelType amount);

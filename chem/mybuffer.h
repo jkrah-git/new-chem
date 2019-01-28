@@ -22,6 +22,7 @@ public:
 	}
 	virtual ~MyBuffer(){	}
 	// -----------
+	void	set(T new_value, T new_delta){ value = new_value; delta = new_delta; }
 	T 		get(void) { return value; }
 	T 		getdelta(void) { return delta; }
 	void 	dump(void) { printf("mybuffer[0x%zX].value[%.6f].delta[%.6f]", (long unsigned int) this, value, delta); }

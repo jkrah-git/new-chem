@@ -297,7 +297,7 @@ void test_cli() {
 		size_t size;
 		if (getline(&line, &size, stdin) == -1) {
 			printf("No line\n");
-		} //else {		printf("[%d][%s]", (int) strlen(line), line);	}
+		} // else {		printf("[%d][%s]", (int) strlen(line), line);	}
 
 		if (strlen(line)>1) {
 			r = cli.run(&cli.base_cmdlist, line);

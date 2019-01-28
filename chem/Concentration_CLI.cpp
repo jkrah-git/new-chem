@@ -16,20 +16,22 @@
 //---------------------------------//---------------------------------
 class Concentration_CLI {
 public:
-	ConcentrationVolume 		*concvol;
-	Concentration				*conc;
-	Molecule					*mole;
+	Concentration_VM			*core;
+	char						lastline[MAX_LINELEN];
 
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;
 	mylist<CLI_Command>			load_cmdlist;
+	mylist<CLI_Command>			clear_cmdlist;
 	mylist<CLI_Command>			stack_cmdlist;
+	mylist<CLI_Command>			pep_cmdlist;
+	mylist<CLI_Command>			mole_cmdlist;
+	mylist<CLI_Command>			conc_cmdlist;
 
-	mylist<Peptide>				peptide_stack;
-	mylist<Molecule>			molecul_stack;
-	mylist<Concentration>		concentration_stack;
+	mylist<CLI_Variable>		vars_list;
 
-	Concentration_CLI(ConcentrationVolume &cvol);
+
+	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();
@@ -38,8 +40,17 @@ public:
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
 	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
 	int		run(mylist<CLI_Command> *cmd_list, char *line);
-	Concentration	*search_conc(char *name);
+	//Concentration	*search_conc(char *name);
+
+	void	base_cmdlist_dump(void) { printf ("Basic Commands => ");  	base_cmdlist.dump(); }
+	void	dump_cmdlist_dump(void) { printf ("'dump' Commands => ");  	dump_cmdlist.dump(); }
+	void	load_cmdlist_dump(void) { printf ("'load' Commands => ");  	load_cmdlist.dump(); }
+	void	stack_cmdlist_dump(void) { printf ("'stack' Commands => "); stack_cmdlist.dump(); }
+	void	pep_cmdlist_dump(void) { printf ("'pep' Commands => ");  	pep_cmdlist.dump(); }
+	void	mole_cmdlist_dump(void) { printf ("'mole' Commands => ");  mole_cmdlist.dump(); }
+	void	conc_cmdlist_dump(void) { printf ("'conc' Commands => ");  	conc_cmdlist.dump(); }
 };
+//---------------------------------
 //---------------------------------
 */
 //---------------------------------
@@ -51,15 +62,22 @@ void Concentration_CLI::dump() {
 //			(long unsigned int) conc,
 //			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
-	printf("'Base' Commands..\n");	base_cmdlist.dump();
-	printf("'dump' Commands..\n");	dump_cmdlist.dump();
-	printf("'load' Commands..\n");	load_cmdlist.dump();
-	printf("'stack' Commands..\n");	stack_cmdlist.dump();
+	base_cmdlist_dump(); 	//printf("'Base' Commands..\n");	base_cmdlist.dump();
+	dump_cmdlist_dump(); 	//printf("'dump' Commands..\n");	dump_cmdlist.dump();
+	load_cmdlist_dump(); 	//printf("'load' Commands..\n");	load_cmdlist.dump();
+	clear_cmdlist_dump(); 	//printf("'clear' Commands..\n");	clear_cmdlist.dump();
+	stack_cmdlist_dump(); 	//printf("'stack' Commands..\n");	stack_cmdlist.dump();
+	pep_cmdlist_dump(); 	//printf("'pep' Commands..\n");	pep_cmdlist.dump();
+	mole_cmdlist_dump(); 	//printf("'mole' Commands..\n");	mole_cmdlist.dump();
+	conc_cmdlist_dump(); 	//printf("'conc' Commands..\n");	conc_cmdlist.dump();
+	var_cmdlist_dump(); 	//printf("'var' Commands..\n");		var_cmdlist.dump();
 
+	var_list_dump(); 		//printf("Variables..\n");		vars_list.dump();
 }
 //---------------------------------
 
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
+	memset(lastline, '\0', MAX_LINELEN);
 	core = &vm;
 	if (core!=NULL)
 		core-> concvol = &cvol;
@@ -120,6 +138,7 @@ int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentr
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	if ((cmd_list==NULL) || (line==NULL)) return -100;
 
+	strncpy(&lastline[0], line, MAX_LINELEN);
 	char	*word, *argv[MAX_ARGS];
 	int c = 0;
 	word = strtok (line," \n");
@@ -134,6 +153,7 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	// check split results
 	if (c<1) {
 		//printf("line read error\n");
+		printf(lastline, "");
 		return -10;
 	}
 

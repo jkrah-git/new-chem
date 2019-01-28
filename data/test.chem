@@ -1,4 +1,13 @@
+# basic 1U mole
 mole push
 pep push 0x41 0x41 0x41 0x42 0x67 0x3f
 mole build
+stack clear pep
+
+# new conc
+conc push
+conc adj 1 0
+conc tovol
+conc pop
+conc fromvol
 

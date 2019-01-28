@@ -320,13 +320,13 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]..",
+	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail );
 
 	if (head!=NULL) {
-		printf("\n");
+		//printf("\n");
 		mylist_item<T>	*item = head;
 		while (item !=NULL) {
 			item-> dump(); 	printf("\n");
