@@ -126,7 +126,8 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos)
 	return found_item;
 }
 // -------------------------------
-void Molecule::clear(void) {	pep_list.clear(true);	}
+//void Molecule::clear(void) {	pep_list.clear(true);	}
+void Molecule::clear(void) {	pep_list.clear();	}
 // -------------------------------
 /*bool Molecule::operator =(const Molecule& p){
 #ifdef DEBUG
@@ -263,7 +264,8 @@ int Molecule::addpep(PepSig sig){
 	//	}
 #endif
 		//--  TODO: pep clashes..
-		pep_list.del(new_item, true);
+		//pep_list.del(new_item, true);
+		pep_list.del(new_item);
 		return -9;
 	}
 

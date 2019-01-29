@@ -130,6 +130,7 @@ void Concentration_CLI::test() {
 int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name){
 	if ((op==NULL)||(name==NULL)||(cmd_list==NULL)) return -1;
 
+	//PRINT("\n");
 	mylist<CLI_Command>::mylist_item<CLI_Command>  *cmd = cmd_list-> add();
 	if (cmd==NULL) return -10;
 	if (cmd-> item ==NULL) return -11;

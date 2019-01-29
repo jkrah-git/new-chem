@@ -37,7 +37,7 @@ public:
 		mylist_item<U>		*next;
 		mylist_item<U>		*prev;
 
-		mylist_item() {				item = NULL; prev = NULL; next = NULL; }
+		mylist_item() { item = NULL; prev = NULL; next = NULL; }
 		virtual ~mylist_item(){		item = NULL; prev = NULL; next = NULL; }
 		// --------------------------------------
 		void 		dump(void) {
@@ -93,7 +93,8 @@ public:
 
 	//---------------
 	// ---
-	mylist();
+	mylist(); //{ mylist(true); };
+	mylist(bool _auto);
 	virtual ~mylist();
 	mylist_item<T>	*gethead(void){ return head; };
 	mylist_item<T>	*gettail(void){ return tail; };
@@ -103,15 +104,16 @@ public:
 	void 		dump(void);
 
 	// --------------------
-	void		clear(bool do_subitem);
+	//void		clear(bool do_subitem);
+	//void			clear(void){ clear(false); };
+	void		clear();
 	mylist_item<T> 	*add(void);
-	mylist_item<T> 	*add(T *element);
-	mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
-	mylist_item<T> 	*del(mylist_item<T> *item){	return del(item, false);	}
+	mylist_item<T> 	*add(T *element){ return add(element, false); };
+	//mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
+	mylist_item<T> 	*del(mylist_item<T> *item); //'{	return del(item, false);	}
 	mylist_item<T>	*offset(int steps){ return offset(NULL, steps); }
 	mylist_item<T>	*offset(mylist_item<T> *start, int steps);
 	// --------------------
-	void			clear(void)  { clear(false); };
 	// --------------------
 
 	void 			test(T *e1, T *e2, T *e3);
@@ -121,11 +123,15 @@ public:
 private:
 	mylist_item<T>	*head;
 	mylist_item<T>	*tail;
+	bool			autoalloc;
 
+	//-----
+	mylist_item<T> 	*add(T *element, bool ignore_auto);
 
 };
 //---------------------------------------------
-template <class T> mylist<T>::mylist() {	head = NULL;	tail = NULL;	};
+template <class T> mylist<T>::mylist() {	autoalloc = true; head = NULL;	tail = NULL;	};
+template <class T> mylist<T>::mylist(bool _auto) {	autoalloc = _auto; head = NULL;	tail = NULL;	};
 template <class T> mylist<T>::~mylist() {	clear();	};
 
 // --------------------------
@@ -151,7 +157,7 @@ template <class T> mylist<T>::~mylist() {	clear();	};
 */// --------------------------
 
 // --------------------------
-template <class T> void mylist<T>::clear(bool do_subitem) {
+template <class T> void mylist<T>::clear() {
 
 	mylist_item<T>	*del_item = head;
 
@@ -160,7 +166,7 @@ template <class T> void mylist<T>::clear(bool do_subitem) {
 
 		// 1. delete sub item..
 		if (del_item-> item != NULL) {
-			if (do_subitem)	{
+			if (autoalloc)	{
 				LOG("free.subitem[0x%zX]\n", (long unsigned int) del_item-> item);
 				delete del_item-> item;
 			} else {
@@ -176,12 +182,16 @@ template <class T> void mylist<T>::clear(bool do_subitem) {
 };
 // --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
+	if (!autoalloc) {
+		PRINT("ERR: calling add() invalid when 'autoalloc' is false\n");
+		return NULL;
+	}
 	T *element = new T;
 	if (element==NULL)
 		return NULL;
 	LOG("malloc[0x%zX].subitem\n", (long unsigned int) element);
 
-	mylist_item<T>  *item = add(element);
+	mylist_item<T>  *item = add(element, true);
 	if (item==NULL) {
 		delete element;
 		LOG("free[0x%zX].subitem\n", (long unsigned int) element);
@@ -189,7 +199,13 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
 	return item;
 }
 // --------------------------	// --------------------------
-template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element){
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool ignore_auto){
+
+
+	if ((autoalloc)&&(!ignore_auto)) {
+		PRINT("ERR: calling add(*ITEM) invalid when 'autoalloc' is true\n");
+		return NULL;
+	}
 
 	if (element == NULL) return NULL;
 
@@ -231,11 +247,14 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::search(T *e1) {
 	return result;
 }
 // --------------------------	// --------------------------
-template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item, bool do_subitem) {
+//template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item, bool do_subitem) {
+template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_item<T> *del_item) {
 
 
 	if (del_item==NULL)
 		return NULL;
+
+	//autoalloc
 
 //	PRINT("++++++++++   DELETE ITEM ++++++++++\n");
 //	del_item-> dump(); NL
@@ -276,7 +295,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	// --------------
 	// clear sub item
 	if (del_item-> item != NULL) {
-		if (do_subitem)	{
+		if (autoalloc)	{
 			LOG("free.subitem[0x%zX]\n", (long unsigned int) del_item-> item);
 			delete del_item-> item;
 		} else {
@@ -320,10 +339,15 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX]\n",
+
+	char ch;
+	if (autoalloc) ch='A';
+	else ch = 'M';
+
+	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX].auto[%c]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
-			(long unsigned int) tail );
+			(long unsigned int) tail, ch);
 
 	if (head!=NULL) {
 		//printf("\n");
@@ -380,13 +404,13 @@ template <class T> bool mylist<T>::operator ==(const mylist<T>& p) {
 // --------------------------
 template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: == START ==\n");
-
-	printf("mylist.test: pre: ");	dump(); printf("\n");
+	autoalloc = false;
+	printf("mylist.test: pre: ");	dump(); //printf("\n");
 	//------------
 	mylist_item<T> *newitem = NULL;
-	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) }
-	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) }
-	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) }
+	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) NL}
+	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) NL}
+	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) NL}
 
 	/*
 	dump(); // printf("\n");
@@ -394,8 +418,8 @@ template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	clear(); dump();
 	 */
 
-	//------------
-	printf("mylist.test: post: ");	dump(); printf("\n");
+	printf("mylist.test: =========================\n");
+	printf("mylist.test: final: ");	dump(); //printf("\n");
 	printf("mylist.test: == END ==\n");
 
 }

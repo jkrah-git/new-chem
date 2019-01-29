@@ -20,6 +20,41 @@ int		cli_echo(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
+int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
+	//PRINT("cli_help : -- LOOP --\n");
+	//-------
+	 PRINT(": argc[%d]", argc);
+	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	 printf("\n");
+	//-------
+	 if (argc<2) {
+		 printf("usage: loop NUM commands..\n");
+		 return -1;
+	 }
+
+	int count;
+	if ( sscanf(argv[0], "%d", &count) <0) {
+		printf("bad count [%s].\n", argv[0]);
+		return -20;
+	}
+	// else..
+
+
+
+
+	int c=0;
+	argc--;
+	while (c++<count){
+		printf("loop[%d/%d]:[", c, count);
+		for (int i=0; i< argc; i++) {	if (i==0) printf("%s", argv[i+1]); else printf(" %s", argv[i+1]);	}	printf("]\n");
+		int r = cli-> run(&cli-> base_cmdlist, argc,  &argv[1]);
+		if (r!=0) printf("Run = [%d]\n", r);
+	}
+
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
 int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
 	PRINT("cli_help : -- PING --\n");
 	//-------
@@ -340,13 +375,18 @@ int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	int r;
 	char name[32];
 	// 'BASE' commands
+	PRINT("\n");
+	cli-> base_cmdlist.dump();
+
 	cli-> base_cmdlist.clear();
+	PRINT("\n");
 	sprintf(name, "quit"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "q"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "#"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_echo, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "?"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_basehelp, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_help, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ping"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_ping, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "loop"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_loop, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "file"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "f"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 
@@ -390,7 +430,6 @@ int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "mole"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_mole, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "pep"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_pep, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "all"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_all, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
-
 
 
 	return 0;

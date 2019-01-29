@@ -20,14 +20,7 @@ void test_rot(void) {
 	m.testrot();
 }
 
-void test_match_pos() {
 
-
-	printf("========= test_match_pos =======\n");
-	MoleculeMatchPos matchpos;
-	matchpos.test();
-}
-//==============
 void test_peptide()
 {
 	Peptide A,B,C;
@@ -68,34 +61,38 @@ void test_mylist()
 	//==============
 	mylist<Peptide> 	pep_list;
 	pep_list.clear();
-
 	pep_list.test(&A, &B, &C);
-	if (A==C) { 	printf("### peptide A == C\n");  }
-	else { 			printf("### peptide A != C\n");  }
+	printf("### peptide .. list clear..\n");
+	pep_list.clear();
+	pep_list.dump();
+	printf("=================================\n");
+
+	if (A==C) { 	printf("### peptide A == C (FAIL)\n");  }
+	else { 			printf("### peptide A != C (Pass)\n");  }
 
 	//C.set(A.get());
 	C=A;
-	if (A==C) { 	printf("### peptide A == C\n");  }
-	else { 			printf("### peptide A != C\n");  }
+	if (A==C) { 	printf("### peptide A == C (Pass)\n");  }
+	else { 			printf("### peptide A != C (Fail)\n");  }
 
-	//C.pos = A.pos;
-	if (A==C) { 	printf("### peptide A == C\n");  }
-	else { 			printf("### peptide A != C\n");  }
 
 	C.pos.dim[0] = 32; C.pos.dim[1] = 33;
 	C.set('C');
-	if (A==C) { 	printf("### peptide A == C\n");  }
-	else { 			printf("### peptide A != C\n");  }
+	if (A==C) { 	printf("### peptide A == C (Fail)\n");  }
+	else { 			printf("### peptide A != C (Pass)\n");  }
 
 	printf("==========================================\n");
 	printf("=== running test_mylist2.. list compare..\n");
 	printf("==========================================\n");
 
 	mylist<Peptide> 	pep_list1, pep_list2;
+	pep_list1.dump();
+	pep_list2.dump();
 	//------------
 	printf("### setup duplicate pep_lists..\n");
 	pep_list1.test(&A, &B, &C);
 	pep_list2.test(&A, &B, &C);
+
 
 	printf("### final compare (pep_lists..)\n");
 	if (pep_list1 == pep_list2) printf("pep_list1 == pep_list2\n");
@@ -272,20 +269,21 @@ void test_conc_vol()
 
 }
 void test_cli() {
+	printf(".. client starting\n");
+	printf("....  new vm\n");
 	Concentration_VM vm;
+	printf("....  new vol\n");
 	ConcentrationVolume vol;
-	//vm.dump();	return;
 
+	printf("....  new cli\n");
 	Concentration_CLI cli(vol, vm);
-	//cli.test();
+
+	printf("....  load commands\n");
 	cli.load_commands();
 
 
 	int r;
-	if (false) {
-		char	cmd[64];
-		sprintf(cmd, "concvol_test\n");  r = cli.run(&cli.base_cmdlist, cmd);	printf("Run = [%d]\n", r);
-	}
+	if (false) {	char	cmd[64];	sprintf(cmd, "concvol_test\n");  r = cli.run(&cli.base_cmdlist, cmd);	printf("Run = [%d]\n", r);	}
 
 	char *line = NULL;
 	while(true) {
@@ -295,6 +293,12 @@ void test_cli() {
 		if (getline(&line, &size, stdin) == -1) {
 			printf("No line\n");
 		} // else {		printf("[%d][%s]", (int) strlen(line), line);	}
+
+		if (strcmp(line, ".\n")==0) {
+			sprintf(line, "%s", cli.lastline);
+			printf("%s", line);
+		}
+
 
 		if (strlen(line)>1) {
 			r = cli.run(&cli.base_cmdlist, line);
@@ -341,7 +345,7 @@ int main(int argc, char **argv)
 	if (argc>1) {
 		printf("CMD = [%s]\n", argv[1]);
 		if ( (strcmp(argv[1], "test_rot")==0))			test_rot();
-		if ( (strcmp(argv[1], "test_match_pos")==0))	test_match_pos();
+		//if ( (strcmp(argv[1], "test_match_pos")==0))	test_match_pos();
 		if ( (strcmp(argv[1], "test_peptide")==0))		test_peptide();
 		if ( (strcmp(argv[1], "test_mylist")==0))		test_mylist();
 		if ( (strcmp(argv[1], "test_buffer")==0))		test_buffer();
@@ -357,5 +361,6 @@ int main(int argc, char **argv)
 	}
 
 	printf("main.end..\n");
+	return 0;
 }
 //----------------------------------

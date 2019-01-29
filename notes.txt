@@ -78,12 +78,13 @@ TODO 1. chem structure
     =======================
     Done
 	- stack -  dump|push|pop|clear  pep|mole|conc
+	- autocmd (think bash prompt) - displ, clear etc
 	Todo
 	- finish matches
 	- dump() formatting.. (mole dump/render)
+	
 	Later..
-	- autocmd (think bash prompt) - displ, clear etc
-	- cmdlist
+	- cmdlist .. hard to embed <end command>
 	
 
 

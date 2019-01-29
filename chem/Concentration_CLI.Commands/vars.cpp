@@ -180,6 +180,7 @@ int	cli_stack_push(Concentration_CLI *cli, int argc, char **argv){
 //===  PEP commands  ===
 //=======================
 //=======================
+// TODO  pep_pos, pep_wri , from_mole, del
 //---------------------------------//---------------------------------
 int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
@@ -251,6 +252,7 @@ int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli-> core-> pep == tail-> item) {
 		cli-> core-> pep = NULL;
 	}
+	// todo.. much more testing around this - maybe change def to true
 	cli-> core-> peptide_stack.del(tail);
 	return 0;
 }
@@ -476,8 +478,6 @@ int	cli_mole_fromvar(Concentration_CLI *cli, int argc, char **argv){
  	if (item==NULL) return -10;
 	if (item-> item == NULL) return -11;
 	cli->core-> mole = item-> item;
-
- 	// todo marker fromvar
 
 	return 0;
 }
@@ -831,9 +831,9 @@ int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
 		return -1;
 	}
 	//-------
-	 PRINT(": argc[%d]", argc);
-	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	 printf("\n");
+	// PRINT(": argc[%d]", argc);
+	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	// printf("\n");
 	//-------
 
 	char buf[KEYVAL_MAX_VAL];
@@ -842,14 +842,14 @@ int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
 	for (int i=1; i<argc; i++) {
 		if ((strlen(buf) + strlen(argv[i]+1) < KEYVAL_MAX_VAL)) {
 
-			printf("arg[%d][%s] -> buf[%d][%s]\n", i, argv[i], c, buf);
+			//printf("arg[%d][%s] -> buf[%d][%s]\n", i, argv[i], c, buf);
 			if (i>1) buf[c++] = ' ';
 			strcpy(&buf[c], argv[i]);
 			c += strlen(argv[i]);
 			//buf[c+1] = '\0';
 		}
 	}
-	printf("set [%s]=[%s]\n", argv[0], buf);
+	printf("'%s'='%s'\n", argv[0], buf);
 
 	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], buf);
 	if (item==NULL) {
@@ -886,8 +886,37 @@ int	cli_var_del(Concentration_CLI *cli, int argc, char **argv){
 	}
 	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.search(argv[0]);
 	if (item!=NULL) {
-		cli->var_list.keyvalues.del(item, true);
+		cli->var_list.keyvalues.del(item);
 	}
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
+	// Not working.. and not ready..
+	// TODO: cli_var_run : how to do multiple commands in one line..
+
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	//-------
+	 PRINT(": argc[%d]", argc);
+	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	 printf("\n");
+	//-------
+	 if (argc<1) {
+		 printf("usage: var run vName..\n");
+		 return -1;
+	 }
+
+	char *str = cli->var_list.get(argv[0]);
+	if (str==NULL) {
+		printf("Error reading args\n");
+		return -10;
+	}
+	printf("[%s]\n", str);
+	int r = -1;
+	//r = cli-> run(cli-> base_cmdlist, str);
+	if (r!=0) printf("Run = [%d]\n", r);
+
 	return 0;
 }
 //---------------------------------//---------------------------------
@@ -918,7 +947,7 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_ld, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "hex"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_hex, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
 
-	// 'MOLE' commands
+	// 'MOLE' (reg) commands
 	cli-> mole_cmdlist.clear();
 	sprintf(name, "mole");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_mole, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_push, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
@@ -928,7 +957,7 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_fromvar, (char*) name);	PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 
-	// 'CONC' commands
+	// 'CONC' (reg) commands
 	cli-> conc_cmdlist.clear();
 	sprintf(name, "conc");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_conc, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_push, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
