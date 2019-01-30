@@ -338,6 +338,7 @@ void test_conc_vol()
  *
  *
  */
+/*
 int main(int argc, char **argv)
 {
 	printf("main.start..\n");
@@ -363,4 +364,5 @@ int main(int argc, char **argv)
 	printf("main.end..\n");
 	return 0;
 }
+*/
 //----------------------------------

@@ -21,31 +21,39 @@ private:
 	Molecule	*mole1;
 	Molecule	*mole2;
 	void		rotatemole();
+	mylist<Peptide>::mylist_item<Peptide>	*root_item;
+	mylist<Peptide>::mylist_item<Peptide>	*test_item;
 public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
-	PepRot		rotation;
+	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
 	Molecule	*rotmole;
 
-	mylist<Peptide>::mylist_item<Peptide>	*test_item;
 	//---------
-	//void		init2(PeptidePos *start, PeptidePos *end);
-	void		clear(){ mole1 = NULL; mole2 = NULL; }
+
+	mylist<Peptide>::mylist_item<Peptide>	*get(){  return test_item; };
+
 	void		setM1(Molecule *_mole){ mole1 = _mole; }
 	void		setM2(Molecule *_mole){ mole2 = _mole; }
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
+	void		clear(){ mole1 = NULL; mole2 = NULL; test_item = NULL; }
 
-	// nextpos returns 0=ok, 1=new rot, -1
-	int			nextpos();
-
-	//nextmatch = <0 error / done,
-	int			nextmatch();
-	//MoleculeMatchPos(Molecule *base, Molecule *match);
 	MoleculeMatchPos();
-	virtual ~MoleculeMatchPos();
-	void	dump();
-	void	render();
+	virtual 	~MoleculeMatchPos();
+	void		render();
+	void		dump();
+	//---------
+	int		start();
+	//			resets root_item
+
+	int			nextpos();
+	// returns: -1=(end), 0=(ok), 1=(newrot),
+
+	int			nextmatch();
+	//	returns: r= -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
+
+
 };
 //----------------------------------
  */
@@ -54,6 +62,8 @@ public:
 MoleculeMatchPos::MoleculeMatchPos() {
 	rotmole = new Molecule;
 	rotation = -1;
+	root_item = NULL;
+	test_item = NULL;
 
 	clear();
 }
@@ -72,7 +82,8 @@ void MoleculeMatchPos::dump(){
 	printf("MoleculeMatchPos:: start_pos: "); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos: "); end_pos.dump();  NL
 	printf("MoleculeMatchPos:: last_rot: %d\n", rotation);
-	printf("MoleculeMatchPos:: last_pos:"); current_pos.dump(); NL
+	printf("MoleculeMatchPos:: last_pos ->: "); current_pos.dump(); NL
+	printf("MoleculeMatchPos:: root_item: "); DUMP(root_item) NL
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
 	printf("MoleculeMatchPos:: M1 :"); //DUMP(mole1) if (mole1==NULL) NL else printf("===============================\n");
@@ -83,18 +94,28 @@ void MoleculeMatchPos::dump(){
 	if (rotmole==NULL) { printf("NULL\n"); } else { rotmole-> render(); }
 	printf("===============================\n");
 }
+int	MoleculeMatchPos::start(){
+	if (mole1==NULL) return -1;
+	if (mole2==NULL) return -2;
+
+	rotation = 5;
+	root_item = mole1-> pep_list.gethead();
+	if (mole1==NULL) return -3;
+	return 0;
+}
 
 //----------------------------------
 void MoleculeMatchPos::rotatemole() {
 	if ((mole1==NULL)||(mole2==NULL)) return;
 	PeptidePos min1, max1, min2, max2;
 
+
 	mole2-> rotate(rotation, rotmole);
 	mole1-> getbounds(&min1, &max1);
 	rotmole-> getbounds(&min2, &max2);
 
-	PRINT(":: min1, max1 : "); min1.dump(); max1.dump(); NL
-	PRINT(":: min2, max2 : "); min2.dump(); max2.dump(); NL
+//	PRINT(":: min1, max1 : "); min1.dump(); max1.dump(); NL
+//	PRINT(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 	// void		getbounds(PeptidePos *min, PeptidePos *max);
 	//mole->
 	// sub size m2 from min
@@ -106,17 +127,18 @@ void MoleculeMatchPos::rotatemole() {
 		current_pos.dim[i] = start_pos.dim[i];
 	}
 
-	//
-
+	// reset new head
+	test_item  = rotmole-> pep_list.gethead();
 
 }
 //----------------------------------
-// nextpos returns 0=(ok), 1=(newrot), -1=(end)
 int	MoleculeMatchPos::nextpos(){
+	// returns: -1=(end), 0=(ok), 1=(newrot),
 
+	// set test_item to current 'rotmole' - (rotate will also refresh)
 	test_item  = rotmole-> pep_list.gethead();
 
-
+	// iniitalise -  on any invalid rot
 	if (rotation >3) {
 		rotation = 0;
 		rotatemole();
@@ -134,10 +156,18 @@ int	MoleculeMatchPos::nextpos(){
 
 		rotation ++;
 		current_pos.dim[1] = start_pos. dim[1];
-		if (rotation >3) { return -1; }
+
+		// End.. Out of positions
+		if (rotation >3) {
+			test_item = NULL;
+			return -1;
+		}
+
 		rotatemole();
 		return 1;
 	}
+
+	//dump();
 	return 0;
 }
 
@@ -145,67 +175,85 @@ int	MoleculeMatchPos::nextpos(){
 //----------------------------------
 // -------------------------------
 int	MoleculeMatchPos::nextmatch(void){
-// todo: bug: match start next next .. then match start
+	// ---------------------------------------------------------------------------
+	//	nextmatch(): returns: -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
+	// ---------------------------------------------------------------------------
+	//PRINT("nextmatch..\n");
 
-	PRINT("nextmatch..\n");
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
 	if (rotmole ==NULL) return -12;
 
-	// --- start by loading nextpos..
-	int r= -2;;
-	if (test_item==NULL) {
-		r = nextpos();
-		if (r<0) return r-100;
-	} else {
-		test_item = test_item-> next;
-	}
-	// new rotoation
-	//if (r>0) {  rotate(matchpos-> rotation, matchpos-> rotmole); }
 
-	//  - Match = 0bXXsseett.... = 4x64 sets
-	//--------------------------------------
-	// this.base = molecule
-	// testmole = (translated mole to check for collisions)
-	//--------------------------------------
-	// for each test-pep = *test_item
-	//mylist<Peptide>::mylist_item<Peptide>		*test_item  = rotmole-> pep_list.gethead();
-
-
-	while((test_item!=NULL)&&(test_item-> item!=NULL)) {
-		//PepSig s1 = current_item-> item-> get();
-		r = -1;
-
-		PeptidePos testpos;
-		testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
-		testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
-	//	PRINT("=============================\n");
-	//	PRINT("testpos ==>");	testpos.dump(); NL
-	//	PRINT("matchpos==>");	dump(); NL
-	//	PRINT("=============================\n");
-
-		// test the traslated pos on 'this' (root)  molecole
-		mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> test_pos(&testpos);
-		if (test_pep!=NULL) {
-			r  = 0;
-			PRINT("Colis @ "); testpos.dump();
-			PRINT("found pep[0x%x]..\n", test_pep-> item-> get() );
-			//----------------
-			if (test_pep-> item-> match( test_item-> item-> get())) {
-				r = 1;
-				PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
-				//---------------------------------
-
-				//---------------------------------
+	while ((root_item!=NULL)&& (root_item-> item!=NULL))
+	{		//---------------- for each 'root_item'
+			int r;
+			if (test_item==NULL)	{
+				r = nextpos();		// returns 0=(ok), 1=(newrot), -1=(end)
+				//PRINT("nextpos returned [%d]\n", r);//		dump();		PRINT("== end dump==\n");
+				if (r<0) return -2;
+				//nextpos();		// returns 0=(ok), 1=(newrot), -1=(end)if (nextpos()<0) return -2;		//nextpos(): returns 0=(ok), 1=(newrot), -1=(end))
+			}
+			else {
+				test_item = test_item-> next;
 			}
 
-			break;
-		} // else keep looking for colis
-		//----
-		test_item = test_item-> next;
-	} // next current_item
+		//	if (test_item==NULL)
+			r = -3;
+			while(true)
+			{
+				// new rotoation
+				//if (r>0) {  rotate(matchpos-> rotation, matchpos-> rotmole); }
 
-	return r;
+				//  - Match = 0bXXsseett.... = 4x64 sets
+				//--------------------------------------
+				// this.base = molecule
+				// testmole = (translated mole to check for collisions)
+				//--------------------------------------
+
+				while((test_item!=NULL)&&(test_item-> item!=NULL)) {
+					//PepSig s1 = current_item-> item-> get();
+					r = -1;
+
+					PeptidePos testpos;
+					testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
+					testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
+				//	PRINT("=============================\n");
+				//	PRINT("testpos ==>");	testpos.dump(); NL
+				//	PRINT("matchpos==>");	dump(); NL
+				//	PRINT("=============================\n");
+
+					// test the traslated pos on 'this' (root)  molecole
+					mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> test_pos(&testpos);
+					if (test_pep!=NULL) {
+						r  = 0;
+						//PRINT("Colis @ "); testpos.dump();
+						//PRINT("found pep[0x%x]..\n", test_pep-> item-> get() );
+						//----------------
+						if (test_pep-> item-> match( test_item-> item-> get())) {
+							r = 1;
+							//PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
+							//---------------------------------
+							//---------------------------------
+							break;
+						}
+					} // else keep looking for colis
+
+					//----
+					test_item = test_item-> next;
+				} // next item
+
+				if (r>=0)
+					return r;
+				if (nextpos()<0)
+					return -2;
+			} // else next rot
+
+			// ---
+			root_item = root_item-> next;
+	} // next root_item
+
+	return -1;
 }
 //------------
 

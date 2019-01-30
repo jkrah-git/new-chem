@@ -893,15 +893,13 @@ int	cli_var_del(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
-	// Not working.. and not ready..
-	// TODO: cli_var_run : how to do multiple commands in one line..
-
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	 PRINT(": argc[%d]", argc);
-	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	 printf("\n");
+	// PRINT(": argc[%d]", argc);
+	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	// printf("\n");
 	//-------
+
 	 if (argc<1) {
 		 printf("usage: var run vName..\n");
 		 return -1;
@@ -913,8 +911,12 @@ int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
 		return -10;
 	}
 	printf("[%s]\n", str);
-	int r = -1;
-	//r = cli-> run(cli-> base_cmdlist, str);
+	//-----------------------------
+	//return 0;
+	char payload[KEYVAL_MAX_VAL];
+	strncpy(payload, str, KEYVAL_MAX_VAL);
+
+	int r = cli-> run(&cli-> base_cmdlist, payload);
 	if (r!=0) printf("Run = [%d]\n", r);
 
 	return 0;
@@ -979,6 +981,7 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "set"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_set, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_clear, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "del"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_del, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_run, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
 	//----------
 	return 0;
 }

@@ -42,7 +42,8 @@ int	cli_match_m1(Concentration_CLI *cli, int argc, char **argv){
 	// printf("\n");
 	//-------
 	if (cli-> core-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
-	cli-> core->matchpos.setM1(cli-> core-> mole);
+	cli-> core-> matchpos.rotation = 6;
+	cli-> core-> matchpos.setM1(cli-> core-> mole);
 	return 0;
 
 }
@@ -56,7 +57,8 @@ int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 	// printf("\n");
 	//-------
 	if (cli-> core-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
-	cli-> core->matchpos.setM2(cli-> core-> mole);
+	cli-> core-> matchpos.rotation = 6;
+	cli-> core-> matchpos.setM2(cli-> core-> mole);
 	return 0;
 
 }
@@ -65,8 +67,10 @@ int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	cli->core->matchpos.rotation = 4;
-	return 0;
+	//cli->core->matchpos.rotation = 5;
+	//cli->core->matchpos.test_item = NULL;
+	int r = cli->core->matchpos.start();
+	return r;
 
 }
 //---------------------------------//---------------------------------
@@ -78,8 +82,9 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
+	//return cli->core->matchpos.nextmatch();
 	int r = cli->core->matchpos.nextmatch();
-	printf(".. nextmatch = [%d]\n", r);
+	//printf("nextmatch = [%d]\n", r);
 	return r;
 
 }

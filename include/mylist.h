@@ -130,8 +130,13 @@ private:
 
 };
 //---------------------------------------------
-template <class T> mylist<T>::mylist() {	autoalloc = true; head = NULL;	tail = NULL;	};
-template <class T> mylist<T>::mylist(bool _auto) {	autoalloc = _auto; head = NULL;	tail = NULL;	};
+template <class T> mylist<T>::mylist() {
+	PRINT("constructor..\n");
+	autoalloc = true; head = NULL;	tail = NULL;
+};
+template <class T> mylist<T>::mylist(bool _auto) {
+	autoalloc = _auto; head = NULL;	tail = NULL;
+};
 template <class T> mylist<T>::~mylist() {	clear();	};
 
 // --------------------------

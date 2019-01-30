@@ -144,7 +144,7 @@ int Molecule::rotate(PepRot rotation, Molecule *dest) {
 	if (dest==NULL) return 1;
 
 	dest-> clear();
-
+	//PRINT("dest-> clear()\n");
 	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
 

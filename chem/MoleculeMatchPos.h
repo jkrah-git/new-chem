@@ -18,32 +18,41 @@ private:
 	Molecule	*mole1;
 	Molecule	*mole2;
 	void		rotatemole();
+	mylist<Peptide>::mylist_item<Peptide>	*root_item;
+	mylist<Peptide>::mylist_item<Peptide>	*test_item;
 public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
-	PepRot		rotation;
+	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
 	Molecule	*rotmole;
 
-	mylist<Peptide>::mylist_item<Peptide>	*test_item;
 	//---------
+
+	mylist<Peptide>::mylist_item<Peptide>	*get(){  return test_item; };
+
 	void		setM1(Molecule *_mole){ mole1 = _mole; }
 	void		setM2(Molecule *_mole){ mole2 = _mole; }
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 	void		clear(){ mole1 = NULL; mole2 = NULL; test_item = NULL; }
 
-	// nextpos returns 0=ok, 1=new rot, -1
-	int			nextpos();
-
-	//nextmatch = <0 error / done,
-	int			nextmatch();
 	MoleculeMatchPos();
-	virtual ~MoleculeMatchPos();
-	void	dump();
-	void	render();
+	virtual 	~MoleculeMatchPos();
+	void		render();
+	void		dump();
+	//---------
+	int		start();
+	//			resets root_item
+
+	int			nextpos();
+	// returns: -1=(end), 0=(ok), 1=(newrot),
+
+	int			nextmatch();
+	//	returns: r= -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
+
+
 };
 //----------------------------------
-
 
 
 //----------------------------------//----------------------------------
