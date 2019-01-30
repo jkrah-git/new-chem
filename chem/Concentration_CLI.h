@@ -33,7 +33,8 @@ class Concentration_CLI;
 class Concentration_CLI {
 public:
 	Concentration_VM			*core;
-	char						lastline[MAX_LINELEN];
+	char						last_line[MAX_LINELEN];
+	int							last_result;
 
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;

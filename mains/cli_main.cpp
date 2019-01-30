@@ -45,21 +45,17 @@ int main(int argc, char **argv) {
 
 	}
 
-
-
-
-
 	char *line = NULL;
 	while(true) {
 		free(line); line = NULL;
-		printf("#> ");
+		printf("[%d]#> ", cli.last_result);
 		size_t size;
 		if (getline(&line, &size, stdin) == -1) {
 			printf("No line\n");
 		} // else {		printf("[%d][%s]", (int) strlen(line), line);	}
 
 		if (strcmp(line, ".\n")==0) {
-			sprintf(line, "%s", cli.lastline);
+			//sprintf(line, "%s", cli.lastline);
 			printf("%s", line);
 		}
 

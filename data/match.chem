@@ -5,29 +5,29 @@ mole push
 stack comp mole
 stack clear pep
 mole tovar $M1
+clear all
 
 # basic 2U mole
-clear all
 pep push 0x41 0x41 0x41 0x42 0x67 0x3f
 pep push 0x41 0x41 0x41 0x42 0x67 0x3f
 mole push
 stack comp mole
 stack clear pep
 mole tovar $M2
-
 clear all
+
+# setup match
 mole fromvar $M1
 match m1
 mole fromvar $M2
 match m2
 clear all
 
-# # old cmds
-# match
-# match start
-# match
-# loop 200 n
 match start
 match
 # -- hint --
 # loop 10 match next
+var set mm ; loopz 100 match next ; match
+# ------
+# use: run mm
+# todo match nextpos

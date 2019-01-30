@@ -22,7 +22,8 @@
 class Concentration_CLI {
 public:
 	Concentration_VM			*core;
-	char						lastline[MAX_LINELEN];
+	char						last_line[MAX_LINELEN];
+	int							last_result;
 
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;
@@ -32,8 +33,10 @@ public:
 	mylist<CLI_Command>			pep_cmdlist;
 	mylist<CLI_Command>			mole_cmdlist;
 	mylist<CLI_Command>			conc_cmdlist;
+	mylist<CLI_Command>			var_cmdlist;
+	mylist<CLI_Command>			match_cmdlist;
 
-	mylist<CLI_Variable>		vars_list;
+	KeyValList					var_list;
 
 
 	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
@@ -50,10 +53,16 @@ public:
 	void	base_cmdlist_dump(void) { printf ("Basic Commands => ");  	base_cmdlist.dump(); }
 	void	dump_cmdlist_dump(void) { printf ("'dump' Commands => ");  	dump_cmdlist.dump(); }
 	void	load_cmdlist_dump(void) { printf ("'load' Commands => ");  	load_cmdlist.dump(); }
+	void	clear_cmdlist_dump(void) { printf ("'clear' Commands => ");	clear_cmdlist.dump(); }
 	void	stack_cmdlist_dump(void) { printf ("'stack' Commands => "); stack_cmdlist.dump(); }
 	void	pep_cmdlist_dump(void) { printf ("'pep' Commands => ");  	pep_cmdlist.dump(); }
 	void	mole_cmdlist_dump(void) { printf ("'mole' Commands => ");  mole_cmdlist.dump(); }
 	void	conc_cmdlist_dump(void) { printf ("'conc' Commands => ");  	conc_cmdlist.dump(); }
+	void	var_cmdlist_dump(void) { printf ("'var' Commands => ");  	var_cmdlist.dump(); }
+	void	match_cmdlist_dump(void) { printf ("'match' Commands=> "); 	match_cmdlist.dump(); }
+
+	void	var_list_dump(void) { printf ("'Variables' => ");  			var_list.dump(); }
+
 };
 //---------------------------------
 //---------------------------------
@@ -76,13 +85,14 @@ void Concentration_CLI::dump() {
 	mole_cmdlist_dump(); 	//printf("'mole' Commands..\n");	mole_cmdlist.dump();
 	conc_cmdlist_dump(); 	//printf("'conc' Commands..\n");	conc_cmdlist.dump();
 	var_cmdlist_dump(); 	//printf("'var' Commands..\n");		var_cmdlist.dump();
-
 	var_list_dump(); 		//printf("Variables..\n");		vars_list.dump();
+	printf("last_result = [%d] : last_line = [%s]\n", last_result, last_line);
 }
 //---------------------------------
 
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
-	memset(lastline, '\0', MAX_LINELEN);
+	memset(last_line, '\0', MAX_LINELEN);
+	last_result = 0;
 	core = &vm;
 	if (core!=NULL)
 		core-> concvol = &cvol;
@@ -144,7 +154,10 @@ int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentr
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	if ((cmd_list==NULL) || (line==NULL)) return -100;
 
-	strncpy(&lastline[0], line, MAX_LINELEN);
+	char buf[MAX_LINELEN];
+	strncpy(buf, line, MAX_LINELEN);
+
+
 	char	*word, *argv[MAX_ARGS];
 	int c = 0;
 	word = strtok (line," \n");
@@ -159,17 +172,23 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	// check split results
 	if (c<1) {
 		//printf("line read error\n");
-		printf(lastline, "");
+		//printf(lastline, "");
 		return -10;
 	}
 
-	return run(cmd_list, c, argv);
+	int r = run(cmd_list, c, argv);
+	if (strcmp(argv[0], ".") !=0)
+		strncpy(last_line, line, MAX_LINELEN);
+	return r;
+
+
 }
 //---------------------------------
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv){
 	if ((cmd_list==NULL) || (argc<1) || (argv==NULL)) return -100;
 
 	//mylist<CLI_Command>::mylist_item<CLI_Command>  *cmd = cmdlist.add();
+
 
 	// search for argv[0]
 	CLI_Command  *cmd = NULL;
@@ -183,18 +202,22 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 		// ---
 		next_item = next_item->next;
 	}
+
+	last_result = 0;
 	if (cmd==NULL) {
 		printf("[%s].Command Not Found\n", argv[0]);
-		return -110;
-	}
-	if (cmd-> operation==NULL) {
-		printf("[%s].Command.operation NULL\n", argv[0]);
-		return -111;
+		last_result =  -110;
+	} else
+		if (cmd-> operation==NULL) {
+			printf("[%s].Command.operation NULL\n", argv[0]);
+			last_result =  -111;
 	}
 
-	int r = cmd-> operation(this, argc-1, &argv[1]);
-	LOG("[%s].[%d]\n", argv[0], r);
-	return r;
+	if (last_result>=0)  {
+		last_result = cmd-> operation(this, argc-1, &argv[1]);
+		LOG("[%s].[%d]\n", argv[0], last_result);
+	}
+	return last_result;
 }
 //---------------------------------
 //---------------------------------//---------------------------------

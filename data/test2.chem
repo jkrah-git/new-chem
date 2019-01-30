@@ -1,18 +1,20 @@
 # basic 1U mole
-clear all
 pep push 0x41 0x41 0x41 0x42 0x67 0x3f
+# new mole from peps
 mole push
 stack comp mole
 stack clear pep
 mole tovar M1
+
 conc push
 conc adj 1 0
 conc tovar C1
 conc tovol
-
+clear all
 
 # .. then to select conc with M1
-# mole fromvar M1
-# conc fromvol
-
-
+mole fromvar M1
+conc fromvol
+conc adj 2 3
+v
+# the final vol conc should be 2,3

@@ -31,6 +31,8 @@ public:
 	virtual ~Molecule();
 	//bool operator =(const Molecule& p);
 	int rotate(PepRot rotation, Molecule *dest);
+	//int	drawto(Molecule m, PepRot rotation, PeptidePos pos, PepSig *value);
+	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
 	bool operator ==(const Molecule& p);
 
 	// -- build

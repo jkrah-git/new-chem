@@ -74,7 +74,63 @@ MoleculeMatchPos::~MoleculeMatchPos() {
 
 }//--------------------
 // todo render-match-pos
-void MoleculeMatchPos::render(){ }
+void MoleculeMatchPos::render(){
+
+	Molecule 	buf;
+	PeptidePos offset;
+
+	offset.dim[0] = 10;
+	PepSig ch = 'x';
+
+	printf("MoleculeMatchPos:: M1 :"); //DUMP(mole1) if (mole1==NULL) NL else printf("===============================\n");
+	if (mole1==NULL) { printf("NULL\n"); }
+	else {
+		//mole1-> dump();
+		//mole1-> render();
+		mole1-> drawto(&buf, NULL, NULL, NULL);
+		mole1-> drawto(&buf, NULL, &offset, &ch);
+		// drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value)
+	}
+
+	printf("MoleculeMatchPos:: M2 :"); // DUMP(mole2) if (mole2==NULL) NL else printf("===============================\n");
+	if (mole2==NULL) { 	printf("NULL\n"); }
+	else {
+		//mole2-> dump();
+		//mole2-> render();
+		offset.dim[0] = 20;		mole2-> drawto(&buf, NULL, &offset, NULL);
+		//drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value)
+		mole2 -> drawto(&buf, NULL, &offset, NULL);
+	}
+
+
+	printf("MoleculeMatchPos:: rotmole :");//  DUMP(rotmole)
+	if (rotmole==NULL) { printf("NULL\n"); }
+	else {
+		//rotmole-> render();
+		ch = 'Y';
+		offset.dim[0] = 10;
+		for (int i=0; i<PepPosVecMax; i++) {
+			offset.dim[i] += current_pos.dim[i];
+		}
+		rotmole-> drawto(&buf, NULL, &offset, &ch);
+	}
+	printf("===============================\n");
+	if ((root_item!=NULL) &&
+		(root_item-> item!=NULL) &&
+		(test_item!=NULL) &&
+		(test_item-> item!=NULL)) {
+		//----------------
+		printf("--- Matched --- .\n");
+		root_item-> item->dump(); NL
+		test_item-> item->dump(); NL
+
+	//----------------
+	}
+	printf("============ buf =================\n");
+	//buf.dump();
+	buf.render();
+
+}
 
 //--------------------
 void MoleculeMatchPos::dump(){
@@ -86,14 +142,11 @@ void MoleculeMatchPos::dump(){
 	printf("MoleculeMatchPos:: root_item: "); DUMP(root_item) NL
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
-	printf("MoleculeMatchPos:: M1 :"); //DUMP(mole1) if (mole1==NULL) NL else printf("===============================\n");
-	if (mole1==NULL) { printf("NULL\n"); } else { mole1-> render(); }
-	printf("MoleculeMatchPos:: M2 :"); // DUMP(mole2) if (mole2==NULL) NL else printf("===============================\n");
-	if (mole2==NULL) { printf("NULL\n"); } else { mole2-> render(); }
-	printf("MoleculeMatchPos:: rotmole :");//  DUMP(rotmole)
-	if (rotmole==NULL) { printf("NULL\n"); } else { rotmole-> render(); }
-	printf("===============================\n");
+
+	render();
+
 }
+//---------------------------------------------------------
 int	MoleculeMatchPos::start(){
 	if (mole1==NULL) return -1;
 	if (mole2==NULL) return -2;

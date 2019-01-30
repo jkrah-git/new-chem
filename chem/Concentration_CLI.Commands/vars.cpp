@@ -99,7 +99,9 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------------//---------------------------------
+// todo : del cli_stack_comp
 //---------------------------------//---------------------------------
+/*
 int	cli_stack_comp(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
@@ -139,6 +141,7 @@ int	cli_stack_comp(Concentration_CLI *cli, int argc, char **argv){
 
 	return 0;
 }
+*/
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 /*
@@ -180,7 +183,7 @@ int	cli_stack_push(Concentration_CLI *cli, int argc, char **argv){
 //===  PEP commands  ===
 //=======================
 //=======================
-// TODO  pep_pos, pep_wri , from_mole, del
+// TODO  pep_frommole , pep_del
 //---------------------------------//---------------------------------
 int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
@@ -252,7 +255,6 @@ int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli-> core-> pep == tail-> item) {
 		cli-> core-> pep = NULL;
 	}
-	// todo.. much more testing around this - maybe change def to true
 	cli-> core-> peptide_stack.del(tail);
 	return 0;
 }
@@ -308,6 +310,40 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 	PepSig sig = hex;
 	if (cli-> core-> pep !=NULL) {
 		cli-> core-> pep-> set(sig);
+	}
+
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	//-------
+	// PRINT(": argc[%d]", argc);
+	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	// printf("\n");
+	//-------
+	if (argc<2) {
+		printf("usage: pep posX posY\n");
+		return -123;
+	}
+
+	int posx;
+	if ( sscanf(argv[0], "%d", &posx) <0) {
+		printf("bad pos-x[%s].\n", argv[0]);
+		return -20;
+	}
+
+	int posy;
+	if ( sscanf(argv[1], "%d", &posy) <0) {
+		printf("bad pos-y[%s].\n", argv[1]);
+		return -21;
+	}
+
+
+	if (cli-> core-> pep !=NULL) {
+		cli-> core-> pep-> pos.dim[0] = posx;
+		cli-> core-> pep-> pos.dim[1] = posy;
 	}
 
 	return 0;
@@ -424,6 +460,44 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 
 
 	if (argc<1) {
+	}
+	return 0;
+}
+//---------------------------------//---------------------------------
+// todo: mole_frompep
+//---------------------------------//---------------------------------
+int	cli_mole_frompep(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli-> core-> mole==NULL)  return -10;
+
+	cli-> core-> mole->clear();
+	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
+	while ((item!=NULL) && (item-> item!=NULL)) {
+		mylist<Peptide>::mylist_item<Peptide> *new_item = cli-> core-> mole-> pep_list.add();
+		if (new_item==NULL)
+			return -20;
+
+		*new_item-> item = *item-> item;
+		// ---
+		item = item-> next;
+	}
+	return 0;
+}
+//---------------------------------//---------------------------------
+int	cli_mole_topep(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli-> core-> mole==NULL)  return -10;
+
+	//cli-> core-> mole->clear();
+	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> mole-> pep_list.gethead();
+	while ((item!=NULL) && (item-> item!=NULL)) {
+		mylist<Peptide>::mylist_item<Peptide> *new_item = cli-> core-> peptide_stack.add();
+		if (new_item==NULL)
+			return -20;
+
+		*new_item-> item = *item-> item;
+		// ---
+		item = item-> next;
 	}
 	return 0;
 }
@@ -939,7 +1013,7 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_stack, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_clear, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "comp"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_comp, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "comp"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_comp, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'PEP' commands
 	cli-> pep_cmdlist.clear();
@@ -948,6 +1022,7 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pop, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_ld, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "hex"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_hex, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pos"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pos, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'MOLE' (reg) commands
 	cli-> mole_cmdlist.clear();
@@ -956,6 +1031,8 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_pop, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_ld, (char*) name);			PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_fromvar, (char*) name);	PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 
@@ -983,5 +1060,6 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "del"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_del, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_run, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
 	//----------
+	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_var_run, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }

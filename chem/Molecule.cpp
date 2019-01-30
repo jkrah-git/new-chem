@@ -140,6 +140,8 @@ void Molecule::clear(void) {	pep_list.clear();	}
 	}
 #endif
 */
+// todo m.rotate
+
 int Molecule::rotate(PepRot rotation, Molecule *dest) {
 	if (dest==NULL) return 1;
 
@@ -193,7 +195,6 @@ int Molecule::rotate(PepRot rotation, Molecule *dest) {
 	return 0;
 }
 // -------------------------------
-
 int Molecule::addpep(PepSig sig){
 	LOG("Molecule::addpep..\n");
 	//return -10;
@@ -542,7 +543,45 @@ void Molecule::print(void){
 
 
 }
+// todo draw2
 // -------------------------------
+int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value){
+	// todo mole.drawto(*mole
+	if (m==NULL) return -1;
+
+	// for each item (pep) in base mole..
+	mylist<Peptide>::mylist_item<Peptide> *item = pep_list.gethead();
+	while  ((item != NULL) && (item-> item !=NULL)){
+
+		mylist<Peptide>::mylist_item<Peptide> *new_item = m->pep_list.add();
+		if (new_item!=NULL)  {
+
+			PepSig sig;
+			if (value==NULL) { 		sig	= item-> item->get(); }
+			else { sig = *value; }
+			new_item-> item->set(sig);
+
+			PeptidePos newpos;
+			for (int i=0; i<PepPosVecMax; i++) {
+				if (pos==NULL) {	newpos.dim[i] = item->item->pos.dim[i]; }
+				else { 				newpos.dim[i] = item->item->pos.dim[i] + pos->dim[i];
+				}
+			}
+			new_item-> item->pos = newpos;
+
+		} // end if new_item
+
+
+		//----
+		item = item-> next;
+	}
+
+
+
+
+	return 0;
+}
+// -------------------------------// -------------------------------
 
 void Molecule::render(void){
 	PeptidePos min, max;

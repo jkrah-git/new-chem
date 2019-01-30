@@ -141,36 +141,30 @@ ConcLevelType	ConcentrationVolume::take(Molecule	*m, ConcAdjustType adj){
 
 }
 //--------------
-#define DEBUG
+//#define DEBUG
 ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
+	if (m==NULL) return -1.0;
+
 	Concentration *conc = molesearch(m);
-#ifdef DEBUG
-	LOG("search =");
+	//PRINT("search mole[0x%zX] = conc[0x%zX]\n", m, conc);
 	//DUMP(conc); NL
-#endif
+
 	if (conc==NULL) {
-		mylist<Concentration>::mylist_item<Concentration> *item = NULL;
 
-		mylist<Molecule>::mylist_item<Molecule> *mli = mole_list.add();
-		if ((mli ==NULL) || (mli-> item ==NULL)) { return -1.0; }
-		m-> rotate(0, mli-> item);
+		// copy new_mole to mole_list
+		mylist<Molecule>::mylist_item<Molecule> *new_mole = mole_list.add();
+		if ((new_mole ==NULL) || (new_mole-> item ==NULL)) { return -1.0; }
+		m-> rotate(0, new_mole-> item);
 
-		conc = new  Concentration(mli-> item);
-		LOG("malloc[0x%zX]\n", (long unsigned int) conc);
+		mylist<Concentration>::mylist_item<Concentration> *new_conc;
+		new_conc = conc_list.add();
+		if ((new_conc==NULL)||(new_conc-> item==NULL)) { return -2.0; }
 
-
-#ifdef DEBUG
-		LOG("create =");
-		//DUMP(conc) NL;
-#endif
-		if (conc==NULL)
-			return -2.0;
-
-		item = conc_list.add(conc);
-#ifdef DEBUG
-		LOG("::ConcentrationVolume::put.. list.create =");
-		//DUMP(item) NL;
-#endif
+		conc = new_conc-> item;
+		conc -> setmole(new_mole-> item);
+		//new_conc-> item-> setmole(new_mole-> item);
+		//PRINT("new conc=[0x%zX]\n",  conc);
+		// conc-> dump();
 	}
 	return conc->put(amount);
 }
