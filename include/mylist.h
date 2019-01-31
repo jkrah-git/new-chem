@@ -106,7 +106,8 @@ public:
 	// --------------------
 	//void		clear(bool do_subitem);
 	//void			clear(void){ clear(false); };
-	void		clear();
+	int				count();
+	void			clear();
 	mylist_item<T> 	*add(void);
 	mylist_item<T> 	*add(T *element){ return add(element, false); };
 	//mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
@@ -160,7 +161,16 @@ template <class T> mylist<T>::~mylist() {	clear();	};
 	return parent;
 }
 */// --------------------------
-
+// --------------------------
+template <class T> int mylist<T>::count() {
+	int c=0;
+	mylist_item<T>	*item = head;
+	while (item!=NULL) {
+		c++;
+		item = item-> next;
+	}
+	return c;
+}
 // --------------------------
 template <class T> void mylist<T>::clear() {
 

@@ -31,6 +31,7 @@ class Concentration_CLI;
 
 //---------------------------------//---------------------------------
 class Concentration_CLI {
+private:
 public:
 	Concentration_VM			*core;
 	char						last_line[MAX_LINELEN];
@@ -48,7 +49,7 @@ public:
 	mylist<CLI_Command>			match_cmdlist;
 
 	KeyValList					var_list;
-
+	char 						**args;
 
 	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
 	virtual ~Concentration_CLI();
@@ -73,6 +74,7 @@ public:
 	void	match_cmdlist_dump(void) { printf ("'match' Commands=> "); 	match_cmdlist.dump(); }
 
 	void	var_list_dump(void) { printf ("'Variables' => ");  			var_list.dump(); }
+	char 	**get_possible_args(mylist<CLI_Command> *menu);
 
 };
 //---------------------------------

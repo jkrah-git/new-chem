@@ -67,6 +67,58 @@ public:
 //---------------------------------
 //---------------------------------
 */
+
+
+char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
+
+	PRINT("start.possible_args[0x%zX]\n", (long unsigned int)  args);
+	if (args!=NULL) {
+		int c=0;
+		while (args[c] != NULL)
+			free(args[c++]);
+		free(args);
+		args = NULL;
+	}
+
+	PRINT("free.possible_args[0x%zX]\n", (long unsigned int)  args);
+
+	if (menu!=NULL) {
+		// add one for NULL ptr at end of list..
+		int c = menu->count()+1;
+		PRINT("c(count+1)=[%d]\n", c);
+
+		args = (char **) malloc(sizeof(char*)*c);
+		PRINT("malloc=[0x%zX]\n",  (long unsigned int)  args);
+		if (args==NULL) return NULL;
+
+
+		int i=0;
+		mylist<CLI_Command>::mylist_item<CLI_Command>  *item = menu-> gethead();
+		while ((item!=NULL)&&(item-> item !=NULL)) {
+			args[i] = strdup(item->item->name);
+			PRINT("arg[%d]=[%s]\n", i, args[i]);
+			//
+			item = item-> next;
+			i++;
+		}
+
+		// terminate word array
+		args[i] = NULL;
+		PRINT("final_null[0x%zX]=[%d]\n", (long unsigned int)  args, i);
+	}
+
+
+	if (args!=NULL) {
+		int c=0;
+		while (args[c] != NULL) {
+			printf("possible_args[%d]=[%s]\n", c, args[c]);
+			c++;
+		}
+	}
+
+	//possible_args = args;
+	return args;
+}
 //---------------------------------
 void Concentration_CLI::dump() {
 
@@ -92,6 +144,8 @@ void Concentration_CLI::dump() {
 
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
 	memset(last_line, '\0', MAX_LINELEN);
+	args = NULL;
+	//possible_args[0] = NULL;
 	last_result = 0;
 	core = &vm;
 	if (core!=NULL)
