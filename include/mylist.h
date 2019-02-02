@@ -132,7 +132,7 @@ private:
 };
 //---------------------------------------------
 template <class T> mylist<T>::mylist() {
-	PRINT("constructor..\n");
+	//PRINT("constructor..\n");
 	autoalloc = true; head = NULL;	tail = NULL;
 };
 template <class T> mylist<T>::mylist(bool _auto) {

@@ -142,7 +142,7 @@ void Molecule::clear(void) {	pep_list.clear();	}
 */
 // todo m.rotate
 
-int Molecule::rotate(PepRot rotation, Molecule *dest) {
+int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 	if (dest==NULL) return 1;
 
 	dest-> clear();
@@ -431,8 +431,12 @@ void Molecule::test(void){
 	Molecule m2;
 	printf("molecule.test: m2=new:\n");	m2.dump();
 	for (int i=0; i<4; i++) {
-		rotate(i, &m2);
-		printf("molecule.test: rotate(%d) = (m2):\n", i);	m2.dump();
+		rotateto(i, &m2);
+		printf("================================\n");
+		printf("molecule.test: rotate(%d) = (m2):\n", i);
+		printf("================================\n");
+		//m2.dump();
+		m2.render();
 	}
 
 	printf("molecule.test: == END ==\n");
@@ -543,10 +547,11 @@ void Molecule::print(void){
 
 
 }
-// todo draw2
+// -------------------------------
 // -------------------------------
 int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value){
 	// todo mole.drawto(*mole
+
 	if (m==NULL) return -1;
 
 	// for each item (pep) in base mole..

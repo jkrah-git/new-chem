@@ -154,7 +154,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 		// copy new_mole to mole_list
 		mylist<Molecule>::mylist_item<Molecule> *new_mole = mole_list.add();
 		if ((new_mole ==NULL) || (new_mole-> item ==NULL)) { return -1.0; }
-		m-> rotate(0, new_mole-> item);
+		m-> rotateto(0, new_mole-> item);
 
 		mylist<Concentration>::mylist_item<Concentration> *new_conc;
 		new_conc = conc_list.add();

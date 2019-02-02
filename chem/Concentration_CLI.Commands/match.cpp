@@ -69,9 +69,41 @@ int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	//cli->core->matchpos.rotation = 5;
 	//cli->core->matchpos.test_item = NULL;
-	int r = cli->core->matchpos.start();
-	return r;
 
+	if (argc<1) {
+		return cli->core->matchpos.start();
+	}
+
+
+
+
+	int rot;
+	if ( sscanf(argv[0], "%d", &rot) <0) {
+		printf("bad rot[%s].\n", argv[0]);
+		return -20;
+	}
+
+	cli-> core-> matchpos.rotation = rot;
+	cli-> core-> matchpos.rotatemole();
+	return 0;
+
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
+
+	int rot = 0;
+
+	if (argc>0) {
+		if ( sscanf(argv[0], "%d", &rot) <0) {
+			printf("bad rot[%s].\n", argv[0]);
+			return -20;
+		}
+	}
+	cli-> core-> matchpos.rotation = rot;
+	cli-> core-> matchpos.rotatemole();
+	cli-> core-> matchpos.dump();
+	return rot;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
@@ -84,6 +116,7 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	//return cli->core->matchpos.nextmatch();
 	int r = cli->core->matchpos.nextmatch();
+	if (r==-1) r=0;
 	//printf("nextmatch = [%d]\n", r);
 	return r;
 
@@ -98,9 +131,20 @@ int	cli_match_n(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	int r = cli->core->matchpos.nextmatch();
 	printf(".. nextmatch = [%d]\n", r);
+	if (r==-1) r=0;
 
 	cli-> core-> matchpos.dump();
+	cli-> core->matchpos.render();
 	return r;
+
+}
+//---------------------------------//---------------------------------//---------------------------------//---------------------------------
+int	cli_match_render(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+
+	cli-> core->matchpos.render();
+	return 0;
+
 
 }
 //---------------------------------//---------------------------------
@@ -127,6 +171,8 @@ int	cli_load_match(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "start"); r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_start, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "next"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_next, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "n"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_n, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "rot"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_rot, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "render"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_render, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
 
 	return 0;
 }

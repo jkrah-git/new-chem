@@ -421,6 +421,24 @@ int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (argc<1) {
 		item = cli-> core-> molecule_stack.gettail();
 	} else {
+
+
+		if (strcmp(argv[0], "m1" ) == 0) {
+			cli-> core-> mole = cli->core->matchpos.getM1();
+			return 0;
+		}
+
+		if (strcmp(argv[0], "m2" ) == 0) {
+			cli-> core-> mole = cli->core->matchpos.getM2();
+			return 0;
+		}
+
+		if (strcmp(argv[0], "rot" ) == 0) {
+			cli-> core-> mole = cli->core->matchpos.rotmole;
+			return 0;
+		}
+
+
 		int off;
 		if ( sscanf(argv[0], "%d", &off) <0) {
 			printf("bad offset [%s].\n", argv[0]);

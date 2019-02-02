@@ -71,7 +71,7 @@ public:
 
 char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
 
-	PRINT("start.possible_args[0x%zX]\n", (long unsigned int)  args);
+//	PRINT("start.possible_args[0x%zX]\n", (long unsigned int)  args);
 	if (args!=NULL) {
 		int c=0;
 		while (args[c] != NULL)
@@ -80,15 +80,15 @@ char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
 		args = NULL;
 	}
 
-	PRINT("free.possible_args[0x%zX]\n", (long unsigned int)  args);
+//	PRINT("free.possible_args[0x%zX]\n", (long unsigned int)  args);
 
 	if (menu!=NULL) {
 		// add one for NULL ptr at end of list..
 		int c = menu->count()+1;
-		PRINT("c(count+1)=[%d]\n", c);
+//		PRINT("c(count+1)=[%d]\n", c);
 
 		args = (char **) malloc(sizeof(char*)*c);
-		PRINT("malloc=[0x%zX]\n",  (long unsigned int)  args);
+//		PRINT("malloc=[0x%zX]\n",  (long unsigned int)  args);
 		if (args==NULL) return NULL;
 
 
@@ -96,7 +96,7 @@ char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
 		mylist<CLI_Command>::mylist_item<CLI_Command>  *item = menu-> gethead();
 		while ((item!=NULL)&&(item-> item !=NULL)) {
 			args[i] = strdup(item->item->name);
-			PRINT("arg[%d]=[%s]\n", i, args[i]);
+//			PRINT("arg[%d]=[%s]\n", i, args[i]);
 			//
 			item = item-> next;
 			i++;
@@ -104,14 +104,14 @@ char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
 
 		// terminate word array
 		args[i] = NULL;
-		PRINT("final_null[0x%zX]=[%d]\n", (long unsigned int)  args, i);
+	//	PRINT("final_null[0x%zX]=[%d]\n", (long unsigned int)  args, i);
 	}
 
 
 	if (args!=NULL) {
 		int c=0;
 		while (args[c] != NULL) {
-			printf("possible_args[%d]=[%s]\n", c, args[c]);
+		//	printf("possible_args[%d]=[%s]\n", c, args[c]);
 			c++;
 		}
 	}
@@ -138,12 +138,12 @@ void Concentration_CLI::dump() {
 	conc_cmdlist_dump(); 	//printf("'conc' Commands..\n");	conc_cmdlist.dump();
 	var_cmdlist_dump(); 	//printf("'var' Commands..\n");		var_cmdlist.dump();
 	var_list_dump(); 		//printf("Variables..\n");		vars_list.dump();
-	printf("last_result = [%d] : last_line = [%s]\n", last_result, last_line);
+	//printf("last_result = [%d] : last_line = [%s]\n", last_result, last_line);
 }
 //---------------------------------
 
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
-	memset(last_line, '\0', MAX_LINELEN);
+	//memset(last_line, '\0', MAX_LINELEN);
 	args = NULL;
 	//possible_args[0] = NULL;
 	last_result = 0;
@@ -231,11 +231,9 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	}
 
 	int r = run(cmd_list, c, argv);
-	if (strcmp(argv[0], ".") !=0)
-		strncpy(last_line, line, MAX_LINELEN);
+	//if (strcmp(argv[0], ".") !=0) strncpy(last_line, line, MAX_LINELEN);
+
 	return r;
-
-
 }
 //---------------------------------
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv){

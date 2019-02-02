@@ -34,7 +34,7 @@ class Concentration_CLI {
 private:
 public:
 	Concentration_VM			*core;
-	char						last_line[MAX_LINELEN];
+	//char						last_line[MAX_LINELEN];
 	int							last_result;
 
 	mylist<CLI_Command>			base_cmdlist;
