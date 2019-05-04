@@ -23,7 +23,7 @@ class MoleculeMatchPos;
 class Molecule {
 private:
 	// ---
-
+	const char *err;
 public:
 	mylist<Peptide> 	pep_list;
 	// ----
@@ -31,7 +31,6 @@ public:
 	virtual ~Molecule();
 	//bool operator =(const Molecule& p);
 	int rotateto(PepRot rotation, Molecule *dest);
-	//int	drawto(Molecule m, PepRot rotation, PeptidePos pos, PepSig *value);
 	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
 	int drawto(PeptidePos *pos, PepSig *value);
 

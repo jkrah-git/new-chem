@@ -20,41 +20,53 @@
 // -------------------------------
 class Molecule {
 private:
-	mylist<Peptide> 	pep_list;
 	// ---
-	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
-
+	char 	*err;
 public:
-
+	mylist<Peptide> 	pep_list;
 	// ----
 	Molecule();
 	virtual ~Molecule();
+	//bool operator =(const Molecule& p);
+	int rotateto(PepRot rotation, Molecule *dest);
+	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
+	int drawto(PeptidePos *pos, PepSig *value);
+
 	bool operator ==(const Molecule& p);
 
 	// -- build
 	int			addpep(PepSig sig);
+
 	//----------- matching
-	MoleculeMatchPos	*startmatch(Molecule *matchmole);
-	int			nextmatch(Molecule *matchmole, MoleculeMatchPos *matchpos);
+	//MoleculeMatchPos	*startmatch(Molecule *matchmole);
+	//int			nextmatch(MoleculeMatchPos *matchpos);
 	//------------
 	void		clear(void);
+	void		getbounds(PeptidePos *min, PeptidePos *max);
+	void		dump(void) { dump(false); }
+	void		dump(bool dorender);
+	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
+
+	// move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };
 	int			rand(int count, int tries, PepSig min, PepSig max);
-	void		print(void);
 	void		test(void);
 	void		test2(void);
 	void		testrot(void);
-	void		getbounds(PeptidePos *min, PeptidePos *max);
+	void		testmatch(void);
+	void		print(void);
 	void		render(void);
-
-	void		dump(void);
 	void		render(int x, int y);
 };
 // -------------------------------
+
  */
 // -------------------------------// -------------------------------
 // -------------------------------// -------------------------------
-Molecule::Molecule() {}
+Molecule::Molecule() {
+		err = NULL;
+
+}
 Molecule::~Molecule() {	clear();}
 // -------------------------------
 
@@ -91,7 +103,7 @@ void Molecule::dump(bool dorender){
 
 	PeptidePos min, max;
 	getbounds(&min, &max);
-	printf("Molecule[0x%zX].. ",	(long unsigned int) this);
+	printf("Molecule[0x%zX].. [%s]",	(long unsigned int) this, err);
 	printf("Min: "); min.dump();
 	printf(", Max: "); max.dump(); NL
 	//print();	NL
@@ -140,10 +152,12 @@ void Molecule::clear(void) {	pep_list.clear();	}
 	}
 #endif
 */
-// todo m.rotate
 
 int Molecule::rotateto(PepRot rotation, Molecule *dest) {
-	if (dest==NULL) return 1;
+	if (dest==NULL) {
+		err =  "Molecule::rotateto(NULL dest)";
+		return 1;
+	}
 
 	dest-> clear();
 	//PRINT("dest-> clear()\n");
@@ -203,13 +217,16 @@ int Molecule::addpep(PepSig sig){
 	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
 
 	// check new list item
-	if (new_item==NULL)
+	if (new_item==NULL) {
+		err =  "Molecule::addpep(NULL new_item)";
 		return -1;
+	}
 
 	// check new list ite.payload
 	Peptide *pep =new_item-> item;
 	if (pep==NULL) {
 		 pep_list.del(new_item);
+		 err =  "Molecule::addpep(NULL new_item.payload)";
 		 return -2;
 	}
 
@@ -225,6 +242,7 @@ int Molecule::addpep(PepSig sig){
 	// first make sure new_item has a chem
 	if (tail-> item ==NULL) {
 		 pep_list.del(new_item);
+		 err =  "Molecule::addpep(NULL tail.item)";
 		return -3;
 	}
 
@@ -255,18 +273,8 @@ int Molecule::addpep(PepSig sig){
 
 	 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
 	 if (testpep != NULL) {
-#ifdef DEBUG
-		LOG("molecule.addpep.newpos clashed with->\n");
-		DUMP(testpep);
-		DUMP(testpep-> item)
-	//	testpep-> dump();
-	//	if (testpep-> item != NULL) {
-	//		testpep-> item-> dump();
-	//	}
-#endif
-		//--  TODO: pep clashes..
-		//pep_list.del(new_item, true);
 		pep_list.del(new_item);
+		err =  "Molecule::addpep(NULL pep_clash)";
 		return -9;
 	}
 
@@ -550,9 +558,11 @@ void Molecule::print(void){
 // -------------------------------
 // -------------------------------
 int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value){
-	// todo mole.drawto(*mole
 
-	if (m==NULL) return -1;
+	if (m==NULL) {
+		err =  "Molecule::drawto(NULL dest)";
+		return -1;
+	}
 
 	// for each item (pep) in base mole..
 	mylist<Peptide>::mylist_item<Peptide> *item = pep_list.gethead();
@@ -575,15 +585,9 @@ int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *val
 			new_item-> item->pos = newpos;
 
 		} // end if new_item
-
-
 		//----
 		item = item-> next;
 	}
-
-
-
-
 	return 0;
 }
 // -------------------------------// -------------------------------
