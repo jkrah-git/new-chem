@@ -16,6 +16,9 @@
 //#define DEBUG
 #include "../include/debug.h"
 
+// TODO 1: main -- add match to VM
+// 1. define match criteria ??
+// 2. match and call code
 //-------------------------------------
 class Concentration_VM {
 public:
