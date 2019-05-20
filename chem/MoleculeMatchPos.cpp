@@ -62,9 +62,6 @@ public:
 MoleculeMatchPos::MoleculeMatchPos() {
 	rotmole = new Molecule;
 	rotation = -1;
-	//root_item = NULL;
-	test_item = NULL;
-
 	clear();
 }
 MoleculeMatchPos::~MoleculeMatchPos() {
@@ -73,11 +70,10 @@ MoleculeMatchPos::~MoleculeMatchPos() {
 	}
 
 }//--------------------
-// todo render-match-pos
 void MoleculeMatchPos::render(){
 
 	Molecule 	buf;
-	PeptidePos offset;
+	PeptidePos 	offset;
 
 	offset.dim[0] = 10;
 	PepSig ch = 'x';
@@ -85,8 +81,6 @@ void MoleculeMatchPos::render(){
 	//printf("MoleculeMatchPos:: M1 :"); //DUMP(mole1) if (mole1==NULL) NL else printf("===============================\n");
 	if (mole1==NULL) { printf("M1 = NULL\n"); }
 	else {
-		//mole1-> dump();
-		//mole1-> render();
 		mole1-> drawto(&buf, NULL, NULL, NULL);
 		mole1-> drawto(&buf, NULL, &offset, &ch);
 	}
@@ -94,10 +88,9 @@ void MoleculeMatchPos::render(){
 	//printf("MoleculeMatchPos:: M2 :"); // DUMP(mole2) if (mole2==NULL) NL else printf("===============================\n");
 	if (mole2==NULL) { 	printf("M2 = NULL\n"); }
 	else {
-		//mole2-> dump();
-		//mole2-> render();
-		offset.dim[0] = 20;		mole2-> drawto(&buf, NULL, &offset, NULL);
-		mole2 -> drawto(&buf, NULL, &offset, NULL);
+		offset.dim[0] = 20;
+		mole2-> drawto(&buf, NULL, &offset, NULL);
+		//mole2-> drawto(&buf, NULL, &offset, NULL);
 	}
 
 
@@ -310,6 +303,9 @@ int	MoleculeMatchPos::nextmatch(void){
 
 	// nextpos also resets 'test_item'
 	result = nextpos();
+
+
+
 	if (result <-1) return -3;
 	if (result <0) return -2;
 	result = -1;

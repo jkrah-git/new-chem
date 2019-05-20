@@ -7,7 +7,7 @@
 
 
 #include "../chem/Concentration_CLI.h"
-
+#include "../include/gfx/MoleDisplay.h"
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
@@ -51,6 +51,21 @@ int main(int argc, char **argv) {
 
 	cli.get_possible_args(&cli.base_cmdlist);
 	//printf("cli.possible_args=[0x%zX]\n",  (long unsigned int) cli.args);
+
+	/*
+	MoleDisplay mole_display;
+	mole_display.open();
+	mole_display.grid();
+
+	Peptide pep;
+	pep.set('A');
+	//mole_display.draw_pep(&pep);
+
+	Molecule m;
+	m.test();
+	m.dump();
+	mole_display.draw_mole(&m);
+	*/
 
 	char *line = NULL;
 	while(true) {

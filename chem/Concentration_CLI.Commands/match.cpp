@@ -3,7 +3,8 @@
 //===  match commands  ===
 //=======================
 //=======================
-
+//#include "../../include/gfx/gfx.h"
+#include "../../include/gfx/MoleDisplay.h"
 //---------------------------------//---------------------------------
 int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
@@ -16,6 +17,9 @@ int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 		cli-> core->matchpos.dump();
 		return 0;
 	} // else
+
+
+
 
 	return 	cli-> run(&cli-> match_cmdlist, argc,  &argv[0]);
 }
@@ -116,6 +120,12 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	//return cli->core->matchpos.nextmatch();
 	int r = cli->core->matchpos.nextmatch();
+
+	MoleDisplay mole_display;
+	mole_display.open();
+	mole_display.grid();
+	mole_display.draw_match(&cli->core->matchpos);
+
 	if (r==-1) r=0;
 	//printf("nextmatch = [%d]\n", r);
 	return r;

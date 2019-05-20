@@ -103,7 +103,7 @@ void Molecule::dump(bool dorender){
 
 	PeptidePos min, max;
 	getbounds(&min, &max);
-	printf("Molecule[0x%zX].. [%s]",	(long unsigned int) this, err);
+	printf("Molecule[0x%zX].. [%s]\n",	(long unsigned int) this, err);
 	printf("Min: "); min.dump();
 	printf(", Max: "); max.dump(); NL
 	//print();	NL

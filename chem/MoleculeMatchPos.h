@@ -17,8 +17,8 @@ class MoleculeMatchPos {
 private:
 	Molecule	*mole1;
 	Molecule	*mole2;
-	//mylist<Peptide>::mylist_item<Peptide>	*root_item;
 	mylist<Peptide>::mylist_item<Peptide>	*test_item;
+
 public:
 	void		rotatemole();
 //---
