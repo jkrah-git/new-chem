@@ -30,7 +30,7 @@ public:
 
 	//---------
 
-	mylist<Peptide>::mylist_item<Peptide>	*get(){  return test_item; };
+	mylist<Peptide>::mylist_item<Peptide>	*get_test_item(){  return test_item; };
 
 	void		setM1(Molecule *_mole){ mole1 = _mole; }
 	void		setM2(Molecule *_mole){ mole2 = _mole; }

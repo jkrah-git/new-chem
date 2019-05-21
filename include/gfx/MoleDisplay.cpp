@@ -31,9 +31,9 @@
  */
 //-------------------------------
 MoleDisplay::MoleDisplay() {
-	ysize = 300;
-	xsize = 300;
-	scale = 20;
+	ysize = 800;
+	xsize = 600;
+	scale = 30;
 }
 //-------------------------------
 MoleDisplay::~MoleDisplay() {}
@@ -85,14 +85,14 @@ void MoleDisplay::grid(){
 
 }
 //-------------------------------
-void MoleDisplay::draw_pep(Peptide *pep){
+void MoleDisplay::draw_pep(Peptide *pep, int colr, int colg, int colb, int offsetx, int offsety){
 	if (pep==NULL) return;
 
-	int x = screenx(pep->pos.dim[0]);
-	int y = screeny(pep->pos.dim[1]);
+	int x = screenx(pep->pos.dim[0]) + offsetx;
+	int y = screeny(pep->pos.dim[1]) + offsety;
 	int s = scale/2;
 
-	//gfx_color(0,100,0);
+	gfx_color(colr, colg, colb);
 	gfx_line(x-s, y-s, x+s, y-s);
 	gfx_line(x+s, y-s, x+s, y+s);
 	gfx_line(x+s, y+s, x-s, y+s);
@@ -100,21 +100,33 @@ void MoleDisplay::draw_pep(Peptide *pep){
 
 
 	gfx_color(200,200,200);
-	char str[2];
-	str[0] = pep->get();
-	str[1] = '\0';
+	char str[8];
+	//str[0] = pep->get();
+	//str[1] = '\0';
+	sprintf(str, "0x%x", pep-> get());
 	gfx_text(str,x,y);
 
 	gfx_flush();
 
 }
 //-------------------------------
-void MoleDisplay::draw_mole(Molecule *mole){
+void MoleDisplay::draw_pep(Peptide *pep, int colr, int colg, int colb, PeptidePos *pos){
+	if ((pep==NULL)||(pos==NULL)) return;
+	Peptide pep2;
+	pep2.set(pep-> get());
+	pep2.pos.dim[0] = pep-> pos.dim[0] + pos-> dim[0];
+	pep2.pos.dim[1] = pep-> pos.dim[1] + pos-> dim[1];
+	draw_pep(&pep2, colr, colg, colb);
+
+
+}
+//-------------------------------
+void MoleDisplay::draw_mole(Molecule *mole, int colr, int colg, int colb, int offsetx, int offsety){
 	if (mole==NULL) return;
 
 	mylist<Peptide>::mylist_item<Peptide> *current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
-		draw_pep(current_item-> item);
+		draw_pep(current_item-> item, colr, colg, colb, offsetx, offsety);
 
 		//---
 		current_item = current_item-> next;
@@ -122,18 +134,34 @@ void MoleDisplay::draw_mole(Molecule *mole){
 	//gfx_flush();
 }
 
+void MoleDisplay::draw_mole(Molecule *mole, int colr, int colg, int colb, PeptidePos *pos){
+
+	if ((mole==NULL)||(pos==NULL)) return;
+	mylist<Peptide>::mylist_item<Peptide> *current_item = mole-> pep_list.gethead();
+	while  ((current_item != NULL) && (current_item-> item !=NULL)){
+		draw_pep(current_item-> item, colr, colg, colb, pos);
+
+		//---
+		current_item = current_item-> next;
+	}
+
+
+}
 //-------------------------------
 void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 	if (matchpos==NULL) return;
 
-	gfx_color(100,0,0);
-	draw_mole(matchpos-> getM1());
 
-	//gfx_color(0,100,0);
-	//draw_mole(matchpos-> getM2());
+	draw_mole(matchpos-> getM1(), 100, 0, 0);
+	draw_mole(matchpos-> rotmole, 0, 100, 0, &matchpos-> current_pos);
 
-	gfx_color(0,0,100);
-	draw_mole(matchpos-> rotmole);
+	if (matchpos-> get_test_item()!=NULL) {
+		draw_pep(matchpos-> get_test_item()-> item, 100, 100, 100,  &matchpos-> current_pos );
+	}
 
-
+	char str[32];
+	sprintf(str, "Rot: %d", matchpos-> rotation);
+	gfx_color(200,200,200);
+	gfx_text(str, 10, 10);
+	gfx_flush();
 }
