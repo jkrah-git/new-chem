@@ -39,7 +39,7 @@ Chem Conc Engine
   - scale on (A,B,C ..) / cell.energy
   - split (ABCD)= AD+BC
   - join  (A,B,C..) = ABC.. (or ACB?)
-  - endo (J)/exo (S) thermic? (energy not temp)
+  - endo (J)/exo (S) thermic? (energy (E), temp (T) , charge (Q)
 
   
   
@@ -128,9 +128,64 @@ TODO 1. chem structure
   	- ie.. each ConcVol has its own r/w mutx ??
     - conc.vol commit = main shm/write
     - 
-   
-   
-   
+
+[Z--- -QqR] 
+
+---------------   
+(R) ROT BIT (0-3)
+---------------   
+[---- ---R](1) 
+[---- ---R](2)
+---------------   
+ROT = R(1)R(2) 
+    = (00 - 11)
+    != R2R1
+---------------   
+(Qq) CHARGE BITS
+---------------   
+0b[---- -Qq-]
+---------------   
+Q = polarity (0=-) (1=+) / 
+q = charged
+  = pep charge
+  = creates overall region charge
+
+---------------------
+(F) CHARGE AFFINITY (-1,0,1) F = 
+---------------------
+0b[---- -Qq-]
+0b[---- -Qq-]
+---------------------
+neutral(0,+):  (F=0), [if (!q1 or !q2) ]
+oppistes (+/-)(F=+1), [if (q1 && q2) && (Q1 != Q2)]
+same(-/-)     (F=-1). [if (q1 && q2) && (Q1 == Q2)]
+  = 
+-------------
+(E+) ENERGY DELTA
+-------------
+E+ = F x reaction rate
+   = (+F)= E+(join) E-(split)
+   = (-F)= E-(join) E+(split)
+   = (0) = no enrgy cost
+
+-------------
+(E+) ENERGY DELTA
+-------------
+E+ = F x reaction rate
+   = (+F)= E+(join) E-(split)
+   = (-F)= E-(join) E+(split)
+   = (0) = no enrgy cost
+
+
+---------------
+(Z) REACTIVE/MATCH BIT 
+---------------
+0b[Z--- ----]
+0b[Z--- ----]
+ if (Z1) (test) (~Z2) ..
+
+
+  
 
 molecule.testrot: [0x41 0x41](A,A) =0
 molecule.testrot: [0x41 0x42](A,B) =1
