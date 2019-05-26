@@ -208,6 +208,7 @@ int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentr
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	if ((cmd_list==NULL) || (line==NULL)) return -100;
 
+	// make a local copy
 	char buf[MAX_LINELEN];
 	strncpy(buf, line, MAX_LINELEN);
 

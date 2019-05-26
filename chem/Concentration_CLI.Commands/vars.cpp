@@ -342,8 +342,10 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 
 
 	if (cli-> core-> pep !=NULL) {
-		cli-> core-> pep-> pos.dim[0] = posx;
-		cli-> core-> pep-> pos.dim[1] = posy;
+	//	cli-> core-> pep-> pos.dim[0] = posx;
+	//	cli-> core-> pep-> pos.dim[1] = posy;
+	//	PepPosVecType	*pos = cli-> core-> pep-> getpos();
+		cli-> core-> pep-> setpos(posx, posy, 0);
 	}
 
 	return 0;

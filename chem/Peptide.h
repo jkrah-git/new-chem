@@ -35,7 +35,10 @@ public:
 
 	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
 	PepPosVecType	*getpos(void); //{ return pos.pos; };
-	bool		testpos(Peptide *pep);
+	bool		testpos(Peptide *pep) { return pos == pep-> pos; }
+	bool		testpos(PeptidePos *_pos) { return (pos == *_pos); };
+
+
 	void		rotateto(PepRot rotation, Peptide *dest);
 	void		addpep(PepSig sig, Peptide *tail);
 

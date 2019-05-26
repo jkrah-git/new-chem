@@ -96,12 +96,13 @@ void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepPosVecType rot){
 //-----------------------
 PepPosVecType *Peptide::getpos(void){ return pos.dim;	}
 // ---------------------
+/*
 bool Peptide::testpos(Peptide *pep){
 	if (pep==NULL) return false;
 	return (pep->pos == pos);
 }
-
-
+*/
+// ---------------------
 void Peptide::rotateto(PepRot rotation, Peptide *dest){
 	if (dest != NULL) {
 		dest->sig = sig;

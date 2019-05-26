@@ -4,3 +4,5 @@ Debug/*
 *.swp
 out.txt
 .cproject
+cli_main/*
+test_main/*

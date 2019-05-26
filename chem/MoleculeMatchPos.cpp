@@ -111,22 +111,27 @@ void MoleculeMatchPos::render(){
 	Molecule m;
 	mylist<Peptide>::mylist_item<Peptide> *new_item = m.pep_list.add();
 	if ((new_item!=NULL) &&(new_item-> item!=NULL)) {
-		new_item-> item->pos = current_pos;
+		new_item-> item->setpos(current_pos.dim[PEPPOS_X], current_pos.dim[PEPPOS_Y], 0);
 		new_item-> item->set(ch);
 		m.drawto(&buf, NULL, NULL, NULL);
 	}
 
 	if (test_item !=NULL) {
-		PeptidePos testpos;
-		testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
-		testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
-		ch = '*';
+		PeptidePos pos;
+	//	testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
+	//	testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
+		PepPosVecType	*test_pos = test_item-> item-> getpos();
+		if (test_pos !=NULL) {
+			pos.dim[PEPPOS_X] = current_pos.dim[PEPPOS_X] + test_pos[PEPPOS_X];
+			ch = '*';
 
-		mylist<Peptide>::mylist_item<Peptide> *new_item = m.pep_list.add();
-		if ((new_item!=NULL) &&(new_item-> item!=NULL)) {
-			new_item-> item->pos = testpos;
-			new_item-> item->set(ch);
-			m.drawto(&buf, NULL, NULL, NULL);
+			mylist<Peptide>::mylist_item<Peptide> *new_item = m.pep_list.add();
+			if ((new_item!=NULL) &&(new_item-> item!=NULL)) {
+				//new_item-> item->pos = testpos;
+				new_item-> item-> setpos(test_pos[PEPPOS_X],test_pos[PEPPOS_Y], 0);
+				new_item-> item-> set(ch);
+				m.drawto(&buf, NULL, NULL, NULL);
+			}
 		}
 
 	}
@@ -192,8 +197,8 @@ void MoleculeMatchPos::rotatemole() {
 	mole1-> getbounds(&min1, &max1);
 	rotmole-> getbounds(&min2, &max2);
 
-	PRINT(":: min1, max1 : "); min1.dump(); max1.dump(); NL
-	PRINT(":: min2, max2 : "); min2.dump(); max2.dump(); NL
+	printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
+	printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 	// void		getbounds(PeptidePos *min, PeptidePos *max);
 	//mole->
 	// sub size m2 from min
@@ -218,7 +223,6 @@ void MoleculeMatchPos::rotatemole() {
 //----------------------------------//----------------------------------
 int	MoleculeMatchPos::nextpos(){
 	// returns: -2 nullpeps, -1=(end), 0=(ok), 1=(newrot),
-
 
 	// ?? root_item first (initialise)
 /*	if (root_item == NULL)
@@ -296,25 +300,26 @@ int	MoleculeMatchPos::nextmatch(void){
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
 	if (rotmole ==NULL) return -12;
-
 	// both root and test items need to be set here
 
-	int result;
-
-	// nextpos also resets 'test_item'
-	result = nextpos();
-
-
-
+	// nextpos
+	int result  = nextpos();
 	if (result <-1) return -3;
 	if (result <0) return -2;
 	result = -1;
 
-	PeptidePos testpos;
-	testpos.dim[0] = test_item-> item-> pos.dim[0] + current_pos.dim[0];
-	testpos.dim[1] = test_item-> item-> pos.dim[1] + current_pos.dim[1];
+	PepPosVecType	*test_item_pos = test_item-> item-> getpos();
+	if (test_item_pos ==NULL) return -13;
 
-	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> test_pos(&testpos);
+	PeptidePos testpos;
+	testpos.dim[0] = test_item_pos[0] + current_pos.dim[0];
+	testpos.dim[1] = test_item_pos[1] + current_pos.dim[1];
+
+	// ------------
+	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);
+	// mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *new_pep);
+
+
 	if (test_pep!=NULL) {
 		result  = 0;
 		//PRINT("Colis @ "); testpos.dump();

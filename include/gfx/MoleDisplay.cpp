@@ -48,6 +48,7 @@ public:
  */
 //-------------------------------
 MoleDisplay::MoleDisplay() {
+	line_pos = 0;
 	ysize = 800;
 	xsize = 600;
 	scale = 30;
@@ -65,6 +66,38 @@ void MoleDisplay::clearatt(){
 //-------------------------------
 MoleDisplay::~MoleDisplay() {}
 //-------------------------------
+void MoleDisplay::dump() {
+	printf("MoleDisplay[0x%zX].", (long unsigned int) this);
+	printf("size[%d,%d].scale[%d].col[%d,%d,%d].off[%d,%d].pos[0x%zX]\n",
+			xsize, ysize, scale, colr, colg, colb, offsetx, offsety, (long unsigned int)  pos);
+	if (pos !=NULL) {
+		printf(".. pos[%d,%d,%d]\n", pos[0], pos[1], pos[2]);
+	}
+}
+//-------------------------------
+void MoleDisplay::printg(char *str){
+	if (str==NULL) return;
+	if (line_pos >= ysize) return;
+	int x = 0;
+	gfx_color(200,200,200);
+	gfx_text(str,x,line_pos);
+	line_pos+= DISPLAY_FONT_HEIGHT;
+
+	gfx_flush();
+
+}
+//-------------------------------
+void MoleDisplay::gdump() {
+
+	printf("MoleDisplay[0x%zX].", (long unsigned int) this);
+	printf("size[%d,%d].scale[%d].col[%d,%d,%d].off[%d,%d].pos[0x%zX]\n",
+			xsize, ysize, scale, colr, colg, colb, offsetx, offsety, (long unsigned int)  pos);
+	if (pos !=NULL) {
+		printf(".. pos[%d,%d,%d]\n", pos[0], pos[1], pos[2]);
+	}
+
+}
+//-------------------------------
 void MoleDisplay::open(){
 	gfx_open(xsize,ysize,"MoleDisplay");
 	gfx_clear();
@@ -73,13 +106,17 @@ void MoleDisplay::open(){
 
 int	MoleDisplay::screenx(void){
 	int px = (xsize/2) + offsetx;
-	if (pos !=NULL)	px += (pos[PEPPOS_X] * scale);
+	if (pos !=NULL)	{
+		px += (pos[PEPPOS_X] * scale);
+	}
 	return px;
 }
 //-------------------------------
 int	MoleDisplay::screeny(void){
 	int py = (ysize/2) + offsety;
-	if (pos !=NULL)	py += (pos[PEPPOS_Y] * scale);
+	if (pos !=NULL)	{
+		py += (pos[PEPPOS_Y] * scale);
+	}
 	return (ysize-py);
 }
 //-------------------------------
@@ -96,9 +133,9 @@ void MoleDisplay::grid(){
 		pos[PEPPOS_X] = x;
 		int px = screenx();
 		if (x==0)
-			gfx_color(colr,colg,colb);
+			gfx_color(colr*2,colg*2,colb*2);
 		else
-			gfx_color(colr*2, colg*2, colb*2);
+			gfx_color(colr, colg, colb);
 
 		gfx_line(px ,0, px, ysize);
 	}
@@ -107,9 +144,9 @@ void MoleDisplay::grid(){
 		pos[PEPPOS_Y] = y;
 		int py = screeny();
 		if (y==0)
-			gfx_color(colr,colg,colb);
+			gfx_color(colr*2,colg*2,colb*2);
 		else
-			gfx_color(colr*2, colg*2, colb*2);
+			gfx_color(colr, colg, colb);
 
 		gfx_line(0, py, xsize, py);
 
@@ -121,7 +158,26 @@ void MoleDisplay::grid(){
 void MoleDisplay::draw_pep(Peptide *pep) {
 
 	if (pep==NULL) return;
-	pos = pep->getpos();
+	PeptidePos new_peppos;
+	PepPosVecType *newpos = new_peppos.dim;
+
+	// if no base offset
+	if (pos==NULL) {
+		// then just use pep.pos
+		pos= pep->getpos();
+	} else { // pos != NULL
+
+		PepPosVecType *pep_pos = pep->getpos();
+		// newpos = pos + pep_pos
+		for (int i=0; i<PepPosVecMax; i++){
+			newpos[i] = pos[i];
+			if (pep_pos!=NULL) {
+				newpos[i] += pep_pos[i];
+			}
+		} //----
+		pos= newpos;
+	}
+
 	int x = screenx();
 	int y = screeny();
 	int s = scale/2;
@@ -132,13 +188,15 @@ void MoleDisplay::draw_pep(Peptide *pep) {
 	gfx_line(x+s, y+s, x-s, y+s);
 	gfx_line(x-s, y+s, x-s, y-s);
 
-	setcol(200,200,200);
 	char str[8];
 	sprintf(str, "0x%x", pep-> get());
+	gfx_color(200,200,200);
 	gfx_text(str,x,y);
 
+	//-------------
+	// (newpos leaving scope)
+	pos = NULL;
 	gfx_flush();
-
 }
 
 //-------------------------------
@@ -186,14 +244,16 @@ void MoleDisplay::draw_mole(Molecule *mole, int colr, int colg, int colb, Peptid
 void MoleDisplay::draw_mole(Molecule *mole){
 
 	if (mole==NULL) return;
+	PepPosVecType *globalpos = pos;
 
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
+		//todo: bug afger firsr pep
+		pos = globalpos;
 		draw_pep(current_item-> item);
 		//---
 		current_item = current_item-> next;
 	}
-
 
 }
 
@@ -213,11 +273,21 @@ void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 
 	if (matchpos-> get_test_item()!=NULL) {
 		//draw_pep(matchpos-> get_test_item()-> item, 100, 100, 100,  &matchpos-> current_pos );
+		setcol(100,100,100);
+		draw_pep(matchpos-> get_test_item()-> item);
 	}
 
-	char str[32];
-	sprintf(str, "Rot: %d", matchpos-> rotation);
 	gfx_color(200,200,200);
-	gfx_text(str, 10, 10);
+	char str[32];
+
+	int tx=10, ty=10;
+	sprintf(str, "Rot: %d", matchpos-> rotation);	gfx_text(str, tx, ty); ty+=20;
+	sprintf(str, "Pos[%d,%d] Rot[%d]",
+			matchpos-> current_pos.dim[PEPPOS_X],
+			matchpos-> current_pos.dim[PEPPOS_Y],
+			matchpos-> current_pos.dim[PEPPOS_ROT]);
+		gfx_text(str, tx, ty); ty+=20;
+
+
 	gfx_flush();
 }

@@ -112,9 +112,31 @@ void Molecule::dump(bool dorender){
 	if (dorender) render();
 
 }
-
 // -------------------------------// -------------------------------
-mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(Peptide *new_pep) {
+mylist<Peptide>::mylist_item<Peptide>   *Molecule::testpos(PeptidePos *_pos){
+	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
+
+	if (_pos!=NULL) {
+		mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
+		while (	(current_item !=NULL) &&
+				(found_item==NULL)) {
+
+			if ((current_item-> item != NULL) &&
+				(current_item-> item-> testpos(_pos)) ) {
+
+				found_item = current_item;
+				break;
+			}
+			//--
+			current_item = current_item-> next;
+		}
+	}
+	//--
+	return found_item;
+}
+// -------------------------------
+// -------------------------------// -------------------------------
+mylist<Peptide>::mylist_item<Peptide>   *Molecule::testpos(Peptide *new_pep) {
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
 	if (new_pep!=NULL) {
@@ -132,10 +154,11 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(Peptide *new_pep) {
 			current_item = current_item-> next;
 		}
 	}
-
+	//--
 	return found_item;
 }
 // -------------------------------
+
 //void Molecule::clear(void) {	pep_list.clear(true);	}
 void Molecule::clear(void) {	pep_list.clear();	}
 // -------------------------------
@@ -247,7 +270,7 @@ int Molecule::addpep(PepSig sig){
 		Peptide tmp_pep;
 		tmp_pep.addpep(sig, tail->item);
 
-		mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&tmp_pep);
+		mylist<Peptide>::mylist_item<Peptide>  *testpep = testpos(&tmp_pep);
 		if (testpep == NULL) {
 			//-------------------------------------
 			// new_item -

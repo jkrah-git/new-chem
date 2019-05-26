@@ -47,7 +47,10 @@ public:
 	void		getbounds(PeptidePos *min, PeptidePos *max);
 	void		dump(void) { dump(false); }
 	void		dump(bool dorender);
-	mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *new_pep);
+
+	//mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *new_pep);
+	mylist<Peptide>::mylist_item<Peptide>  *testpos(Peptide *new_pep);
+	mylist<Peptide>::mylist_item<Peptide>  *testpos(PeptidePos *_pos);
 
 	// move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };
