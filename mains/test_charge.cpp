@@ -177,21 +177,4 @@ int run(int argc, char **argv) {
 	return -10;
 }
 //=======================================================
-int XXXrun_line(char *line) {
-	if (line==NULL) return -1;
-
-	if (strlen(line)>0) {
-		add_history(line);
-		printf("LINE[%s]\n", line);
-		// =======================
-		// RUN CMD
-		// -------------------
-		if ( (strcmp(line, "test_pep")==0))			test_pep();
-		if ( (strcmp(line, "test_mole")==0))		test_mole();
-		//if ( (strcmp(line, "test_display")==0))		test_display();
-//			if ( (strcmp(line, "test_display")==0))		test_display();
-		// -------------------
-	}
-	return 0;
-}//=======================================================
 

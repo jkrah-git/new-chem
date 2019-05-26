@@ -123,6 +123,7 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 
 	MoleDisplay mole_display;
 	mole_display.open();
+	mole_display.setcol(80,80,80);
 	mole_display.grid();
 	mole_display.draw_match(&cli->core->matchpos);
 
