@@ -14,9 +14,11 @@
 //#include "../chem/CLI_Command.h"
 //#include "../include/mylist.h"
 #include "../include/gfx/MoleDisplay.h"
-// --------------------------
-// --------------------------
 
+///=================== need to be declared externally
+char 	**build_args(void);
+int 	run(int argc, char **argv);
+//==========================================================
 //===============================================================//===============================================================
 int test_pep(void) {
 	printf("(test_pep.start..)\n");
@@ -36,7 +38,7 @@ int test_mole(void) {
 
 void test_offset(MoleDisplay *mole_display, int x, int y, PepPosVecType *p) {
 	if (mole_display!=NULL) {
-		gfx_clear();
+		mole_display-> cls();
 		mole_display-> clearatt();
 		//--------
 		mole_display-> setcol(80,80,80);
@@ -125,8 +127,18 @@ int test_display_moles(MoleDisplay *mole_display, int section) {
 int test_display(int mode) {
 	printf("test_display:: start..\n");
 	printf("test_display:: =======\n");
+
 	MoleDisplay mole_display;
 	mole_display.open();
+	mole_display.cls();
+	mole_display.clearatt();
+	//--------
+
+	char msg[128];
+	sprintf(msg, "HEllow World\n");
+	mole_display.printg(msg);
+	gfx_wait();
+
 	//---------------
 	//test_display_peps(&mole_display);
 	test_display_moles(&mole_display, mode);

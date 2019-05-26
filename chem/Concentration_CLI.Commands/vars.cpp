@@ -98,86 +98,7 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 
 	return 0;
 }
-//---------------------------------//---------------------------------
-// todo : del cli_stack_comp
-//---------------------------------//---------------------------------
-/*
-int	cli_stack_comp(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	// printf("\n");
-	//-------
-	if (argc<1) {
-		printf("usage: stack comp mole|conc to select.\n");
-	} else {
-		//if (strcmp(argv[0], "pep") ==0)  {	printf("peptide_stack ==> clear\n");	 	cli->core-> peptide_stack.clear();	 }
-		if (strcmp(argv[0], "mole") ==0) {
-			//printf("molecule_stack ==> clear\n");
-			//cli->core-> molecule_stack.clear();
-			if (cli-> core-> mole ==NULL) {
-				printf("No molecule selected\n");
-				return -2;
-			}
 
-			int c = 0;
-			mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
-			while ((item!=NULL) && (item-> item!=NULL)) {
-				cli-> core-> mole->addpep(item-> item-> get());
-				// ---
-				item = item-> next;
-				c++;
-			}
-			return c;
-
-		}
-
-		if (strcmp(argv[0], "conc") ==0) {
-			printf("concentration_stack ==> clear\n");
-			cli->core-> concentration_stack.clear();
-		}
-	}
-
-	return 0;
-}
-*/
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-/*
-int	cli_stack_push(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	// printf("\n");
-	//-------
-	if (argc<1) {
-		 printf(".. use [pep|mole|conc to push item.\n");
-		 return 0;
-	} // else
-
-	 if (strcmp(argv[0], "pep") ==0)  {	//cli-> core-> pushpep(cli-> core-> pep);	 }
-		mylist<Peptide>::mylist_item<Peptide>  *new_pep = NULL;
-		new_pep = cli-> core-> peptide_stack.add();
-		if (new_pep ==NULL) return -1;
-		if (cli-> core-> pep==NULL) {
-			cli-> core-> pep = new_pep-> item;
-		} else {
-			*new_pep-> item = *cli-> core-> pep;
-		}
-		return 0;
-		cli_pep_push(cli, argc, argv);
-	 }
-
-	 if (strcmp(argv[0], "mole") ==0) {	printf("molecule_stack ==> ");	 cli->core-> molecule_stack.dump();	 }
-	 if (strcmp(argv[0], "conc") ==0) 	  {	printf("concentration_stack ==> ");	 cli->core-> concentration_stack.dump();	 }
-
-	return 0;
-}
-*/
-//---------------------------------//---------------------------------
-//int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
 //=======================
 //=======================
 //===  PEP commands  ===
@@ -484,7 +405,7 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------------//---------------------------------
-// todo: mole_frompep
+
 //---------------------------------//---------------------------------
 int	cli_mole_frompep(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;

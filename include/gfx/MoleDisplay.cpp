@@ -48,7 +48,7 @@ public:
  */
 //-------------------------------
 MoleDisplay::MoleDisplay() {
-	line_pos = 0;
+	line_pos = DISPLAY_FONT_HEIGHT;
 	ysize = 800;
 	xsize = 600;
 	scale = 30;
@@ -63,6 +63,12 @@ void MoleDisplay::clearatt(){
 	offsety = 0;
 	pos = NULL;
 }
+//-------------------------------
+void MoleDisplay::cls(){
+	line_pos = DISPLAY_FONT_HEIGHT;
+	gfx_clear();
+}
+//-------------------------------
 //-------------------------------
 MoleDisplay::~MoleDisplay() {}
 //-------------------------------
@@ -88,12 +94,13 @@ void MoleDisplay::printg(char *str){
 }
 //-------------------------------
 void MoleDisplay::gdump() {
-
+	char msg[128];
 	printf("MoleDisplay[0x%zX].", (long unsigned int) this);
 	printf("size[%d,%d].scale[%d].col[%d,%d,%d].off[%d,%d].pos[0x%zX]\n",
 			xsize, ysize, scale, colr, colg, colb, offsetx, offsety, (long unsigned int)  pos);
 	if (pos !=NULL) {
-		printf(".. pos[%d,%d,%d]\n", pos[0], pos[1], pos[2]);
+		sprintf(msg, ".. pos[%d,%d,%d]\n", pos[0], pos[1], pos[2]);
+		printg(msg);
 	}
 
 }
@@ -248,7 +255,7 @@ void MoleDisplay::draw_mole(Molecule *mole){
 
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
-		//todo: bug afger firsr pep
+		// fix: bug afger firsr pep - reload pos
 		pos = globalpos;
 		draw_pep(current_item-> item);
 		//---

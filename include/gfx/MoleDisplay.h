@@ -12,6 +12,8 @@
 #include "../../chem/Peptide.h"
 #include "../../chem/MoleculeMatchPos.h"
 #include "../../chem/Molecule.h"
+
+// todo:  fully encapsulate gfx.h
 #include "gfx.h"
 
 #define DISPLAY_FONT_HEIGHT 10
@@ -45,6 +47,7 @@ public:
 	void	setcol(int red, int green, int blue) { colr = red; colg = green; colb = blue; };
 	void	grid();
 	void	clearatt();
+	void	cls();
 	void	draw_pep(Peptide *pep);
 	void	draw_mole(Molecule *mole);
 	void	draw_match(MoleculeMatchPos *matchpos);
