@@ -114,20 +114,18 @@ void Molecule::dump(bool dorender){
 }
 
 // -------------------------------// -------------------------------
-mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(PeptidePos *testpos) {
+mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(Peptide *pep) {
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
 	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
-	while ( (testpos != NULL) &&
+	while ( (pep != NULL) &&
 			(current_item !=NULL) &&
 			(found_item==NULL)) {
-#ifdef DEBUG
-		LOG("testpos = "); testpos-> dump(); NL
-		LOG("current_item = "); current_item-> dump(); 	printf("\n");
-#endif
 
 		if ((current_item-> item != NULL) &&
-			(current_item-> item-> pos == *testpos)) {
+			(current_item-> item-> testpos(pep)) ) {
+
+			//(current_item-> item-> pos == *testpos)) {
 			found_item = current_item;
 			break;
 		}
@@ -178,6 +176,9 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 		}
 		// new_item is OK
 		// set pep..
+		current_item->item->rotateto(rotation, pep);
+
+		/*
 		pep-> set(current_item-> item->get());
 
 		// set pos
@@ -201,6 +202,7 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 				break;
 			}
 		}
+	*/
 
 		//---
 		current_item = current_item-> next;
@@ -210,19 +212,17 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 }
 // -------------------------------
 int Molecule::addpep(PepSig sig){
-	LOG("Molecule::addpep..\n");
-	//return -10;
-	//----
-	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
-	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
 
-	// check new list item
+	//----
+	// new_item
+	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
 	if (new_item==NULL) {
 		err =  "Molecule::addpep(NULL new_item)";
 		return -1;
 	}
 
-	// check new list ite.payload
+	// pep = new_item.pep
+	//-------------------------------------
 	Peptide *pep =new_item-> item;
 	if (pep==NULL) {
 		 pep_list.del(new_item);
@@ -230,12 +230,52 @@ int Molecule::addpep(PepSig sig){
 		 return -2;
 	}
 
+	// peppos
+	//-------------------------------------
+	PepPosVecType	*peppos = pep-> getpos();
+	if (peppos==NULL) {
+		 pep_list.del(new_item);
+		 err =  "Molecule::addpep(NULL new_item.pos)";
+		 return -3;
+	}
+
+	// -------------
+	// get tail
+	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
+	if (tail==NULL) {
+		pep->addpep(sig, NULL);
+		} else		{
+			if (tail-> item==NULL) {
+				err =  "Molecule::addpep(NULL tail.item)";
+				return -4;
+			}
+
+			//-------------------------------------
+			pep->addpep(sig, tail->item);
+
+			 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(pep);
+			 if (testpep != NULL) {
+				pep_list.del(new_item);
+				err =  "Molecule::addpep(NULL pep_clash)";
+				return -9;
+			 }
+		} // end else
+
+
+	return 0;
+}
+/*
+
+
 	pep->set(sig);
+
 
 	// simple add to head ??
 	if (tail==NULL) {
-		pep-> pos.dim[0] = 0;
-		pep-> pos.dim[1] = 0;
+	//	pep-> pos.dim[0] = 0;
+	//	pep-> pos.dim[1] = 0;
+		peppos[PEPPOS_X] = 0;
+		peppos[PEPPOS_Y] = 0;
 		return 0;
 	} // else add to tail
 
@@ -248,19 +288,22 @@ int Molecule::addpep(PepSig sig){
 
 
 	// =========== try tp calc rotion
-	/*** rot masks --
-		r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 /1= xx
-		r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
-		r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
-		r4 1100 0000 =(64+128) = 192 & P1 & P2 /64 = xx
+	// rot masks --
+	//	r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 /1= xx
+	//	r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
+	//	r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
+	//	r4 1100 0000 =(64+128) = 192 & P1 & P2 /64 = xx
+	//	- Max r wins .. if tie then 0
+	// ============
 
-		- Max r wins .. if tie then 0
-	 ***/
+
 	PepRot rotation = tail-> item->getrot(pep-> get());
 
 	// ============
-	PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
-	newpos = tail-> item-> pos;	//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
+	PepPosVecType	*tailpos = tail-> item-> getpos();
+
+	// PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
+	// newpos = tail-> item-> pos;			//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
 
 	switch(rotation) {
 		case 0:		newpos.dim[1] ++; break;	// 0 = (0,1)
@@ -283,6 +326,7 @@ int Molecule::addpep(PepSig sig){
 	return 0;
 }
 // -------------------------------
+*/
 
 //----------- matching
 // MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){}
@@ -317,15 +361,15 @@ void Molecule::testmatch(void){
 	// -------------
 	printf("molecule.testmatch: ------------------------------- \n");
 	//MoleculeMatchPos matchpos(this, &m2);
-	MoleculeMatchPos matchpos;
-	matchpos.set(this, &m2);
+//	MoleculeMatchPos matchpos;
+//	matchpos.set(this, &m2);
 	printf("molecule.testmatch: ------------------------------- \n");
-	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
+//	printf("molecule.testmatch: new matchpos = \n"); matchpos.dump();
 	printf("molecule.testmatch: ------------------------------- \n");
 	printf("molecule.testmatch: ------------------------------- \n");
-	int r = matchpos.nextmatch();
+//	int r = matchpos.nextmatch();
 	printf("molecule.testmatch: ------------------------------- \n");
-	printf("molecule.testmatch: next matchpos = [%d] \n", r); matchpos.dump();
+//	printf("molecule.testmatch: next matchpos = [%d] \n", r); matchpos.dump();
 	printf("molecule.testmatch: ---------------- \n");
 
 	// -------------
@@ -518,29 +562,34 @@ void Molecule::testrot(void){
 // -------------------------------
 // -------------------------------
 void Molecule::getbounds(PeptidePos *min, PeptidePos *max){
+
+
 	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	while (next_item !=NULL) {
 		//PRINT("item="); DUMP(next_item-> item); NL
-
 		if (next_item-> item !=NULL) {
-			if (min != NULL) {
-				for (int i=0; i<PepPosVecMax; i++)
-					if (next_item-> item-> pos.dim[i] < min-> dim[i])
-						min-> dim[i] = next_item-> item->pos.dim[i];
+			PepPosVecType	*pos = next_item-> item-> getpos();
+			if (pos!=NULL) {
+				if (min != NULL) {
+					for (int i=0; i<PepPosVecMax; i++)
+						// if (next_item-> item-> pos.dim[i] < min-> dim[i])
+						if (pos[i] < min-> dim[i])
+							min-> dim[i] = pos[i];
 
+				}
+
+				if (max != NULL) {
+					for (int i=0; i<PepPosVecMax; i++)
+						if (pos[i] > max-> dim[i])
+							max-> dim[i] = pos[i];
+
+				}
 			}
-
-			if (max != NULL) {
-				for (int i=0; i<PepPosVecMax; i++)
-					if (next_item-> item-> pos.dim[i] > max-> dim[i])
-						max-> dim[i] = next_item-> item->pos.dim[i];
-
-			}
-
 		}
 
+		//
 		next_item = next_item-> next;
-	}
+	}	// end while
 
 }
 // -------------------------------
@@ -576,13 +625,17 @@ int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *val
 			else { sig = *value; }
 			new_item-> item->set(sig);
 
-			PeptidePos newpos;
-			for (int i=0; i<PepPosVecMax; i++) {
-				if (pos==NULL) {	newpos.dim[i] = item->item->pos.dim[i]; }
-				else { 				newpos.dim[i] = item->item->pos.dim[i] + pos->dim[i];
+			PepPosVecType	*item_pos = new_item-> item->getpos();
+			if (item_pos!=NULL) {
+
+				PeptidePos newpos;
+				for (int i=0; i<PepPosVecMax; i++) {
+					if (pos==NULL) {	newpos.dim[i] = item_pos[i]; }
+					else { 				newpos.dim[i] = item_pos[i] + pos->dim[i];
+					}
 				}
+				//new_item-> item->pos = newpos;
 			}
-			new_item-> item->pos = newpos;
 
 		} // end if new_item
 		//----
@@ -645,12 +698,18 @@ void Molecule::render(void){
 	mylist<Peptide>::mylist_item<Peptide> *next_item = pep_list.gethead();
 	while (next_item !=NULL) {
 		if (next_item-> item !=NULL) {
-			int a =  (next_item-> item-> pos.dim[0] - min.dim[0]+ox) ;
-			int b =  (next_item-> item-> pos.dim[1] - min.dim[1]+oy) ;
+		//	int a =  (next_item-> item-> pos.dim[0] - min.dim[0]+ox) ;
+		//	int b =  (next_item-> item-> pos.dim[1] - min.dim[1]+oy) ;
+			PepPosVecType	*pos = next_item-> item-> getpos();
+			if (pos!=NULL) {
+				int a =  (pos[0] - min.dim[0]+ox) ;
+				int b =  (pos[1] - min.dim[1]+oy) ;
 
-			if((a>=0) && (a<x) && (b>=0) && (b<y)) {
-				txt[a+b*x] = next_item-> item-> get();
-				//printf(".. (%d,%d)[%d]=[0x%x]\n", a, b, a+b*x, txt[a+b*x]);
+				if((a>=0) && (a<x) && (b>=0) && (b<y)) {
+					txt[a+b*x] = next_item-> item-> get();
+					//printf(".. (%d,%d)[%d]=[0x%x]\n", a, b, a+b*x, txt[a+b*x]);
+				}
+
 			}
 		}
 		next_item = next_item-> next;

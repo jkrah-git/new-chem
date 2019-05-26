@@ -42,7 +42,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="mains/old_main.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="chem/Concentration.cpp|chem/CLI_Command.cpp|chem/Concentration_VM.cpp|chem/MoleculeMatchPos.cpp|chem/Concentration_CLI.cpp|chem/Concentration_CLI.Commands|mains/cli_main.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -812,6 +812,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="chem/Concentration.cpp|chem/CLI_Command.cpp|chem/Concentration_VM.cpp|chem/MoleculeMatchPos.cpp|chem/Concentration_CLI.cpp|chem/Concentration_CLI.Commands|mains/cli_main.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

@@ -18,28 +18,26 @@
 
 /*
 // ----------------------------------------------
-// ----------------------------------------------
 class PeptidePos {
 public:
-	PepPosVecType	*dim;
-
-	PeptidePos();
-	virtual ~PeptidePos();
+	PepPosVecType	*pos;
+	//----
 	void		init();
 	void		dump();
-	bool operator =(const PeptidePos& p);
-	bool operator ==(const PeptidePos& p);
 	void		test();
+	PeptidePos& operator +(const PeptidePos& p);
+	PeptidePos& operator =(const PeptidePos& p);
+	       bool operator ==(const PeptidePos& p);
+	PeptidePos();
+	virtual ~PeptidePos();
 };
-// ----------------------------------------------
-
 // ----------------------------------------------
 
  */
 PeptidePos::PeptidePos() {
 
 	dim = (PepPosVecType*) malloc (sizeof(PepPosVecType) * PepPosVecMax);
-	LOG("malloc[0x%zX]\n",  (long unsigned int) dim);
+	//LOG("malloc[0x%zX]\n",  (long unsigned int) dim);
 	init();
 }
 // ---------------------
@@ -53,7 +51,7 @@ void PeptidePos::init() {
 // ---------------------
 PeptidePos::~PeptidePos() {
 	//printf("::PeptidePos.free[0x%zX]\n",  (long unsigned int) dim);
-	LOG("free[0x%zX]\n",  (long unsigned int) dim);
+	//LOG("free[0x%zX]\n",  (long unsigned int) dim);
 	if (dim!=NULL)  free(dim);
 }
 // ---------------------
@@ -74,13 +72,9 @@ void PeptidePos::dump(){
 // ---------------------
 PeptidePos &PeptidePos::operator +(const PeptidePos& p) {
 //	if ((dim==NULL) || (p.dim==NULL)) return ;
-
 	for (int i=0; i<PepPosVecMax; i++){
-		//p.dim[i] = dim[i];
 		dim[i] += p.dim[i];
-
 	}
-
 	return *this;
 }
 // ---------------------// ---------------------
@@ -88,21 +82,17 @@ PeptidePos &PeptidePos::operator =(const PeptidePos& p) {
 //	if ((dim==NULL) || (p.dim==NULL)) return ;
 
 	for (int i=0; i<PepPosVecMax; i++){
-		//p.dim[i] = dim[i];
 		dim[i] = p.dim[i];
-
 	}
-
 	return *this;
-}// ---------------------
+}
+// ---------------------
 bool PeptidePos::operator ==(const PeptidePos& p) {
 	if ((dim==NULL) || (p.dim==NULL)) return false;
-
 	for (int i=0; i<PepPosVecMax; i++) {
 		if (dim[i] != p.dim[i])
 			return false;
 	}
-
 	return true;
 }
 // ---------------------

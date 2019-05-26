@@ -82,6 +82,81 @@ void Peptide::print(void){
 		printf("(0x%2X)", sig);
 
 }
+
+void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepPosVecType rot){
+	if (pos.dim!=NULL)	pos.dim[0] = posx; 	pos.dim[1] = posy;	pos.dim[2] = rot;
+}
+
+//-----------------------
+PepPosVecType *Peptide::getpos(void){ return pos.dim;	}
+// ---------------------
+bool Peptide::testpos(Peptide *pep){
+	if (pep==NULL) return false;
+	return (pep->pos == pos);
+}
+
+
+void Peptide::rotateto(PepRot rotation, Peptide *dest){
+	if (dest != NULL) {
+		dest->sig = sig;
+
+		// set pos
+		if (rotation==0) {
+			dest-> pos = pos;
+		} else {
+
+			switch(rotation) {
+			case 1:		// x'=y, y'=-x
+				dest-> pos.dim[0] =   pos.dim[1];
+				dest-> pos.dim[1] = - pos.dim[0];
+				break;
+
+			case 2: 	// x'=x , y= -y
+				dest-> pos.dim[0] =   pos.dim[0];
+				dest-> pos.dim[1] = - pos.dim[1];
+				break;
+			case 3:   // x' = =y, y' = -x
+				dest-> pos.dim[0] = - pos.dim[1];
+				dest-> pos.dim[1] = - pos.dim[0];
+				break;
+			}
+		}
+	}
+}
+//-----------------------
+void Peptide::addpep(PepSig sig, Peptide *tail) {
+
+	set(sig);
+
+	// simple add to head ??
+	if (tail==NULL) {	setpos(0,0,0);	}
+	else {  // else add to tail
+		pos = tail-> pos;
+		PepRot rotation = tail->getrot(sig);
+		switch(rotation) {
+			case 0:		pos.dim[1] ++; break;	// 0 = (0,1)
+			case 1:		pos.dim[0] ++; break;	// 1 = (1,0)
+			case 2: 	pos.dim[1] --; break;	// 2 = (0,-1)
+			case 3:		pos.dim[0] --; break;	// 3 = (-1,0)
+		}
+	}
+
+	/*
+		 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
+		 if (testpep != NULL) {
+			pep_list.del(new_item);
+			err =  "Molecule::addpep(NULL pep_clash)";
+			return -9;
+		}
+
+		// copy new pos
+		pep-> pos = newpos;
+	 */
+
+	return;
+}
+
+
 // ---------------------
 //void Peptide::set(PepSig newsig, PepStatus newstatus) {	sig = newsig;	status = newstatus;}
 

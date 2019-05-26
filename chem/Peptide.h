@@ -10,31 +10,36 @@
 // ----------------------- // -----------------------
 #include "PeptidePos.h"
 
+typedef PepPosVecType PepRot;
 typedef unsigned char PepSig;
-typedef unsigned char PepRot;
 typedef unsigned char PepMatch;
 
-//typedef unsigned char PepStatus;
+
+// needed for rand
 #include <stdlib.h>
 // -----------------------
 class Peptide {
 private:
 	PepSig	sig;
+	PeptidePos	pos;
 
 public:
-	PeptidePos	pos;
+	//PeptidePos	pos;
 
 	//--------------
 	Peptide();
 	virtual ~Peptide();
 
-	void  set(PepSig newval) { sig = newval; };
-	PepSig get(){	return sig;	};
-	void randsig(void) { randsig(0,255); };
+	void  		set(PepSig newval) { sig = newval; };
+	PepSig 		get(){	return sig;	};
 
-//	void 		set(PepSig newval);
-//	PepSig		get();
-//	PepSig		rand(void);
+	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
+	PepPosVecType	*getpos(void); //{ return pos.pos; };
+	bool		testpos(Peptide *pep);
+	void		rotateto(PepRot rotation, Peptide *dest);
+	void		addpep(PepSig sig, Peptide *tail);
+
+	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);

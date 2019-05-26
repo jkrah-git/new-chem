@@ -15,9 +15,9 @@
 // -------------------------------
 #include "../include/mylist.h"
 #include "Peptide.h"
-#include "MoleculeMatchPos.h"
-#include "Molecule.h"
-class MoleculeMatchPos;
+
+//#include "MoleculeMatchPos.h"
+//class MoleculeMatchPos;
 
 // -------------------------------
 class Molecule {
@@ -47,7 +47,7 @@ public:
 	void		getbounds(PeptidePos *min, PeptidePos *max);
 	void		dump(void) { dump(false); }
 	void		dump(bool dorender);
-	mylist<Peptide>::mylist_item<Peptide>  *test_pos(PeptidePos *testpos);
+	mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *pep);
 
 	// move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };
