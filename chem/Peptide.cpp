@@ -12,6 +12,7 @@
 #include "Peptide.h"
 //-----
 //#define DEBUG
+#include "../include/debug.h"
 #include "../include/common.h"
 
 
@@ -23,25 +24,29 @@
 class Peptide {
 private:
 	PepSig	sig;
+	PeptidePos	pos;
 
 public:
-	PeptidePos	pos;
+	//PeptidePos	pos;
 
 	//--------------
 	Peptide();
 	virtual ~Peptide();
 
-	void  set(PepSig newval) { sig = newval; };
-	PepSig get(){	return sig;	};
-	void randsig(void) { randsig(0,255); };
+	void  		set(PepSig newval) { sig = newval; };
+	PepSig 		get(){	return sig;	};
 
-//	void 		set(PepSig newval);
-//	PepSig		get();
-//	PepSig		rand(void);
+	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
+	PepPosVecType	*getpos(void); //{ return pos.pos; };
+	bool		testpos(Peptide *pep);
+	void		rotateto(PepRot rotation, Peptide *dest);
+	void		addpep(PepSig sig, Peptide *tail);
+
+	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
-	PepMatch	getmatch(PepSig MatchSig);
+	bool		match(PepSig MatchSig);
 
 	// ---
 	void 		print(void);
@@ -49,6 +54,7 @@ public:
 	void		test(void);
 };
 // -----------------------
+
 
 */
 // -----------------------
@@ -140,37 +146,9 @@ void Peptide::addpep(PepSig sig, Peptide *tail) {
 			case 3:		pos.dim[0] --; break;	// 3 = (-1,0)
 		}
 	}
-
-	/*
-		 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
-		 if (testpep != NULL) {
-			pep_list.del(new_item);
-			err =  "Molecule::addpep(NULL pep_clash)";
-			return -9;
-		}
-
-		// copy new pos
-		pep-> pos = newpos;
-	 */
-
 	return;
 }
 
-
-// ---------------------
-//void Peptide::set(PepSig newsig, PepStatus newstatus) {	sig = newsig;	status = newstatus;}
-
-
-// ---------------------
-/*
-void  Peptide::set(PepSig newval) { sig = newval; }
-PepSig Peptide::get(){	return sig;	};
-PepSig Peptide::rand(void) { return rand(0,255); };
-*/
-//PepSig Peptide::rand(PepSig min, PepSig max) {	return (PepSig) (rand() % (max-min) + min);}
-// ---------------------
-//void Peptide::setstatus(PepStatus newval) { status = newval; }
-//PepStatus Peptide::getstatus(){	return status;	}
 // ---------------------
 PepRot		Peptide::getrot(PepSig parentSig){
 
@@ -277,34 +255,38 @@ bool Peptide::match(PepSig MatchSig){
 
 	return true;
 }
+// ---------------------// ---------------------
+Peptide &Peptide::operator =(const Peptide& p) {
+	sig = p.sig;
+	pos = p.pos;
+	return *this;
+}
+// ---------------------
 
 
 
 bool Peptide::operator ==(const Peptide& p) {
-/*
-						printf("Peptide::operator ??\n");
-	if (sig == p.sig) 	printf("Peptide:: sig == p.sig\n");
-	else 				printf("Peptide:: sig != p.sig\n");
-
-	if (pos == p.pos) 	printf("Peptide:: pos == p.pos\n");
-	else 				printf("Peptide:: pos != p.pos");
-*/
 	return ((sig == p.sig) && (pos==p.pos));
 }
 // ---------------------
 void Peptide::test(void){
 
+	printf("Peptide.test: ================\n");
 	printf("Peptide.test: == START ==\n");
-	printf("Peptide.test: pre: ");	dump(); printf("\n");
-	//------------
-	printf("Peptide.test: running pos.test: ");
-	pos.test();
+	printf("Peptide.test: ================\n");
+	printf("Peptide.test: pre: ");	dump(); NL
+	printf("Peptide.test1: ================\n");
+//	printf("Peptide.test1: running pos.test\n");
+//	printf("Peptide.test1: ================\n");
+//	pos.test();
 
+	printf("Peptide.test2: ================\n");
 	PepSig a;
 	a = 'A';
-	printf("Peptide.test: set(0x%x)(%c) ...\n", a, a);	set(a);
-	printf("Peptide.test: get = (0x%x)(%c) ...\n", get(), get());
+	printf("Peptide.test2: set(0x%x)(%c) ...\n", a, a);	set(a);
+	printf("Peptide.test2: get = (0x%x)(%c) ...\n", get(), get());
 
+	printf("Peptide.test3: ================\n");
 	// - Match = 0bXXsseett.... = 4x64 sets
 	// 11 01 01 01 01
 	set( (128+64) +16+4+1 );
@@ -314,14 +296,15 @@ void Peptide::test(void){
 	sprintb(bin0, sig);
 	sprintb(bin1, a);
 
-	printf("Peptide.test: match (0x%x)->(0x%x).. ", sig, a);
-	printf("\n%s\n%s ==>", bin0,bin1);
+	printf("Peptide.test3: match (0x%x)->(0x%x).. ", sig, a);
+	printf("\n%s\n%s ==>", bin0, bin1);
 
 	if (match(a)) {	printf("MATCH\n");	}
 	else {	printf("no match\n");	}
 
 	//------------
 
+	printf("Peptide.test: ================\n");
 	printf("Peptide.test: post: ");	dump(); printf("\n");
 	printf("Peptide.test: == END ==\n");
 

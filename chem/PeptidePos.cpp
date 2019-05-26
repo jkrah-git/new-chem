@@ -88,8 +88,11 @@ PeptidePos &PeptidePos::operator =(const PeptidePos& p) {
 }
 // ---------------------
 bool PeptidePos::operator ==(const PeptidePos& p) {
-	if ((dim==NULL) || (p.dim==NULL)) return false;
+	//printf("PeptidePos::operator1 ==\n");
+	//if ((dim==NULL) || (p.dim==NULL)) return false;
+
 	for (int i=0; i<PepPosVecMax; i++) {
+		//printf("PeptidePos::operator2 == [%d]==[%d]\n", dim[i], p.dim[i]);
 		if (dim[i] != p.dim[i])
 			return false;
 	}
@@ -97,40 +100,49 @@ bool PeptidePos::operator ==(const PeptidePos& p) {
 }
 // ---------------------
 void PeptidePos::test(){
+	printf("PeptidePos.test: ===========\n");
 	printf("PeptidePos.test: == START ==\n");
 	printf("PeptidePos.test: pre: ");	dump(); printf("\n");
 	//------------
-	printf("PeptidePos.test1: setting [%d] elements to [i+1]\n", PepPosVecMax);
+	printf("PeptidePos.test1: ===========\n");
 	for (int i=0; i<PepPosVecMax; i++) {	dim[i] = i+1; }
+	printf("PeptidePos.test1: setting [%d] elements to [i+1]=> ", PepPosVecMax);
 	dump(); printf("\n");
 
+	printf("PeptidePos.test2: ===========\n");
 	printf("PeptidePos.test2: setting pos2 [%d] elements to [i*2]\n", PepPosVecMax);
-	PeptidePos pos2, pos3;
+	PeptidePos pos2;
 	for (int i=0; i<PepPosVecMax; i++) {
 		pos2.dim[i] = i*2;
 	}
-	printf("PeptidePos.test2:pos2 => "); pos2.dump(); printf("\n");
-	printf("PeptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
+	printf("PeptidePos.test3: ===========\n");
+	printf("PeptidePos.test3: pos2 => "); pos2.dump(); printf("\n");
 
-	printf("PeptidePos.test2: setting pos3 = pos2\n");
+	PeptidePos pos3;
 	pos3 = pos2;
+	printf("PeptidePos.test4: ===========\n");
+	printf("PeptidePos.test4: setting pos3 = pos2\n");
+	printf("PeptidePos.test4: pos3 => "); pos3.dump(); printf("\n");
 
-	printf("PeptidePos.test2:pos3 => "); pos3.dump(); printf("\n");
-
-	printf("PeptidePos.test2: cmp.pos2==pos3 ?; ");
-	if (pos2==pos3) printf("true\n");
+	printf("PeptidePos.test5: ===========\n");
+	printf("PeptidePos.test5: cmp.pos2==pos3 ?; ");
+	if ((pos2)==(pos3)) printf("true\n");
 	else  printf("false\n");
 
-	printf("PeptidePos.test3:pos3.[0] = +10\n");
+	printf("PeptidePos.test6: ===========\n");
+	printf("PeptidePos.test6: pos3.[0] = +10\n");
 	pos3.dim[0] += 10;
-	printf("PeptidePos.test3:pos3 => "); pos3.dump(); printf("\n");
+	printf("PeptidePos.test6: pos3 => "); pos3.dump(); printf("\n");
 
-	printf("PeptidePos.test3: cmp.pos2==pos3 ?; ");
+	printf("PeptidePos.test7: ===========\n");
+	printf("PeptidePos.test7: cmp.pos2==pos3 ?; ");
 	if (pos2==pos3) printf("true\n");
 	else  printf("false\n");
 
 	//------------
+	printf("PeptidePos.test: ===========\n");
 	printf("PeptidePos.test: == END ==\n");
+
 
 }
 // ---------------------

@@ -114,23 +114,23 @@ void Molecule::dump(bool dorender){
 }
 
 // -------------------------------// -------------------------------
-mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(Peptide *pep) {
+mylist<Peptide>::mylist_item<Peptide>   *Molecule::test_pos(Peptide *new_pep) {
 
 	mylist<Peptide>::mylist_item<Peptide> *found_item = NULL;
-	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
-	while ( (pep != NULL) &&
-			(current_item !=NULL) &&
-			(found_item==NULL)) {
+	if (new_pep!=NULL) {
+		mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
+		while (	(current_item !=NULL) &&
+				(found_item==NULL)) {
 
-		if ((current_item-> item != NULL) &&
-			(current_item-> item-> testpos(pep)) ) {
+			if ((current_item-> item != NULL) &&
+				(current_item-> item-> testpos(new_pep)) ) {
 
-			//(current_item-> item-> pos == *testpos)) {
-			found_item = current_item;
-			break;
+				found_item = current_item;
+				break;
+			}
+			//--
+			current_item = current_item-> next;
 		}
-		//--
-		current_item = current_item-> next;
 	}
 
 	return found_item;
@@ -213,53 +213,69 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 // -------------------------------
 int Molecule::addpep(PepSig sig){
 
-	//----
-	// new_item
-	mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
-	if (new_item==NULL) {
-		err =  "Molecule::addpep(NULL new_item)";
-		return -1;
-	}
-
-	// pep = new_item.pep
-	//-------------------------------------
-	Peptide *pep =new_item-> item;
-	if (pep==NULL) {
-		 pep_list.del(new_item);
-		 err =  "Molecule::addpep(NULL new_item.payload)";
-		 return -2;
-	}
-
-	// peppos
-	//-------------------------------------
-	PepPosVecType	*peppos = pep-> getpos();
-	if (peppos==NULL) {
-		 pep_list.del(new_item);
-		 err =  "Molecule::addpep(NULL new_item.pos)";
-		 return -3;
-	}
-
 	// -------------
-	// get tail
+	// get tail first ..
 	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
+
+	// if no-tail then .. simple.. newpos = (0,0) / no clash check
 	if (tail==NULL) {
-		pep->addpep(sig, NULL);
-		} else		{
-			if (tail-> item==NULL) {
-				err =  "Molecule::addpep(NULL tail.item)";
-				return -4;
+		//-------------------------------------
+		// new_item -
+		mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
+		if (new_item==NULL) {
+			err =  "Molecule::addpep(NULL new_item)";
+			return -1;
+		}
+
+		Peptide *new_pep =new_item-> item;
+		if (new_pep==NULL) {
+			 pep_list.del(new_item);
+			 err =  "Molecule::addpep(NULL new_item.payload)";
+			 return -2;
+		}
+		//-------------------------------------
+		new_pep-> addpep(sig, NULL);
+
+	} else	{
+		// check tail->item
+		if (tail-> item==NULL) {
+			err =  "Molecule::addpep(NULL tail.item)";
+			return -4;
+		}
+		//-------------------------------------
+		// we add peptide out of band..as we need to scan for collsion after we add (ie calc new.pos)
+		Peptide tmp_pep;
+		tmp_pep.addpep(sig, tail->item);
+
+		mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&tmp_pep);
+		if (testpep == NULL) {
+			//-------------------------------------
+			// new_item -
+			mylist<Peptide>::mylist_item<Peptide> *new_item = pep_list.add();
+			if (new_item==NULL) {
+				err =  "Molecule::addpep(NULL new_item)";
+				return -1;
 			}
 
+			Peptide *new_pep =new_item-> item;
+			if (new_pep==NULL) {
+				 pep_list.del(new_item);
+				 err =  "Molecule::addpep(NULL new_item.payload)";
+				 return -2;
+			}
 			//-------------------------------------
-			pep->addpep(sig, tail->item);
+			*new_pep = tmp_pep;
+		}
+		else
+		{
+			 //printf("Molecule::addpep.clash:");	 dump(); NL	 testpep-> dump(); NL
+			 //pep_list.del(new_item);
+			 err =  "Molecule::addpep(NULL pep_clash)";
+			 return -9;
+		}
 
-			 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(pep);
-			 if (testpep != NULL) {
-				pep_list.del(new_item);
-				err =  "Molecule::addpep(NULL pep_clash)";
-				return -9;
-			 }
-		} // end else
+
+	} // end else
 
 
 	return 0;
@@ -466,19 +482,20 @@ void Molecule::test(void){
 
 	printf("molecule.test: == START ==\n");
 	printf("molecule.test: pre: ");	dump();
+	printf("molecule.test: ===========\n");
 	//------------
-
-	printf("molecule.test:add(A) 0 (0,0) = [%d]\n", addpep('A'));
-	printf("molecule.test:add(A) 0 (0,1) = [%d]\n", addpep('A'));
-	printf("molecule.test:add(B) 1 (1,1) = [%d]\n", addpep('B'));
-	printf("molecule.test:add(W) 2 (1,0) = [%d]\n", addpep('W'));
-	printf("molecule.test:add(7) 2 (1,-1) = [%d]\n", addpep('7'));
-	printf("molecule.test:add(A) 3 (0,-1) = [%d]\n", addpep('A'));
-
+	printf("molecule.test1: ===========\n");
+	printf("molecule.test1:add(A) 0 (0,1) = [%d]\n", addpep('A'));
+	printf("molecule.test1:add(A) 0 (0,1) = [%d]\n", addpep('A'));
+	printf("molecule.test1:add(B) 1 (1,1) = [%d]\n", addpep('B'));
+	printf("molecule.test1:add(W) 2 (1,0) = [%d]\n", addpep('W'));
+	printf("molecule.test1:add(7) 2 (1,-1) = [%d]\n", addpep('7'));
+	printf("molecule.test1:add(A) 3 (0,-1) = [%d]\n", addpep('A'));
 	//------------
-	printf("molecule.test: final:\n");
-	dump();
-	//return;
+	printf("molecule.test1: ===========\n");
+	printf("molecule.test1: final:\n");
+	// dump();
+	render();
 
 	Molecule m2;
 	printf("molecule.test: m2=new:\n");	m2.dump();

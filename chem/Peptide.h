@@ -41,6 +41,8 @@ public:
 
 	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
+
+	Peptide& 	operator =(const Peptide& p);
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(PepSig parentSig);
 	bool		match(PepSig MatchSig);
