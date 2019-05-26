@@ -20,7 +20,9 @@ private:
 	int saved_xpos;
 	int saved_ypos;
 
-
+	int width;
+	int height;
+	const char *title;
 
 public:
 	GFX_Base();
@@ -53,16 +55,39 @@ GFX_Base::GFX_Base() {
 	saved_xpos = 0;
 	saved_ypos = 0;
 
+	width = 100;
+	height = 100;
+	title = "DefautWindow";
+
+	line_height = 12;
+
+
+
 }
 //-----------------------------------------
 GFX_Base::~GFX_Base() {}
 
 //-----------------------------------------
 /* Open a new graphics window. */
-void GFX_Base::gfx_open( int width, int height, const char *title )
-{
+void GFX_Base::close(){
+	if(gfx_display !=NULL) 	{
+		XCloseDisplay(gfx_display);
+		gfx_display = NULL;
+	}
+}
+//-----------------------------------------
+void GFX_Base::open(int _width, int _height, const char *_title ){	// Open a new graphics window.
+
+	width = _width;
+	height = _height;
+	title = _title;
+	open();
+}
+void GFX_Base::open() {
+
 	if(gfx_display !=NULL) 	// Open a new window for drawing.
 		return;
+
 
 	gfx_display = XOpenDisplay(0);
 	if(!gfx_display) {
@@ -105,28 +130,20 @@ void GFX_Base::gfx_open( int width, int height, const char *title )
 }
 //-----------------------------------------
 // Draw a single point at (x,y)
-void GFX_Base::gfx_point( int x, int y ){
-	XDrawPoint(gfx_display,gfx_window,gfx_gc,x,y);
-}
-
+void GFX_Base::point( int x, int y ){	XDrawPoint(gfx_display,gfx_window,gfx_gc,x,y);	}
 //-----------------------------------------
 // Draw a line from (x1,y1) to (x2,y2)
-void GFX_Base::gfx_line( int x1, int y1, int x2, int y2 ){
-	XDrawLine(gfx_display,gfx_window,gfx_gc,x1,y1,x2,y2);
-}
-
-void GFX_Base::gfx_text( char *str,  int x1, int y1){
+void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(gfx_display,gfx_window,gfx_gc,x1,y1,x2,y2);}
+//-----------------------------------------
+void GFX_Base::text( char *str,  int x1, int y1){
 	if (str==NULL) return;
 	int len = strlen(str);
 	if (len<1) return;
-
 	XDrawString(gfx_display,gfx_window,gfx_gc,x1,y1,str, len);
 }
-
-
 //-----------------------------------------
 // Change the current drawing color.
-void GFX_Base::gfx_color( int r, int g, int b ){
+void GFX_Base::color( int r, int g, int b ){
 	XColor color;
 
 	if(gfx_fast_color_mode) {
@@ -146,13 +163,15 @@ void GFX_Base::gfx_color( int r, int g, int b ){
 
 //-----------------------------------------
 //  Clear the graphics window to the background color.
-void GFX_Base::gfx_clear(){
+void GFX_Base::clear(){
 	XClearWindow(gfx_display,gfx_window);
+	line_pos = line_height;
+
 }
 
 //-----------------------------------------
 //  Change the current background color.
-void GFX_Base::gfx_clear_color( int r, int g, int b ){
+void GFX_Base::clear_color( int r, int g, int b ){
 	XColor color;
 	color.pixel = 0;
 	color.red = r<<8;
@@ -166,10 +185,10 @@ void GFX_Base::gfx_clear_color( int r, int g, int b ){
 }
 //-----------------------------------------
 //
-int GFX_Base::gfx_event_waiting() {
+int GFX_Base::event_waiting() {
        XEvent event;
 
-       gfx_flush();
+       flush();
 
        while (1) {
                if(XCheckMaskEvent(gfx_display,-1,&event)) {
@@ -194,10 +213,10 @@ int GFX_Base::gfx_event_waiting() {
 
 //-----------------------------------------
 //  Wait for the user to press a key or mouse button.
-char GFX_Base::gfx_wait() {
+char GFX_Base::wait() {
 	XEvent event;
 
-	gfx_flush();
+	flush();
 
 	while(1) {
 		XNextEvent(gfx_display,&event);
@@ -216,19 +235,23 @@ char GFX_Base::gfx_wait() {
 
 //-----------------------------------------
 //  Return the X and Y coordinates of the last event.
-int GFX_Base::gfx_xpos() {
-	return saved_xpos;
-}
-//-----------------------------------------
-//
-int GFX_Base::gfx_ypos() {
-	return saved_ypos;
-}
+int GFX_Base::xpos() {		return saved_xpos;	}
+int GFX_Base::ypos() {	return saved_ypos;	}
 
 //-----------------------------------------
 //  Flush all previous output to the window.
-void GFX_Base::gfx_flush() {
-	XFlush(gfx_display);
-}
-
+void GFX_Base::flush() {	XFlush(gfx_display);	}
 //-----------------------------------------
+//-------------------------------
+void GFX_Base::printg(char *str){
+	if (str==NULL) return;
+	if (line_pos >= height) return;
+
+	int x = 0;
+	color(200,200,200);
+	text(str,x,line_pos);
+
+	line_pos+= line_height;
+	flush();
+
+}

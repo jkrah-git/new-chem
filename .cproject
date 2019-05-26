@@ -42,7 +42,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="mains/main_test_charge.cpp|include/main.cpp|mains/NEW_main_cli.cpp|mains/main_cli.cpp|chem/MoleculeMatchPos.cpp|mains/test_charge.cpp|mains/test_main.cpp|mains/cli_main.cpp|chem/Concentration_VM.cpp|chem/Concentration_CLI.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="mains/main_test_display.cpp|include/gfx/gfx.cpp|mains/main_test_charge.cpp|include/main.cpp|mains/NEW_main_cli.cpp|mains/main_cli.cpp|chem/MoleculeMatchPos.cpp|mains/test_charge.cpp|mains/test_main.cpp|mains/cli_main.cpp|chem/Concentration_VM.cpp|chem/Concentration_CLI.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -813,7 +813,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="mains/NEW_main_cli.cpp|mains/main_cli.cpp|chem/MoleculeMatchPos.cpp|mains/cli_main.cpp|chem/Concentration_VM.cpp|chem/Concentration_CLI.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="mains/main_test_charge.cpp|include/gfx/gfx.cpp|mains/NEW_main_cli.cpp|mains/main_cli.cpp|chem/MoleculeMatchPos.cpp|mains/cli_main.cpp|chem/Concentration_VM.cpp|chem/Concentration_CLI.cpp|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -1584,7 +1584,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="mains/main_test_charge.cpp|mains/cli_main.cpp|mains/test_charge.cpp|mains/test_main.cpp|chem/Concentration_CLI.Commands|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="mains/main_test_display.cpp|include/gfx/gfx.cpp|mains/main_test_charge.cpp|mains/cli_main.cpp|mains/test_charge.cpp|mains/test_main.cpp|chem/Concentration_CLI.Commands|main.cpp|chem/Concentration_CLI.Commands/match.cpp|chem/Concentration_CLI.Commands/Old_External_Commands.cpp|chem/Concentration_CLI.Commands/vars.cpp|chem/Concentration_CLI.Commands/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI.Commands/base.cpp|chem/cli/Concentration_CLI_External_Commands.cpp|chem/Concentration_CLI_External_Commands.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
