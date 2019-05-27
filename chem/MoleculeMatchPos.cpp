@@ -61,7 +61,9 @@ public:
 //----------------------------------
 MoleculeMatchPos::MoleculeMatchPos() {
 	rotmole = new Molecule;
-	rotation = -1;
+	//rotation = -1;
+	current_pos.dim[PEPPOS_ROT] = -1;
+
 	clear();
 }
 MoleculeMatchPos::~MoleculeMatchPos() {
@@ -167,9 +169,8 @@ void MoleculeMatchPos::dump(){
 	printf("===============================\n");
 	printf("MoleculeMatchPos:: start_pos: "); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos: "); end_pos.dump();  NL
-	printf("MoleculeMatchPos:: last_rot: %d\n", rotation);
+	printf("MoleculeMatchPos:: last_rot: %d\n", current_pos.dim[PEPPOS_ROT]);
 	printf("MoleculeMatchPos:: last_pos ->: "); current_pos.dump(); NL
-	//printf("MoleculeMatchPos:: root_item: "); DUMP(root_item) NL
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
 
@@ -181,7 +182,7 @@ int	MoleculeMatchPos::start(){
 	if (mole1==NULL) return -1;
 	if (mole2==NULL) return -2;
 
-	rotation = 5;
+	current_pos.dim[PEPPOS_ROT]= 5;
 	test_item = NULL;
 
 	return 0;
@@ -193,7 +194,7 @@ void MoleculeMatchPos::rotatemole() {
 	PeptidePos min1, max1, min2, max2;
 
 
-	mole2-> rotateto(rotation, rotmole);
+	mole2-> rotateto(current_pos.dim[PEPPOS_ROT], rotmole);
 	mole1-> getbounds(&min1, &max1);
 	rotmole-> getbounds(&min2, &max2);
 
@@ -203,7 +204,8 @@ void MoleculeMatchPos::rotatemole() {
 	//mole->
 	// sub size m2 from min
 	// add size m2 to max
-	for (int i=0; i< PepPosVecMax; i++) {
+	// dont blat over rot
+	for (int i=0; i< 2; i++) {
 		PepPosVecType len2 = max2.dim[i]-min2.dim[i] ;
 		start_pos.dim[i] = min1.dim[i] - min2.dim[i]; // + len2;
 		end_pos.dim[i] =   max1.dim[i] - max2.dim[i]; // + len2;
@@ -212,7 +214,6 @@ void MoleculeMatchPos::rotatemole() {
 			end_pos.dim[i] = start_pos.dim[i];
 			start_pos.dim[i] = len2;
 		}
-
 		current_pos.dim[i] = start_pos.dim[i];
 	}
 
@@ -241,8 +242,8 @@ int	MoleculeMatchPos::nextpos(){
 	 */
 
 
-	if (rotation>3) {
-		rotation = 0;
+	if (current_pos.dim[PEPPOS_ROT]>3) {
+		current_pos.dim[PEPPOS_ROT] = 0;
 		rotatemole();
 		return 1;
 	}
@@ -263,20 +264,20 @@ int	MoleculeMatchPos::nextpos(){
 
 
 
-	current_pos.dim[0]++;
-	if (current_pos.dim[0] > end_pos.dim[0]) {
-		current_pos.dim[1]++;
-		current_pos.dim[0] = start_pos. dim[0];
+	current_pos.dim[PEPPOS_X]++;
+	if (current_pos.dim[PEPPOS_X] > end_pos.dim[0]) {
+		current_pos.dim[PEPPOS_Y]++;
+		current_pos.dim[PEPPOS_X] = start_pos. dim[0];
 	}
 
-	if (current_pos.dim[1] > end_pos.dim[1]) {
+	if (current_pos.dim[PEPPOS_Y] > end_pos.dim[1]) {
 		//if ( (matchmole !=NULL) &&   (matchmole-> pep_list.head == matchmole-> pep_list.tail) ) {	return -1;		}
 
-		rotation ++;
-		current_pos.dim[1] = start_pos. dim[1];
+		current_pos.dim[PEPPOS_ROT] ++;
+		current_pos.dim[PEPPOS_Y] = start_pos. dim[1];
 
 		// End.. Out of positions
-		if (rotation >3) {
+		if (current_pos.dim[PEPPOS_ROT] >3) {
 			test_item = NULL;
 			return -1;
 		}
@@ -312,8 +313,8 @@ int	MoleculeMatchPos::nextmatch(void){
 	if (test_item_pos ==NULL) return -13;
 
 	PeptidePos testpos;
-	testpos.dim[0] = test_item_pos[0] + current_pos.dim[0];
-	testpos.dim[1] = test_item_pos[1] + current_pos.dim[1];
+	testpos.dim[0] = test_item_pos[0] + current_pos.dim[PEPPOS_X];
+	testpos.dim[1] = test_item_pos[1] + current_pos.dim[PEPPOS_Y];
 
 	// ------------
 	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);

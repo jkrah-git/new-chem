@@ -58,6 +58,7 @@ public:
 	void flush();											// Flush all previous output to the window.
 
 	void	printg(char *str);
+	void	cprintg(char *str);
 
 };
 //-----------------------------------------

@@ -246,12 +246,19 @@ void GFX_Base::flush() {	XFlush(gfx_display);	}
 void GFX_Base::printg(char *str){
 	if (str==NULL) return;
 	if (line_pos >= height) return;
-
-	int x = 0;
 	color(200,200,200);
+	cprintg(str);
+//	int x = 0;
+//	text(str,x,line_pos);
+//	line_pos+= line_height;
+//	flush();
+}
+//-------------------------------
+void GFX_Base::cprintg(char *str){
+	if (str==NULL) return;
+	if (line_pos >= height) return;
+	int x = 0;
 	text(str,x,line_pos);
-
 	line_pos+= line_height;
 	flush();
-
 }

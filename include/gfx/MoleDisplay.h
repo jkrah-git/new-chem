@@ -42,11 +42,11 @@ public:
 	void	dump();
 	void	gdump();
 	//-----------
-	void	open();
-	void	setcol(int red, int green, int blue) { colr = red; colg = green; colb = blue; };
-	void	grid();
+	//void	open();
+	void	setcol(int red, int green, int blue){ 	colr = red; colg = green; colb = blue; gfx.color(colr, colg, colb); };
+	void	grid(){ grid(colr, colg, colb); }
+	void	grid(int red, int green, int blue);
 	void	clearatt();
-//	void	cls();
 	void	draw_pep(Peptide *pep);
 	void	draw_mole(Molecule *mole);
 	void	draw_match(MoleculeMatchPos *matchpos);

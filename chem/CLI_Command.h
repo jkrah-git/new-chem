@@ -18,6 +18,9 @@ class CLI_Command {
 public:
 
 	int 	(*operation)(Concentration_CLI*, int, char**);
+
+	// todo: cmd.callback
+	void	(*callback)(void);
 	char 	name[COMMAND_MAX_NAME];
 	//-----
 	CLI_Command();
@@ -26,17 +29,5 @@ public:
 	void test();
 };
 //================================================
-//----------------
-/*class CLI_Variable {
-public:
-	char	name[COMMAND_MAX_VAR];
-	char
-	//----
-	CLI_Variable(){ memset(name, '\0', COMMAND_MAX_VARLEN); ptr = NULL; };
-	~CLI_Variable(){}
-	void dump() { printf("var: '%s' = [0x%zX]\n", name, ptr); }
-};*/
-
-
 //================================================
 #endif /* CLI_COMMAND_H_ */

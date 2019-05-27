@@ -11,6 +11,7 @@
 #include "Concentration.h"
 #include "CLI_Command.h"
 #include "Concentration_VM.h"
+#include "../include/gfx/MoleDisplay.h"
 
 #undef DEBUG
 //#define DEBUG
@@ -30,11 +31,12 @@ class Concentration_CLI;
 
 
 //---------------------------------//---------------------------------
+CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name);
+//-------------------------------------------
 class Concentration_CLI {
 private:
 public:
 	Concentration_VM			*core;
-	//char						last_line[MAX_LINELEN];
 	int							last_result;
 
 	mylist<CLI_Command>			base_cmdlist;
@@ -50,6 +52,8 @@ public:
 
 	KeyValList					var_list;
 	char 						**args;
+	//MoleDisplay 				mole_display;
+	void 	(*run_callback)(char *msg);
 
 	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
 	virtual ~Concentration_CLI();
@@ -58,9 +62,10 @@ public:
 	void 	test();
 
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
+	int		argstr(char *dest, int max, int argc, char **argv);
+
 	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
 	int		run(mylist<CLI_Command> *cmd_list, char *line);
-	//Concentration	*search_conc(char *name);
 
 	void	base_cmdlist_dump(void) { printf ("Basic Commands => ");  	base_cmdlist.dump(); }
 	void	dump_cmdlist_dump(void) { printf ("'dump' Commands => ");  	dump_cmdlist.dump(); }
@@ -78,8 +83,5 @@ public:
 
 };
 //---------------------------------
-// int		cli_quit(Concentration_CLI *cli, int argc, char **argv);
-//---------------------------------
-
 
 #endif /* CONCENTRATION_CLI_H_ */

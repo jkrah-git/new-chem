@@ -4,7 +4,6 @@
 //=======================
 //=======================
 //#include "../../include/gfx/gfx.h"
-#include "../../include/gfx/MoleDisplay.h"
 //---------------------------------//---------------------------------
 int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
@@ -46,7 +45,8 @@ int	cli_match_m1(Concentration_CLI *cli, int argc, char **argv){
 	// printf("\n");
 	//-------
 	if (cli-> core-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
-	cli-> core-> matchpos.rotation = 6;
+	//cli-> core-> matchpos.rotation = 6;
+	cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = 6;
 	cli-> core-> matchpos.setM1(cli-> core-> mole);
 	return 0;
 
@@ -61,7 +61,9 @@ int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 	// printf("\n");
 	//-------
 	if (cli-> core-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
-	cli-> core-> matchpos.rotation = 6;
+	//cli-> core-> matchpos.rotation = 6;
+	cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = 6;
+
 	cli-> core-> matchpos.setM2(cli-> core-> mole);
 	return 0;
 
@@ -86,8 +88,8 @@ int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
 		printf("bad rot[%s].\n", argv[0]);
 		return -20;
 	}
-
-	cli-> core-> matchpos.rotation = rot;
+	//cli-> core-> matchpos.rotation = rot;
+	cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = rot;
 	cli-> core-> matchpos.rotatemole();
 	return 0;
 
@@ -104,7 +106,9 @@ int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 	}
-	cli-> core-> matchpos.rotation = rot;
+	//cli-> core-> matchpos.rotation = rot;
+	cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = rot;
+
 	cli-> core-> matchpos.rotatemole();
 	cli-> core-> matchpos.dump();
 	return rot;
@@ -121,11 +125,7 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	//return cli->core->matchpos.nextmatch();
 	int r = cli->core->matchpos.nextmatch();
 
-	MoleDisplay mole_display;
-	mole_display.open();
-	mole_display.setcol(80,80,80);
-	mole_display.grid();
-	mole_display.draw_match(&cli->core->matchpos);
+
 
 	if (r==-1) r=0;
 	//printf("nextmatch = [%d]\n", r);

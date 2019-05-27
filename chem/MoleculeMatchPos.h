@@ -25,7 +25,7 @@ public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
-	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
+	//PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
 	Molecule	*rotmole;
 
 	//---------
