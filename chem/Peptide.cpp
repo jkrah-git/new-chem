@@ -139,12 +139,14 @@ void Peptide::addpep(PepSig sig, Peptide *tail) {
 	if (tail==NULL) {	setpos(0,0,0);	}
 	else {  // else add to tail
 		pos = tail-> pos;
-		PepRot rotation = tail->getrot(sig);
-		switch(rotation) {
-			case 0:		pos.dim[1] ++; break;	// 0 = (0,1)
-			case 1:		pos.dim[0] ++; break;	// 1 = (1,0)
-			case 2: 	pos.dim[1] --; break;	// 2 = (0,-1)
-			case 3:		pos.dim[0] --; break;	// 3 = (-1,0)
+		pos.dim[PEPPOS_ROT] = tail->getrot(sig);
+
+
+		switch(pos.dim[PEPPOS_ROT]) {
+			case 0:		pos.dim[PEPPOS_Y] ++; break;	// 0 = (0,1)
+			case 1:		pos.dim[PEPPOS_X] ++; break;	// 1 = (1,0)
+			case 2: 	pos.dim[PEPPOS_Y] --; break;	// 2 = (0,-1)
+			case 3:		pos.dim[PEPPOS_X] --; break;	// 3 = (-1,0)
 		}
 	}
 	return;

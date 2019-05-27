@@ -16,8 +16,8 @@
 //#define DEBUG
 #include "../include/debug.h"
 
-// TODO 1: main -- add match to VM
-// 1. define match criteria ??
+// TODO 2: main -- add "match-map" to VM
+// 1. created from mole / cached??
 // 2. match and call code
 //-------------------------------------
 class Concentration_VM {

@@ -285,7 +285,7 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 		last_result = cmd-> operation(this, argc-1, &argv[1]);
 		LOG("[%s].[%d]\n", argv[0], last_result);
 		if (cmd->callback !=NULL) {
-			cmd->callback();
+			cmd->callback(last_result);
 		}
 
 	}

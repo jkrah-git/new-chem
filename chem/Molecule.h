@@ -29,7 +29,6 @@ public:
 	// ----
 	Molecule();
 	virtual ~Molecule();
-	//bool operator =(const Molecule& p);
 	int rotateto(PepRot rotation, Molecule *dest);
 	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
 	int drawto(PeptidePos *pos, PepSig *value);
@@ -38,17 +37,14 @@ public:
 
 	// -- build
 	int			addpep(PepSig sig);
+	int			addpep2(PepSig sig);
 
-	//----------- matching
-	//MoleculeMatchPos	*startmatch(Molecule *matchmole);
-	//int			nextmatch(MoleculeMatchPos *matchpos);
 	//------------
-	void		clear(void);
 	void		getbounds(PeptidePos *min, PeptidePos *max);
+	void		clear(void)		{	pep_list.clear();	};
 	void		dump(void) { dump(false); }
 	void		dump(bool dorender);
 
-	//mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *new_pep);
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(Peptide *new_pep);
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(PeptidePos *_pos);
 

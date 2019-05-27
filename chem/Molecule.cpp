@@ -159,74 +159,27 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::testpos(Peptide *new_pep) {
 }
 // -------------------------------
 
-//void Molecule::clear(void) {	pep_list.clear(true);	}
-void Molecule::clear(void) {	pep_list.clear();	}
-// -------------------------------
-/*bool Molecule::operator =(const Molecule& p){
-#ifdef DEBUG
-	LOG("\npep_list => ");
-	pep_list.dump();;
-
-	LOG("\np.pep_list => ");
-	p.pep_list.dump();
-
-	}
-#endif
-*/
-
 int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 	if (dest==NULL) {
 		err =  "Molecule::rotateto(NULL dest)";
 		return 1;
 	}
-
 	dest-> clear();
-	//PRINT("dest-> clear()\n");
+
+	// start at pep_list.head
 	mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
 
-		// new_item
-		//mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
-
+		// add new_item to dest
 		mylist<Peptide>::mylist_item<Peptide> *new_item = dest-> pep_list.add();
 		if (new_item==NULL)	break;
-
-		// check new list ite.payload
-		Peptide *pep =new_item-> item;
+		Peptide *pep =new_item-> item;			// check new list ite.payload
 		if (pep==NULL) {
 			 pep_list.del(new_item);
 			 break;
 		}
-		// new_item is OK
-		// set pep..
+		// new_item is OK, set pep..
 		current_item->item->rotateto(rotation, pep);
-
-		/*
-		pep-> set(current_item-> item->get());
-
-		// set pos
-		if (rotation==0) {
-			pep-> pos = current_item-> item->pos;
-		} else {
-
-			switch(rotation) {
-			case 1:		// x'=y, y'=-x
-				pep-> pos.dim[0] =   current_item-> item->pos.dim[1];
-				pep-> pos.dim[1] = - current_item-> item->pos.dim[0];
-				break;
-
-			case 2: 	// x'=x , y= -y
-				pep-> pos.dim[0] =   current_item-> item->pos.dim[0];
-				pep-> pos.dim[1] = - current_item-> item->pos.dim[1];
-				break;
-			case 3:   // x' = =y, y' = -x
-				pep-> pos.dim[0] = - current_item-> item->pos.dim[1];
-				pep-> pos.dim[1] = - current_item-> item->pos.dim[0];
-				break;
-			}
-		}
-	*/
-
 		//---
 		current_item = current_item-> next;
 	}
@@ -236,10 +189,13 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 // -------------------------------
 int Molecule::addpep(PepSig sig){
 
+	// TODO: 1. add relative rotation (and store rotation)
+
 	// -------------
 	// get tail first ..
 	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
 
+	// 1st PEP on Molecule
 	// if no-tail then .. simple.. newpos = (0,0) / no clash check
 	if (tail==NULL) {
 		//-------------------------------------
@@ -259,7 +215,7 @@ int Molecule::addpep(PepSig sig){
 		//-------------------------------------
 		new_pep-> addpep(sig, NULL);
 
-	} else	{
+	} else	{  		// After 1st PEP
 		// check tail->item
 		if (tail-> item==NULL) {
 			err =  "Molecule::addpep(NULL tail.item)";
@@ -303,69 +259,7 @@ int Molecule::addpep(PepSig sig){
 
 	return 0;
 }
-/*
 
-
-	pep->set(sig);
-
-
-	// simple add to head ??
-	if (tail==NULL) {
-	//	pep-> pos.dim[0] = 0;
-	//	pep-> pos.dim[1] = 0;
-		peppos[PEPPOS_X] = 0;
-		peppos[PEPPOS_Y] = 0;
-		return 0;
-	} // else add to tail
-
-	// first make sure new_item has a chem
-	if (tail-> item ==NULL) {
-		 pep_list.del(new_item);
-		 err =  "Molecule::addpep(NULL tail.item)";
-		return -3;
-	}
-
-
-	// =========== try tp calc rotion
-	// rot masks --
-	//	r0 0000 0011 = ( 1+ 2) =   3 & P1 & P2 /1= xx
-	//	r1 0000 1100 = ( 4+ 8) =  12 & P1 & P2 /4 = xx
-	//	r3 0011 0000 = (16+32) =  48 & P1 & P2 /16 = xx
-	//	r4 1100 0000 =(64+128) = 192 & P1 & P2 /64 = xx
-	//	- Max r wins .. if tie then 0
-	// ============
-
-
-	PepRot rotation = tail-> item->getrot(pep-> get());
-
-	// ============
-	PepPosVecType	*tailpos = tail-> item-> getpos();
-
-	// PeptidePos newpos;					//printf("!!!!!!!::molecule.addpep.newpos(org) =>"); newpos.dump(); printf("\n");
-	// newpos = tail-> item-> pos;			//printf("!!!!!!!::molecule.addpep.newpos(last_item) =>"); newpos.dump(); printf("\n");
-
-	switch(rotation) {
-		case 0:		newpos.dim[1] ++; break;	// 0 = (0,1)
-		case 1:		newpos.dim[0] ++; break;	// 1 = (1,0)
-		case 2: 	newpos.dim[1] --; break;	// 2 = (0,-1)
-		case 3:		newpos.dim[0] --; break;	// 3 = (-1,0)
-	}
-	//printf("molecule.addpep.newpos(with_rot)(%d) =>", rotation); newpos.dump(); printf("\n");
-
-
-	 mylist<Peptide>::mylist_item<Peptide>  *testpep = test_pos(&newpos);
-	 if (testpep != NULL) {
-		pep_list.del(new_item);
-		err =  "Molecule::addpep(NULL pep_clash)";
-		return -9;
-	}
-
-	// copy new pos
-	pep-> pos = newpos;
-	return 0;
-}
-// -------------------------------
-*/
 
 //----------- matching
 // MoleculeMatchPos *Molecule::startmatch(Molecule *matchmole){}
@@ -416,66 +310,7 @@ void Molecule::testmatch(void){
 }
 //
 // -------------------------------
-/*
-int	Molecule::nextmatch(MoleculeMatchPos *matchpos){
-
-	PRINT("molecule.nextmatch..\n");
-	 if (matchpos ==NULL) return -10;
-	 if (matchpos-> rotmole ==NULL) return -11;
-
-	 int r =  matchpos->nextpos();
-	 if (r<0) return r;
-
-	 // new rotoation
-	 //if (r>0) {  rotate(matchpos-> rotation, matchpos-> rotmole); }
-
-	//  - Match = 0bXXsseett.... = 4x64 sets
-	//--------------------------------------
-	// this.base = molecule
-	// testmole = (translated mole to check for collisions)
-	//--------------------------------------
-	// for each test-pep = *test_item
-	mylist<Peptide>::mylist_item<Peptide>
-		*test_item  = matchpos-> rotmole-> pep_list.gethead();
-
-
-	while((test_item!=NULL)&&(test_item-> item!=NULL)) {
-		//PepSig s1 = current_item-> item-> get();
-		r = -1;
-
-		PeptidePos testpos;
-
-		testpos.dim[0] = test_item-> item-> pos.dim[0] + matchpos-> current_pos.dim[0];
-		testpos.dim[1] = test_item-> item-> pos.dim[1] + matchpos-> current_pos.dim[1];
-		PRINT("=============================\n");
-		PRINT("testpos ==>");	testpos.dump(); NL
-		PRINT("matchpos==>");	matchpos-> dump(); NL
-		PRINT("=============================\n");
-
-		// test the traslated pos on 'this' (root)  molecole
-		mylist<Peptide>::mylist_item<Peptide>  *test_pep = test_pos(&testpos);
-		if (test_pep!=NULL) {
-
-
-			PRINT("found pep[0x%x]..\n", test_pep-> item-> get() );
-			//----------------
-			if (test_pep-> item-> match( test_item-> item-> get())) {
-				PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
-
-			}
-		}
-
-
-		//----
-		test_item = test_item-> next;
-	} // next current_item
-
-	return 0;
-}
-*/
 //------------
-
-
 // -------------------------------
 int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 	if (max<1) return -1;

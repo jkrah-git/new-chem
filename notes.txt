@@ -128,9 +128,9 @@ TODO 1. chem structure
   	- ie.. each ConcVol has its own r/w mutx ??
     - conc.vol commit = main shm/write
     - 
-
-[Z--- -QqR] 
-
+=================
+[Z--- -QqR] <- REACT BITS  
+=================
 ---------------   
 (R) ROT BIT (0-3)
 ---------------   
@@ -153,39 +153,59 @@ q = charged
 ---------------------
 (F) CHARGE AFFINITY (-1,0,1) F = 
 ---------------------
-0b[---- -Qq-]
-0b[---- -Qq-]
+[---- -Qq-]
+[---- -Qq-]
 ---------------------
-neutral(0,+):  (F=0), [if (!q1 or !q2) ]
-oppistes (+/-)(F=+1), [if (q1 && q2) && (Q1 != Q2)]
-same(-/-)     (F=-1). [if (q1 && q2) && (Q1 == Q2)]
-  = 
--------------
-(E+) ENERGY DELTA
--------------
-E+ = F x reaction rate
-   = (+F)= E+(join) E-(split)
-   = (-F)= E-(join) E+(split)
-   = (0) = no enrgy cost
+    if (!q1 or !q2) - (F=0),  ie neutral(0,x)  
+elseif (Q1 != Q2)	- (F=+1), ie opposites (+/-) (attract) 
+elseif (Q1 == Q2)	- (F=-1), ie same(-/-)     	(repel)
 
 -------------
 (E+) ENERGY DELTA
 -------------
 E+ = F x reaction rate
-   = (+F)= E+(join) E-(split)
-   = (-F)= E-(join) E+(split)
-   = (0) = no enrgy cost
-
+   = (+F)= (join)=(exo)(E+),  (split)=(endo)(E-)
+   = (-F)= (join)=(endo)(E-), (split)=(exo)(E+)
+   = (0) = no energy change
 
 ---------------
 (Z) REACTIVE/MATCH BIT 
 ---------------
-0b[Z--- ----]
-0b[Z--- ----]
- if (Z1) (test) (~Z2) ..
+[Z--- ----]
+[Z--- ----]
+if (Z1) (test) (~Z2) ..
+====================================================================
+
+[0--- ----] GENE(store)
+[1--- ----] PROTIEN(funcs) -> match-map 
+
+[Z--- -QqR] <- REACT BITS 
+[Z--- -QqR] <- REACT BITS
+[0-xx x---] <- DATA BITs (3xbits/pep) (8xgroups)
+[00xx x---] Start
+[Z1xx x---] end
+
+xxx			(simple opcodes)
+xxx xxx 	(more ad
+xxx xxx ...
+
+TODO
+-----
+1.1 update addpep - new rotation rules and relative rotations
+1.2 create new tests --
+
+2.1 fixup match - (seed map) - transcribe?
+3.  funcs - (if match then while (load payload) {execute payload })
+		- transcribe(payload) 
+3.2 port cli cmds???
 
 
   
+  
+
+
+
+
 
 molecule.testrot: [0x41 0x41](A,A) =0
 molecule.testrot: [0x41 0x42](A,B) =1

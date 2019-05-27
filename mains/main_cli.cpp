@@ -22,16 +22,34 @@ Concentration_CLI cli(vol, vm);
 MoleDisplay 				mole_display;
 
 
-
-
-void matchcb() {
+// --------------------------
+// --------------------------
+void matchcb(int val) {
 	mole_display.gfx.open();
 	mole_display.gfx.clear();
 	//mole_display.gfx.printg(msg);
 	//mole_display.setcol(20,20,20);
 	mole_display.grid(0,0,100);
 	mole_display.draw_match(&cli.core->matchpos);
+
+	char msg[128];
+	sprintf(msg, "result = %d", val);
+	mole_display.gfx.printg(msg);
 }
+// --------------------------
+void molecb(int val) {
+	mole_display.gfx.open();
+	mole_display.gfx.clear();
+	//mole_display.gfx.printg(msg);
+	//mole_display.setcol(20,20,20);
+	mole_display.grid(0,0,100);
+	mole_display.draw_match(&cli.core->matchpos);
+
+	char msg[128];
+	sprintf(msg, "result = %d", val);
+	mole_display.gfx.printg(msg);
+}
+
 
 // --------------------------
 //int main(int argc, char **argv) {

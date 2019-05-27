@@ -10,7 +10,7 @@
 //================================================
 #include "../include/KeyValPair.h"
 
-#define COMMAND_MAX_NAME 	32
+#define CLI_COMMAND_MAX_NAME 	32
 //-----------------------------
 class Concentration_CLI;
 
@@ -18,10 +18,8 @@ class CLI_Command {
 public:
 
 	int 	(*operation)(Concentration_CLI*, int, char**);
-
-	// todo: cmd.callback
-	void	(*callback)(void);
-	char 	name[COMMAND_MAX_NAME];
+	void	(*callback)(int);
+	char 	name[CLI_COMMAND_MAX_NAME];
 	//-----
 	CLI_Command();
 	virtual ~CLI_Command(){};

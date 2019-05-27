@@ -7,45 +7,51 @@
 
 #include "GFX_Base.h"
 /*
- //-----------------------------------------
+//-----------------------------------------
 class GFX_Base {
 private:
-	Display *gfx_display;
-	Window  gfx_window;
-	GC      gfx_gc;
-	Colormap gfx_colormap;
-	int      gfx_fast_color_mode;
+	Display 	*gfx_display;
+	Window  	gfx_window;
+	GC      	gfx_gc;
+	Colormap 	gfx_colormap;
+	int      	gfx_fast_color_mode;
 
 	// These values are saved by gfx_wait then retrieved later by gfx_xpos and gfx_ypos.
 	int saved_xpos;
 	int saved_ypos;
 
-	int width;
-	int height;
-	const char *title;
 
 public:
 	GFX_Base();
 	virtual ~GFX_Base();
 	//-----------
+	int width;
+	int height;
+	const char *title;
+	int line_pos;
+	int line_height;
 
-	void gfx_open( int width, int height, const char *title );	// Open a new graphics window.
-	void gfx_point( int x, int y );								// Draw a point at (x,y)
-	void gfx_line( int x1, int y1, int x2, int y2 );			// Draw a line from (x1,y1) to (x2,y2)
-	void gfx_text( char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
-	void gfx_color( int red, int green, int blue );				// Change the current drawing color.
-	void gfx_clear();											// Clear the graphics window to the background color.
-	void gfx_clear_color( int red, int green, int blue );		// Change the current background color.
-	char gfx_wait();											// Wait for the user to press a key or mouse button.
-	int gfx_xpos();
-	int gfx_ypos();												// Return the X and Y coordinates of the last event.
-	int gfx_xsize();
-	int gfx_ysize();											// Return the X and Y dimensions of the window.
-	int gfx_event_waiting();									// Check to see if an event is waiting.
-	void gfx_flush();											// Flush all previous output to the window.
-
+	void 	open(int _width, int _height, const char *_title );	// Open a new graphics window.
+	void 	open();	// open with existing settings
+	void 	close();
+	void 	point( int x, int y );								// Draw a point at (x,y)
+	void 	line( int x1, int y1, int x2, int y2 );				// Draw a line from (x1,y1) to (x2,y2)
+	void 	text( char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
+	void 	color( int red, int green, int blue );				// Change the current drawing color.
+	void 	clear();											// Clear the graphics window to the background color.
+	void 	clear_color( int red, int green, int blue );		// Change the current background color.
+	char	wait();												// Wait for the user to press a key or mouse button.
+	int 	xpos();
+	int 	ypos();												// Return the X and Y coordinates of the last event.
+	int 	xsize();
+	int		ysize();											// Return the X and Y dimensions of the window.
+	int 	event_waiting();									// Check to see if an event is waiting.
+	void 	flush();											// Flush all previous output to the window.
+	void	printg(char *str);									// print white
+	void	cprintg(char *str);									// print with current color
 };
 //-----------------------------------------
+
  */
 //-----------------------------------------
 GFX_Base::GFX_Base() {
@@ -58,10 +64,7 @@ GFX_Base::GFX_Base() {
 	width = 100;
 	height = 100;
 	title = "DefautWindow";
-
-	line_height = 12;
-
-
+	line_height = 14;
 
 }
 //-----------------------------------------
@@ -248,10 +251,6 @@ void GFX_Base::printg(char *str){
 	if (line_pos >= height) return;
 	color(200,200,200);
 	cprintg(str);
-//	int x = 0;
-//	text(str,x,line_pos);
-//	line_pos+= line_height;
-//	flush();
 }
 //-------------------------------
 void GFX_Base::cprintg(char *str){

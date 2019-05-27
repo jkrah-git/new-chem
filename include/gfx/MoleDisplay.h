@@ -12,9 +12,6 @@
 #include "../../chem/Peptide.h"
 #include "../../chem/MoleculeMatchPos.h"
 #include "../../chem/Molecule.h"
-
-// todo:  fully encapsulate gfx.h
-//#include "gfx.h"
 #include "GFX_Base.h"
 
 //-----------------

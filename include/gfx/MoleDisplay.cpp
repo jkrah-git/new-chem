@@ -233,15 +233,15 @@ void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 	gfx.printg(str);
 
 	if (matchpos-> getM1()!=NULL) {
-		setcol(100,0,0);
+		setcol(200,0,0);
 		gfx.cprintg("M1");
 		draw_mole(matchpos-> getM1()); //, 100, 0, 0);
 	}
 
 	if ((matchpos-> rotmole != NULL) && (matchpos-> rotmole-> pep_list.gethead() !=NULL)) {
-		printf("########### ROTMOLE ############\n");
-		matchpos-> rotmole-> dump();
-		printf("########### ROTMOLE ############\n");
+		//printf("########### ROTMOLE ############\n");
+		//matchpos-> rotmole-> dump();
+		//printf("########### ROTMOLE ############\n");
 		pos = matchpos-> current_pos.dim;
 		setcol(0,100,0);
 		gfx.cprintg("rotemole");
