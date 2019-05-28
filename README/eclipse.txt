@@ -1,0 +1,10 @@
+- NEW c++ Proj
+- Executable / Cross GCC
+- Exclude From Build - (all but one mains/*.cpp)  + all Conc*.Commands/*
+
+- Click on Project / Properties
+  - C/C++ Build -> Settings 
+    - Cross G++ Linker / Libraries 
+	- !! SELECT ALL CONFIGURATIONS !!
+		[ + X11 , + readline ]
+
