@@ -390,9 +390,13 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	if (cli-> core-> mole==NULL)  return -10;
 
+	int r = -100;
+	int c=0;
 	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
-		cli-> core-> mole->addpep(item-> item-> get());
+		r = cli-> core-> mole->addpep(item-> item-> get());
+		if (r<0) { PRINT("addpep = [%d]\n", r); }
+		else { c++; }
 		// ---
 		item = item-> next;
 	}
@@ -401,7 +405,7 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 
 	if (argc<1) {
 	}
-	return 0;
+	return c;
 }
 //---------------------------------//---------------------------------
 

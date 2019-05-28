@@ -25,27 +25,32 @@ class Peptide {
 private:
 	PepSig	sig;
 	PeptidePos	pos;
-
+	PepRot		rot;
 public:
-	//PeptidePos	pos;
-
-	//--------------
-	Peptide();
-	virtual ~Peptide();
-
-	void  		set(PepSig newval) { sig = newval; };
+	,,,
+	void  		set(PepSig newsig) { sig = newsig; };
+	void  		setrot(PepRot newrot) { pos.dim[PEPPOS_ROT] = newrot; };
 	PepSig 		get(){	return sig;	};
+	PepRot		getrot(void){	return pos.dim[PEPPOS_ROT];	}
 
+	void		setpos(PepPosVecType posx, PepPosVecType posy);
 	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
 	PepPosVecType	*getpos(void); //{ return pos.pos; };
-	bool		testpos(Peptide *pep);
+	bool		testpos(Peptide *pep) { return pos == pep-> pos; }
+	bool		testpos(PeptidePos *_pos) { return (pos == *_pos); };
+
+	void		rotate(PepRot rotation);
 	void		rotateto(PepRot rotation, Peptide *dest);
 	void		addpep(PepSig sig, Peptide *tail);
+	void		addpep(Peptide *tail);
 
 	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
+
+	Peptide& 	operator =(const Peptide& p);
 	bool 		operator ==(const Peptide& p);
-	PepRot		getrot(PepSig parentSig);
+	PepRot		getrot(Peptide parent);
+	PepRot		OLDgetrot(PepSig parentSig);
 	bool		match(PepSig MatchSig);
 
 	// ---
@@ -55,11 +60,11 @@ public:
 };
 // -----------------------
 
-
 */
 // -----------------------
-Peptide::Peptide() {	sig = 0;}
-Peptide::~Peptide() {	}
+//Peptide::Peptide() {	sig = 0;}
+//Peptide(PepSig newval);
+//Peptide::~Peptide() {	}
 // ---------------------
 void Peptide::dump(void){
 	PepSig txtsig = 0;
@@ -67,17 +72,10 @@ void Peptide::dump(void){
 		txtsig = sig;
 
 	printf("Peptide[0x%zX].dump =>", (long unsigned int) this);
-
-//	if (txtsig==0) printf("sig(0x%X()).status(0x%x)", sig, status);
-//	else printf("sig(0x%X(%c)).status(0x%x)", sig, txtsig, status);
-
 	if (txtsig==0) printf("sig(0x%X())", sig);
 	else printf("sig(0x%X(%c))", sig, txtsig);
-
-
-	//printf(".Pos.");
 	pos.dump();
-	//printf("\n");
+	printf(".rot[%d]", rot);
 
 }
 // ---------------------
@@ -89,19 +87,27 @@ void Peptide::print(void){
 
 }
 
-void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepPosVecType rot){
-	if (pos.dim!=NULL)	pos.dim[0] = posx; 	pos.dim[1] = posy;	pos.dim[2] = rot;
+void Peptide::setpos(PepPosVecType posx, PepPosVecType posy){
+	if (pos.dim!=NULL)	{
+		pos.dim[PEPPOS_X] = posx;
+		pos.dim[PEPPOS_Y] = posy;
+	}
 }
-
+void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepPosVecType rot){
+	setpos(posx, posy);
+	setrot(rot);
+//	if (pos.dim!=NULL)	pos.dim[PEPPOS_ROT] = rot;
+}
 //-----------------------
 PepPosVecType *Peptide::getpos(void){ return pos.dim;	}
 // ---------------------
-/*
-bool Peptide::testpos(Peptide *pep){
-	if (pep==NULL) return false;
-	return (pep->pos == pos);
+void Peptide::rotate(PepRot rotation){
+	if ((rotation>0)&&(rotation<4)) {
+		Peptide		newpos;
+		rotateto(rotation, &newpos);
+		pos = newpos.pos;
+	}
 }
-*/
 // ---------------------
 void Peptide::rotateto(PepRot rotation, Peptide *dest){
 	if (dest != NULL) {
@@ -114,17 +120,17 @@ void Peptide::rotateto(PepRot rotation, Peptide *dest){
 
 			switch(rotation) {
 			case 1:		// x'=y, y'=-x
-				dest-> pos.dim[0] =   pos.dim[1];
-				dest-> pos.dim[1] = - pos.dim[0];
+				dest-> pos.dim[PEPPOS_X] =   pos.dim[PEPPOS_Y];
+				dest-> pos.dim[PEPPOS_Y] = - pos.dim[PEPPOS_X];
 				break;
 
 			case 2: 	// x'=x , y= -y
-				dest-> pos.dim[0] =   pos.dim[0];
-				dest-> pos.dim[1] = - pos.dim[1];
+				dest-> pos.dim[PEPPOS_X] =   pos.dim[PEPPOS_X];
+				dest-> pos.dim[PEPPOS_Y] = - pos.dim[PEPPOS_Y];
 				break;
-			case 3:   // x' = =y, y' = -x
-				dest-> pos.dim[0] = - pos.dim[1];
-				dest-> pos.dim[1] = - pos.dim[0];
+			case 3:   // x' = -y, y' = -x
+				dest-> pos.dim[PEPPOS_X] = - pos.dim[PEPPOS_Y];
+				dest-> pos.dim[PEPPOS_Y] = - pos.dim[PEPPOS_X];
 				break;
 			}
 		}
@@ -132,28 +138,47 @@ void Peptide::rotateto(PepRot rotation, Peptide *dest){
 }
 //-----------------------
 void Peptide::addpep(PepSig sig, Peptide *tail) {
-
 	set(sig);
+	addpep(tail);
+}
+//-----------------------
+void Peptide::addpep(Peptide *tail) {
 
+
+	pos.init();
 	// simple add to head ??
-	if (tail==NULL) {	setpos(0,0,0);	}
+	if (tail==NULL) {	setpos(0,0);	}
 	else {  // else add to tail
-		pos = tail-> pos;
-		pos.dim[PEPPOS_ROT] = tail->getrot(sig);
 
+		// calc rot
 
-		switch(pos.dim[PEPPOS_ROT]) {
+		short unsigned int msb  = (tail->get() & PEPMASK_ROT);
+		short unsigned int lsb  = (sig & PEPMASK_ROT);
+		rot =  (msb*2) + lsb;
+		//pos.dim[PEPPOS_ROT] =  (msb*2) + lsb;
+
+		//PRINT("tail -> "); tail-> dump(); NL
+		//PRINT("msb(tail)=[%d] lsb(new)=[%d] rot=[%d]\n", msb, lsb, pos.dim[PEPPOS_ROT]);
+
+		switch(rot) {
 			case 0:		pos.dim[PEPPOS_Y] ++; break;	// 0 = (0,1)
 			case 1:		pos.dim[PEPPOS_X] ++; break;	// 1 = (1,0)
 			case 2: 	pos.dim[PEPPOS_Y] --; break;	// 2 = (0,-1)
 			case 3:		pos.dim[PEPPOS_X] --; break;	// 3 = (-1,0)
 		}
+
+		rotate(tail->getrot());
+		pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
+		pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];
 	}
 	return;
 }
 
+
 // ---------------------
-PepRot		Peptide::getrot(PepSig parentSig){
+//PepRot		Peptide::getrot(void){	return dim[PEPPOS_ROT];	}
+// ---------------------
+PepRot		Peptide::OLDgetrot(PepSig parentSig){
 
 	/*
 	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
@@ -262,6 +287,7 @@ bool Peptide::match(PepSig MatchSig){
 Peptide &Peptide::operator =(const Peptide& p) {
 	sig = p.sig;
 	pos = p.pos;
+	rot = p.rot;
 	return *this;
 }
 // ---------------------
@@ -273,23 +299,48 @@ bool Peptide::operator ==(const Peptide& p) {
 }
 // ---------------------
 void Peptide::test(void){
-
+	// TODO: Fix or scrap .. local scope
 	printf("Peptide.test: ================\n");
 	printf("Peptide.test: == START ==\n");
 	printf("Peptide.test: ================\n");
 	printf("Peptide.test: pre: ");	dump(); NL
-	printf("Peptide.test1: ================\n");
+//	printf("Peptide.test1: ================\n");
 //	printf("Peptide.test1: running pos.test\n");
 //	printf("Peptide.test1: ================\n");
 //	pos.test();
 
 	printf("Peptide.test2: ================\n");
-	PepSig a;
-	a = 'A';
-	printf("Peptide.test2: set(0x%x)(%c) ...\n", a, a);	set(a);
-	printf("Peptide.test2: get = (0x%x)(%c) ...\n", get(), get());
+	Peptide A;
+	PepSig a = 0x30;
+	printf("Peptide.test2: setA(0x%x)(%c) ...\n", a, a);	A.set(a);
+	printf("Peptide.test2: getA = (0x%x)(%c) ...\n", A.get(), A.get());
+	A.dump(); NL
 
+	Peptide B;
+	PepSig b = 0x40;
 	printf("Peptide.test3: ================\n");
+	printf("Peptide.test3a: setB(0x%x)(%c) ...\n", b, b);
+	B.set(b);	B.dump(); NL
+
+	printf("Peptide.test3a: B.addpep(NULL) ...\n");
+	B.addpep(NULL);	B.dump(); NL
+
+	printf("Peptide.test3b: B.addpep(A) ...\n");
+	B.addpep(&A);	B.dump(); NL
+
+	Peptide C;
+	PepSig c = 0x41;
+	C.set(c);
+	printf("Peptide.test3: ================\n");
+	printf("Peptide.test3a: setC(0x%x)(%c) ...\n", c, c);
+	C.set(c);	C.dump(); NL
+
+	printf("Peptide.test3b: C.addpep(A) ...\n");
+	C.addpep(&A);	C.dump(); NL
+
+
+	return;
+	printf("Peptide.test4: ================\n");
 	// - Match = 0bXXsseett.... = 4x64 sets
 	// 11 01 01 01 01
 	set( (128+64) +16+4+1 );

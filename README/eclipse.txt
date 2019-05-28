@@ -1,5 +1,9 @@
+- mk prod/source dirs'
 - NEW c++ Proj
 - Executable / Cross GCC
+- Proj-> Build Configs -> New (test_peps, test_display, cli)
+
+
 - Exclude From Build - (all but one mains/*.cpp)  + all Conc*.Commands/*
 
 - Click on Project / Properties
@@ -7,4 +11,5 @@
     - Cross G++ Linker / Libraries 
 	- !! SELECT ALL CONFIGURATIONS !!
 		[ + X11 , + readline ]
+    - Build Aritifacts (TAB) - for each build env 
 

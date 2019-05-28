@@ -54,15 +54,11 @@ MoleDisplay::MoleDisplay() {
 	gfx.title = "NewMoles";
 	gfx.width = 800;
 	gfx.height = 600;
-	//gfx.line_height = 30;
-	scale = 30;
+	scale = 40;
 	clearatt();
 }
 //-------------------------------
 void MoleDisplay::clearatt(){
-	colr = 0;
-	colg = 0;
-	colb = 0;
 	offsetx = 0;
 	offsety = 0;
 	pos = NULL;
@@ -183,11 +179,32 @@ void MoleDisplay::draw_pep(Peptide *pep) {
 	gfx.line(x+s, y-s, x+s, y+s);
 	gfx.line(x+s, y+s, x-s, y+s);
 	gfx.line(x-s, y+s, x-s, y-s);
+	int t = s/2;
+
+	switch (pep-> getrot()) {
+	case 0:
+		gfx.line(x-t, y+s, x, y+t);
+		gfx.line(x+t, y+s, x, y+t);
+		break;
+	case 1:
+		gfx.line(x-s, y-t, x-t, y);
+		gfx.line(x-s, y+t, x-t, y);
+		break;
+	case 2:
+		gfx.line(x-t, y-s, x, y-t);
+		gfx.line(x+t, y-s, x, y-t);
+		break;
+	case 3:
+		gfx.line(x+s, y-t, x+t, y);
+		gfx.line(x+s, y+t, x+t, y);
+		break;
+	}
+
 
 	char str[8];
 	sprintf(str, "0x%x", pep-> get());
 	gfx.color(200,200,200);
-	gfx.text(str,x,y);
+	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
 
 	//-------------
 	// (newpos leaving scope)
@@ -229,7 +246,7 @@ void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 			matchpos-> end_pos.dim[PEPPOS_X],
 			matchpos-> end_pos.dim[PEPPOS_Y],
 
-			matchpos-> current_pos.dim[PEPPOS_ROT]);
+			matchpos-> rotation);
 	gfx.printg(str);
 
 	if (matchpos-> getM1()!=NULL) {

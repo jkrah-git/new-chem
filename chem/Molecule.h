@@ -37,7 +37,7 @@ public:
 
 	// -- build
 	int			addpep(PepSig sig);
-	int			addpep2(PepSig sig);
+	//int			addpep2(PepSig sig);
 
 	//------------
 	void		getbounds(PeptidePos *min, PeptidePos *max);

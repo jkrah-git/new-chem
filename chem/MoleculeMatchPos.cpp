@@ -61,8 +61,8 @@ public:
 //----------------------------------
 MoleculeMatchPos::MoleculeMatchPos() {
 	rotmole = new Molecule;
-	//rotation = -1;
-	current_pos.dim[PEPPOS_ROT] = -1;
+	rotation = -1;
+	//current_pos.dim[PEPPOS_ROT] = -1;
 
 	clear();
 }
@@ -77,7 +77,7 @@ void MoleculeMatchPos::render(){
 	Molecule 	buf;
 	PeptidePos 	offset;
 
-	offset.dim[0] = 10;
+	offset.dim[PEPPOS_X] = 10;
 	PepSig ch = 'x';
 
 	//printf("MoleculeMatchPos:: M1 :"); //DUMP(mole1) if (mole1==NULL) NL else printf("===============================\n");
@@ -169,7 +169,8 @@ void MoleculeMatchPos::dump(){
 	printf("===============================\n");
 	printf("MoleculeMatchPos:: start_pos: "); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos: "); end_pos.dump();  NL
-	printf("MoleculeMatchPos:: last_rot: %d\n", current_pos.dim[PEPPOS_ROT]);
+//	printf("MoleculeMatchPos:: last_rot: %d\n", current_pos.dim[PEPPOS_ROT]);
+	printf("MoleculeMatchPos:: last_rot: %d\n", rotation);
 	printf("MoleculeMatchPos:: last_pos ->: "); current_pos.dump(); NL
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
@@ -182,7 +183,8 @@ int	MoleculeMatchPos::start(){
 	if (mole1==NULL) return -1;
 	if (mole2==NULL) return -2;
 
-	current_pos.dim[PEPPOS_ROT]= 5;
+	rotation = 5;
+	//current_pos.dim[PEPPOS_ROT]= 5;
 	test_item = NULL;
 
 	return 0;
@@ -194,7 +196,8 @@ void MoleculeMatchPos::rotatemole() {
 	PeptidePos min1, max1, min2, max2;
 
 
-	mole2-> rotateto(current_pos.dim[PEPPOS_ROT], rotmole);
+//	mole2-> rotateto(current_pos.dim[PEPPOS_ROT], rotmole);
+	mole2-> rotateto(rotation, rotmole);
 	mole1-> getbounds(&min1, &max1);
 	rotmole-> getbounds(&min2, &max2);
 
@@ -242,8 +245,10 @@ int	MoleculeMatchPos::nextpos(){
 	 */
 
 
-	if (current_pos.dim[PEPPOS_ROT]>3) {
-		current_pos.dim[PEPPOS_ROT] = 0;
+//	if (current_pos.dim[PEPPOS_ROT]>3) {
+	if (rotation>3) {
+		//current_pos.dim[PEPPOS_ROT] = 0;
+		rotation = 0;
 		rotatemole();
 		return 1;
 	}
@@ -273,11 +278,13 @@ int	MoleculeMatchPos::nextpos(){
 	if (current_pos.dim[PEPPOS_Y] > end_pos.dim[1]) {
 		//if ( (matchmole !=NULL) &&   (matchmole-> pep_list.head == matchmole-> pep_list.tail) ) {	return -1;		}
 
-		current_pos.dim[PEPPOS_ROT] ++;
+		rotation ++;
+		//current_pos.dim[PEPPOS_ROT] ++;
 		current_pos.dim[PEPPOS_Y] = start_pos. dim[1];
 
 		// End.. Out of positions
-		if (current_pos.dim[PEPPOS_ROT] >3) {
+//		if (current_pos.dim[PEPPOS_ROT] >3) {
+		if (rotation >3) {
 			test_item = NULL;
 			return -1;
 		}

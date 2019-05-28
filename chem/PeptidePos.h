@@ -8,14 +8,15 @@
 #define PEPTIDEPOS_H_
 // ----------------------------------------------
 // simple vector class really -
-#define 	PepPosVecMax (int) 3
+#define 	PepPosVecMax (int) 2
 // some indexes
 #define PEPPOS_X 	0
 #define PEPPOS_Y 	1
-#define PEPPOS_ROT 	2
+//#define PEPPOS_ROT 	2
 
 // type = int
 typedef int PepPosVecType;
+
 //
 // pos=[x,y,R]
 //

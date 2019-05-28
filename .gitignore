@@ -1,9 +1,0 @@
-Release/*
-Debug/*
-.settings/*
-*.swp
-out.txt
-.cproject
-.project
-cli_main/*
-test_main/*

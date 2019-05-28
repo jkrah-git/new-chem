@@ -25,10 +25,12 @@ public:
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
-	//PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
+	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
 	Molecule	*rotmole;
 
 	//---------
+	MoleculeMatchPos();
+	virtual 	~MoleculeMatchPos();
 
 	mylist<Peptide>::mylist_item<Peptide>	*get_test_item(){  return test_item; };
 
@@ -39,8 +41,6 @@ public:
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 	void		clear(){ mole1 = NULL; mole2 = NULL; test_item = NULL; }
 
-	MoleculeMatchPos();
-	virtual 	~MoleculeMatchPos();
 	void		render();
 	void		dump();
 	//---------

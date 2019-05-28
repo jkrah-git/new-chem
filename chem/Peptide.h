@@ -10,7 +10,12 @@
 // ----------------------- // -----------------------
 #include "PeptidePos.h"
 
-typedef PepPosVecType PepRot;
+// masks
+#define PEPMASK_ROT		1
+#define PEPMASK_CHARGE	6
+
+
+typedef int PepRot;
 typedef unsigned char PepSig;
 typedef unsigned char PepMatch;
 
@@ -20,34 +25,43 @@ typedef unsigned char PepMatch;
 // -----------------------
 class Peptide {
 private:
-	PepSig	sig;
-	PeptidePos	pos;
-
 public:
-	//PeptidePos	pos;
+	PepSig		sig;
+	PeptidePos	pos;
+	PepRot		rot;
 
 	//--------------
-	Peptide();
-	virtual ~Peptide();
+	Peptide(){ sig = 0; rot = 0; };
+	Peptide(PepSig newsig){ sig = newsig; rot = 0;}
+	virtual ~Peptide(){};
 
-	void  		set(PepSig newval) { sig = newval; };
+	//--------------------------------
+	// TODO: if really going public then rm these setter/getters
+	void  		set(PepSig newsig) { sig = newsig; };
+	void  		setrot(PepRot newrot) { rot = newrot; };
 	PepSig 		get(){	return sig;	};
-
+	PepRot		getrot(void){	return rot;	}
+	void		setpos(PepPosVecType posx, PepPosVecType posy);
 	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
 	PepPosVecType	*getpos(void); //{ return pos.pos; };
+	//--------------------------------
+
+
 	bool		testpos(Peptide *pep) { return pos == pep-> pos; }
 	bool		testpos(PeptidePos *_pos) { return (pos == *_pos); };
 
-
+	void		rotate(PepRot rotation);
 	void		rotateto(PepRot rotation, Peptide *dest);
 	void		addpep(PepSig sig, Peptide *tail);
+	void		addpep(Peptide *tail);
 
 	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
 
 	Peptide& 	operator =(const Peptide& p);
 	bool 		operator ==(const Peptide& p);
-	PepRot		getrot(PepSig parentSig);
+	PepRot		getrot(Peptide parent);
+	PepRot		OLDgetrot(PepSig parentSig);
 	bool		match(PepSig MatchSig);
 
 	// ---

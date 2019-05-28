@@ -14,7 +14,7 @@
 //#define DEBUG
 #include "../include/debug.h"
 #include "../include/common.h"
-
+#include <string.h>
 
 /*
 // -------------------------------
@@ -191,11 +191,10 @@ int Molecule::addpep(PepSig sig){
 
 	// TODO: 1. add relative rotation (and store rotation)
 
-	// -------------
-	// get tail first ..
+
+	// get tail
 	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();
 
-	// 1st PEP on Molecule
 	// if no-tail then .. simple.. newpos = (0,0) / no clash check
 	if (tail==NULL) {
 		//-------------------------------------
@@ -226,6 +225,9 @@ int Molecule::addpep(PepSig sig){
 		Peptide tmp_pep;
 		tmp_pep.addpep(sig, tail->item);
 
+		PRINT("::temp_pep ==> "); tmp_pep.dump(); NL
+
+
 		mylist<Peptide>::mylist_item<Peptide>  *testpep = testpos(&tmp_pep);
 		if (testpep == NULL) {
 			//-------------------------------------
@@ -249,7 +251,7 @@ int Molecule::addpep(PepSig sig){
 		{
 			 //printf("Molecule::addpep.clash:");	 dump(); NL	 testpep-> dump(); NL
 			 //pep_list.del(new_item);
-			 err =  "Molecule::addpep(NULL pep_clash)";
+			 err =  "Molecule::addpep(pep_clash)";
 			 return -9;
 		}
 
@@ -338,6 +340,18 @@ int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 // -------------------------------
 void Molecule::test(void){
 
+	char *gene = "@@AA\0";
+	PRINT("gene=[%s]\n", gene);
+	int r;
+	for (int c=0; c<strlen(gene); c++) {
+		r = addpep(gene[c]);
+		PRINT(".. add[%d]=[%c][0x%x] = [%d]\n", c, gene[c], gene[c],r);
+//		dump();
+
+	}
+
+	return;
+
 	printf("molecule.test: == START ==\n");
 	printf("molecule.test: pre: ");	dump();
 	printf("molecule.test: ===========\n");
@@ -352,8 +366,8 @@ void Molecule::test(void){
 	//------------
 	printf("molecule.test1: ===========\n");
 	printf("molecule.test1: final:\n");
-	// dump();
-	render();
+	 dump();
+	//render();
 
 	Molecule m2;
 	printf("molecule.test: m2=new:\n");	m2.dump();
@@ -408,7 +422,7 @@ void Molecule::testrot(void){
 		{
 			//int t = getrot(a, b);
 			p.set(a);
-			int t = p.getrot(b);
+			int t = p.OLDgetrot(b);
 			ca = 32; cb=32;
 			if ((a>32) && (a<127))	ca = a;
 			if ((b>32) && (b<127))	cb = b;
