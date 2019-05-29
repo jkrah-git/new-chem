@@ -11,9 +11,9 @@
 #include "PeptidePos.h"
 
 // masks
-#define PEPMASK_ROT		1
-#define PEPMASK_CHARGE	6
-
+#define PEPMASK_ROT			1
+#define PEPMASK_CHARGED		2
+#define PEPMASK_POLARITY	4
 
 typedef int PepRot;
 typedef unsigned char PepSig;

@@ -134,31 +134,55 @@ TODO 1. chem structure
 ---------------   
 (R) ROT BIT (0-3)
 ---------------   
-[---- ---R](1) 
-[---- ---R](2)
+[---- ---R](1) (new pep) 
+[---- ---R](2) (tail)
 ---------------   
-ROT = R(1)R(2) 
-    = (00 - 11)
-    != R2R1
+	if (R1=0)||(R2=0)||(Q1=0)||(Q2=0) rot=0
+	else (R1,R2,Q1,Q2=1) (F!=0)
+	if (q1=q2) ie (F=-1)(same/repel) then ROT=2
+		if q1=0 then ROT=1
+		if q2=1 then ROT=3
+	
+---------------------------------------------
+Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[2]
+Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[1]
+Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[1]
+Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[3]
+Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[3]
+Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[2]
+Tally.rot[0]=[60]
+Tally.rot[1]=[1]
+Tally.rot[2]=[2]
+Tally.rot[3]=[1]
+---------------------------------------------
+With this model rotations are rare, and early terminations possible. 
+
+
+
 ---------------   
 (Qq) CHARGE BITS
 ---------------   
-0b[---- -Qq-]
+0b[---- -qQ-]
 ---------------   
-Q = polarity (0=-) (1=+) / 
-q = charged
-  = pep charge
+Q = charged / pep charge
+q = polarity (0=-) (1=+) / 
   = creates overall region charge
 
 ---------------------
 (F) CHARGE AFFINITY (-1,0,1) F = 
 ---------------------
-[---- -Qq-]
-[---- -Qq-]
+[---- -qQ-]
+[---- -qQ-]
 ---------------------
-    if (!q1 or !q2) - (F=0),  ie neutral(0,x)  
-elseif (Q1 != Q2)	- (F=+1), ie opposites (+/-) (attract) 
-elseif (Q1 == Q2)	- (F=-1), ie same(-/-)     	(repel)
+   if (Q1=0 or Q2=0) - (F=0),  ie neutral(0,x)  
+elseif (q1 != q2)	- (F=+1), ie opposites (+/-) (attract) 
+elseif (q1 == q2)	- (F=-1), ie same(-/-)     	(repel)
 
 -------------
 (E+) ENERGY DELTA

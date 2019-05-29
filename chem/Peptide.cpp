@@ -71,7 +71,10 @@ void Peptide::dump(void){
 	if ((sig>31) && (sig<128))
 		txtsig = sig;
 
-	printf("Peptide[0x%zX].dump =>", (long unsigned int) this);
+	char btxt[9];
+	sprintb(btxt, sig, '0');
+
+	printf("Peptide[0x%zX].dump =>[%s]->", (long unsigned int) this, btxt);
 	if (txtsig==0) printf("sig(0x%X())", sig);
 	else printf("sig(0x%X(%c))", sig, txtsig);
 	pos.dump();
@@ -143,30 +146,59 @@ void Peptide::addpep(PepSig sig, Peptide *tail) {
 }
 //-----------------------
 void Peptide::addpep(Peptide *tail) {
-
+	if (tail == this) return;
 
 	pos.init();
 	// simple add to head ??
 	if (tail==NULL) {	setpos(0,0);	}
 	else {  // else add to tail
+			/*
+			 *  1=new , 2=tail
+			 * 	if (R1=0)||(R2=0) rot=0
+				if (Q1=0)||(Q2=0) rot=0
+					else (R1,R2,Q1,Q2=1)
+				if (F=+1) / opposites / attract
+				if Q1 then ROT=1
+				if Q2 then ROT=3
+				if (F=-1) / same / repel then ROT=2
+			 *
+			 */
 
-		// calc rot
+			// calc rot
+			// 		if (R1,R2,Q1,Q2=1)
+			if (((sig & tail-> sig & PEPMASK_ROT) ==0)  ||
+				((sig & tail-> sig & PEPMASK_CHARGED) ==0) ) {
+				rot = 0;
+			}
+			else {
+				if ((sig & PEPMASK_POLARITY) == (tail-> sig & PEPMASK_POLARITY)) {
+					// same / repel
+					rot = 2;
+				} else  { // q1 != q2
+					if ((sig & PEPMASK_POLARITY)==0) {
+						rot = 1;
+						}
+					else {
+						rot = 3;
+					}
+				}
+			}
 
-		short unsigned int msb  = (tail->get() & PEPMASK_ROT);
-		short unsigned int lsb  = (sig & PEPMASK_ROT);
-		rot =  (msb*2) + lsb;
-		//pos.dim[PEPPOS_ROT] =  (msb*2) + lsb;
+
+		//	short unsigned int msb  = (tail->get() & PEPMASK_ROT);
+		//	short unsigned int lsb  = (sig & PEPMASK_ROT);
+		//	rot =  (msb*2) + lsb;
 
 		//PRINT("tail -> "); tail-> dump(); NL
 		//PRINT("msb(tail)=[%d] lsb(new)=[%d] rot=[%d]\n", msb, lsb, pos.dim[PEPPOS_ROT]);
-
+/*
 		switch(rot) {
 			case 0:		pos.dim[PEPPOS_Y] ++; break;	// 0 = (0,1)
 			case 1:		pos.dim[PEPPOS_X] ++; break;	// 1 = (1,0)
 			case 2: 	pos.dim[PEPPOS_Y] --; break;	// 2 = (0,-1)
 			case 3:		pos.dim[PEPPOS_X] --; break;	// 3 = (-1,0)
 		}
-
+*/
 		rotate(tail->getrot());
 		pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
 		pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];

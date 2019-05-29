@@ -11,7 +11,7 @@
 // -------------------------------------
 void printb(char val) {
 	char str[16];
-	sprintb(str, val);
+	sprintb(str, val, '0');
 	printf("%s", str);
 }
 //-----------------
