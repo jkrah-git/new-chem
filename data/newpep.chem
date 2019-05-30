@@ -1,0 +1,24 @@
+# newmatch - purpose built for match tests
+# Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+# Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+
+# Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[1]
+# Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+
+# Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[3]
+# Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+
+# Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+# Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+# 0x3/0x7 = rot1 (0b/0e)
+# 0x3/0x3  or 0x7/0x7 = rot2
+# 0x7/0x3 = rot3 
+# 3+8 = 11 = 0b , 7+8=15 = 0e
+
+stack clear pep
+# pep push 0x41 0x42 0x43 0x44 0x45 
+# new mole from peps
+# mole push
+pep push 0x1 0x1 0x3 07x
+mole push
+mole frompep

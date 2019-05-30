@@ -27,8 +27,6 @@ MoleDisplay 				mole_display;
 void matchcb(int val) {
 	mole_display.gfx.open();
 	mole_display.gfx.clear();
-	//mole_display.gfx.printg(msg);
-	//mole_display.setcol(20,20,20);
 	mole_display.grid(0,0,100);
 	mole_display.draw_match(&cli.core->matchpos);
 
@@ -40,12 +38,17 @@ void matchcb(int val) {
 void molecb(int val) {
 	mole_display.gfx.open();
 	mole_display.gfx.clear();
-	//mole_display.gfx.printg(msg);
-	//mole_display.setcol(20,20,20);
+	mole_display.setcol(0,100,0);
 	mole_display.grid(0,0,100);
-	mole_display.draw_match(&cli.core->matchpos);
+	mole_display.draw_mole(cli.core->mole);
 
 	char msg[128];
+	if (cli.core->mole==NULL)
+		sprintf(msg, "<NULL>");
+	else
+		sprintf(msg, "Molecule[0x%zX]",	(long unsigned int) cli.core->mole);
+	mole_display.gfx.printg(msg);
+
 	sprintf(msg, "result = %d", val);
 	mole_display.gfx.printg(msg);
 }
@@ -57,10 +60,14 @@ char 	**build_args(void){
 	//cli.run_callback = runcallback;
 	cli.load_commands();
 
-	CLI_Command  *match_cmd = search_cmd_list(&cli.base_cmdlist, "match");
-	if (match_cmd!=NULL) {
-		match_cmd->callback = matchcb;
-	}
+	CLI_Command  *cmd;
+	cmd = search_cmd_list(&cli.base_cmdlist, "match");
+	if (cmd!=NULL) { cmd->callback = matchcb; 	}
+
+	cmd = search_cmd_list(&cli.base_cmdlist, "mole");
+	if (cmd!=NULL) { cmd->callback = molecb; 	}
+
+
 	return cli.get_possible_args(&cli.base_cmdlist);
 }
 //-----------------------------------

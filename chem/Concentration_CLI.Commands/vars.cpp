@@ -408,6 +408,28 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 	return c;
 }
 //---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
+int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
+	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli-> core-> mole==NULL)  return -10;
+
+	int r=0;
+	int hex;
+	if (argc>0) {
+		for (int i=0; i<argc; i++)
+
+		if ( sscanf(argv[i], "0x%x", &hex) <0) {
+			printf("bad sig[%s].\n", argv[0]);
+			return -20;
+		}
+		r = cli-> core-> mole->addpep(hex);
+		PRINT("addpep = [%d] = [%d]\n", hex, r);
+	}
+
+
+	return r;
+}
+//---------------------------------//---------------------------------
 
 //---------------------------------//---------------------------------
 int	cli_mole_frompep(Concentration_CLI *cli, int argc, char **argv){
@@ -971,10 +993,13 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	// 'MOLE' (reg) commands
 	cli-> mole_cmdlist.clear();
 	sprintf(name, "mole");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_mole, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+	sprintf(name, "clear"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_clear_mole, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_push, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_pop, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_ld, (char*) name);			PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "addpep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_addpep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);

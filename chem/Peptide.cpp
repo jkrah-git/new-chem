@@ -191,14 +191,14 @@ void Peptide::addpep(Peptide *tail) {
 
 		//PRINT("tail -> "); tail-> dump(); NL
 		//PRINT("msb(tail)=[%d] lsb(new)=[%d] rot=[%d]\n", msb, lsb, pos.dim[PEPPOS_ROT]);
-/*
+
 		switch(rot) {
 			case 0:		pos.dim[PEPPOS_Y] ++; break;	// 0 = (0,1)
 			case 1:		pos.dim[PEPPOS_X] ++; break;	// 1 = (1,0)
 			case 2: 	pos.dim[PEPPOS_Y] --; break;	// 2 = (0,-1)
 			case 3:		pos.dim[PEPPOS_X] --; break;	// 3 = (-1,0)
 		}
-*/
+
 		rotate(tail->getrot());
 		pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
 		pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];
