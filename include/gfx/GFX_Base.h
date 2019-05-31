@@ -12,18 +12,17 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include "gfx.h"
 #include <string.h>
 //#define DISPLAY_FONT_HEIGHT 10
 
 //-----------------------------------------
 class GFX_Base {
 private:
-	Display 	*gfx_display;
-	Window  	gfx_window;
-	GC      	gfx_gc;
-	Colormap 	gfx_colormap;
-	int      	gfx_fast_color_mode;
+	Display 	*display;
+	Window  	window;
+	GC      	gc;
+	Colormap 	colormap;
+	int      	fast_color_mode;
 
 	// These values are saved by gfx_wait then retrieved later by gfx_xpos and gfx_ypos.
 	int saved_xpos;

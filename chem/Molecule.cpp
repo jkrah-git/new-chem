@@ -123,7 +123,6 @@ mylist<Peptide>::mylist_item<Peptide>   *Molecule::testpos(PeptidePos *_pos){
 
 			if ((current_item-> item != NULL) &&
 				(current_item-> item-> testpos(_pos)) ) {
-
 				found_item = current_item;
 				break;
 			}
@@ -188,9 +187,6 @@ int Molecule::rotateto(PepRot rotation, Molecule *dest) {
 }
 // -------------------------------
 int Molecule::addpep(PepSig sig){
-
-	// TODO: 1. add relative rotation (and store rotation)
-
 
 	// get tail
 	mylist<Peptide>::mylist_item<Peptide> *tail = pep_list.gettail();

@@ -56,8 +56,8 @@ public:
 //-----------------------------------------
 GFX_Base::GFX_Base() {
 
-	gfx_display=NULL;
-	gfx_fast_color_mode = 0;
+	display=NULL;
+	fast_color_mode = 0;
 	saved_xpos = 0;
 	saved_ypos = 0;
 
@@ -73,9 +73,9 @@ GFX_Base::~GFX_Base() {}
 //-----------------------------------------
 /* Open a new graphics window. */
 void GFX_Base::close(){
-	if(gfx_display !=NULL) 	{
-		XCloseDisplay(gfx_display);
-		gfx_display = NULL;
+	if(display !=NULL) 	{
+		XCloseDisplay(display);
+		display = NULL;
 	}
 }
 //-----------------------------------------
@@ -88,68 +88,68 @@ void GFX_Base::open(int _width, int _height, const char *_title ){	// Open a new
 }
 void GFX_Base::open() {
 
-	if(gfx_display !=NULL) 	// Open a new window for drawing.
+	if(display !=NULL) 	// Open a new window for drawing.
 		return;
 
 
-	gfx_display = XOpenDisplay(0);
-	if(!gfx_display) {
+	display = XOpenDisplay(0);
+	if(!display) {
 		fprintf(stderr,"gfx_open: unable to open the graphics window.\n");
 		exit(1);
 	}
 
-	Visual *visual = DefaultVisual(gfx_display,0);
+	Visual *visual = DefaultVisual(display,0);
 	if(visual && visual->c_class==TrueColor) {
-		gfx_fast_color_mode = 1;
+		fast_color_mode = 1;
 	} else {
-		gfx_fast_color_mode = 0;
+		fast_color_mode = 0;
 	}
 
-	int blackColor = BlackPixel(gfx_display, DefaultScreen(gfx_display));
-	int whiteColor = WhitePixel(gfx_display, DefaultScreen(gfx_display));
+	int blackColor = BlackPixel(display, DefaultScreen(display));
+	int whiteColor = WhitePixel(display, DefaultScreen(display));
 
-	gfx_window = XCreateSimpleWindow(gfx_display, DefaultRootWindow(gfx_display), 0, 0, width, height, 0, blackColor, blackColor);
+	window = XCreateSimpleWindow(display, DefaultRootWindow(display), 0, 0, width, height, 0, blackColor, blackColor);
 
 	XSetWindowAttributes attr;
 	attr.backing_store = Always;
 
-	XChangeWindowAttributes(gfx_display,gfx_window,CWBackingStore,&attr);
-	XStoreName(gfx_display,gfx_window,title);
-	XSelectInput(gfx_display, gfx_window, StructureNotifyMask|KeyPressMask|ButtonPressMask);
-	XMapWindow(gfx_display,gfx_window);
+	XChangeWindowAttributes(display,window,CWBackingStore,&attr);
+	XStoreName(display,window,title);
+	XSelectInput(display, window, StructureNotifyMask|KeyPressMask|ButtonPressMask);
+	XMapWindow(display,window);
 
-	gfx_gc = XCreateGC(gfx_display, gfx_window, 0, 0);
-	gfx_colormap = DefaultColormap(gfx_display,0);
+	gc = XCreateGC(display, window, 0, 0);
+	colormap = DefaultColormap(display,0);
 
-	XSetForeground(gfx_display, gfx_gc, whiteColor);
+	XSetForeground(display, gc, whiteColor);
 
 	// Wait for the MapNotify event
 	for(;;) {
 		XEvent e;
-		XNextEvent(gfx_display, &e);
+		XNextEvent(display, &e);
 		if (e.type == MapNotify)
 			break;
 	}
 }
 //-----------------------------------------
 // Draw a single point at (x,y)
-void GFX_Base::point( int x, int y ){	XDrawPoint(gfx_display,gfx_window,gfx_gc,x,y);	}
+void GFX_Base::point( int x, int y ){	XDrawPoint(display,window,gc,x,y);	}
 //-----------------------------------------
 // Draw a line from (x1,y1) to (x2,y2)
-void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(gfx_display,gfx_window,gfx_gc,x1,y1,x2,y2);}
+void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(display,window,gc,x1,y1,x2,y2);}
 //-----------------------------------------
 void GFX_Base::text(const char *str,  int x1, int y1){
 	if (str==NULL) return;
 	int len = strlen(str);
 	if (len<1) return;
-	XDrawString(gfx_display,gfx_window,gfx_gc,x1,y1,str, len);
+	XDrawString(display,window,gc,x1,y1,str, len);
 }
 //-----------------------------------------
 // Change the current drawing color.
 void GFX_Base::color( int r, int g, int b ){
 	XColor color;
 
-	if(gfx_fast_color_mode) {
+	if(fast_color_mode) {
 		/* If this is a truecolor display, we can just pick the color directly. */
 		color.pixel = ((b&0xff) | ((g&0xff)<<8) | ((r&0xff)<<16) );
 	} else {
@@ -158,16 +158,16 @@ void GFX_Base::color( int r, int g, int b ){
 		color.red = r<<8;
 		color.green = g<<8;
 		color.blue = b<<8;
-		XAllocColor(gfx_display,gfx_colormap,&color);
+		XAllocColor(display,colormap,&color);
 	}
 
-	XSetForeground(gfx_display, gfx_gc, color.pixel);
+	XSetForeground(display, gc, color.pixel);
 }
 
 //-----------------------------------------
 //  Clear the graphics window to the background color.
 void GFX_Base::clear(){
-	XClearWindow(gfx_display,gfx_window);
+	XClearWindow(display,window);
 	line_pos = line_height;
 
 }
@@ -180,11 +180,11 @@ void GFX_Base::clear_color( int r, int g, int b ){
 	color.red = r<<8;
 	color.green = g<<8;
 	color.blue = b<<8;
-	XAllocColor(gfx_display,gfx_colormap,&color);
+	XAllocColor(display,colormap,&color);
 
 	XSetWindowAttributes attr;
 	attr.background_pixel = color.pixel;
-	XChangeWindowAttributes(gfx_display,gfx_window,CWBackPixel,&attr);
+	XChangeWindowAttributes(display,window,CWBackPixel,&attr);
 }
 //-----------------------------------------
 //
@@ -194,16 +194,16 @@ int GFX_Base::event_waiting() {
        flush();
 
        while (1) {
-               if(XCheckMaskEvent(gfx_display,-1,&event)) {
+               if(XCheckMaskEvent(display,-1,&event)) {
                        if(event.type==KeyPress) {
-                               XPutBackEvent(gfx_display,&event);
+                               XPutBackEvent(display,&event);
                                return 1;
                        } else if (event.type==ButtonPress) {
-                               XPutBackEvent(gfx_display,&event);
+                               XPutBackEvent(display,&event);
                                return 1;
                        } else if (event.type==DestroyNotify) {
 
-                    	   gfx_display=NULL;
+                    	   display=NULL;
 
                        } else {
                                return 0;
@@ -222,7 +222,7 @@ char GFX_Base::wait() {
 	flush();
 
 	while(1) {
-		XNextEvent(gfx_display,&event);
+		XNextEvent(display,&event);
 
 		if(event.type==KeyPress) {
 			saved_xpos = event.xkey.x;
@@ -243,7 +243,7 @@ int GFX_Base::ypos() {	return saved_ypos;	}
 
 //-----------------------------------------
 //  Flush all previous output to the window.
-void GFX_Base::flush() {	XFlush(gfx_display);	}
+void GFX_Base::flush() {	XFlush(display);	}
 //-----------------------------------------
 //-------------------------------
 void GFX_Base::printg(char *str){

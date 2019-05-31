@@ -10,10 +10,10 @@
 
 char 		**character_name_completion(const char *, int, int);
 char 		*character_name_generator(const char *, int);
-char 		**args = NULL;
+const char 		**args = NULL;
 
 //=================== need to be declared externally
-char 	**build_args(void);
+const char 	**build_args(void);
 int 	run(int argc, char **argv);
 //==========================================================
 //  run_args(char *line){
@@ -61,7 +61,7 @@ char *character_name_generator(const char *text, int state)
 	if ( args==NULL) {	return NULL;	}
 	//-------------------
     static int list_index, len;
-    char *name;
+    const char *name;
 
     if (state==0) {
         list_index = 0;

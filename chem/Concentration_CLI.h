@@ -11,7 +11,7 @@
 #include "Concentration.h"
 #include "CLI_Command.h"
 #include "Concentration_VM.h"
-#include "../include/gfx/MoleDisplay.h"
+#include "ChemDisplay.h"
 
 #undef DEBUG
 //#define DEBUG
@@ -52,7 +52,11 @@ public:
 
 	KeyValList					var_list;
 	char 						**args;
-	//MoleDisplay 				mole_display;
+
+	//---------------
+	ChemDisplay 				display;
+
+
 	void 	(*run_callback)(char *msg);
 
 	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
@@ -63,9 +67,9 @@ public:
 
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
 	int		argstr(char *dest, int max, int argc, char **argv);
+	int		runline(mylist<CLI_Command> *cmd_list, char *line);
 
 	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
-	int		run(mylist<CLI_Command> *cmd_list, char *line);
 
 	void	base_cmdlist_dump(void) { printf ("Basic Commands => ");  	base_cmdlist.dump(); }
 	void	dump_cmdlist_dump(void) { printf ("'dump' Commands => ");  	dump_cmdlist.dump(); }

@@ -11,9 +11,10 @@
 // -------------------
 //#include "Concentration_CLI_External_Commands.cpp"
 
-#include "Concentration_CLI.Commands/base.cpp"
-#include "Concentration_CLI.Commands/vars.cpp"
-#include "Concentration_CLI.Commands/match.cpp"
+#include "Concentration_CLI.Callbacks/base.cpp"
+#include "Concentration_CLI.Callbacks/vars.cpp"
+#include "Concentration_CLI.Callbacks/match.cpp"
+#include "Concentration_CLI.Callbacks/display.cpp"
 
 // -------------------
 //---------------------------------//---------------------------------
@@ -147,7 +148,6 @@ Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM
 	//memset(last_line, '\0', MAX_LINELEN);
 	args = NULL;
 	run_callback = NULL;
-	//possible_args[0] = NULL;
 	last_result = 0;
 	core = &vm;
 	if (core!=NULL)
@@ -207,7 +207,7 @@ int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentr
 
 
 //---------------------------------
-int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
+int	Concentration_CLI::runline(mylist<CLI_Command> *cmd_list, char *line) {
 	if ((cmd_list==NULL) || (line==NULL)) return -100;
 
 	// make a local copy
@@ -234,7 +234,7 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, char *line) {
 	return run(cmd_list, c, argv);
 	//return r;
 }
-
+//-----------------------------------
 CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
 	CLI_Command  *cmd = NULL;
 	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = cmd_list-> gethead();
@@ -254,22 +254,6 @@ CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv){
 	if ((cmd_list==NULL) || (argc<1) || (argv==NULL)) return -100;
 
-	//mylist<CLI_Command>::mylist_item<CLI_Command>  *cmd = cmdlist.add();
-
-/*
-	// search for argv[0]
-	CLI_Command  *cmd = NULL;
-	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = cmd_list-> gethead();
-	while ((next_item!=NULL) && (next_item-> item != NULL)) {
-		int r = strcmp(argv[0], next_item-> item->name);
-		if (r==0) {
-			cmd = next_item-> item;
-			break;
-		}
-		// ---
-		next_item = next_item->next;
-	}
-*/
 	CLI_Command  *cmd = search_cmd_list(cmd_list, argv[0]);
 	last_result = 0;
 	if (cmd==NULL) {
@@ -285,7 +269,8 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 		last_result = cmd-> operation(this, argc-1, &argv[1]);
 		LOG("[%s].[%d]\n", argv[0], last_result);
 		if (cmd->callback !=NULL) {
-			cmd->callback(last_result);
+			//cmd->callback(last_result);
+			cmd->callback(this, 0, NULL);
 		}
 
 	}
@@ -331,6 +316,10 @@ void Concentration_CLI::load_commands() {
 	cli_load_base(this, 0, NULL);
 	cli_load_vars(this, 0, NULL);
 	cli_load_match(this, 0, NULL);
+	cli_load_gfx(this, 0, NULL);
+
+
+
 }
 
 //---------------------------------//---------------------------------

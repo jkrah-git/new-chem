@@ -16,7 +16,7 @@
 #include "../include/gfx/MoleDisplay.h"
 #include "../include/common.h"
 ///=================== need to be declared externally
-char 	**build_args(void);
+const char 	**build_args(void);
 int 	run(int argc, char **argv);
 //==========================================================
 //===============================================================//===============================================================
@@ -265,23 +265,23 @@ int test_display(int mode) {
 }
 
 //===============================================================//===============================================================
-char **build_args(void) {
+const char **build_args(void) {
 	// =======================
 	// build cmd_list;
 	//------------------
 	int num_commands = 32;
 	//------------------
-	char **args = (char **) malloc(sizeof(char*)*num_commands);
+	const char **args = (const char **) malloc(sizeof(char*)*num_commands);
 	if (args!=NULL) {
 		// add max (num_commands)
 		//------------------
 		int c = 0;
-		args[c++] = (char *) "test_pep";
-		args[c++] = "test_addpep";
-		args[c++] = "test_mole";
-		args[c++] = "test_display";
-		args[c++] = "test_printb";
-		args[c++] = "test_rot";
+		args[c++] = (const char*) "test_pep";
+		args[c++] = (const char*) "test_addpep";
+		args[c++] = (const char*) "test_mole";
+		args[c++] = (const char*) "test_display";
+		args[c++] = (const char*) "test_printb";
+		args[c++] = (const char*) "test_rot";
 
 
 		//args[c++] = "test_display";

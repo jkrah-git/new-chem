@@ -148,10 +148,6 @@ void MoleDisplay::grid(int red, int green, int blue){
 }
 //-------------------------------
 void MoleDisplay::draw_pep(Peptide *pep) {
-	draw_pep(pep ,NULL);
-}
-//-------------------------------
-void MoleDisplay::draw_pep(Peptide *pep, Peptide *previous) {
 	// TODO: maybe this pos thing was a bad idea
 
 	if (pep==NULL) return;
@@ -216,42 +212,10 @@ void MoleDisplay::draw_pep(Peptide *pep, Peptide *previous) {
 	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[1], pep->rot);
 	gfx.printg(str);
 
-/*
 
-	int oldx = x;
-	int oldy = y;
-	//----------------------------------------
-	if (previous !=NULL) {
-		sprintf(str, "(PREV)0x%x", previous-> get());
-		gfx.printg(str);
-
-		pos = saved_pos;
-		// if no base offset
-		if (pos==NULL) {
-			// then just use pep.pos
-			pos= previous->getpos();
-		} else { // pos != NULL
-
-			PepPosVecType *pep_pos = previous->getpos();
-			// newpos = pos + pep_pos
-			for (int i=0; i<PepPosVecMax; i++){
-				newpos[i] = pos[i];
-				if (pep_pos!=NULL) {
-					newpos[i] += pep_pos[i];
-				}
-			} //----
-			pos= newpos;
-		}
-		gfx.color(colr, colg, colb);
-		x = screenx();
-		y = screeny();
-		gfx.line(oldx, oldy, x, y );
-
-	}
-*/
 
 	//-------------
-	// (newpos leaving scope)
+	// (restore pos)
 	pos = saved_pos;
 	gfx.flush();
 
@@ -264,14 +228,9 @@ void MoleDisplay::draw_mole(Molecule *mole){
 	if (mole==NULL) return;
 	//PepPosVecType *globalpos = pos;
 
-	Peptide *previous = NULL;
-
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
-		// (local) pos = destroyed by render_pep
-		//pos = globalpos;
-		draw_pep(current_item-> item, previous);
-		previous = current_item-> item;
+		draw_pep(current_item-> item);
 		//---
 		current_item = current_item-> next;
 	}
@@ -324,4 +283,23 @@ void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 	gfx.flush();
 }
 
+//-------------------------------
+void MoleDisplay::draw_vm(Concentration_VM *vm){
+	if (vm==NULL) return;
+	setcol(100,100,100);
+	gfx.cprintg("VM..");
+
+	char str[128];
+	sprintf(str, "REGS: PEP[0x%zX] MOLE[0x%zX] CONC[0x%zX] VOL[0x%zX]",
+			(long unsigned int) vm->pep,
+			(long unsigned int) vm->mole,
+			(long unsigned int) vm->conc,
+			(long unsigned int) vm->concvol);
+	gfx.printg(str);
+
+
+
+	//---------------
+	gfx.flush();
+}
 //-------------------------------

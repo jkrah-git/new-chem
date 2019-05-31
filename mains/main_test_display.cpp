@@ -8,7 +8,7 @@
 #include "../include/gfx/MoleDisplay.h"
 
 ///=================== need to be declared externally
-char 	**build_args(void);
+const char 	**build_args(void);
 int 	run(int argc, char **argv);
 //==========================================================
 MoleDisplay _display;
@@ -103,18 +103,18 @@ int test_moledisplay(int mode) {
 	return 0;
 }
 //===============================================================//===============================================================
-char **build_args(void) {
+const char **build_args(void) {
 	// =======================
 	// build cmd_list;
 	//------------------
 	int num_commands = 4;
 	//------------------
-	char **args = (char **) malloc(sizeof(char*)*num_commands);
+	const char **args = (const char **) malloc(sizeof(char*)*num_commands);
 	if (args!=NULL) {
 		// add max (num_commands)
 		//------------------
 		int c = 0;
-		args[c++] = "test_moledisplay";
+		args[c++] = (const char*) "test_moledisplay";
 		//args[c++] = "test_display";
 		//------------------
 		printf("..added[%d] functions..\n", c);

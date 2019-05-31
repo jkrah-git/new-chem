@@ -18,7 +18,7 @@ class CLI_Command {
 public:
 
 	int 	(*operation)(Concentration_CLI*, int, char**);
-	void	(*callback)(int);
+	void	(*callback)(Concentration_CLI*, int, char**);
 	char 	name[CLI_COMMAND_MAX_NAME];
 	//-----
 	CLI_Command();

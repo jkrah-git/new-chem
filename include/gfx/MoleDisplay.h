@@ -12,6 +12,7 @@
 #include "../../chem/Peptide.h"
 #include "../../chem/MoleculeMatchPos.h"
 #include "../../chem/Molecule.h"
+#include "../../chem/Concentration_VM.h"
 #include "GFX_Base.h"
 
 //-----------------
@@ -45,9 +46,11 @@ public:
 	void	grid(int red, int green, int blue);
 	void	clearatt();
 	void	draw_pep(Peptide *pep);
-	void	draw_pep(Peptide *pep, Peptide *previous);
+//	void	draw_pep(Peptide *pep, Peptide *previous);
 	void	draw_mole(Molecule *mole);
 	void	draw_match(MoleculeMatchPos *matchpos);
+
+	void	draw_vm(Concentration_VM *vm);
 
 };
 //--------------
