@@ -1,0 +1,82 @@
+BASE
+
+	cli-> base_cmdlist.clear();
+	PRINT("\n");
+	sprintf(name, "quit"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "q"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "#"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_echo, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "testrot"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_testrot, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+	sprintf(name, "?"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_basehelp, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_help, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ping"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_ping, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "loop"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_loop, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "loopz"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_loopz, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, ";"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_multi, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "file"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+// BASE Shortcuts
+	sprintf(name, "f"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "s"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_stacks, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "r"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_regs, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "v"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_vol, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "p"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_pep, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "m"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_mole, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "c"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_conc, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+	sprintf(name, "~p"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_clear_pep, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "~m"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_clear_mole, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "~c"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_clear_conc, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+// 'match' Shortcuts
+	sprintf(name, "n"); 	r = cli-> addcmd(&cli-> base_cmdlist, 		cli_match_n, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+
+
+	// 'DUMP' commands
+	cli-> dump_cmdlist.clear();
+	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_help, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "cli"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_cli, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "core"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_core, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "stacks"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_stacks, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "moles"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_moles, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "regs"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_regs, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "vol"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_vol, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "conc"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_conc, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "mole"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_mole, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pep"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_pep, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+
+	// 'LOAD' commands
+	cli-> load_cmdlist.clear();
+	sprintf(name, "load"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_load, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "conc"); 		r = cli-> addcmd(&cli-> load_cmdlist, 	cli_load_conc, (char*) name);		PRINT("load_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "mole"); 		r = cli-> addcmd(&cli-> load_cmdlist, 	cli_load_mole, (char*) name);		PRINT("load_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pep"); 		r = cli-> addcmd(&cli-> load_cmdlist, 	cli_load_pep, (char*) name);		PRINT("load_cmdlist[%s] = [%d]\n", name, r);
+
+	// 'CLEAR' commands
+	cli-> clear_cmdlist.clear();
+	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_clear, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "conc"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_conc, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "mole"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_mole, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pep"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_pep, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "all"); 		r = cli-> addcmd(&cli-> clear_cmdlist, 	cli_clear_all, (char*) name);		PRINT("clear_cmdlist[%s] = [%d]\n", name, r);
+
+
+
+	// 'MATCH.CPP' commands
+	cli-> match_cmdlist.clear();
+	sprintf(name, "match"); r = cli-> addcmd(&cli-> base_cmdlist, 	cli_match, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "help"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_help, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "m1"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_m1, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "m2"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_m2, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "start"); r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_start, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "next"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_next, (char*) name);		PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "n"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_n, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "rot"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_rot, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "render"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_render, (char*) name);			PRINT("match_cmdlist[%s] = [%d]\n", name, r);
+
+	// 'VARS.CPP' commands
+	
+	
+	
