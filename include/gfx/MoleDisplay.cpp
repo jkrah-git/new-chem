@@ -148,10 +148,18 @@ void MoleDisplay::grid(int red, int green, int blue){
 }
 //-------------------------------
 void MoleDisplay::draw_pep(Peptide *pep) {
+	draw_pep(pep ,NULL);
+}
+//-------------------------------
+void MoleDisplay::draw_pep(Peptide *pep, Peptide *previous) {
+	// TODO: maybe this pos thing was a bad idea
 
 	if (pep==NULL) return;
+
 	PeptidePos new_peppos;
 	PepPosVecType *newpos = new_peppos.dim;
+	PepPosVecType *saved_pos = pos;
+
 
 	// if no base offset
 	if (pos==NULL) {
@@ -179,8 +187,9 @@ void MoleDisplay::draw_pep(Peptide *pep) {
 	gfx.line(x+s, y-s, x+s, y+s);
 	gfx.line(x+s, y+s, x-s, y+s);
 	gfx.line(x-s, y+s, x-s, y-s);
-	int t = s/2;
 
+
+	int t = s/2;
 	switch (pep-> getrot()) {
 	case 0:
 		gfx.line(x-t, y+s, x, y+t);
@@ -201,14 +210,49 @@ void MoleDisplay::draw_pep(Peptide *pep) {
 	}
 
 
-	char str[8];
-	sprintf(str, "0x%x", pep-> get());
-	gfx.color(200,200,200);
-	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
+	char str[64];
+	sprintf(str, "0x%x", pep-> get());	gfx.color(200,200,200);	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
+
+	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[1], pep->rot);
+	gfx.printg(str);
+
+/*
+
+	int oldx = x;
+	int oldy = y;
+	//----------------------------------------
+	if (previous !=NULL) {
+		sprintf(str, "(PREV)0x%x", previous-> get());
+		gfx.printg(str);
+
+		pos = saved_pos;
+		// if no base offset
+		if (pos==NULL) {
+			// then just use pep.pos
+			pos= previous->getpos();
+		} else { // pos != NULL
+
+			PepPosVecType *pep_pos = previous->getpos();
+			// newpos = pos + pep_pos
+			for (int i=0; i<PepPosVecMax; i++){
+				newpos[i] = pos[i];
+				if (pep_pos!=NULL) {
+					newpos[i] += pep_pos[i];
+				}
+			} //----
+			pos= newpos;
+		}
+		gfx.color(colr, colg, colb);
+		x = screenx();
+		y = screeny();
+		gfx.line(oldx, oldy, x, y );
+
+	}
+*/
 
 	//-------------
 	// (newpos leaving scope)
-	pos = NULL;
+	pos = saved_pos;
 	gfx.flush();
 
 }
@@ -218,13 +262,16 @@ void MoleDisplay::draw_pep(Peptide *pep) {
 void MoleDisplay::draw_mole(Molecule *mole){
 
 	if (mole==NULL) return;
-	PepPosVecType *globalpos = pos;
+	//PepPosVecType *globalpos = pos;
+
+	Peptide *previous = NULL;
 
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
-		// fix: bug afger firsr pep - reload pos
-		pos = globalpos;
-		draw_pep(current_item-> item);
+		// (local) pos = destroyed by render_pep
+		//pos = globalpos;
+		draw_pep(current_item-> item, previous);
+		previous = current_item-> item;
 		//---
 		current_item = current_item-> next;
 	}
@@ -251,7 +298,7 @@ void MoleDisplay::draw_match(MoleculeMatchPos *matchpos){
 
 	if (matchpos-> getM1()!=NULL) {
 		setcol(200,0,0);
-		gfx.cprintg("M1");
+		gfx.cprintg((const char*) "M1");
 		draw_mole(matchpos-> getM1()); //, 100, 0, 0);
 	}
 

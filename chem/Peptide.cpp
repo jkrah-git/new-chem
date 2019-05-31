@@ -96,7 +96,7 @@ void Peptide::setpos(PepPosVecType posx, PepPosVecType posy){
 		pos.dim[PEPPOS_Y] = posy;
 	}
 }
-void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepPosVecType rot){
+void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot){
 	setpos(posx, posy);
 	setrot(rot);
 //	if (pos.dim!=NULL)	pos.dim[PEPPOS_ROT] = rot;
@@ -109,13 +109,14 @@ void Peptide::rotate(PepRot rotation){
 		Peptide		newpos;
 		rotateto(rotation, &newpos);
 		pos = newpos.pos;
+		rot = newpos.rot;
 	}
 }
 // ---------------------
 void Peptide::rotateto(PepRot rotation, Peptide *dest){
 	if (dest != NULL) {
 		dest->sig = sig;
-
+		dest->rot = rotation;
 		// set pos
 		if (rotation==0) {
 			dest-> pos = pos;
@@ -184,7 +185,10 @@ void Peptide::addpep(Peptide *tail) {
 				}
 			}
 
-
+			rot += tail-> rot;
+			rot %= 4;
+			pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
+			pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];
 		//	short unsigned int msb  = (tail->get() & PEPMASK_ROT);
 		//	short unsigned int lsb  = (sig & PEPMASK_ROT);
 		//	rot =  (msb*2) + lsb;
@@ -199,9 +203,9 @@ void Peptide::addpep(Peptide *tail) {
 			case 3:		pos.dim[PEPPOS_X] --; break;	// 3 = (-1,0)
 		}
 
-		rotate(tail->getrot());
-		pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
-		pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];
+//		rotate(tail->getrot());
+	//	pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
+	//	pos.dim[PEPPOS_Y] += tail-> pos.dim[PEPPOS_Y];
 	}
 	return;
 }

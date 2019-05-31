@@ -45,6 +45,7 @@ public:
 	void	grid(int red, int green, int blue);
 	void	clearatt();
 	void	draw_pep(Peptide *pep);
+	void	draw_pep(Peptide *pep, Peptide *previous);
 	void	draw_mole(Molecule *mole);
 	void	draw_match(MoleculeMatchPos *matchpos);
 

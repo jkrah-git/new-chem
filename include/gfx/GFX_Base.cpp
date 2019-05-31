@@ -138,7 +138,7 @@ void GFX_Base::point( int x, int y ){	XDrawPoint(gfx_display,gfx_window,gfx_gc,x
 // Draw a line from (x1,y1) to (x2,y2)
 void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(gfx_display,gfx_window,gfx_gc,x1,y1,x2,y2);}
 //-----------------------------------------
-void GFX_Base::text( char *str,  int x1, int y1){
+void GFX_Base::text(const char *str,  int x1, int y1){
 	if (str==NULL) return;
 	int len = strlen(str);
 	if (len<1) return;
@@ -253,7 +253,7 @@ void GFX_Base::printg(char *str){
 	cprintg(str);
 }
 //-------------------------------
-void GFX_Base::cprintg(char *str){
+void GFX_Base::cprintg(const char *str){
 	if (str==NULL) return;
 	if (line_pos >= height) return;
 	int x = 0;

@@ -45,7 +45,7 @@ public:
 	void 	close();
 	void 	point( int x, int y );								// Draw a point at (x,y)
 	void 	line( int x1, int y1, int x2, int y2 );				// Draw a line from (x1,y1) to (x2,y2)
-	void 	text( char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
+	void 	text(const char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
 	void 	color( int red, int green, int blue );				// Change the current drawing color.
 	void 	clear();											// Clear the graphics window to the background color.
 	void 	clear_color( int red, int green, int blue );		// Change the current background color.
@@ -57,7 +57,7 @@ public:
 	int 	event_waiting();									// Check to see if an event is waiting.
 	void 	flush();											// Flush all previous output to the window.
 	void	printg(char *str);									// print white
-	void	cprintg(char *str);									// print with current color
+	void	cprintg(const char *str);									// print with current color
 };
 //-----------------------------------------
 

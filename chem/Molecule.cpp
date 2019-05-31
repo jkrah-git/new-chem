@@ -340,10 +340,10 @@ int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 // -------------------------------
 void Molecule::test(void){
 
-	char *gene = "@@AA\0";
+	const char *gene = "@@AA\0";
 	PRINT("gene=[%s]\n", gene);
 	int r;
-	for (int c=0; c<strlen(gene); c++) {
+	for (unsigned int c=0; c<strlen(gene); c++) {
 		r = addpep(gene[c]);
 		PRINT(".. add[%d]=[%c][0x%x] = [%d]\n", c, gene[c], gene[c],r);
 //		dump();

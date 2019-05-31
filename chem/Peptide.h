@@ -15,7 +15,7 @@
 #define PEPMASK_CHARGED		2
 #define PEPMASK_POLARITY	4
 
-typedef int PepRot;
+typedef unsigned int PepRot;
 typedef unsigned char PepSig;
 typedef unsigned char PepMatch;
 
