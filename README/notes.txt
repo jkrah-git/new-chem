@@ -216,6 +216,7 @@ xxx xxx ...
 TODO
 -----
 1.1 DONE -- update addpep - new rotation rules and relative rotations
+1..1 = menu - **buttons
 1.2 port cli cmds???
 	- start VM commands .. callbacks ?
 	- new cli/gfx commands

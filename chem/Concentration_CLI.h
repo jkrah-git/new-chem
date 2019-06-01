@@ -57,7 +57,10 @@ public:
 	ChemDisplay 				display;
 
 
-	void 	(*run_callback)(char *msg);
+
+	//void 	(*run_callback)(char *msg);
+	int		(*callback)(Concentration_CLI*, int, char**);
+
 
 	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
 	virtual ~Concentration_CLI();

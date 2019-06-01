@@ -1,13 +1,20 @@
-// --------------------------
-void vmcb(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return;
+
+
+// --------------------------// --------------------------// --------------------------
+// main VM Callback
+int cli_cb(Concentration_CLI *cli, int argc, char **argv) {
+	if (cli==NULL) return -1;
+	/*
 	cli->display.gfx.title = (const char*) "VM";
 	cli->display.gfx.open();
 	cli->display.gfx.clear();
-	cli->display.grid(0,0,100);
 	cli->display.draw_vm(cli-> core);
+	*/
+	cli->display.main();
+	return 0;
 }
-// --------------------------
+/*
+// --------------------------// --------------------------// --------------------------
 void matchcb(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return;
 	cli->display.gfx.title = (const char*) "Match";
@@ -36,21 +43,20 @@ void molecb(Concentration_CLI *cli, int argc, char **argv) {
 	cli->display.gfx.printg(msg);
 
 }
+*/
 // --------------------------
-
 int	cli_load_gfx(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 
+	/*
 	CLI_Command  *cmd;
 	cmd = search_cmd_list(&cli-> base_cmdlist, "match");
 	if (cmd!=NULL) { cmd->callback = matchcb; 	}
 
 	cmd = search_cmd_list(&cli-> base_cmdlist, "mole");
 	if (cmd!=NULL) { cmd->callback = molecb; 	}
-
-
-
-
-
+	*/
+	cli-> callback = cli_cb;
+	cli_cb(cli, argc, argv);
 	return 0;
 }

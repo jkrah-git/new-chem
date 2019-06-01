@@ -6,33 +6,131 @@
  */
 
 #include "ChemDisplay.h"
-
 #define  DISPLAY_FONT_HEIGHT 10
+/*
+// ----------------
+class ChemDisplay {
+private:
+//	int		screenx(void);
+//	int		screeny(void);
+	void	getcol(void) { gfx.color(colr, colg, colb); };
+//	int		line_pos;
+public:
+	GFX_Base	gfx;
+ChemDisplayAttrib	attrib;
+//	int 		offsetx;
+//	int 		offsety;
+//  PepPosVecType	*peppos;
+//	int 		scale;
+	// ------
+	int 		colr;
+	int 		colg;
+	int 		colb;
+	// ------
 
-//-------------------------------
+    // selected objects
+	Concentration_VM			*core;
+	Peptide						*pep;
+	Molecule					*mole;
+	Concentration				*conc;
+	ConcentrationVolume 		*concvol;
+	MoleculeMatchPos 			*matchpos;
+	ChemMenuList				*menu_list;
+
+
+  	//-------------------
+	ChemDisplay();
+	virtual ~ChemDisplay();
+	void	dump();
+	void	gdump();
+
+	void	setcol(int red, int green, int blue){ 	colr = red; colg = green; colb = blue; gfx.color(colr, colg, colb); };
+	void	grid(){ grid(colr, colg, colb); }
+	void	grid(int red, int green, int blue);
+	void	clearatt();
+
+	void	draw_pep(Peptide *pep);
+	void	draw_mole(Molecule *mole);
+	void	draw_match(MoleculeMatchPos *matchpos);
+	//---- new
+	void	draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+	void	draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+	void	draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+	//---
+	void	draw_vm(Concentration_VM *vm);
+	void	main(void);
+
+};
+// ----------------
+ */
 ChemDisplay::ChemDisplay() {
 	//line_pos = DISPLAY_FONT_HEIGHT;
-	gfx.title = "NewMoles";
-	gfx.width = 800;
-	gfx.height = 600;
-	scale = 40;
+	gfx.title = "NewChem";
+	gfx.width = 1000;
+	gfx.height = 800;
+	attrib.scale = 40;
+
+	core = NULL;
+	pep = NULL;
+	mole = NULL;
+	conc = NULL;
+	concvol = NULL;
+	matchpos = NULL;
+
+
 	clearatt();
 }
 //-------------------------------
+//-------------------------------
+//---- new
+void ChemDisplay::draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
+
+
+}
+//-------------------------------
+void ChemDisplay::draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
+
+}
+//-------------------------------
+void ChemDisplay::draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
+
+}
+//-------------------------------
+//-------------------------------
+void ChemDisplay::main(void) {
+	gfx.title = (const char*) "- NewChem -";
+	gfx.open();
+	gfx.clear();
+
+	if (core==NULL) {
+		gfx.printg("- Null Core -");
+		return;
+	}
+	// else core OK
+	draw_vm(core);
+
+}
+
+
+
+//-------------------------------
+//-------------------------------	//-------------------------------
+//- OLD  ------------------------------
+
 void ChemDisplay::clearatt(){
-	offsetx = 0;
-	offsety = 0;
-	pos = NULL;
+	attrib.offsetx = 0;
+	attrib.offsety = 0;
+	attrib.pos = NULL;
 }
 //-------------------------------
 ChemDisplay::~ChemDisplay() {}
 //-------------------------------
 void ChemDisplay::dump() {
 	printf("ChemDisplay[0x%zX].", (long unsigned int) this);
-	printf("size[%d,%d].scale[%d].col[%d,%d,%d].off[%d,%d].pos[0x%zX]\n",
-			gfx.width, gfx.height, scale, colr, colg, colb, offsetx, offsety, (long unsigned int)  pos);
-	if (pos !=NULL) {
-		printf(".. pos[%d,%d,%d]\n", pos[0], pos[1], pos[2]);
+	printf("size[%d,%d].scale[%f].col[%d,%d,%d].off[%d,%d].pos[0x%zX]\n",
+			gfx.width, gfx.height, attrib.scale, colr, colg, colb, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
+	if (attrib.pos !=NULL) {
+		printf(".. pos[%d,%d,%d]\n", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
 	}
 }
 //-------------------------------
@@ -41,12 +139,12 @@ void ChemDisplay::gdump() {
 
 	sprintf(msg, "ChemDisplay[0x%zX].", (long unsigned int) this);
 	gfx.printg(msg);
-	sprintf(msg, "size[%d,%d].scale[%d].col[%d,%d,%d].off[%d,%d].pos[0x%zX]",
-			gfx.width, gfx.height, scale, colr, colg, colb, offsetx, offsety, (long unsigned int)  pos);
+	sprintf(msg, "size[%d,%d].scale[%f].col[%d,%d,%d].off[%d,%d].pos[0x%zX]",
+			gfx.width, gfx.height, attrib.scale, colr, colg, colb, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
 	gfx.printg(msg);
 
-	if (pos !=NULL) {
-		sprintf(msg, ".. pos[%d,%d,%d]", pos[0], pos[1], pos[2]);
+	if (attrib.pos !=NULL) {
+		sprintf(msg, ".. pos[%d,%d,%d]", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
 		gfx.printg(msg);
 	}
 
@@ -54,37 +152,38 @@ void ChemDisplay::gdump() {
 //-------------------------------
 //void ChemDisplay::open(){ gfx.open(width,height,"ChemDisplay");	gfx.clear();}
 //-------------------------------
-
+/*
 int	ChemDisplay::screenx(void){
 	int px = (gfx.width/2) + offsetx;
-	if (pos !=NULL)	{
-		px += (pos[PEPPOS_X] * scale);
+	if (peppos !=NULL)	{
+		px += (peppos[PEPPOS_X] * scale);
 	}
 	return px;
 }
 //-------------------------------
 int	ChemDisplay::screeny(void){
 	int py = (gfx.height/2) + offsety;
-	if (pos !=NULL)	{
-		py += (pos[PEPPOS_Y] * scale);
+	if (peppos !=NULL)	{
+		py += (peppos[PEPPOS_Y] * scale);
 	}
 	return (gfx.height-py);
 }
+*/
 //-------------------------------
 void ChemDisplay::grid(int red, int green, int blue){
 	PeptidePos p;
-	pos = p.dim;
-	if (pos==NULL) return;
+	attrib.pos = p.dim;
+	if (attrib.pos==NULL) return;
 
 	//gfx.color(red, green, blue);
 
-	int x_steps = (gfx.width / scale)/2;
-	int y_steps = (gfx.height / scale)/2;
+	int x_steps = (gfx.width / attrib.scale)/2;
+	int y_steps = (gfx.height /attrib. scale)/2;
 
 
 	for (int x=-x_steps; x < x_steps; x++) {
-		pos[PEPPOS_X] = x;
-		int px = screenx();
+		attrib.pos[PEPPOS_X] = x;
+		int px = attrib.getx();
 		if (x==0)
 			gfx.color(red, green, blue);
 		else
@@ -94,8 +193,8 @@ void ChemDisplay::grid(int red, int green, int blue){
 	}
 
 	for (int y=-y_steps; y<y_steps; y++) {
-		pos[PEPPOS_Y] = y;
-		int py = screeny();
+		attrib.pos[PEPPOS_Y] = y;
+		int py = attrib.gety();
 		if (y==0)
 			gfx.color(red, green, blue);
 		else
@@ -106,6 +205,8 @@ void ChemDisplay::grid(int red, int green, int blue){
 	}
 	gfx.flush();
 
+	attrib.pos = NULL;
+
 }
 //-------------------------------
 void ChemDisplay::draw_pep(Peptide *pep) {
@@ -115,29 +216,29 @@ void ChemDisplay::draw_pep(Peptide *pep) {
 
 	PeptidePos new_peppos;
 	PepPosVecType *newpos = new_peppos.dim;
-	PepPosVecType *saved_pos = pos;
+	PepPosVecType *saved_pos = attrib.pos;
 
 
 	// if no base offset
-	if (pos==NULL) {
+	if (attrib.pos==NULL) {
 		// then just use pep.pos
-		pos= pep->getpos();
+		attrib.pos= pep->getpos();
 	} else { // pos != NULL
 
 		PepPosVecType *pep_pos = pep->getpos();
 		// newpos = pos + pep_pos
 		for (int i=0; i<PepPosVecMax; i++){
-			newpos[i] = pos[i];
+			newpos[i] = attrib.pos[i];
 			if (pep_pos!=NULL) {
 				newpos[i] += pep_pos[i];
 			}
 		} //----
-		pos= newpos;
+		attrib.pos= newpos;
 	}
 
-	int x = screenx();
-	int y = screeny();
-	int s = scale/2;
+	int x = attrib.getx();
+	int y = attrib.gety();
+	int s = attrib.scale/2;
 
 	gfx.color(colr, colg, colb);
 	gfx.line(x-s, y-s, x+s, y-s);
@@ -177,7 +278,7 @@ void ChemDisplay::draw_pep(Peptide *pep) {
 
 	//-------------
 	// (restore pos)
-	pos = saved_pos;
+	attrib.pos = saved_pos;
 	gfx.flush();
 
 }
@@ -226,17 +327,17 @@ void ChemDisplay::draw_match(MoleculeMatchPos *matchpos){
 		//printf("########### ROTMOLE ############\n");
 		//matchpos-> rotmole-> dump();
 		//printf("########### ROTMOLE ############\n");
-		pos = matchpos-> current_pos.dim;
+		attrib.pos = matchpos-> current_pos.dim;
 		setcol(0,100,0);
 		gfx.cprintg("rotemole");
-		pos = matchpos-> current_pos.dim;
+		attrib.pos = matchpos-> current_pos.dim;
 		draw_mole(matchpos-> rotmole);
 	}
 
 	if (matchpos-> get_test_item()!=NULL) {
 		setcol(100,100,100);
 		gfx.cprintg("test_item");
-		pos = matchpos-> current_pos.dim;
+		attrib.pos = matchpos-> current_pos.dim;
 		draw_pep(matchpos-> get_test_item()-> item);
 	}
 

@@ -147,11 +147,12 @@ void Concentration_CLI::dump() {
 Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
 	//memset(last_line, '\0', MAX_LINELEN);
 	args = NULL;
-	run_callback = NULL;
+	callback = NULL;
 	last_result = 0;
 	core = &vm;
 	if (core!=NULL)
 		core-> concvol = &cvol;
+		display.core = core;
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}
@@ -275,14 +276,16 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 
 	}
 
-	if (run_callback!=NULL) {
-
+	if (callback!=NULL) {
+/*
 		char cmd[128];
 		char line[256];
 		argstr(cmd, 127, argc, argv);
 		sprintf(line, "Command[%s] Result[%d]", cmd, last_result);
 		printf("Callback:%s\n", line);
 		run_callback(line);
+		*/
+		callback(this, argc-1, &argv[1]);
 	}
 
 
