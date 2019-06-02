@@ -46,17 +46,19 @@ ChemMenu::ChemMenu() {
 	sizex =0;
 	sizey =0;
 	title = NULL;
+	display = NULL;
 };
 //------------------------------
 ChemMenu::~ChemMenu() { };
 //------------------------------
 void ChemMenu::dump(void){
 	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
-	printf("title[%s]", title);
-	printf("mode[%d]", mode);
-	printf("col[%d,%d,%d]", col.r, col.g, col.b);
-	printf("selcol[%d,%d,%d]", selcol.r, selcol.g, selcol.b);
-	printf("step[%d,%d].size[%d,%d]\n", stepx, stepy, sizex, sizey);
+	printf(".display[0x%zX]",	(long unsigned int) display);
+	printf(".title[%s]", title);
+	printf(".mode[%d]", mode);
+	printf(".col[%d,%d,%d]", col.r, col.g, col.b);
+	printf(".selcol[%d,%d,%d]", selcol.r, selcol.g, selcol.b);
+	printf(".step[%d,%d].size[%d,%d]\n", stepx, stepy, sizex, sizey);
 	attrib.dump(); NL
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
@@ -69,22 +71,24 @@ void ChemMenu::dump(void){
 }
 //------------------------------
 void ChemMenu::layout_buttons(void){
-	int posx = attrib.getx();
-	int posy = attrib.gety();
+	int offsetx = attrib.getx();
+	int offsety = attrib.gety();
+
+	int px=0;
+	int py=0;
 
 	// test by fixing abs pos of each button
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		current_item-> item-> attrib.gfx = attrib.gfx;
-		current_item-> item-> attrib.offsetx = posx;
-		current_item-> item-> attrib.offsety = posy;
-		//PRINT("--- pos[%d,%d] -->\n", posx, posy);
-		//current_item-> item-> attrib.dump(); NL
-		//current_item-> item-> dump(); NL
-		posx+= stepx;
-		posy+= stepy;
-		sizex = posx;
-		sizey = posy;
+//		current_item-> item-> attrib.gfx = attrib.gfx;
+		current_item-> item-> attrib.offsetx = offsetx;
+		current_item-> item-> attrib.offsety = offsety;
+		//PRINT("--- pos[%d,%d] -->\n", posx, posy); current_item-> item-> dump(); NL
+		current_item-> item-> attrib.pos[PEPPOS_X] = px;
+		current_item-> item-> attrib.pos[PEPPOS_Y] = py;
+		px +=2;
+	//	offsetx+= stepx; offsety+= stepy;
+	//	sizex = offsetx; sizey = offsety;
 
 		//-----
 		current_item = current_item-> next;
@@ -98,9 +102,11 @@ ChemMenuButton *ChemMenu::add_button(const char *_text){
 
 	if ((new_button_item!=NULL)&&(new_button_item-> item!=NULL)) {
 		new_button_item-> item-> attrib.gfx = attrib.gfx;
-		new_button_item-> item-> text = _text;
+		new_button_item-> item-> attrib.scalex = attrib.scalex;
+		new_button_item-> item-> attrib.scaley = attrib.scaley;
 		new_button_item-> item-> sizex = button_sizex;
 		new_button_item-> item-> sizey = button_sizey;
+		new_button_item-> item-> text = _text;
 		return new_button_item-> item;
 		PRINT("Add ..\n");
 	}
@@ -108,8 +114,8 @@ ChemMenuButton *ChemMenu::add_button(const char *_text){
 	return NULL;
 }
 //------------------------------
-void ChemMenu::draw(ChemDisplay *display){
-
+void ChemMenu::draw(void){
+	if (display==NULL) return;
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 		//PRINT("---\n");

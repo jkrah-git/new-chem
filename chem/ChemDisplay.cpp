@@ -69,7 +69,8 @@ ChemDisplay::ChemDisplay() {
 	gfx.title = "NewChem";
 	gfx.width = 1000;
 	gfx.height = 800;
-	attrib.scale = 40;
+	attrib.scalex = 30;
+	attrib.scaley = 20;
 
 	core = NULL;
 	pep = NULL;
@@ -79,7 +80,7 @@ ChemDisplay::ChemDisplay() {
 	matchpos = NULL;
 	menu_list = NULL;
 	attrib.gfx = &gfx;
-	clearatt();
+	//clearatt();
 }
 //-------------------------------
 //-------------------------------
@@ -102,19 +103,20 @@ void ChemDisplay::draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecTy
 //-------------------------------
 //-------------------------------	//-------------------------------
 //- OLD  ------------------------------
-
+/*
 void ChemDisplay::clearatt(){
 	attrib.offsetx = 0;
 	attrib.offsety = 0;
 	attrib.pos = NULL;
 }
+*/
 //-------------------------------
 ChemDisplay::~ChemDisplay() {}
 //-------------------------------
 void ChemDisplay::dump() {
 	printf("ChemDisplay[0x%zX].", (long unsigned int) this);
-	printf("size[%d,%d].scale[%f].off[%d,%d].pos[0x%zX]\n",
-			gfx.width, gfx.height, attrib.scale, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
+	printf("size[%d,%d].scale[%d,%d].off[%d,%d].pos[0x%zX]\n",
+			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
 			//gfx.width, gfx.height, attrib.scale, col.r, col.g, col.b, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
 	if (attrib.pos !=NULL) {
 		printf(".. pos[%d,%d,%d]\n", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
@@ -122,14 +124,17 @@ void ChemDisplay::dump() {
 }
 //-------------------------------
 void ChemDisplay::gdump() {
-	char msg[128];
+	char msg[256];
 
-	sprintf(msg, "ChemDisplay[0x%zX].", (long unsigned int) this);
-	gfx.printg(msg);
+	//sprintf(msg, "ChemDisplay[0x%zX].", (long unsigned int) this);
+	//gfx.printg(msg);
 //	sprintf(msg, "size[%d,%d].scale[%f].col[%d,%d,%d].off[%d,%d].pos[0x%zX]",
 //			gfx.width, gfx.height, attrib.scale, col.r, col.g, col.b, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
-	sprintf(msg, "size[%d,%d].scale[%f].off[%d,%d].pos[0x%zX]",
-			gfx.width, gfx.height, attrib.scale, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
+	sprintf(msg, "ChemDisplay[0x%zX][%s].size[%d,%d].scale[%d, %d].off[%d,%d].pos[0x%zX] CursPos[%d,%d]",
+			(long unsigned int) this,
+			gfx.title,
+			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos,
+			curs_pos.dim[PEPPOS_X], curs_pos.dim[PEPPOS_Y] );
 	gfx.printg(msg);
 
 	if (attrib.pos !=NULL) {
@@ -159,42 +164,58 @@ int	ChemDisplay::screeny(void){
 }
 */
 //-------------------------------
+void ChemDisplay::curs(int red, int green, int blue){
+	Peptide curs;
+	curs.sig = '?';
+	curs.pos =  curs_pos;
+	draw_pep(&curs, red, green, blue);
+}
+//-------------------------------
 void ChemDisplay::grid(int red, int green, int blue){
-	PeptidePos p;
-	attrib.pos = p.dim;
-	if (attrib.pos==NULL) return;
 
-	//gfx.color(red, green, blue);
+	PepPosVecType	*oldpos = attrib.pos;
+	PeptidePos pos;
 
-	int x_steps = (gfx.width / attrib.scale)/2;
-	int y_steps = (gfx.height /attrib. scale)/2;
+	int oldposx = 0;
+	int oldposy = 0;
+
+	if (attrib.pos!=NULL) {
+		oldposx = attrib.pos[PEPPOS_X];
+		oldposy = attrib.pos[PEPPOS_Y];
+	} else {
+		attrib.pos = pos.dim;
+	}
+	int x_steps = (gfx.width / attrib.scalex)/2;
+	int y_steps = (gfx.height / attrib.scaley)/2;
 
 
-	for (int x=-x_steps; x < x_steps; x++) {
-		attrib.pos[PEPPOS_X] = x;
+	for (int x=(-x_steps-oldposx); x < (x_steps-oldposx); x++) {
+		attrib.pos[PEPPOS_X] = x+oldposx;
 		int px = attrib.screenx();
-		if (x==0)
-			gfx.color(red, green, blue);
-		else
-			gfx.color(red/2, green/2, blue/2);
+		if (x==0)	gfx.color(red, green, blue);
+		else		gfx.color(red/2, green/2, blue/2);
 
 		gfx.line(px ,0, px, gfx.height);
 	}
 
-	for (int y=-y_steps; y<y_steps; y++) {
-		attrib.pos[PEPPOS_Y] = y;
+	for (int y=(-y_steps-oldposy); y< (y_steps-oldposy); y++) {
+		attrib.pos[PEPPOS_Y] = y+oldposy;
 		int py = attrib.screeny();
-		if (y==0)
-			gfx.color(red, green, blue);
-		else
-			gfx.color(red/2, green/2, blue/2);
+		if (y==0)	gfx.color(red, green, blue);
+		else		gfx.color(red/2, green/2, blue/2);
 
 		gfx.line(0, py, gfx.width, py);
 
 	}
-	gfx.flush();
 
-	attrib.pos = NULL;
+	if (attrib.pos!=NULL) {
+		attrib.pos[PEPPOS_X] = oldposx;
+		attrib.pos[PEPPOS_Y] = oldposy;
+	}
+
+
+	gfx.flush();
+	attrib.pos = oldpos;
 
 }
 //-------------------------------
@@ -226,31 +247,33 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 
 	int x = attrib.screenx();
 	int y = attrib.screeny();
-	int s = attrib.scale/2;
+	int sx = attrib.scalex/2;
+	int sy = attrib.scaley/2;
 
 //	gfx.line(x-s, y-s, x+s, y-s);
 //	gfx.line(x+s, y-s, x+s, y+s);
 //	gfx.line(x+s, y+s, x-s, y+s);
 //	gfx.line(x-s, y+s, x-s, y-s);
-	gfx.box(x,y,s);
+	gfx.box(x,y,sx, sy);
 
-	int t = s/2;
+	int tx = sx/2;
+	int ty = sy/2;
 	switch (pep-> getrot()) {
 	case 0:
-		gfx.line(x-t, y+s, x, y+t);
-		gfx.line(x+t, y+s, x, y+t);
+		gfx.line(x-tx, y+sy, x, y+ty);
+		gfx.line(x+tx, y+sy, x, y+ty);
 		break;
 	case 1:
-		gfx.line(x-s, y-t, x-t, y);
-		gfx.line(x-s, y+t, x-t, y);
+		gfx.line(x-sx, y-ty, x-tx, y);
+		gfx.line(x-sx, y+ty, x-tx, y);
 		break;
 	case 2:
-		gfx.line(x-t, y-s, x, y-t);
-		gfx.line(x+t, y-s, x, y-t);
+		gfx.line(x-tx, y-sy, x, y-ty);
+		gfx.line(x+tx, y-sy, x, y-ty);
 		break;
 	case 3:
-		gfx.line(x+s, y-t, x+t, y);
-		gfx.line(x+s, y+t, x+t, y);
+		gfx.line(x+sx, y-ty, x+tx, y);
+		gfx.line(x+sx, y+ty, x+tx, y);
 		break;
 	}
 
@@ -258,10 +281,8 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 	char str[64];
 	sprintf(str, "0x%x", pep-> get());	gfx.color(200,200,200);	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
 
-	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[1], pep->rot);
+	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[PEPPOS_Y], pep->rot);
 	gfx.printg(str);
-
-
 
 	//-------------
 	// (restore pos)
@@ -361,83 +382,95 @@ void ChemDisplay::draw_vm(Concentration_VM *vm){
 ChemMenu	*ChemDisplay::add_menu(const char *_title){
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = menu_list->add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
+		new_menu_item-> item-> display = this;
 		new_menu_item-> item-> attrib.gfx = &gfx;
-		new_menu_item-> item-> attrib.offsetx = attrib.scale/2;
-		new_menu_item-> item-> attrib.offsety = attrib.scale/2;
-		new_menu_item-> item-> button_sizex = attrib.scale;
-		new_menu_item-> item-> button_sizey = attrib.scale;
-		new_menu_item-> item-> stepx = attrib.scale;
+		new_menu_item-> item-> attrib.scalex = attrib.scalex;
+		new_menu_item-> item-> attrib.scaley = attrib.scaley;
+		//new_menu_item-> item-> attrib.offsetx = attrib.scalex/2;
+		//new_menu_item-> item-> attrib.offsety = attrib.scaley/2;
+		new_menu_item-> item-> button_sizex = attrib.scalex-1;
+		new_menu_item-> item-> button_sizey = attrib.scaley-1;
+//		new_menu_item-> item-> stepx = attrib.scale;
 		new_menu_item-> item-> title = _title;
 		return new_menu_item-> item;
 	}
 	return NULL;
 }
 //-------------------------------
-void ChemDisplay::main(void) {
-	gfx.title = (const char*) "- NewChem -";
+void ChemDisplay::draw_menus(void){
+	if (menu_list==NULL) return;
+
+	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list-> gethead();
+	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
+		current_item-> item-> draw();
+		//-------
+		current_item = current_item->next;
+	}
+
+}
+//-------------------------------
+int ChemDisplay::main(int argc, char **argv) {
+	if (core==NULL) { PRINT("[null core]\n"); return -1; }
+	if (menu_list==NULL) { PRINT("[null menu_list]\n"); return -2; }
+
+	//gfx.title = (const char*) "- NewChem -";
 	gfx.open();
-	gfx.clear();
-	gfx.printg("Main...");
+	PRINT("-----RENDER ----\n");
+	while(true) {
+		gfx.clear();
+		grid(100,100,100);
+		gdump();
 
-	if (core==NULL) {
-		gfx.printg("- Null Core -");
-		return;
+
+		if (menu_list!=NULL) {
+			// clear the list
+			menu_list-> clear();
+
+			ChemMenu *menu = add_menu("test_menu");
+			if (menu!=NULL) {
+				menu-> add_button("A");
+				menu-> add_button("B");
+				menu-> add_button("C");
+				menu->layout_buttons();
+				menu-> dump();
+			}
+
+			//menu_list-> dump();
+		}
+
+		curs(200,200,0);
+		draw_menus();
+		int x=0;
+		int y=0;
+
+		PRINT("# waiting ...\n");
+		int w = gfx.wait();
+//		if ((w>31)&&(w<127)) {	PRINT("# recieved[%c][%d][0x%x] [%d][%d] ...\n", w, w, w, gfx.xpos(), gfx.ypos());		}
+//		else {					PRINT("# recieved[][%d][0x%x] [%d][%d] ...\n", w, w, gfx.xpos(), gfx.ypos());		}
+		if (w==27) {			PRINT("# [ESC][%d]##\n", w);	break;	}
+
+		switch(w) {
+		// MOUSE CLICK
+		case 01:	//curs_pos.dim[PEPPOS_X] --;
+			x = attrib.getxcell(gfx.xpos());
+			y = attrib.getycell(gfx.ypos());
+	//		PRINT("mouse: xcell[%d,%d]", x, y);
+			curs_pos.dim[PEPPOS_X]=x;
+			curs_pos.dim[PEPPOS_Y]=y;
+			break;
+		// ARROWS
+		case 81:	curs_pos.dim[PEPPOS_X] --;	break;
+		case 82:	curs_pos.dim[PEPPOS_Y] ++;	break;
+		case 83:	curs_pos.dim[PEPPOS_X] ++;	break;
+		case 84:	curs_pos.dim[PEPPOS_Y] --;	break;
+		}
+
 	}
-	PRINT("-----\n");
-	grid(100,100,100);
+	// -------------------------------
 
-	if (menu_list!=NULL) {
-		// clear the list
-		menu_list-> clear();
-		// 	mylist<ChemMenu> 	menu_list;
-
-		PeptidePos Apos;
-		ChemMenu *menu = add_menu("test_menu");
-		if (menu!=NULL) {
-			menu-> add_button("A");
-			menu-> add_button("B");
-			menu-> add_button("C");
-			menu->layout_buttons();
-		}
-		/*
-		// --------- try to add a button
-		mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = menu_list->add();
-		if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
-			ChemMenu *menu = new_menu_item-> item;
-
-			menu-> attrib.gfx = &gfx;
-			menu-> attrib.offsetx = attrib.scale/2;
-			menu-> attrib.offsety = attrib.scale/2;
-			menu-> button_sizex = attrib.scale;
-			menu-> button_sizey = attrib.scale;
-			menu-> stepx = attrib.scale;
-			menu-> title = "TestMenu";
-			menu-> add_button("A");
-			menu-> add_button("B");
-			menu-> add_button("C");
-			menu->layout_buttons();
-		}
-		//if ((new_menu!=NULL) && (new_menu-> item !=NULL)) {	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *new_button = new_menu-> button_list.gethead();
-		 */
-
-
-		//---------- draw all items
-		mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list-> gethead();
-		while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-			current_item-> item-> draw(this);
-			//-------
-			current_item = current_item->next;
-		}
-	}
-
-
-
-
-	// else core OK
-	//draw_vm(core);
-	//---------------
-	gfx.flush();
-
+	PRINT("# done ...\n");
+	gfx.close();
+	return 0;
 }
 //-------------------------------
 

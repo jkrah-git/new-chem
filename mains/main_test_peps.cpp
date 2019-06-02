@@ -115,117 +115,137 @@ int test_mole(void) {
 
 };
 
-
 // ----------------------------------------
-void test_offset(ChemDisplay *display, int x, int y, PepPosVecType *p) {
+void test_offset(ChemDisplay *display, int x, int y, PepPosVecType *pv) {
 	if (display!=NULL) {
+		PRINT("==>1 \n");
 		display-> gfx.clear();
-		display-> clearatt();
+		//display-> clearatt();
 		//--------
-		//display-> setcol(80,80,80);
-		display-> gfx.color(100, 100, 100);
-		display-> grid();
-
 		display-> attrib.offsetx = x;
 		display-> attrib.offsety = y;
-		display-> attrib.pos = p;
+		display-> attrib.pos = pv;
+		PRINT("==>2\n");
+		display-> grid();
 		display-> gdump();
+		PRINT("==>3\n");
+		display-> attrib.dump(); NL
 	}
 }
 //---------------------
-int test_display_peps(ChemDisplay *display) {
-	printf("test_display_peps:: start..\n");
-	printf("test_display_peps:: =======\n");
 
+int test_display_peps(ChemDisplay *display) {
+	PRINT("# start..\n");
+	PRINT("# =======\n");
+	display-> gfx.open();
+	display-> attrib.pos  = NULL;
 	Peptide pep;
 	pep.set('A');
-	PeptidePos pos;
+	ChemDisplayColor red(100,0,0);
+	ChemDisplayColor green(0,100,0);
 
+	PRINT("# loop1\n");
+	PRINT("# =======\n");
 	for (int x=-3; x<4; x++) {
+		PRINT("# x=[%d]\n", x);
 		test_offset(display, x*5, x*5, NULL);
-		//display-> setcol(100,0,0);
-		display-> gfx.color(100, 0, 0);
+		display-> gfx.color(&red);
+		display-> gdump();
 		display-> draw_pep(&pep);
-		display-> gfx.wait();
+		PRINT("# waiting ...\n");
+		int w = display-> gfx.wait();
+		PRINT("# recieved[%d] [%d][%d] ...\n", w, display-> gfx.saved_xpos, display-> gfx.saved_ypos);
 	}
-
+	PRINT("# loop2\n");
+	PRINT("# =======\n");
+	test_offset(display, 0, 0, NULL);
 	for (int x=-3; x<4; x++) {
+		PRINT("# x=[%d]\n", x);
+		PeptidePos pos;
 		pos.dim[PEPPOS_X] = x;
 		pos.dim[PEPPOS_Y] = x;
 		test_offset(display, 0, 0, pos.dim);
-		//display-> setcol(100,100,0);
-		display-> gfx.color(100, 100, 0);
-		display-> dump();
 
-		display-> draw_pep(&pep);
+		//display-> gfx.color(100, 100, 0);
+
+		display-> draw_pep(&pep, 100, 100, 0);
 		display-> gfx.wait();
 	}
-	printf("test_display_peps:: =======\n");
-	printf("test_display_peps:: end..\n");
+	PRINT("=======\n");
+	PRINT(":: end..\n");
+	display-> gfx.close();
 	return 0;
 }
-//---------------------
-int test_display_moles(ChemDisplay *display, int section) {
-	printf("test_display_moles:: start..\n");
-	printf("test_display_moles:: =======\n");
 
-	Molecule m;
-	m.test();
-	PeptidePos pos;
-	int r;
-
-	r = (section & 1);
-	if (section & 1) {
-		//printf("test_display_moles== [%d] =======\n". r);
-		for (int x=-3; x<4; x++) {
-			test_offset(display, x*5, x*5, NULL);
-			//display-> setcol(0,100,0);
-			display-> gdump();
-
-			//display.draw_pep(&pep);
-			display-> draw_mole(&m, 0, 100, 0);
-			display-> gfx.wait();
-		}
-	}
-
-	r = (section & 2);
-	if (section & 2) {
-		//printf("test_display_moles ==[%d] =======\n", r);
-		for (int x=-3; x<4; x++) {
-			pos.dim[PEPPOS_X] = x;
-			pos.dim[PEPPOS_Y] = x;
-			test_offset(display, 0, 0, pos.dim);
-			//display->setcol(0,100,100);
-			display->dump();
-
-			//display.draw_pep(&pep);
-			display-> draw_mole(&m, 0, 100, 100);
-			display-> gfx.wait();
-		}
-	}
-	printf("test_display_moles:: =======\n");
-	printf("test_display_moles:: end..\n");
-	return 0;
-}
 //-------------------
 int test_display(int mode) {
-	printf("test_display:: start..\n");
+	printf("test_display:: start [%d]..\n", mode);
 	printf("test_display:: =======\n");
+
 	ChemDisplay display;
-	display.gfx.open();
-	display.gfx.clear();
-	display.clearatt();
-	//--------
-
-	//char msg[128];
-	//sprintf(msg, "HEllow World\n");
-	//display.gfx.printg(msg);
-	//display.gfx.wait();
-
+	//display.gfx.open();
 	//---------------
-	//test_display_peps(&display);
-	test_display_moles(&display, mode);
+	Molecule m;
+	m.test();
+	Peptide pep;
+	pep.set('A');
+	PeptidePos pos;
+	ChemDisplayColor green(0, 100, 0);
 
+	//-------------------- 0x?1
+	int M1 = (mode & 1);
+	int M2 = (mode & 2);
+	int M3 = (mode & 4);
+	printf("test_display:: === M1[%d] M2[%d] M3[%d] ====\n", M1, M2, M3);
+
+	//-------------------------- M3
+	if (M3>0) {
+		test_display_peps(&display);
+		return 0;
+	}
+	else {
+		display.gfx.open();
+		if (M1==0) {
+			//printf("test_display_moles== [%d] =======\n". r);
+			for (int x=-3; x<4; x++) {
+				PRINT("# x=[%d]\n", x);
+				display.attrib.dump(); NL
+				PRINT("# -- offset tests ---\n");
+				test_offset(&display, x*5, x*5, NULL);
+
+				//------- render / wait
+				//display.gdump(&green);
+				if (M2==0) {	display.draw_pep(&pep, &green);	}
+				else {			display.draw_mole(&m, &green);	}
+				PRINT("# waiting ...\n");
+				display.gfx.wait();
+				//-----------------------
+			}
+		}
+		//-------------------- 0x1?
+		else {
+			PeptidePos pos;
+			PepPosVecType *pv = pos.dim;
+			//printf("test_display_moles== [%d] =======\n". r);
+			for (int x=-3; x<4; x++) {
+				PRINT("# x=[%d]\n", x);
+				pv[PEPPOS_X] = x;
+				pv[PEPPOS_Y] = x;
+				test_offset(&display, 0, 0, pv);
+				//------- render / wait
+				//display.gdump(&green);
+				if (M2==0) {	display.draw_pep(&pep, &green);	}
+				else {			display.draw_mole(&m, &green);	}
+				PRINT("# waiting ...\n");
+				display.gfx.wait();
+				//-----------------------
+			}
+		}
+	}
+	PRINT("ENDING....\n");
+	display.attrib.init();
+	//-------------------- 2
+	//test_offset(&display, 0, 0, NULL);
 	display.gfx.close();
 	printf("test_display:: =======\n");
 	printf("test_display:: end..\n");
@@ -273,7 +293,7 @@ int run(int argc, char **argv) {
 		if ( (strcmp(argv[0], "test_pep")==0))		{ return test_pep(); }
 //		if ( (strcmp(argv[0], "test_addpep")==0))	{ return test_addpep(); }
 		if ( (strcmp(argv[0], "test_mole")==0))		{ return test_mole(); }
-		if ( (strcmp(argv[0], "test_display")==0))	{ return test_display(2); }
+		if ( (strcmp(argv[0], "test_display")==0))	{ return test_display(0); }
 		if ( (strcmp(argv[0], "test_printb")==0))	{ return test_printb(); }
 		if ( (strcmp(argv[0], "test_rot")==0))		{ return test_rot(); }
 

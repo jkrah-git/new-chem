@@ -30,13 +30,13 @@ class ChemDisplay;
 class ChemMenuButton {
 public:
 	ChemDisplayAttrib	attrib;
+	int		sizex;
+	int		sizey;
 	CHEMMENUBUTON_TYPE	mode;
 	bool		_selected;
 	const char	*text;
 	void		*data;
 	int		(*callback)(Concentration_CLI*, int, char**);
-	int		sizex;
-	int		sizey;
 	//----------------
 	ChemMenuButton();
 	virtual ~ChemMenuButton();

@@ -13,6 +13,7 @@ class ChemMenu;
 //------------------------------
 class ChemMenu {
 public:
+	ChemDisplay 			*display;
 	ChemDisplayAttrib		attrib;
 	CHEMMENUBUTON_TYPE		mode;
 	mylist<ChemMenuButton> 	button_list;
@@ -31,7 +32,8 @@ public:
 	virtual ~ChemMenu();
 	void	dump(void);
 	//------------
-	void	draw(ChemDisplay *display);
+//	void	draw(ChemDisplay *display);
+	void	draw(void);
 	void	layout_buttons(void);
 	ChemMenuButton *add_button(void){ return add_button(NULL); };
 	ChemMenuButton *add_button(const char *_text);

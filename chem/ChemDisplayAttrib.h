@@ -17,25 +17,30 @@
 class ChemDisplayAttrib {
 
 public:
+	GFX_Base	*gfx;
 	int 		offsetx;
 	int 		offsety;
   PepPosVecType	*pos;
-	float 		scale;
-	GFX_Base	*gfx;
+	int 		scalex;
+	int 		scaley;
+
 	// ------
  	//----------------
   	ChemDisplayAttrib();
   	virtual ~ChemDisplayAttrib();
+  	void	init(void);
   	void	dump(void);
   	//------
-  	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scale);
+  	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley);
   	void	setoffset(int _offsetx, int _offsety);
   	void	setpos(PepPosVecType *_pos);
-  	void	setscale(int _scale);
+  	void	setscale(int sx, int sy);
 
   	// get local(x,y) (ie 0,0 = centre)
   	int		getx(void);
   	int		gety(void);
+  	int		getxcell(int screenx);
+  	int		getycell(int screeny);
   	// get final screen(x,y)
   	int		screenx(void);
   	int		screeny(void);

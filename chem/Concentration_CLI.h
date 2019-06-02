@@ -38,7 +38,7 @@ private:
 public:
 	Concentration_VM			*core;
 	int							last_result;
-
+// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;
 	mylist<CLI_Command>			load_cmdlist;

@@ -14,7 +14,7 @@
 int	cli_stack(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -29,7 +29,7 @@ int	cli_stack(Concentration_CLI *cli, int argc, char **argv){
 int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -48,7 +48,7 @@ int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -108,7 +108,7 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -124,7 +124,7 @@ int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -163,7 +163,7 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -183,7 +183,7 @@ int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -213,7 +213,7 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -239,7 +239,7 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -281,7 +281,7 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 int	cli_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -297,7 +297,7 @@ int	cli_mole(Concentration_CLI *cli, int argc, char **argv){
 int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -318,7 +318,7 @@ int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
 int	cli_mole_pop(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -398,7 +398,7 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
 		r = cli-> core-> mole->addpep(item-> item-> get());
-		if (r<0) { PRINT("addpep = [%d]\n", r); }
+		if (r<0) { LOG("addpep = [%d]\n", r); }
 		else { c++; }
 		// ---
 		item = item-> next;
@@ -426,7 +426,7 @@ int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		r = cli-> core-> mole->addpep(hex);
-		PRINT("addpep = [%d] = [%d]\n", hex, r);
+		LOG("addpep = [%d] = [%d]\n", hex, r);
 	}
 
 	return r;
@@ -553,7 +553,7 @@ int	cli_mole_fromvar(Concentration_CLI *cli, int argc, char **argv){
 int	cli_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -100;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -592,7 +592,7 @@ int	cli_conc_push(Concentration_CLI *cli, int argc, char **argv){
 int	cli_conc_pop(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -844,7 +844,7 @@ int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
 int	cli_var(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -889,7 +889,7 @@ int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
 		return -1;
 	}
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -953,7 +953,7 @@ int	cli_var_del(Concentration_CLI *cli, int argc, char **argv){
 int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
 	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
 	//-------
-	// PRINT(": argc[%d]", argc);
+	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
@@ -994,62 +994,62 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 
 	// 'STACK' commands
 	cli-> stack_cmdlist.clear();
-	sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_stack, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_dump, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_clear, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
-	//sprintf(name, "comp"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_comp, (char*) name);		PRINT("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_stack, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_dump, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_clear, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "comp"); 		r = cli-> addcmd(&cli-> stack_cmdlist, 	cli_stack_comp, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'PEP' commands
 	cli-> pep_cmdlist.clear();
-	sprintf(name, "pep");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_pep, (char*) name);				PRINT("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_push, (char*) name);		PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pop, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_ld, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "hex"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_hex, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "pos"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pos, (char*) name);			PRINT("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pep");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_pep, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_push, (char*) name);		LOG("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pop, (char*) name);			LOG("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_ld, (char*) name);			LOG("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "hex"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_hex, (char*) name);			LOG("pep_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pos"); 		r = cli-> addcmd(&cli-> pep_cmdlist, 	cli_pep_pos, (char*) name);			LOG("pep_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'MOLE' (reg) commands
 	cli-> mole_cmdlist.clear();
-	sprintf(name, "mole");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_mole, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "mole");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_mole, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 
-	sprintf(name, "clear"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_clear_mole, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_push, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_pop, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_ld, (char*) name);			PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "addpep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_addpep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "deltail"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_deltail, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clear"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_clear_mole, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_push, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_pop, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_ld, (char*) name);			LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "addpep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_addpep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "deltail"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_deltail, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 
 
-	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_fromvar, (char*) name);	PRINT("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_fromvar, (char*) name);	LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'CONC' (reg) commands
 	cli-> conc_cmdlist.clear();
-	sprintf(name, "conc");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_conc, (char*) name);			PRINT("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_push, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_pop, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_ld, (char*) name);			PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "mole");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_mole, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "adj");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_adj, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "commit");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_commit, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "tovol");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_tovol, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "fromvol");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_fromvol, (char*) name);	PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_tovar, (char*) name);		PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_fromvar, (char*) name);	PRINT("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "conc");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_conc, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_push, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_pop, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_ld, (char*) name);			LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "mole");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_mole, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "adj");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_adj, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "commit");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_commit, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "tovol");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_tovol, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "fromvol");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_fromvol, (char*) name);	LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_tovar, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_fromvar, (char*) name);	LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'VAR' commands
 	cli-> var_cmdlist.clear();
-	sprintf(name, "var");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_var, (char*) name);				PRINT("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_help, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "get"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_get, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "set"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_set, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_clear, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "del"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_del, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_run, (char*) name);		PRINT("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "var");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_var, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_help, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "get"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_get, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "set"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_set, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_clear, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "del"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_del, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> var_cmdlist, 	cli_var_run, (char*) name);		LOG("var_cmdlist[%s] = [%d]\n", name, r);
 	//----------
-	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_var_run, (char*) name);		PRINT("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "run"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_var_run, (char*) name);		LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }

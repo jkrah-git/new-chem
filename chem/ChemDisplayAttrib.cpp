@@ -40,16 +40,20 @@ public:
 
 
  */
-//--------------------------
-ChemDisplayAttrib::ChemDisplayAttrib() {
-	offsetx = 0;
-	offsety = 0;
-	pos = NULL;
-	scale = 30;
+ChemDisplayAttrib::ChemDisplayAttrib(){
+	scalex = 10;
+	scaley = 10;
 	gfx	= NULL;
+	init();
 }
 //--------------------------
 ChemDisplayAttrib::~ChemDisplayAttrib() {}
+//--------------------------
+void ChemDisplayAttrib::init() {
+	offsetx = 0;
+	offsety = 0;
+	pos = NULL;
+}
 //--------------------------
 void ChemDisplayAttrib::dump(void) {
 	printf("ChemDisplayAttrib[0x%zX]:",	(long unsigned int) this);
@@ -60,26 +64,27 @@ void ChemDisplayAttrib::dump(void) {
 	} else {
 		printf("[%d,%d]", pos[PEPPOS_X], pos[PEPPOS_Y]);
 	}
-	printf(".scale[%f]", scale);
+	printf(".scale[%d,%d]", scalex, scaley);
 	printf(".getxy[%d,%d]", screenx(), screeny());
 
 }
 //--------------------------
 void ChemDisplayAttrib::setoffset(int _offsetx, int _offsety){	offsetx = _offsetx;	offsety = _offsety;}
 void ChemDisplayAttrib::setpos(PepPosVecType *_pos){	pos = _pos;	}
-void ChemDisplayAttrib::setscale(int _scale){	scale = _scale;		}
+void ChemDisplayAttrib::setscale(int sx, int sy){	scalex = sx; scaley = sy;	}
 //--------------------------
-void ChemDisplayAttrib::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scale){
+void ChemDisplayAttrib::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley){
 	offsetx = _offsetx;
 	offsety = _offsety;
 	pos = _pos;
-	scale = _scale;
+	scalex = _scalex;
+	scaley = _scaley;
 }
 //--------------------------
 int ChemDisplayAttrib::getx(void){
 	int px = offsetx;
 	if (pos !=NULL)	{
-		px += (pos[PEPPOS_X] * scale);
+		px += (pos[PEPPOS_X] * scalex);
 	}
 	return px;
 }
@@ -87,9 +92,17 @@ int ChemDisplayAttrib::getx(void){
 int ChemDisplayAttrib::gety(void){
 	int py = offsety;
 	if (pos !=NULL)	{
-		py += (pos[PEPPOS_Y] * scale);
+		py += (pos[PEPPOS_Y] * scaley);
 	}
 	return py;
+}
+//--------------------------
+int ChemDisplayAttrib::getxcell(int screenx){
+	return (screenx-(gfx-> width/2))/scalex;
+}
+//--------------------------
+int ChemDisplayAttrib::getycell(int screeny){
+	return -(screeny-(gfx-> height/2))/scaley;
 }
 //--------------------------
 int ChemDisplayAttrib::screenx(void){

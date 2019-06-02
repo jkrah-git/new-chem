@@ -6,6 +6,7 @@
  */
 
 #include "GFX_Base.h"
+#include "../debug.h"
 /*
 //-----------------------------------------
 class GFX_Base {
@@ -139,11 +140,17 @@ void GFX_Base::point( int x, int y ){	XDrawPoint(display,window,gc,x,y);	}
 void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(display,window,gc,x1,y1,x2,y2);}
 //-----------------------------------------
 // Draw a line from (x1,y1, size)
-void GFX_Base::box( int x, int y, int s){
-	line(x-s, y-s, x+s, y-s);
-	line(x+s, y-s, x+s, y+s);
-	line(x+s, y+s, x-s, y+s);
-	line(x-s, y+s, x-s, y-s);
+//void GFX_Base::box( int x, int y, int s){
+//	line(x-s, y-s, x+s, y-s);
+//	line(x+s, y-s, x+s, y+s);
+//	line(x+s, y+s, x-s, y+s);
+//	line(x-s, y+s, x-s, y-s);
+//}
+void GFX_Base::box( int x, int y, int sx, int sy){
+	line(x-sx, y-sy, x+sx, y-sy);
+	line(x+sx, y-sy, x+sx, y+sy);
+	line(x+sx, y+sy, x-sx, y+sy);
+	line(x-sx, y+sy, x-sx, y-sy);
 }
 
 //-----------------------------------------
@@ -247,8 +254,15 @@ char GFX_Base::wait() {
 			saved_xpos = event.xkey.x;
 			saved_ypos = event.xkey.y;
 			return event.xbutton.button;
+		} else if(event.type==DestroyNotify) {
+			PRINT("desytroy event\n");
 		}
+
+
+
 	}
+
+
 }
 
 //-----------------------------------------
