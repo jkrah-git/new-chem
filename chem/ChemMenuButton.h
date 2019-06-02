@@ -4,7 +4,7 @@
  *  Created on: Jun 1, 2019
  *      Author: jkrah
  */
-
+class ChemMenuButton;
 #ifndef CHEMMENUBUTON_H_
 #define CHEMMENUBUTON_H_
 /*
@@ -20,8 +20,12 @@
 
 enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
 #include "Concentration_VM.h"
-#include "../include/gfx/GFX_Base.h"
+//#include "../include/gfx/GFX_Base.h"
+
+class ChemDisplay;
 #include "ChemDisplay.h"
+
+
 // ---------------------------------------
 class ChemMenuButton {
 public:
@@ -36,6 +40,7 @@ public:
 	//----------------
 	ChemMenuButton();
 	virtual ~ChemMenuButton();
+	void	dump(void);
 	//----------------
 	void	draw(ChemDisplay *display, ChemDisplayColor *col);
 };

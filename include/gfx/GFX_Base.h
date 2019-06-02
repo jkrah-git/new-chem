@@ -14,6 +14,21 @@
 #include <stdlib.h>
 #include <string.h>
 //#define DISPLAY_FONT_HEIGHT 10
+// ---------------------------------------
+#define CHEM_DEF_COLR 100
+#define CHEM_DEF_COLG 100
+#define CHEM_DEF_COLB 100
+// ---------------------------------------
+class ChemDisplayColor {
+public:
+	int r;
+	int g;
+	int b;
+	//----
+	ChemDisplayColor(void){ r=CHEM_DEF_COLR; g=CHEM_DEF_COLG; b=CHEM_DEF_COLB; };
+	ChemDisplayColor(int red, int green, int blue){ r=red; g=green; b=blue; };
+	void	set(int red, int green, int blue){ r=red; g=green; b=blue; };
+};
 
 //-----------------------------------------
 class GFX_Base {
@@ -44,7 +59,9 @@ public:
 	void 	close();
 	void 	point( int x, int y );								// Draw a point at (x,y)
 	void 	line( int x1, int y1, int x2, int y2 );				// Draw a line from (x1,y1) to (x2,y2)
+	void	box( int x, int y, int s);
 	void 	text(const char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
+	void 	color(ChemDisplayColor *col);
 	void 	color( int red, int green, int blue );				// Change the current drawing color.
 	void 	clear();											// Clear the graphics window to the background color.
 	void 	clear_color( int red, int green, int blue );		// Change the current background color.

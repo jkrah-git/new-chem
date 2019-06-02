@@ -138,6 +138,15 @@ void GFX_Base::point( int x, int y ){	XDrawPoint(display,window,gc,x,y);	}
 // Draw a line from (x1,y1) to (x2,y2)
 void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(display,window,gc,x1,y1,x2,y2);}
 //-----------------------------------------
+// Draw a line from (x1,y1, size)
+void GFX_Base::box( int x, int y, int s){
+	line(x-s, y-s, x+s, y-s);
+	line(x+s, y-s, x+s, y+s);
+	line(x+s, y+s, x-s, y+s);
+	line(x-s, y+s, x-s, y-s);
+}
+
+//-----------------------------------------
 void GFX_Base::text(const char *str,  int x1, int y1){
 	if (str==NULL) return;
 	int len = strlen(str);
@@ -146,6 +155,12 @@ void GFX_Base::text(const char *str,  int x1, int y1){
 }
 //-----------------------------------------
 // Change the current drawing color.
+void GFX_Base::color(ChemDisplayColor *col){
+	if (col!=NULL) {
+		color(col->r, col->g, col->b);
+	}
+}
+//-----------------------------------------
 void GFX_Base::color( int r, int g, int b ){
 	XColor color;
 

@@ -35,19 +35,45 @@ ChemMenuButton::ChemMenuButton() {
 	data = NULL;
 	callback = NULL;
 	sizex = 30;
-	sizey = 15;
+	sizey = 30;
 }
 // ---------------------------------------
 ChemMenuButton::~ChemMenuButton() {}
 // ---------------------------------------
+void ChemMenuButton::dump(void) {
+	printf("ChemMenuButton[0x%zX]:",	(long unsigned int) this);
+	/*
+	int x = attrib.getx();
+	int y = attrib.gety();
+	printf(".pos");
+	if (attrib.pos !=NULL) {
+		printf("[%d,%d]", attrib.pos[PEPPOS_X], attrib.pos[PEPPOS_Y]);
+	}
+	else {
+		printf("[NULL]");
+	}
+	printf(".getxy[%d,%d]", x, y);
+*/
+	printf(".sizeXY[%d,%d]", sizex, sizey);
+	//if (text!=NULL)
+	if ( _selected) printf("[%s]*.", text);
+	else			printf("[%s].", text);
+	attrib.dump();
+
+	NL
+}
+// ---------------------------------------
+
 void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
 	if (display==NULL) return;
 	if (col==NULL) return;
-	int x = attrib.getx();
-	int y = attrib.gety();
-	//display-> setcol(col-> r, col-> g, col-> b);
+	int x = attrib.screenx();
+	int y = attrib.screeny();
 	int sx = sizex/2;
 	int sy = sizey/2;
+	PRINT(" col[%d][%d][%d]\n --> ", col-> r, col-> g, col-> b);
+	dump();
+
 	display-> gfx.color(col-> r, col-> g, col-> b);
 	display-> gfx.line(x-sx, y-sy, x+sx, y-sy);
 	display-> gfx.line(x+sx, y-sy, x+sx, y+sy);

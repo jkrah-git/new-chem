@@ -13,19 +13,26 @@
 //#include "../chem/Concentration_CLI.h"
 //#include "../chem/CLI_Command.h"
 //#include "../include/mylist.h"
-#include "../include/gfx/MoleDisplay.h"
+//#include "../include/gfx/MoleDisplay.h"
+#include "../chem/ChemDisplay.h"
+//#include "../chem/CLI_Command.h"
 #include "../include/common.h"
+
 ///=================== need to be declared externally
 const char 	**build_args(void);
 int 	run(int argc, char **argv);
 //==========================================================
 //===============================================================//===============================================================
 int test_pep(void) {
-	MoleDisplay mole_display;
-	mole_display.gfx.open();
-	mole_display.gfx.clear();
-	mole_display.grid(100,100,100);
-	mole_display.setcol(100,0,0);
+	ChemDisplayColor red(100,0,0);
+	ChemDisplayColor green(0,100,0);
+	ChemDisplayColor blue(0,0,100);
+
+	ChemDisplay display;
+	display.gfx.open();
+	display.gfx.clear();
+	display.grid(100,100,100);
+
 
 	PRINT("== START ==\n");
 	Peptide A;	PepSig a = 0x30;	A.set(a);
@@ -34,22 +41,22 @@ int test_pep(void) {
 	PRINT("getA = (0x%x)(%c) ...\n", A.get(), A.get());
 	PRINT("== END ==\n");
 
-	mole_display.draw_pep(&A);
-	//mole_display.gfx.wait();
+	display.draw_pep(&A, &red);
+	//display.gfx.wait();
 	for (int i=0; i<4; i++) {
 		A.setpos(i*2,0,i);
 		PRINT("A.rot[%d] ==>", i); A.dump(); NL
-		mole_display.draw_pep(&A);
-		//mole_display.gfx.wait();
+		//display.gfx.color(&green);
+		display.draw_pep(&A, 0, 100, 0);
+		//display.gfx.wait();
 	}
 
-	mole_display.gfx.wait();
-	mole_display.gfx.close();
+	display.gfx.wait();
+	display.gfx.close();
 	return 0;
 }
+//-----------------------------
 int test_printb(void) {
-
-
 	char bA[9];
 	for (int i=0; i<16; i++) {
 		//printb(i); NL
@@ -58,6 +65,7 @@ int test_printb(void) {
 	}
 	return 0;
 }
+//-----------------------------
 int test_rot(void){
 	int t[4];
 	for (int i=0; i<4; i++)
@@ -77,97 +85,55 @@ int test_rot(void){
 
 		}
 	}
-
+	//-----------------------------
 	for (int i=0; i<4; i++)
 		printf("Tally.rot[%d]=[%d]\n", i, t[i]);
 
-
 	return 0;
 }
-//-------------------
-int test_addpep(void) {
-	MoleDisplay mole_display;
-	mole_display.gfx.open(1000, 800, "test_addpep");
-	mole_display.gfx.clear();
-	mole_display.grid(100,100,100);
-	mole_display.setcol(100,0,0);
-
-
-
-	Peptide A(0x1);
-	Peptide B(0x2);
-	Peptide C(0x3);
-
-
-
-
-
-
-/*
-	PRINT("Offset tests A/B = (5,5,0)..\n");
-	mole_display.setcol(200,0,0);
-	mole_display.clearatt();	mole_display.draw_pep(&X);
-	mole_display.clearatt();	mole_display.draw_pep(&Y);
-	mole_display.gfx.printg("A/B");
-	mole_display.gfx.wait();
-
-	C.addpep(&A);		PRINT("C.addpep(A) (0/0) r=0...-> ");	C.dump(); NL
-	D.addpep(&A);		PRINT("D.addpep(A) (1/0) r=1...-> ");	D.dump(); NL
-	mole_display.setcol(0,200,0);
-	mole_display.clearatt();	mole_display.draw_pep(&C);
-	mole_display.clearatt();	mole_display.draw_pep(&D);
-
-	C.addpep(&B);		PRINT("C.addpep(B) (0/1) r=2...-> ");	C.dump(); NL
-	D.addpep(&B);		PRINT("D.addpep(B) (1/1) r=3...-> ");	D.dump(); NL
-	mole_display.setcol(0,0,200);
-	mole_display.draw_pep(&C);
-	mole_display.draw_pep(&D);
-*/
-
-	mole_display.gfx.wait();
-	mole_display.gfx.close();
-	return 0;
-
-};
 
 
 int test_mole(void) {
-	MoleDisplay mole_display;
-	mole_display.gfx.open(1000, 800, "test_addpep");
-	mole_display.gfx.clear();
-	mole_display.grid(100,100,100);
-	mole_display.setcol(100,0,0);
+
+	ChemDisplayColor mole_col(0,100,200);
+
+
+	ChemDisplay display;
+	display.gfx.open(1000, 800, "test_addpep");
+	display.gfx.clear();
+	display.grid(100,100,100);
 
 	printf("(test_mole.start..)\n");
 	Molecule mole;
 	mole.test();
-	mole_display.draw_mole(&mole);
+	display.draw_mole(&mole, &mole_col);
 
 	printf("(test_mole.end..)\n");
-	mole_display.gfx.wait();
-	mole_display.gfx.close();
+	display.gfx.wait();
+	display.gfx.close();
 	return 0;
 
 };
 
 
 // ----------------------------------------
-void test_offset(MoleDisplay *mole_display, int x, int y, PepPosVecType *p) {
-	if (mole_display!=NULL) {
-		mole_display-> gfx.clear();
-		mole_display-> clearatt();
+void test_offset(ChemDisplay *display, int x, int y, PepPosVecType *p) {
+	if (display!=NULL) {
+		display-> gfx.clear();
+		display-> clearatt();
 		//--------
-		mole_display-> setcol(80,80,80);
-		mole_display-> grid();
+		//display-> setcol(80,80,80);
+		display-> gfx.color(100, 100, 100);
+		display-> grid();
 
-		mole_display-> offsetx = x;
-		mole_display-> offsety = y;
-		mole_display-> pos = p;
-		mole_display-> gdump();
+		display-> attrib.offsetx = x;
+		display-> attrib.offsety = y;
+		display-> attrib.pos = p;
+		display-> gdump();
 	}
 }
 //---------------------
-int test_display_peps(MoleDisplay *mole_display) {
+int test_display_peps(ChemDisplay *display) {
 	printf("test_display_peps:: start..\n");
 	printf("test_display_peps:: =======\n");
 
@@ -176,28 +142,30 @@ int test_display_peps(MoleDisplay *mole_display) {
 	PeptidePos pos;
 
 	for (int x=-3; x<4; x++) {
-		test_offset(mole_display, x*5, x*5, NULL);
-		mole_display-> setcol(100,0,0);
-		mole_display-> draw_pep(&pep);
-		mole_display-> gfx.wait();
+		test_offset(display, x*5, x*5, NULL);
+		//display-> setcol(100,0,0);
+		display-> gfx.color(100, 0, 0);
+		display-> draw_pep(&pep);
+		display-> gfx.wait();
 	}
 
 	for (int x=-3; x<4; x++) {
 		pos.dim[PEPPOS_X] = x;
 		pos.dim[PEPPOS_Y] = x;
-		test_offset(mole_display, 0, 0, pos.dim);
-		mole_display-> setcol(100,100,0);
-		mole_display-> dump();
+		test_offset(display, 0, 0, pos.dim);
+		//display-> setcol(100,100,0);
+		display-> gfx.color(100, 100, 0);
+		display-> dump();
 
-		mole_display-> draw_pep(&pep);
-		mole_display-> gfx.wait();
+		display-> draw_pep(&pep);
+		display-> gfx.wait();
 	}
 	printf("test_display_peps:: =======\n");
 	printf("test_display_peps:: end..\n");
 	return 0;
 }
 //---------------------
-int test_display_moles(MoleDisplay *mole_display, int section) {
+int test_display_moles(ChemDisplay *display, int section) {
 	printf("test_display_moles:: start..\n");
 	printf("test_display_moles:: =======\n");
 
@@ -210,13 +178,13 @@ int test_display_moles(MoleDisplay *mole_display, int section) {
 	if (section & 1) {
 		//printf("test_display_moles== [%d] =======\n". r);
 		for (int x=-3; x<4; x++) {
-			test_offset(mole_display, x*5, x*5, NULL);
-			mole_display-> setcol(0,100,0);
-			mole_display-> gdump();
+			test_offset(display, x*5, x*5, NULL);
+			//display-> setcol(0,100,0);
+			display-> gdump();
 
-			//mole_display.draw_pep(&pep);
-			mole_display-> draw_mole(&m);
-			mole_display-> gfx.wait();
+			//display.draw_pep(&pep);
+			display-> draw_mole(&m, 0, 100, 0);
+			display-> gfx.wait();
 		}
 	}
 
@@ -226,13 +194,13 @@ int test_display_moles(MoleDisplay *mole_display, int section) {
 		for (int x=-3; x<4; x++) {
 			pos.dim[PEPPOS_X] = x;
 			pos.dim[PEPPOS_Y] = x;
-			test_offset(mole_display, 0, 0, pos.dim);
-			mole_display->setcol(0,100,100);
-			mole_display->dump();
+			test_offset(display, 0, 0, pos.dim);
+			//display->setcol(0,100,100);
+			display->dump();
 
-			//mole_display.draw_pep(&pep);
-			mole_display-> draw_mole(&m);
-			mole_display-> gfx.wait();
+			//display.draw_pep(&pep);
+			display-> draw_mole(&m, 0, 100, 100);
+			display-> gfx.wait();
 		}
 	}
 	printf("test_display_moles:: =======\n");
@@ -243,22 +211,22 @@ int test_display_moles(MoleDisplay *mole_display, int section) {
 int test_display(int mode) {
 	printf("test_display:: start..\n");
 	printf("test_display:: =======\n");
-	MoleDisplay mole_display;
-	mole_display.gfx.open();
-	mole_display.gfx.clear();
-	mole_display.clearatt();
+	ChemDisplay display;
+	display.gfx.open();
+	display.gfx.clear();
+	display.clearatt();
 	//--------
 
 	//char msg[128];
 	//sprintf(msg, "HEllow World\n");
-	//mole_display.gfx.printg(msg);
-	//mole_display.gfx.wait();
+	//display.gfx.printg(msg);
+	//display.gfx.wait();
 
 	//---------------
-	//test_display_peps(&mole_display);
-	test_display_moles(&mole_display, mode);
+	//test_display_peps(&display);
+	test_display_moles(&display, mode);
 
-	mole_display.gfx.close();
+	display.gfx.close();
 	printf("test_display:: =======\n");
 	printf("test_display:: end..\n");
 	return 0;
@@ -277,7 +245,7 @@ const char **build_args(void) {
 		//------------------
 		int c = 0;
 		args[c++] = (const char*) "test_pep";
-		args[c++] = (const char*) "test_addpep";
+//		args[c++] = (const char*) "test_addpep";
 		args[c++] = (const char*) "test_mole";
 		args[c++] = (const char*) "test_display";
 		args[c++] = (const char*) "test_printb";
@@ -303,7 +271,7 @@ int run(int argc, char **argv) {
 
 	if (argc ==1){
 		if ( (strcmp(argv[0], "test_pep")==0))		{ return test_pep(); }
-		if ( (strcmp(argv[0], "test_addpep")==0))	{ return test_addpep(); }
+//		if ( (strcmp(argv[0], "test_addpep")==0))	{ return test_addpep(); }
 		if ( (strcmp(argv[0], "test_mole")==0))		{ return test_mole(); }
 		if ( (strcmp(argv[0], "test_display")==0))	{ return test_display(2); }
 		if ( (strcmp(argv[0], "test_printb")==0))	{ return test_printb(); }
