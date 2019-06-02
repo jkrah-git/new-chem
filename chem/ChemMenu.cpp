@@ -86,10 +86,7 @@ void ChemMenu::layout_buttons(void){
 		//PRINT("--- pos[%d,%d] -->\n", posx, posy); current_item-> item-> dump(); NL
 		current_item-> item-> attrib.pos[PEPPOS_X] = px;
 		current_item-> item-> attrib.pos[PEPPOS_Y] = py;
-		px +=2;
-	//	offsetx+= stepx; offsety+= stepy;
-	//	sizex = offsetx; sizey = offsety;
-
+		px +=1;
 		//-----
 		current_item = current_item-> next;
 	}

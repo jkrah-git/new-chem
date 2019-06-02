@@ -326,16 +326,15 @@ Peptide &Peptide::operator =(const Peptide& p) {
 	rot = p.rot;
 	return *this;
 }
-// ---------------------
-
-
-
+// ---------------------// ---------------------
 bool Peptide::operator ==(const Peptide& p) {
 	return ((sig == p.sig) && (pos==p.pos));
 }
+// ---------------------// ---------------------
+/*
 // ---------------------
 void Peptide::test(void){
-	// TODO: Fix or scrap .. local scope
+	// TODO: Scrap pep test .. local scope
 	printf("Peptide.test: ================\n");
 	printf("Peptide.test: == START ==\n");
 	printf("Peptide.test: ================\n");
@@ -399,5 +398,6 @@ void Peptide::test(void){
 	printf("Peptide.test: == END ==\n");
 
 }
+*/
 // ---------------------
 

@@ -220,6 +220,7 @@ TODO
 1.2 port cli cmds???
 	- start VM commands .. callbacks ?
 	- new cli/gfx commands
+		- screen modes;
 		- select / display VM items (register/stack/match)
 			 
 1.3 create new tests --

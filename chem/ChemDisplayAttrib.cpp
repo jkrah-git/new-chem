@@ -80,6 +80,7 @@ void ChemDisplayAttrib::set(int _offsetx, int _offsety, PepPosVecType *_pos, int
 	scalex = _scalex;
 	scaley = _scaley;
 }
+// TODO normalise or protect offsets..
 //--------------------------
 int ChemDisplayAttrib::getx(void){
 	int px = offsetx;
@@ -107,26 +108,12 @@ int ChemDisplayAttrib::getycell(int screeny){
 //--------------------------
 int ChemDisplayAttrib::screenx(void){
 	if (gfx==NULL) return 0;
-	/*
-	int px = (gfx-> width/2) + offsetx;
-	if (pos !=NULL)	{
-		px += (pos[PEPPOS_X] * scale);
-	}*/
-
 	return (gfx-> width/2) + getx();
 }
 //--------------------------
 int ChemDisplayAttrib::screeny(void){
 	if (gfx==NULL) return 0;
-	/*
-	int py = (gfx-> height/2) + offsety;
-	if (pos !=NULL)	{
-		py += (pos[PEPPOS_Y] * scale);
-	}
-	return (gfx-> height-py);
-	*/
 	return (gfx-> height-((gfx-> height/2) + gety()));
-
 }
 //--------------------------
 

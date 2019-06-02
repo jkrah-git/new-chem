@@ -421,6 +421,17 @@ int ChemDisplay::main(int argc, char **argv) {
 		grid(100,100,100);
 		gdump();
 
+		// TODO 1: new modes/renders for selobjects..
+		/* ------------------------------------------
+				// selected objects
+				Concentration_VM		*core;
+				Peptide					*pep;
+				Molecule				*mole;
+				Concentration			*conc;
+				ConcentrationVolume 	*concvol;
+				MoleculeMatchPos 		*matchpos;
+				mylist<ChemMenu> 		*menu_list;
+		 --------------------------------------------- */
 
 		if (menu_list!=NULL) {
 			// clear the list
