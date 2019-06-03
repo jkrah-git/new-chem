@@ -146,13 +146,35 @@ void GFX_Base::line( int x1, int y1, int x2, int y2 ){	XDrawLine(display,window,
 //	line(x+s, y+s, x-s, y+s);
 //	line(x-s, y+s, x-s, y-s);
 //}
+/*
 void GFX_Base::box( int x, int y, int sx, int sy){
+	box(x,y,sx,sy,NULL);
+	return;
 	line(x-sx, y-sy, x+sx, y-sy);
 	line(x+sx, y-sy, x+sx, y+sy);
 	line(x+sx, y+sy, x-sx, y+sy);
 	line(x-sx, y+sy, x-sx, y-sy);
 }
+*/
+//-----------------------------------------
+void GFX_Base::box( int x, int y, int sx, int sy, const char *_title){
 
+	PRINT("txt[%s]\n", _title);
+	line(x-sx, y-sy, x+sx, y-sy);
+	line(x+sx, y-sy, x+sx, y+sy);
+	line(x+sx, y+sy, x-sx, y+sy);
+	line(x-sx, y+sy, x-sx, y-sy);
+
+
+	if (_title!=NULL) {
+		int len = strlen(_title) * FONT_WIDTH;
+		int tx = x - (len/2);
+		int ty = y-sy;
+		text(_title, tx, ty);
+
+	}
+
+}
 //-----------------------------------------
 void GFX_Base::text(const char *str,  int x1, int y1){
 	if (str==NULL) return;

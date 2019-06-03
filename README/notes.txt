@@ -213,6 +213,8 @@ xxx			(simple opcodes)
 xxx xxx 	(more ad
 xxx xxx ...
 
+NB: CLI = (*core, menus, display)
+
 TODO
 -----
 1.1 DONE -- update addpep - new rotation rules and relative rotations

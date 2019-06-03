@@ -21,11 +21,14 @@ Concentration_VM 	vm;
 ConcentrationVolume vol;
 Concentration_CLI	cli(vol, vm);
 //ChemMenuList 		menu_list;
-mylist<ChemMenu> 	menu_list;
+//mylist<ChemMenu> 	menu_list;
 
+mylist<ChemScreen> 	screen_list;
 // --------------------------
 char 	**build_args(void){
-	cli.display.menu_list = &menu_list;
+//	cli.display.menu_list = &menu_list;
+	cli.display.screen_list = &screen_list;
+
 	//------
 	cli.load_commands();
 	return cli.get_possible_args(&cli.base_cmdlist);

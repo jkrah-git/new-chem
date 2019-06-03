@@ -7,7 +7,7 @@
 
 #include "ChemDisplay.h"
 //#include "ChemMenuList.h"
-#define  DISPLAY_FONT_HEIGHT 10
+//#define  DISPLAY_FONT_HEIGHT 10
 /*
 // ----------------
 class ChemDisplay {
@@ -78,7 +78,8 @@ ChemDisplay::ChemDisplay() {
 	conc = NULL;
 	concvol = NULL;
 	matchpos = NULL;
-	menu_list = NULL;
+//	menu_list = NULL;
+	screen_list = NULL;
 	attrib.gfx = &gfx;
 	//clearatt();
 }
@@ -254,7 +255,7 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 //	gfx.line(x+s, y-s, x+s, y+s);
 //	gfx.line(x+s, y+s, x-s, y+s);
 //	gfx.line(x-s, y+s, x-s, y-s);
-	gfx.box(x,y,sx, sy);
+	gfx.box(x,y,sx, sy, NULL);
 
 	int tx = sx/2;
 	int ty = sy/2;
@@ -279,8 +280,11 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 
 
 	char str[64];
-	sprintf(str, "0x%x", pep-> get());	gfx.color(200,200,200);	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
+	sprintf(str, "0x%x", pep-> get());
+	gfx.color(200,200,200);
+	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
 
+	// list pep deails also
 	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[PEPPOS_Y], pep->rot);
 	gfx.printg(str);
 
@@ -378,6 +382,8 @@ void ChemDisplay::draw_vm(Concentration_VM *vm){
 	//---------------
 	gfx.flush();
 }
+// ############################################################
+/*
 //-------------------------------//-------------------------------
 ChemMenu	*ChemDisplay::add_menu(const char *_title){
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = menu_list->add();
@@ -409,15 +415,55 @@ void ChemDisplay::draw_menus(void){
 
 }
 //-------------------------------
+int	ChemDisplay::test_menus(int posx, int posy){
+	if (menu_list==NULL) return 0;
+
+	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list-> gethead();
+	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
+		current_item-> item-> draw();
+		//-------
+		current_item = current_item->next;
+	}
+	return 0;
+}
+*/
+//###############################################################################
+//void ChemDisplay::draw_box(int min_xpos, int min_ypos, int max_xpos,int max_ypos) {
+// draw
+void ChemDisplay::draw_cellbox(int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title){
+
+	int minx = attrib.screenx(attrib.offsetx, min_xpos);// - attrib.scalex/2;
+	int maxx = attrib.screenx(attrib.offsetx, max_xpos);// + attrib.scalex/2;
+	// screen y cords inverted
+	int maxy = attrib.screeny(attrib.offsety, min_ypos);// - attrib.scaley/2;
+	int miny = attrib.screeny(attrib.offsety, max_ypos);// + attrib.scaley/2;
+	//PRINT("screen.min[%d,%d]screen.max[%d,%d]\n", minx, miny, maxx, maxy);
+
+	int px = minx+((maxx-minx)/2);
+	int py = miny+((maxy-miny)/2);
+	//PRINT("scale[%d,%d]\n", attrib.scalex, attrib.scaley);
+
+	int sx = (maxx-minx)/2 + (attrib.scalex/2);
+	int sy = (maxy-miny)/2 + (attrib.scaley/2);
+	//int sy = (max_posy - min_posy) * attrib.scaley/2;
+
+	gfx.box(px,py, sx , sy , _title);
+	//PRINT("offset[%d,%d] size[%d,%d]\n",  px,  py, sx, sy);
+}
+
+//-------------------------------
 int ChemDisplay::main(int argc, char **argv) {
 	if (core==NULL) { PRINT("[null core]\n"); return -1; }
-	if (menu_list==NULL) { PRINT("[null menu_list]\n"); return -2; }
+	//if (menu_list==NULL) { PRINT("[null menu_list]\n"); return -2; }
+	if (screen_list==NULL) { PRINT("[null screen_list]\n"); return -2; }
 
 	//gfx.title = (const char*) "- NewChem -";
 	gfx.open();
 	PRINT("-----RENDER ----\n");
 	while(true) {
 		gfx.clear();
+		attrib.scalex = 50;
+		attrib.scaley = 50;
 		grid(100,100,100);
 		gdump();
 
@@ -432,25 +478,56 @@ int ChemDisplay::main(int argc, char **argv) {
 				MoleculeMatchPos 		*matchpos;
 				mylist<ChemMenu> 		*menu_list;
 		 --------------------------------------------- */
-
+/*__________________
 		if (menu_list!=NULL) {
 			// clear the list
 			menu_list-> clear();
+*/
+		PRINT(".. screens ..\n");
+		if (screen_list!=NULL) {
+			mylist<ChemMenu> 		menu_list;
 
-			ChemMenu *menu = add_menu("test_menu");
-			if (menu!=NULL) {
-				menu-> add_button("A");
-				menu-> add_button("B");
-				menu-> add_button("C");
-				menu->layout_buttons();
-				menu-> dump();
+			const char	*title = "Test Screen";
+
+			screen_list-> clear();
+			PRINT(".. screens.cleared ..\n");
+			screen_list-> dump();
+
+			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->add();
+
+			if ((screen_item !=NULL) && (screen_item-> item !=NULL)) {
+				screen_item-> item -> title = title;
+				screen_item-> item -> menu_list = &menu_list;
+
+
+				PRINT(".. new.screen ..\n");
+				PRINT("===============\n");
+				screen_item-> item-> dump(); NL
+				PRINT("===============\n");
+
+				//ChemScreen *screen = screen_item-> item;
+				mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = screen_item-> item-> menu_list->add();
+				if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
+					PRINT(".. new.menu ..\n");
+					ChemMenu *menu = screen_item-> item -> add_menu("test_menu", this);
+					if (menu!=NULL) {
+						menu-> stepx = 1; menu-> stepy = 1;
+						menu-> add_button("A");
+						menu-> add_button("B");
+						menu-> add_button("C");
+						menu->layout_buttons();
+						menu-> dump();
+					}
+				}
+				//----------
+				screen_item-> item-> draw_menus();
 			}
 
-			//menu_list-> dump();
-		}
+
+		} //-------------
 
 		curs(200,200,0);
-		draw_menus();
+//		draw_menus();
 		int x=0;
 		int y=0;
 
@@ -461,13 +538,18 @@ int ChemDisplay::main(int argc, char **argv) {
 		if (w==27) {			PRINT("# [ESC][%d]##\n", w);	break;	}
 
 		switch(w) {
-		// MOUSE CLICK
+		// TODO : MOUSE CLICK =====
+		//
 		case 01:	//curs_pos.dim[PEPPOS_X] --;
+			// TODO Tune
 			x = attrib.getxcell(gfx.xpos());
 			y = attrib.getycell(gfx.ypos());
 	//		PRINT("mouse: xcell[%d,%d]", x, y);
 			curs_pos.dim[PEPPOS_X]=x;
 			curs_pos.dim[PEPPOS_Y]=y;
+			//TODO - scan menus
+
+
 			break;
 		// ARROWS
 		case 81:	curs_pos.dim[PEPPOS_X] --;	break;

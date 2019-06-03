@@ -54,13 +54,14 @@ void ChemMenuButton::dump(void) {
 	attrib.dump();	NL
 }
 // ---------------------------------------
-
+/*
 void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
 	if (display==NULL) return;
 	if (col==NULL) return;
 	int x = attrib.screenx();
 	int y = attrib.screeny();
 	display-> gfx.color(col-> r, col-> g, col-> b);
-	display-> gfx.box(x,y,sizex/2, sizey/2);
+	display-> gfx.box(x,y,sizex/2, sizey/2, text);
 	if (text!=NULL)	display-> gfx.text(text, x, y);
 }
+*/

@@ -12,16 +12,20 @@
 //#include "../mylist.h"
 //class ChemMenuList;
 #include "Concentration_VM.h"
-#include "../include/gfx/GFX_Base.h"
+//#include "../include/gfx/GFX_Base.h"
 #include "ChemDisplayAttrib.h"
 #include "ChemMenu.h"
 
-
+//class ChemScreen;
+#include "ChemScreen.h"
+//====================================
 // ----------------
 class ChemDisplay {
 private:
+	// does this make a screen
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
+	int						test_menus(int posx, int posy);
 	PeptidePos				curs_pos;
 
 public:
@@ -30,12 +34,14 @@ ChemDisplayAttrib			attrib;
 
     // selected objects
 	Concentration_VM		*core;
+	// selection pointers
 	Peptide					*pep;
 	Molecule				*mole;
 	Concentration			*conc;
 	ConcentrationVolume 	*concvol;
 	MoleculeMatchPos 		*matchpos;
-	mylist<ChemMenu> 		*menu_list;
+	//mylist<ChemMenu> 		*menu_list;
+	mylist<ChemScreen> 		*screen_list;
 
 
   	//-------------------
@@ -66,12 +72,13 @@ ChemDisplayAttrib			attrib;
 	void	draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
 	//---
 	void	draw_vm(Concentration_VM *vm);
+	void	draw_cellbox(int minx, int miny, int maxx,int maxy, const char *_title);
+	void	draw_box(int minx, int miny, int maxx,int maxy){ draw_cellbox(minx, miny, maxx, maxy, NULL); };
 
 	//--------------
 	int		main(int argc, char **argv);
 
 };
-// ----------------
 
 
 

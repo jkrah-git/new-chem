@@ -36,13 +36,19 @@ int molecb(Concentration_CLI *cli, int argc, char **argv) {
 int display_maincb(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
 
-	PRINT("===\n");
+	//PRINT("===\n");
 	if (argc<=0) {
 		PRINT(" argc[%d]arv[-]\n", argc);
 		return cli->display.main(argc, argv);
 	}
 	//-----
 	PRINT(" argc[%d]arv[%s]\n", argc, argv[0]);
+
+	// help
+	if (strcmp(argv[0], "help")==0) {
+		PRINT("off|mole|match\n");
+		return 0;
+	}
 
 	// off
 	if (strcmp(argv[0], "off")==0) {
@@ -51,20 +57,20 @@ int display_maincb(Concentration_CLI *cli, int argc, char **argv) {
 			cli->display.gfx.close();
 			cli-> callback = NULL;
 		}
+		return 0;
 	}
 
 	// mole
 	if (strcmp(argv[0], "mole")==0) {
 		PRINT("mole..\n");
 		cli-> callback = molecb;
-
-
+		return 0;
 	}
 
 	if (strcmp(argv[0], "match")==0) {
 		PRINT("match..\n");
 		cli-> callback = matchcb;
-
+		return 0;
 	}
 
 

@@ -98,6 +98,17 @@ int ChemDisplayAttrib::gety(void){
 	return py;
 }
 //--------------------------
+int ChemDisplayAttrib::getx(int offx, int posx){
+	return  offx + (posx *scalex);
+}
+
+//--------------------------
+int ChemDisplayAttrib::gety(int offy, int posy){
+	return  offy + (posy *scaley);
+}
+
+
+//--------------------------
 int ChemDisplayAttrib::getxcell(int screenx){
 	return (screenx-(gfx-> width/2))/scalex;
 }
@@ -114,6 +125,16 @@ int ChemDisplayAttrib::screenx(void){
 int ChemDisplayAttrib::screeny(void){
 	if (gfx==NULL) return 0;
 	return (gfx-> height-((gfx-> height/2) + gety()));
+}
+//--------------------------
+int ChemDisplayAttrib::screenx(int offx, int posx){
+	if (gfx==NULL) return 0;
+	return (gfx-> width/2) + getx(offx,posx);
+}
+//--------------------------
+int ChemDisplayAttrib::screeny(int offy, int posy){
+	if (gfx==NULL) return 0;
+	return (gfx-> height-((gfx-> height/2) + gety(offy, posy)));
 }
 //--------------------------
 

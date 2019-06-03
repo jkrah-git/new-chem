@@ -39,11 +39,15 @@ public:
   	// get local(x,y) (ie 0,0 = centre)
   	int		getx(void);
   	int		gety(void);
+  	int		getx(int offx, int posx);
+  	int		gety(int offy, int posy);
   	int		getxcell(int screenx);
   	int		getycell(int screeny);
   	// get final screen(x,y)
   	int		screenx(void);
   	int		screeny(void);
+  	int		screenx(int offx, int posx);
+  	int		screeny(int offy, int posy);
 
 };
 //--------------------------
