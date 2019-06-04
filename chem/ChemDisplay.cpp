@@ -64,6 +64,15 @@ ChemDisplayAttrib	attrib;
 };
 // ----------------
  */
+//-------------------------------
+//---- new
+/*
+void ChemDisplay::draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){}
+void ChemDisplay::draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){}
+void ChemDisplay::draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){}
+//-------------------------------
+*/
+
 ChemDisplay::ChemDisplay() {
 	//line_pos = DISPLAY_FONT_HEIGHT;
 	gfx.title = "NewChem";
@@ -72,6 +81,7 @@ ChemDisplay::ChemDisplay() {
 	attrib.scalex = 30;
 	attrib.scaley = 20;
 
+	current_screen = NULL;
 	core = NULL;
 	pep = NULL;
 	mole = NULL;
@@ -80,39 +90,22 @@ ChemDisplay::ChemDisplay() {
 	matchpos = NULL;
 //	menu_list = NULL;
 	screen_list = NULL;
+
+	//	mylist<ChemScreen> 		*screen_list;
+
+	screen_list = (mylist<ChemScreen>*) malloc(sizeof(mylist<ChemScreen>));
+	if (screen_list!=NULL) {
+		screen_list->init();
+	}
+
 	attrib.gfx = &gfx;
 	//clearatt();
 }
 //-------------------------------
-//-------------------------------
-//---- new
-void ChemDisplay::draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
-
-
+ChemDisplay::~ChemDisplay() {
+	if (screen_list!=NULL) free(screen_list);
+	screen_list = NULL;
 }
-//-------------------------------
-void ChemDisplay::draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
-
-}
-//-------------------------------
-void ChemDisplay::draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue){
-
-}
-//-------------------------------
-
-
-//-------------------------------
-//-------------------------------	//-------------------------------
-//- OLD  ------------------------------
-/*
-void ChemDisplay::clearatt(){
-	attrib.offsetx = 0;
-	attrib.offsety = 0;
-	attrib.pos = NULL;
-}
-*/
-//-------------------------------
-ChemDisplay::~ChemDisplay() {}
 //-------------------------------
 void ChemDisplay::dump() {
 	printf("ChemDisplay[0x%zX].", (long unsigned int) this);
@@ -405,47 +398,6 @@ ChemMenu	*ChemDisplay::add_menu(const char *_title){
 //-------------------------------
  */
 
-// void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
-void ChemDisplay::draw_button(ChemMenuButton *button, ChemDisplayColor *col) {
-	if (button==NULL) return;
-	if (col==NULL) return;
-	int x = attrib.screenx();
-	int y = attrib.screeny();
-	gfx.color(col-> r, col-> g, col-> b);
-	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> text);
-	if (button-> text!=NULL)	gfx.text(button-> text, x, y);
-}
-
-
-void ChemDisplay::draw_screen(ChemScreen *screen){
-	if (screen==NULL) return;
-	if (screen-> menu_list==NULL) return;
-
-	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
-	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		// 	void 	draw_menu(ChemMenu *menu);
-		//-->		current_item-> item-> draw();
-		draw_menu(current_item-> item);
-		//-------
-		current_item = current_item->next;
-	}
-
-}
-//-------------------------------
-int	ChemDisplay::test_screen(ChemScreen *screen, int posx, int posy){
-	if (screen==NULL) return -1;
-	if (screen-> menu_list==NULL) return -2;
-
-	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
-	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		//-->		current_item-> item-> draw();
-		//-------
-		current_item = current_item->next;
-	}
-	return 0;
-}
-
-
 
 //###############################################################################
 //void ChemDisplay::draw_box(int min_xpos, int min_ypos, int max_xpos,int max_ypos) {
@@ -480,21 +432,56 @@ void ChemDisplay::draw_menu_border(ChemMenu *menu){
 //------------------------------
 void ChemDisplay::draw_menu(ChemMenu *menu){
 	if (menu==NULL) return;
+	//PRINT("======\n");	menu-> dump();	PRINT("======\n");
 	if (menu-> display==NULL) return;
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = menu-> button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		//PRINT("---\n");
-
 		ChemDisplayColor *c = &menu-> col;
 		if (current_item-> item->_selected)		c = &menu-> selcol;
-//-->	current_item-> item->draw(display, c);
 		draw_button(current_item-> item, c);
 		//-----
 		current_item = current_item-> next;
 	}
 	draw_menu_border(menu);
-
 };
+
+// void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
+void ChemDisplay::draw_button(ChemMenuButton *button, ChemDisplayColor *col) {
+	if (button==NULL) return;
+	if (col==NULL) return;
+	int x = button-> attrib.screenx();
+	int y = button-> attrib.screeny();
+	gfx.color(col-> r, col-> g, col-> b);
+	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> text);
+	if (button-> text!=NULL)	gfx.text(button-> text, x, y);
+}
+
+
+void ChemDisplay::draw_screen(ChemScreen *screen){
+	if (screen==NULL) return;
+	if (screen-> menu_list==NULL) return;
+
+	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
+	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
+		draw_menu(current_item-> item);
+		//-------
+		current_item = current_item->next;
+	}
+
+}
+//-------------------------------
+int	ChemDisplay::test_screen(ChemScreen *screen, int posx, int posy){
+	if (screen==NULL) return -1;
+	if (screen-> menu_list==NULL) return -2;
+
+	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
+	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
+		//-->		current_item-> item-> draw();
+		//-------
+		current_item = current_item->next;
+	}
+	return 0;
+}
 
 
 
@@ -502,17 +489,21 @@ void ChemDisplay::draw_menu(ChemMenu *menu){
 
 //-------------------------------
 int ChemDisplay::main(int argc, char **argv) {
+	//--------------
 	if (core==NULL) { PRINT("[null core]\n"); return -1; }
-	//if (menu_list==NULL) { PRINT("[null menu_list]\n"); return -2; }
 	if (screen_list==NULL) { PRINT("[null screen_list]\n"); return -2; }
 
-	//gfx.title = (const char*) "- NewChem -";
-	gfx.open();
+
+	attrib.scalex = 50;
+	attrib.scaley = 50;
+
+	//--------------
 	PRINT("-----RENDER ----\n");
+	gfx.open();
 	while(true) {
 		gfx.clear();
-		attrib.scalex = 50;
-		attrib.scaley = 50;
+	//	attrib.scalex = 50;
+	//	attrib.scaley = 50;
 		grid(100,100,100);
 		gdump();
 
@@ -527,55 +518,48 @@ int ChemDisplay::main(int argc, char **argv) {
 				MoleculeMatchPos 		*matchpos;
 				mylist<ChemMenu> 		*menu_list;
 		 --------------------------------------------- */
-/*__________________
-		if (menu_list!=NULL) {
-			// clear the list
-			menu_list-> clear();
-*/
+
+		// TODO:  _0 -- move out and render selected screen
 		PRINT(".. screens ..\n");
-		if (screen_list!=NULL) {
-			mylist<ChemMenu> 		menu_list;
+		const char	*title = "Test Screen";
 
-			const char	*title = "Test Screen";
+		screen_list-> clear();
+		PRINT(".. screens.cleared ..\n");		screen_list-> dump();
 
-			screen_list-> clear();
-			PRINT(".. screens.cleared ..\n");
-			screen_list-> dump();
+		mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->add();
+		if ((screen_item !=NULL) && (screen_item-> item !=NULL)) {
+			screen_item-> item -> title = title;
 
-			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->add();
+			PRINT(".. new.screen ..\n");
+			PRINT("===============\n");
+			//screen_item-> item-> init();
+			screen_item-> item-> dump(); NL
 
-			if ((screen_item !=NULL) && (screen_item-> item !=NULL)) {
-				screen_item-> item -> title = title;
-				screen_item-> item -> menu_list = &menu_list;
-
-
-				PRINT(".. new.screen ..\n");
-				PRINT("===============\n");
-				screen_item-> item-> dump(); NL
-				PRINT("===============\n");
-
-				//ChemScreen *screen = screen_item-> item;
-				mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = screen_item-> item-> menu_list->add();
-				if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
-					PRINT(".. new.menu ..\n");
-					ChemMenu *menu = screen_item-> item -> add_menu("test_menu", this);
-					if (menu!=NULL) {
-						menu-> stepx = 1; menu-> stepy = 1;
-						menu-> add_button("A");
-						menu-> add_button("B");
-						menu-> add_button("C");
-						menu->layout_buttons();
-						menu-> dump();
-					}
+			PRINT("=== menu_list ======\n");
+			screen_item-> item-> menu_list->dump();
+			//ChemScreen *screen = screen_item-> item;
+			PRINT("=========== CRASH ==\n");
+			mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = screen_item-> item-> menu_list->add();
+			PRINT("=========== CRASH ==\n");
+			if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
+				PRINT(".. new.menu ..\n");
+				ChemMenu *menu = screen_item-> item -> add_menu("test_menu", this);
+				if (menu!=NULL) {
+					menu-> display = this;
+					menu-> stepx = 1; menu-> stepy = 1;
+					menu-> add_button("A");
+					menu-> add_button("B");
+					menu-> add_button("C");
+					menu->layout_buttons();
+					menu-> dump();
 				}
-				//----------
-				//screen_item-> item-> draw_menus();
-				//void 	draw_menu(ChemMenu *menu);
-				draw_screen(screen_item-> item);
 			}
 
-
-		} //-------------
+			//----------
+			draw_screen(screen_item-> item);
+		}
+	    //-------------
+		//=======================================
 
 		curs(200,200,0);
 //		draw_menus();

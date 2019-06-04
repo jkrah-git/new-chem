@@ -44,6 +44,7 @@ public:
 	void	draw(void);
 	void	draw_border(void);
 	void	layout_buttons(void);
+	ChemMenuButton *test_menu(int posx, int posy);
 	ChemMenuButton *add_button(void){ return add_button(NULL); };
 	ChemMenuButton *add_button(const char *_text);
 };

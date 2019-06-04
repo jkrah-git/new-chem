@@ -30,11 +30,16 @@ public:
 ChemScreen::ChemScreen() {
 	title = NULL;
 	menu_list = NULL;
-	//display = NULL;
+	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
+	if (menu_list!=NULL)
+		menu_list-> init();
 
 }
 //-----------------------------------------
-ChemScreen::~ChemScreen() {}
+ChemScreen::~ChemScreen() {
+	if (menu_list!=NULL) free(menu_list);
+
+}
 //-----------------------------------------
 void ChemScreen::dump(void){
 	if (title==NULL)	printf("ChemScreen[0x%zX].[-]", (long unsigned int) this);
@@ -50,7 +55,7 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = menu_list->add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
 
-		new_menu_item-> item-> display = display;
+		//new_menu_item-> item-> display = display;
 		if (display !=NULL) {
 			new_menu_item-> item-> attrib.gfx = & display-> gfx;
 			new_menu_item-> item-> attrib.scalex = display-> attrib.scalex;

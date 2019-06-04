@@ -113,6 +113,22 @@ void ChemMenu::layout_buttons(void){
 
 }
 //------------------------------
+ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
+	ChemMenuButton *found_item = NULL;
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
+	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
+		if ((current_item-> item->_pos.dim[0] == posx) &&
+			(current_item-> item->_pos.dim[1] == posy) ) {
+			found_item = current_item-> item; break;
+		}
+		//-----
+		current_item = current_item-> next;
+	}
+	return found_item;
+}
+
+
+//------------------------------
 ChemMenuButton *ChemMenu::add_button(const char *_text){
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *new_button_item = button_list.add();
 

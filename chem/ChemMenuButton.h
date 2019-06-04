@@ -29,7 +29,9 @@ enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
 // ---------------------------------------
 class ChemMenuButton {
 public:
+	PeptidePos			_pos;
 	ChemDisplayAttrib	attrib;
+
 	int		sizex;
 	int		sizey;
 	CHEMMENUBUTON_TYPE	mode;

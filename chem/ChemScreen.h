@@ -29,6 +29,7 @@ public:
 	ChemScreen();
 	virtual ~ChemScreen();
 	void	dump(void);
+	// menu inherits ' *gfx struct (scale, offset etc)
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);

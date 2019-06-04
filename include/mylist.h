@@ -5,7 +5,6 @@
  *      Author: jkrah
  */
 
-
 #ifndef MYLIST_H_
 #define MYLIST_H_
 //==========================================================
@@ -14,17 +13,10 @@
 
 //#define DEBUG
 #include "../include/debug.h"
-
-
 //#ifdef LOG
 //#undef LOG
 //#endif
 
-//#ifdef DEBUG
-//#define LOG printf("##-- %s.", __PRETTY_FUNCTION__); printf
-//#else
-//#define LOG if (false) printf
-//#endif
 //---------------------------------------------
 template <class T> class mylist {
 
@@ -93,16 +85,15 @@ public:
 
 	//---------------
 	// ---
+
 	mylist(); //{ mylist(true); };
 	mylist(bool _auto);
 	virtual ~mylist();
 	mylist_item<T>	*gethead(void){ return head; };
 	mylist_item<T>	*gettail(void){ return tail; };
-	//mylist_item<T>	*getpar(mylist_item<T> *list_item);
-
 
 	void 		dump(void);
-
+	void		init(void){ 	autoalloc = true; head = NULL;	tail = NULL;	 };
 	// --------------------
 	//void		clear(bool do_subitem);
 	//void			clear(void){ clear(false); };
@@ -130,10 +121,13 @@ private:
 	mylist_item<T> 	*add(T *element, bool ignore_auto);
 
 };
+
+// --------------------------
 //---------------------------------------------
 template <class T> mylist<T>::mylist() {
 	//PRINT("constructor..\n");
 	autoalloc = true; head = NULL;	tail = NULL;
+	//init();
 };
 template <class T> mylist<T>::mylist(bool _auto) {
 	autoalloc = _auto; head = NULL;	tail = NULL;
@@ -161,7 +155,6 @@ template <class T> mylist<T>::~mylist() {	clear();	};
 	return parent;
 }
 */// --------------------------
-// --------------------------
 template <class T> int mylist<T>::count() {
 	int c=0;
 	mylist_item<T>	*item = head;

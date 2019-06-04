@@ -26,6 +26,7 @@ private:
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
+	ChemScreen				*current_screen;
 	PeptidePos				curs_pos;
 
 public:
@@ -67,9 +68,9 @@ ChemDisplayAttrib			attrib;
 
 	void	draw_match(MoleculeMatchPos *matchpos);
 	//---- new
-	void	draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
-	void	draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
-	void	draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+//	void	draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+//	void	draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+//	void	draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
 	//---
 	void	draw_vm(Concentration_VM *vm);
 	void	draw_cellbox(int minx, int miny, int maxx,int maxy, const char *_title);

@@ -36,13 +36,14 @@ ChemMenuButton::ChemMenuButton() {
 	callback = NULL;
 	sizex = 30;
 	sizey = 30;
-	attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*2);
+	//attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*2);
+	attrib.pos = _pos.dim;
 	attrib.pos[PEPPOS_X]=0;
 	attrib.pos[PEPPOS_Y]=0;
 }
 // ---------------------------------------
 ChemMenuButton::~ChemMenuButton() {
-	free(attrib.pos);
+	//free(attrib.pos);
 	attrib.pos = NULL;
 }
 // ---------------------------------------

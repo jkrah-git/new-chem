@@ -78,6 +78,57 @@ int display_maincb(Concentration_CLI *cli, int argc, char **argv) {
 	return 0;
 }
 // --------------------------
+int	cli_load_screens(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	if (cli->display.screen_list ==NULL) return -2;
+
+	// ====================================
+	PRINT(".. screens ..\n");
+//
+	mylist<ChemMenu> 		menu_list;
+
+		const char	*title = "Test Screen";
+
+		cli->display.screen_list-> clear();
+		PRINT(".. screens.cleared ..\n");
+		cli->display.screen_list-> dump();
+
+		mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list->add();
+
+		if ((screen_item !=NULL) && (screen_item-> item !=NULL)) {
+			screen_item-> item -> title = title;
+			screen_item-> item -> menu_list = &menu_list;
+			//screen_item-> item -> menu_list
+
+			//PRINT(".. new.screen ..\n");
+			//PRINT("===============\n");
+			//screen_item-> item-> dump(); NL
+			//PRINT("===============\n");
+
+			//ChemScreen *screen = screen_item-> item;
+			mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = screen_item-> item-> menu_list->add();
+			if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
+				PRINT(".. new.menu ..\n");
+				ChemMenu *menu = screen_item-> item -> add_menu("test_menu", &cli->display);
+				if (menu!=NULL) {
+					menu-> stepx = 1; menu-> stepy = 1;
+					menu-> add_button("A");
+					menu-> add_button("B");
+					menu-> add_button("C");
+					menu->layout_buttons();
+					menu-> dump();
+				}
+			}
+			//----------
+			//draw_screen(screen_item-> item);
+		}
+
+
+	//-------------
+	return 0;
+}
+
+
 // --------------------------
 int	cli_load_gfx(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
