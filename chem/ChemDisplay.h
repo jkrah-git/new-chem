@@ -75,6 +75,12 @@ ChemDisplayAttrib			attrib;
 	void	draw_cellbox(int minx, int miny, int maxx,int maxy, const char *_title);
 	void	draw_box(int minx, int miny, int maxx,int maxy){ draw_cellbox(minx, miny, maxx, maxy, NULL); };
 
+
+	void 	draw_screen(ChemScreen *screen);
+	int		test_screen(ChemScreen *screen, int posx, int posy);
+	void 	draw_menu_border(ChemMenu *menu);
+	void 	draw_menu(ChemMenu *menu);
+	void 	draw_button(ChemMenuButton *button, ChemDisplayColor *col);
 	//--------------
 	int		main(int argc, char **argv);
 

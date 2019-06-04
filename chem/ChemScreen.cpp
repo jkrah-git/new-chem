@@ -64,13 +64,18 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	}
 	return NULL;
 }
-//-------------------------------
+//-------------------------------//-------------------------------//-------------------------------
+
+
+//-------------------------------//-------------------------------
+/*
 void ChemScreen::draw_menus(void){
 	if (menu_list==NULL) return;
 	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list->gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 	// TODO - Menu Draw
 	//	current_item-> item-> draw();
+
 		//-------
 		current_item = current_item->next;
 	}
@@ -90,5 +95,5 @@ int	ChemScreen::test_menus(int posx, int posy){
 	return 0;
 }
 
-
+*/
 //-------------------------------
