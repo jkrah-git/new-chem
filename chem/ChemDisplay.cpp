@@ -115,6 +115,10 @@ void ChemDisplay::dump() {
 	if (attrib.pos !=NULL) {
 		printf(".. pos[%d,%d,%d]\n", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
 	}
+
+
+	printf("screen_list=>");
+	screen_list->dump();
 }
 //-------------------------------
 void ChemDisplay::gdump() {
