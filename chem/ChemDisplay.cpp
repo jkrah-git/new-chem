@@ -511,7 +511,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 				screen-> waiting = false;
 				break;
 			}
-			PRINT("r=[%d]\n", r);
+			//PRINT("r=[%d]\n", r);
 		} else {
 			break;
 		}
@@ -545,6 +545,8 @@ int ChemDisplay::wait(void) {
 
 	PRINT("# waiting ...\n");
 	int w = gfx.wait();
+	PRINT("# waiting.. recieved[%d]\n", w);
+
 	//		if ((w>31)&&(w<127)) {	PRINT("# recieved[%c][%d][0x%x] [%d][%d] ...\n", w, w, w, gfx.xpos(), gfx.ypos());		}
 	//		else {					PRINT("# recieved[][%d][0x%x] [%d][%d] ...\n", w, w, gfx.xpos(), gfx.ypos());		}
 	if (w==27) {			PRINT("# [ESC][%d]##\n", w);	return -110;	}
