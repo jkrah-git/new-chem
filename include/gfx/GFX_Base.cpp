@@ -159,7 +159,7 @@ void GFX_Base::box( int x, int y, int sx, int sy){
 //-----------------------------------------
 void GFX_Base::box( int x, int y, int sx, int sy, const char *_title){
 
-	PRINT("txt[%s]\n", _title);
+	//PRINT("txt[%s]\n", _title);
 	line(x-sx, y-sy, x+sx, y-sy);
 	line(x+sx, y-sy, x+sx, y+sy);
 	line(x+sx, y+sy, x-sx, y+sy);

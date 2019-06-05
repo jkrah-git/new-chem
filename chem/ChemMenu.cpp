@@ -107,8 +107,8 @@ void ChemMenu::layout_buttons(void){
 		if (px> max_posx) max_posx = px;
 		if (py> max_posy) max_posy = py;
 
-		printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
-		PRINT("Button:"); current_item-> item-> dump();
+	//	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
+	//	PRINT("Button:"); current_item-> item-> dump();
 
 
 

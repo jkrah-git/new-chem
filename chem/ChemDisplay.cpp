@@ -432,35 +432,31 @@ void ChemDisplay::draw_menu_border(ChemMenu *menu){
 }
 //------------------------------
 void ChemDisplay::draw_menu(ChemMenu *menu){
-	PRINT("==== start = >\n");
+	//PRINT("==== start = >\n");
 	if (menu==NULL) return;
 
-	PRINT("======\n");	menu-> dump();	PRINT("======\n");
+	//PRINT("======\n");	menu-> dump();	PRINT("======\n");
 	if (menu-> display==NULL) return;
 
-
-
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = menu-> button_list.gethead();
-	DUMP(current_item)  NL
+	//DUMP(current_item)  NL
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 		ChemDisplayColor *c = &menu-> col;
 		if (current_item-> item->_selected)
 			c = &menu-> selcol;
-		PRINT("== > draw button\n");
+		//PRINT("== > draw button\n");
 		draw_button(current_item-> item, c);
-
-
 		//-----
 		current_item = current_item-> next;
 	}
 	draw_menu_border(menu);
-	PRINT("==== end = >\n");
+	//PRINT("==== end = >\n");
 };
 
 // void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
 void ChemDisplay::draw_button(ChemMenuButton *button, ChemDisplayColor *col) {
 	if (button==NULL) return;
-	button-> dump();
+	//button-> dump();
 	if (col==NULL) return;
 	int x = button-> attrib.screenx();
 	int y = button-> attrib.screeny();
@@ -469,8 +465,8 @@ void ChemDisplay::draw_button(ChemMenuButton *button, ChemDisplayColor *col) {
 	if (button-> text!=NULL)	gfx.text(button-> text, x, y);
 }
 
-
-void ChemDisplay::draw_screen(ChemScreen *screen){
+//------------
+void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 	if (screen==NULL) return;
 	if (screen-> menu_list==NULL) return;
 
@@ -483,17 +479,25 @@ void ChemDisplay::draw_screen(ChemScreen *screen){
 		gdump();
 		if (screen-> title !=NULL)
 			gfx.printg((char*) screen-> title);
+
+		if (screen-> callback !=NULL) {
+			screen-> callback (cli, 0, NULL);
+		}
+
+
 		//----------------------
 		// get all menus
 		mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
-
 		while ((current_item != NULL) && (current_item-> item != NULL)) {
 		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
 			draw_menu(current_item-> item);
 			//-------
 			current_item = current_item->next;
 		}
-		PRINT("=========\n");
+
+
+		//PRINT("=========\n");
+		//-------- wait / loop
 		gfx.flush();
 		if (screen-> waiting) {
 			int r = wait();
@@ -596,6 +600,7 @@ ChemScreen *ChemDisplay::search_screen(const char* screen_title){
 				break;
 			}
 		}
+		screen_item = screen_item->next;
 	}
 	//------
 	return found_screen;
@@ -679,7 +684,7 @@ int ChemDisplay::main(int argc, char **argv) {
 	    //-------------
 		//=======================================
 		*/
-		draw_screen(current_screen);
+		draw_screen(current_screen, NULL);
 		curs(200,200,0);
 //		draw_menus();
 		int x=0;
