@@ -1,16 +1,19 @@
 // -------------------
+#include "../chem/Concentration_CLI.h"
+
+
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
-#include <readline/readline.h>
-#include <readline/history.h>
+//#include <readline/readline.h>
+//#include <readline/history.h>
 #include "../include/debug.h"
 #include "../chem/Peptide.h"
 #include "../chem/Molecule.h"
 #include "../chem/Concentration.h"
 //#include "../chem/mybuffer.h"
 //#include "../chem/MoleculeMatchPos.h"
-#include "../chem/Concentration_CLI.h"
+//#include "../chem/Concentration_CLI.h"
 #include "../chem/CLI_Command.h"
 //#include "../include/mylist.h"
 //#include "../include/gfx/MoleDisplay.h"
@@ -336,8 +339,8 @@ int test_screens(int mode) {
 			}
 
 			//----------
-			cli.display.draw_screen(screen_item-> item);
-			cli.display.select_screen(screen_item-> item);
+			//cli.display.draw_screen(screen_item-> item);
+			//cli.display.select_screen(screen_item-> item);
 	//		PRINT("======> seleted_screen ====>\n");			screen_item-> item-> dump();			PRINT("<======> seleted_screen ====\n");
 		} else {
 			PRINT("========= ERRRRR =========\n");
@@ -351,6 +354,26 @@ int test_screens(int mode) {
 
 	PRINT("=======\n");
 	PRINT("end [%d]..\n", mode);
+	return 0;
+}
+
+int test_cli(void) {
+//===============================================================
+Concentration_VM 	vm;
+ConcentrationVolume vol;
+Concentration_CLI	cli(vol, vm);
+
+
+	PRINT("Testing..\n");
+	PRINT("====================\n");
+	cli.dump();
+
+	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli.display.screen_list->add();
+
+	DUMP(screen_item);
+
+	cli.dump();
+
 	return 0;
 }
 
@@ -373,6 +396,7 @@ const char **build_args(void) {
 		args[c++] = (const char*) "test_printb";
 		args[c++] = (const char*) "test_rot";
 		args[c++] = (const char*) "test_screens";
+		args[c++] = (const char*) "test_cli";
 
 
 		//args[c++] = "test_display";
@@ -385,6 +409,7 @@ const char **build_args(void) {
 	}
 	return args;
 }
+
 
 //=======================================================
 int run(int argc, char **argv) {
@@ -399,6 +424,7 @@ int run(int argc, char **argv) {
 		if ( (strcmp(argv[0], "test_display")==0))	{ return test_display(0); }
 		if ( (strcmp(argv[0], "test_printb")==0))	{ return test_printb(); }
 		if ( (strcmp(argv[0], "test_rot")==0))		{ return test_rot(); }
+		if ( (strcmp(argv[0], "test_cli")==0))		{ return test_cli(); }
 
 		if ( (strcmp(argv[0], "test_screens")==0))		{ return test_screens(0); }
 
@@ -406,7 +432,7 @@ int run(int argc, char **argv) {
 	}
 	if (argc ==2){
 		int arg1 = atoi(argv[1]);
-		if ( (strcmp(argv[0], "test_display")==0))	{ return test_display(arg1); }
+		if ( (strcmp(argv[0], "test_cli")==0))	{ return test_display(arg1); }
 
 	}
 	return -10;

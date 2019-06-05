@@ -141,6 +141,7 @@ void Concentration_CLI::dump() {
 	var_cmdlist_dump(); 	//printf("'var' Commands..\n");		var_cmdlist.dump();
 	var_list_dump(); 		//printf("Variables..\n");		vars_list.dump();
 	//printf("last_result = [%d] : last_line = [%s]\n", last_result, last_line);
+	display.dump();
 }
 //---------------------------------
 
