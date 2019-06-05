@@ -29,7 +29,9 @@ public:
 //-----------------------------------------
 ChemScreen::ChemScreen() {
 	title = NULL;
-	menu_list = NULL;
+	callback  =NULL;
+	waiting = true;
+
 	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
 	if (menu_list!=NULL)
 		menu_list-> init();
@@ -52,11 +54,13 @@ void ChemScreen::dump(void){
 //-------------------------------//-------------------------------
 ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	if ((menu_list==NULL)||(display==NULL)) return NULL;
+
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = menu_list->add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
 
 		//new_menu_item-> item-> display = display;
 		if (display !=NULL) {
+			new_menu_item-> item-> display = display;
 			new_menu_item-> item-> attrib.gfx = & display-> gfx;
 			new_menu_item-> item-> attrib.scalex = display-> attrib.scalex;
 			new_menu_item-> item-> attrib.scaley = display-> attrib.scaley;
@@ -69,12 +73,13 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	}
 	return NULL;
 }
+//-----------------------------------------
 //-------------------------------//-------------------------------//-------------------------------
 
 
 //-------------------------------//-------------------------------
 /*
-void ChemScreen::draw_menus(void){
+void ChemScreen::	void			draw_menus(ChemDisplay *display);{
 	if (menu_list==NULL) return;
 	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list->gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {

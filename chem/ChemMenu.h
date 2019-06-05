@@ -16,6 +16,7 @@ class ChemDisplay;
 class ChemMenu {
 public:
 	const char				*title;
+	// you have been here before (display)
 	ChemDisplay 			*display;
 	ChemDisplayAttrib		attrib;
 	CHEMMENUBUTON_TYPE		mode;

@@ -10,13 +10,14 @@
 #include "../chem/Concentration.h"
 //#include "../chem/mybuffer.h"
 //#include "../chem/MoleculeMatchPos.h"
-//#include "../chem/Concentration_CLI.h"
-//#include "../chem/CLI_Command.h"
+#include "../chem/Concentration_CLI.h"
+#include "../chem/CLI_Command.h"
 //#include "../include/mylist.h"
 //#include "../include/gfx/MoleDisplay.h"
 #include "../chem/ChemDisplay.h"
-//#include "../chem/CLI_Command.h"
+#include "../chem/CLI_Command.h"
 #include "../include/common.h"
+
 
 ///=================== need to be declared externally
 const char 	**build_args(void);
@@ -154,7 +155,7 @@ int test_display_peps(ChemDisplay *display) {
 		display-> draw_pep(&pep);
 		PRINT("# waiting ...\n");
 		int w = display-> gfx.wait();
-		PRINT("# recieved[%d] [%d][%d] ...\n", w, display-> gfx.saved_xpos, display-> gfx.saved_ypos);
+		PRINT("# recieved[%d] [%d][%d] ...\n", w, display-> gfx.xpos(), display-> gfx.ypos());
 	}
 	PRINT("# loop2\n");
 	PRINT("# =======\n");
@@ -252,6 +253,107 @@ int test_display(int mode) {
 	return 0;
 }
 
+//------------------------------------
+
+Concentration_VM 	vm;
+ConcentrationVolume vol;
+Concentration_CLI	cli(vol, vm);
+
+//-------------------
+int test_screens(int mode) {
+	PRINT("start [%d]..\n", mode);
+	PRINT("=======\n");
+//	PRINT("new cli\n");
+//	PRINT("========\n");
+//	cli.dump();
+
+	// start
+	//cli.load_commands();
+
+	PRINT(".. screens ..\n");
+//
+	//mylist<ChemMenu> 		menu_list;
+
+		const char	*title = "Test Screen";
+
+		cli.display.screen_list-> clear();
+	//	PRINT("========= screen_list.clear =========\n");
+	//	cli.display.screen_list-> dump();
+	//	PRINT("========= \n");	//screen_list.clear =========\n");
+
+		mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli.display.screen_list->add();
+
+		if ((screen_item !=NULL) && (screen_item-> item !=NULL)) {
+			//screen_item-> item -> title = title;
+
+			ChemScreen* screen = screen_item-> item;
+			screen-> title = title;
+
+
+			PRINT("========= screen = new screen_item =========> \n");
+			screen-> dump();
+
+			//screen_item-> item -> menu_list = &menu_list;
+			//screen_item-> item -> menu_list
+
+			//PRINT(".. new.screen ..\n");
+			//PRINT("===============\n");
+			//screen_item-> item-> dump(); NL
+			//PRINT("===============\n");
+			//PRINT("========= new screen_item =========> \n");
+			//screen_item -> dump();
+			//PRINT("<========= new screen_item =========\n");
+
+
+			//ChemScreen *screen = screen_item-> item;
+			mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item = screen_item-> item-> menu_list->add();
+			PRINT("============(post menu add ======> \n");
+			screen-> dump();
+			PRINT("<===============================\n");
+
+			//DUMP(new_menu_item)
+
+			if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
+				ChemMenu *menu = new_menu_item-> item;
+				PRINT("=======(new menu)=============> \n");
+				menu-> dump();
+				PRINT("<===============================\n");
+
+				PRINT("new menu = [0x%zX]\n", (long unsigned int) menu);
+				if (menu!=NULL) {
+					//PRINT("========= new menu (menu) =========\n");
+					//menu -> dump();
+					menu-> stepx = 1; menu-> stepy = 1;
+					menu-> add_button("A");
+					menu-> add_button("B");
+					menu-> add_button("C");
+					menu->layout_buttons();
+					PRINT("======> final menu ====>\n");
+					menu-> dump();
+					PRINT("<======> final menu ===\n");
+				}
+
+			}
+
+			//----------
+			cli.display.draw_screen(screen_item-> item);
+			cli.display.select_screen(screen_item-> item);
+	//		PRINT("======> seleted_screen ====>\n");			screen_item-> item-> dump();			PRINT("<======> seleted_screen ====\n");
+		} else {
+			PRINT("========= ERRRRR =========\n");
+			PRINT("screen_list.add returned NULL");
+		}
+
+		PRINT("========= FINAL SCREEN LIST =========\n");
+		 cli.display.screen_list-> dump();
+
+	//---------------------------
+
+	PRINT("=======\n");
+	PRINT("end [%d]..\n", mode);
+	return 0;
+}
+
 //===============================================================//===============================================================
 const char **build_args(void) {
 	// =======================
@@ -270,6 +372,7 @@ const char **build_args(void) {
 		args[c++] = (const char*) "test_display";
 		args[c++] = (const char*) "test_printb";
 		args[c++] = (const char*) "test_rot";
+		args[c++] = (const char*) "test_screens";
 
 
 		//args[c++] = "test_display";
@@ -297,6 +400,7 @@ int run(int argc, char **argv) {
 		if ( (strcmp(argv[0], "test_printb")==0))	{ return test_printb(); }
 		if ( (strcmp(argv[0], "test_rot")==0))		{ return test_rot(); }
 
+		if ( (strcmp(argv[0], "test_screens")==0))		{ return test_screens(0); }
 
 
 	}

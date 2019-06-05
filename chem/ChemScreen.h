@@ -25,14 +25,19 @@ public:
 	const char					*title;
 	mylist<ChemMenu> 		*menu_list;
 	PeptidePos				curs_pos;
+	bool					waiting;
+	int					(*callback)(Concentration_CLI*, int, char**);
+
+
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
 	void	dump(void);
 	// menu inherits ' *gfx struct (scale, offset etc)
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
-	void					draw_menus(void);
-	int						test_menus(int posx, int posy);
+	//void					draw_menus(ChemDisplay *display);
+	//int						test_menus(int posx, int posy);
+	//int						wait(void);
 };
 //-----------------------------------------
 

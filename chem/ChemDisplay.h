@@ -26,7 +26,6 @@ private:
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
-	ChemScreen				*current_screen;
 	PeptidePos				curs_pos;
 
 public:
@@ -41,8 +40,9 @@ ChemDisplayAttrib			attrib;
 	Concentration			*conc;
 	ConcentrationVolume 	*concvol;
 	MoleculeMatchPos 		*matchpos;
-	//mylist<ChemMenu> 		*menu_list;
+
 	mylist<ChemScreen> 		*screen_list;
+	ChemScreen				*current_screen;
 
 
   	//-------------------
@@ -82,7 +82,12 @@ ChemDisplayAttrib			attrib;
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemMenuButton *button, ChemDisplayColor *col);
+	//void	select_screen(ChemScreen *_screen);
+
 	//--------------
+	int		wait(void);
+	ChemScreen *add_screen(const char* screen_title);
+	ChemScreen *search_screen(const char* screen_title);
 	int		main(int argc, char **argv);
 
 };

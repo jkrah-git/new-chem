@@ -78,7 +78,7 @@ void ChemMenu::dump(void){
 		//-----
 		current_item = current_item-> next;
 	}
-	printf("\n");
+	//printf("\n");
 
 }
 //------------------------------
@@ -91,10 +91,12 @@ void ChemMenu::layout_buttons(void){
 	min_posx =0;	max_posx =0;
 	min_posy =0;	max_posy =0;
 
+
 	// test by fixing abs pos of each button
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-//		current_item-> item-> attrib.gfx = attrib.gfx;
+
+		current_item-> item-> attrib.gfx = attrib.gfx;
 		current_item-> item-> attrib.offsetx = offsetx;
 		current_item-> item-> attrib.offsety = offsety;
 		//PRINT("--- pos[%d,%d] -->\n", posx, posy); current_item-> item-> dump(); NL
@@ -104,6 +106,11 @@ void ChemMenu::layout_buttons(void){
 		if (py< min_posy) min_posy = py;
 		if (px> max_posx) max_posx = px;
 		if (py> max_posy) max_posy = py;
+
+		printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
+		PRINT("Button:"); current_item-> item-> dump();
+
+
 
 		px += stepx;
 		py += stepy;
@@ -119,6 +126,7 @@ ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 		if ((current_item-> item->_pos.dim[0] == posx) &&
 			(current_item-> item->_pos.dim[1] == posy) ) {
+
 			found_item = current_item-> item; break;
 		}
 		//-----
