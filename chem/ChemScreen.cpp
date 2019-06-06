@@ -11,26 +11,33 @@
 //-----------------------------------------
 class ChemScreen {
 	// does this make a screen
+	//----------
+	// TODO:fix to local
 	char					*title;
-	ChemDisplay 			*display;
+public:
 	mylist<ChemMenu> 		*menu_list;
 	PeptidePos				curs_pos;
-	//----------
-	ChemMenu				*add_menu(const char *_title);
-	void					draw_menus(void);
-	int						test_menus(int posx, int posy);
-public:
+	bool					waiting;
+	int					(*callback)(Concentration_CLI*, int, char**);
+
+	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
+	void	dump(void);
+	// menu inherits ' *gfx struct (scale, offset etc)
+	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
+
+	const char 				*get_title(void){ return title; };
+	int						set_title(const char* newtitle);
+
 };
 //-----------------------------------------
-
 */
 //-----------------------------------------
 ChemScreen::ChemScreen() {
 	title = NULL;
 	callback  =NULL;
-	waiting = true;
+	waiting = false;
 
 	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
 	if (menu_list!=NULL)
@@ -40,7 +47,7 @@ ChemScreen::ChemScreen() {
 //-----------------------------------------
 ChemScreen::~ChemScreen() {
 	if (menu_list!=NULL) free(menu_list);
-
+	if (title ==NULL) 	free(title);
 }
 //-----------------------------------------
 void ChemScreen::dump(void){
@@ -75,7 +82,29 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 }
 //-----------------------------------------
 //-------------------------------//-------------------------------//-------------------------------
+int	ChemScreen::set_title(const char* newtitle){
+	if (newtitle==NULL) return -1;
 
+	int len = strlen(newtitle)+1;
+	if (len<1) return -2;
+
+	char *buf = (char*) malloc(sizeof(char)*len);
+	if (buf==NULL) {
+		PRINT("Failled to malloc title..\n");
+		return -3;
+	}
+	if (title!=NULL) free(title);
+	strncpy(buf, newtitle, len);
+	title = buf;
+	return len;
+}
+int	ChemScreen::istitle(const char* _title){
+	if ((_title==NULL) && (title==NULL)) return 0;
+	if ((_title!=NULL) && (title!=NULL)) {
+		return strcmp(_title, title);
+	}
+	return 1;
+}
 
 //-------------------------------//-------------------------------
 /*

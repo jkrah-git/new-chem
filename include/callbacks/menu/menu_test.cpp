@@ -7,6 +7,7 @@
 
 //---------------
 #include "menu_callbacks.h"
+#include "../screens/screen_callbacks.h"
 // --------------------------// --------------------------// --------------------------
 int cli_gfx_matchcb(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
@@ -89,7 +90,7 @@ int	cli_gfx_screens_cb2(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 // --------------------------// --------------------------// --------------------------
-int	cli_load_test_screens(Concentration_CLI *cli, int argc, char **argv){
+int	XXcli_load_test_screens(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	if (cli->display.screen_list ==NULL) return -2;
 

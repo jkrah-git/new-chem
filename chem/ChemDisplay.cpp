@@ -481,9 +481,17 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		gfx.clear();
 		grid(100,100,100);
 		gdump();
-		if (screen-> title !=NULL)
-			gfx.printg((char*) screen-> title);
 
+		char _title[128];
+		sprintf(_title, "== Screen[%s] ==", screen-> get_title());
+		gfx.printg(_title);
+		/*
+		if (screen-> title !=NULL) {
+			gfx.printg((char*) screen-> title);
+		} else {
+			gfx.printg("(NULL)Title");
+		}
+		*/
 		if (screen-> callback !=NULL) {
 			screen-> callback (cli, 0, NULL);
 		}
@@ -577,6 +585,19 @@ int ChemDisplay::wait(void) {
 }
 //-------------------------------
 ChemScreen *ChemDisplay::add_screen(const char* screen_title){
+
+	//PRINT("ADD[%s]..\n", screen_title);
+	if (screen_title==NULL) {
+		PRINT("NULL screen_title");
+		return NULL;
+	}
+
+	if (strlen(screen_title)==0) {
+		PRINT("Empty screen_title");
+		return NULL;
+	}
+
+
 	ChemScreen *found_screen = search_screen(screen_title);
 	if (found_screen!=NULL) {
 		return NULL;
@@ -586,8 +607,21 @@ ChemScreen *ChemDisplay::add_screen(const char* screen_title){
 	if ((new_item==NULL)||(new_item-> item ==NULL)) {
 		return NULL;
 	}
-	new_item-> item-> title = screen_title;
 
+	/*
+	int len = strlen(screen_title)+1;
+	if (len>0) {
+		char *buf = (char*) malloc(sizeof(char)*len);
+		if (buf==NULL) {
+			PRINT("Failled to malloc title..\n");
+		} else {
+			strncpy(buf, screen_title, len);
+			new_item-> item-> title = buf;
+		}
+	}
+//	new_item-> item-> title = screen_title;
+ */
+	new_item-> item-> set_title(screen_title);
 	//--------------
 	return new_item-> item;
 }
@@ -596,6 +630,7 @@ ChemScreen *ChemDisplay::search_screen(const char* screen_title){
 	ChemScreen *found_screen = NULL;
 	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->gethead();
 	while ((screen_item!=NULL)&&(screen_item-> item!=NULL)) {
+		/*
 		if ((screen_title==NULL) && (screen_item-> item->title==NULL)) {
 			found_screen = screen_item-> item;
 			break;
@@ -606,6 +641,12 @@ ChemScreen *ChemDisplay::search_screen(const char* screen_title){
 				break;
 			}
 		}
+		*/
+		if (screen_item-> item->istitle(screen_title)==0) {
+			found_screen = screen_item-> item;
+			break;
+		}
+		//---------------------
 		screen_item = screen_item->next;
 	}
 	//------

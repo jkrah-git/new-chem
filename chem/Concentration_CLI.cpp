@@ -15,7 +15,8 @@
 #include "Concentration_CLI.Callbacks/vars.cpp"
 #include "Concentration_CLI.Callbacks/match.cpp"
 //#include "Concentration_CLI.Callbacks/display.cpp"
-#include "../include/callbacks/menu/menu_callbacks.h"
+//#include "../include/callbacks/menu/menu_callbacks.h"
+#include "../include/callbacks/screens/screen_callbacks.h"
 // -------------------
 //---------------------------------//---------------------------------
 /*
@@ -320,8 +321,8 @@ void Concentration_CLI::load_commands() {
 	cli_load_base(this, 0, NULL);
 	cli_load_vars(this, 0, NULL);
 	cli_load_match(this, 0, NULL);
-	cli_load_gfx(this, 0, NULL);
-
+	//cli_load_gfx(this, 0, NULL);
+	cli_load_screen(this, 0, NULL);
 
 
 }

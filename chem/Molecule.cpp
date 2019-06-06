@@ -221,7 +221,7 @@ int Molecule::addpep(PepSig sig){
 		Peptide tmp_pep;
 		tmp_pep.addpep(sig, tail->item);
 
-		PRINT("::temp_pep ==> "); tmp_pep.dump(); NL
+		//PRINT("::temp_pep ==> "); tmp_pep.dump(); NL
 
 
 		mylist<Peptide>::mylist_item<Peptide>  *testpep = testpos(&tmp_pep);

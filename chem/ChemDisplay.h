@@ -88,7 +88,7 @@ ChemDisplayAttrib			attrib;
 	int		wait(void);
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);
-	int		main(int argc, char **argv);
+	int			main(int argc, char **argv);
 
 };
 

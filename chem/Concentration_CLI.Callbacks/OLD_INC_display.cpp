@@ -13,7 +13,7 @@ int cli_gfx_matchcb(Concentration_CLI *cli, int argc, char **argv) {
 // --------------------------
 int cli_gfx_molecb(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	cli->display.gfx.title = (const char*) "Mole";
+	//cli->display.gfx.title = (const char*) "Mole";
 	cli->display.gfx.open();
 	cli->display.gfx.clear();
 	//cli->display.setcol(0,100,0);

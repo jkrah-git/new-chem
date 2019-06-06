@@ -21,13 +21,12 @@ class ChemScreen {
 	// does this make a screen
 	//----------
 	// TODO:fix to local
+	char					*title;
 public:
-	const char					*title;
 	mylist<ChemMenu> 		*menu_list;
 	PeptidePos				curs_pos;
 	bool					waiting;
 	int					(*callback)(Concentration_CLI*, int, char**);
-
 
 	//--------------
 	ChemScreen();
@@ -35,9 +34,11 @@ public:
 	void	dump(void);
 	// menu inherits ' *gfx struct (scale, offset etc)
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
-	//void					draw_menus(ChemDisplay *display);
-	//int						test_menus(int posx, int posy);
-	//int						wait(void);
+
+	const char 				*get_title(void){ return title; };
+	int						set_title(const char* newtitle);
+	int						istitle(const char* _title);
+
 };
 //-----------------------------------------
 
