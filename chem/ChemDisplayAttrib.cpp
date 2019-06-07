@@ -6,9 +6,11 @@
  */
 
 #include <stdlib.h>
+#include <math.h>
 #include "ChemDisplayAttrib.h"
-
+#include "../include/debug.h"
 class ChemDisplay;
+
 /*
 
 // ---------------------------------------
@@ -58,6 +60,10 @@ void ChemDisplayAttrib::init() {
 void ChemDisplayAttrib::dump(void) {
 	printf("ChemDisplayAttrib[0x%zX]:",	(long unsigned int) this);
 	printf("gfx[0x%zX]:",	(long unsigned int) gfx);
+	if (gfx!=NULL) {
+		printf("([%d]x[%d]):", gfx->width, gfx->height);
+	}
+
 	printf(".offset[%d,%d].pos", offsetx, offsety);
 	if (pos==NULL) {
 		printf("[NULL]");
@@ -110,11 +116,44 @@ int ChemDisplayAttrib::gety(int offy, int posy){
 
 //--------------------------
 int ChemDisplayAttrib::getxcell(int screenx){
-	return (screenx-(gfx-> width/2))/scalex;
+	//return (screenx - (scalex/2) -(gfx-> width/2))/ scalex;
+	/*
+	// uncenter  -= 					// eg (sc=100 )600,600, @200,400
+	int x = screenx; // + (scalex/2);
+	PRINT("1. x=[%d]\n", x);
+
+	x = x - (gfx-> width/2);  	// = @-100, +100
+	PRINT("uncentered x=[%d]\n", x);
+
+	x = x - offsetx;
+	PRINT("x=[%d]\n", x);
+	float xf = x / (float)scalex;
+	PRINT("xf=[%f]\n", xf);
+
+	x = round(xf);
+	PRINT("x=[%d]\n", x);
+*/
+	int x = screenx - (gfx-> width/2) -offsetx;
+	//PRINT("1. x=[%d]\n", x);
+	float xf = x / (float)scalex;
+	//PRINT("xf=[%f]\n", xf);
+	x = round(xf);
+	//PRINT("x=[%d]\n", x);
+	return x;
 }
 //--------------------------
 int ChemDisplayAttrib::getycell(int screeny){
-	return -(screeny-(gfx-> height/2))/scaley;
+//	return -(screeny - (scaley/2) -(gfx-> height/2))/scaley;
+
+	int y = screeny - (gfx->height/2) -offsety;
+	//PRINT("1. x=[%d]\n", x);
+	float yf = y / (float)scaley;
+	//PRINT("xf=[%f]\n", xf);
+	y = - round(yf);
+	//PRINT("x=[%d]\n", x);
+	return y;
+
+
 }
 //--------------------------
 int ChemDisplayAttrib::screenx(void){

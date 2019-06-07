@@ -164,7 +164,7 @@ void GFX_Base::box( int x, int y, int sx, int sy, const char *_title){
 	line(x+sx, y-sy, x+sx, y+sy);
 	line(x+sx, y+sy, x-sx, y+sy);
 	line(x-sx, y+sy, x-sx, y-sy);
-
+	//PRINT("[%d,%d] +[%d][%d]\n", x, y, sx, sy);
 
 	if (_title!=NULL) {
 		int len = strlen(_title) * FONT_WIDTH;

@@ -20,7 +20,11 @@ public:
 	GFX_Base	*gfx;
 	int 		offsetx;
 	int 		offsety;
-  PepPosVecType	*pos;
+  // TODO: change to full
+//	PepPosVecType	*pos;
+
+	PepPosVecType	*pos;
+
 	int 		scalex;
 	int 		scaley;
 

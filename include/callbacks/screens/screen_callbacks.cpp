@@ -140,6 +140,41 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			}
 		} // ------------------end(callback)
 
+		//---------------
+		// argv($name, scale, [$sclae])
+		//----------------
+		if (strcmp(argv[1], "scale")==0) {
+			//PRINT(" scale : argc[%d][%s]\n", argc, argv[argc-1]);
+			if (argc<3) {
+				printf("[%d][%d]\n", cli->display.attrib.scalex, cli->display.attrib.scaley);
+			}
+
+			if (argc==3) {
+				int sx, r;
+				r = sscanf(argv[2], "%d", &sx);
+				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
+				cli->display.attrib.scalex = sx;
+				cli->display.attrib.scaley = sx;
+				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sx);
+			} // end(argc==3)
+
+			if (argc==4) {
+				int sx, sy, r;
+				r = sscanf(argv[2], "%d", &sx);
+				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
+				r = sscanf(argv[3], "%d", &sy);
+				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
+
+				cli->display.attrib.scalex = sx;
+				cli->display.attrib.scaley = sy;
+				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sy);
+			} // end(argc==3)
+
+
+
+
+
+		} // ------------------end(callback)
 
 
 

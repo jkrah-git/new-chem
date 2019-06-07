@@ -18,6 +18,28 @@
 
 //class ChemScreen;
 #include "ChemScreen.h"
+
+#define DISPLAY_EVENT_MOUSE1 1
+#define DISPLAY_EVENT_MOUSE2 3
+#define DISPLAY_EVENT_MOUSE3 2
+#define DISPLAY_EVENT_MOUSEUP 4
+#define DISPLAY_EVENT_MOUSEDOWN 5
+
+#define DISPLAY_EVENT_LEFT 	81
+#define DISPLAY_EVENT_RIGHT 82
+#define DISPLAY_EVENT_UP	83
+#define DISPLAY_EVENT_DOWN	84
+#define DISPLAY_EVENT_ESC 	27
+
+/*
+	// ARROWS
+	case 81:	curs_pos.dim[PEPPOS_X] --;	break;
+	case 82:	curs_pos.dim[PEPPOS_Y] ++;	break;
+	case 83:	curs_pos.dim[PEPPOS_X] ++;	break;
+	case 84:	curs_pos.dim[PEPPOS_Y] --;	break;
+	}
+*/
+
 //====================================
 // ----------------
 class ChemDisplay {
@@ -26,7 +48,7 @@ private:
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
-	PeptidePos				curs_pos;
+	//PeptidePos				curs_pos;
 
 public:
 	GFX_Base				gfx;
@@ -56,7 +78,6 @@ ChemDisplayAttrib			attrib;
 //	void	grid(){ grid(col.r, col.g, col.b); }
 	void	grid(){ grid(100,100,100); }
 	void	grid(int red, int green, int blue);
-	void	curs(int red, int green, int blue);
 	void	clearatt();
 
 	void	draw_pep(Peptide *pep);
@@ -85,10 +106,12 @@ ChemDisplayAttrib			attrib;
 	//void	select_screen(ChemScreen *_screen);
 
 	//--------------
-	int		wait(void);
+	int		XXwait(ChemScreen *screen);
+	void	XXcurs(int red, int green, int blue);
+
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);
-	int			main(int argc, char **argv);
+	int			XXmain(int argc, char **argv);
 
 };
 

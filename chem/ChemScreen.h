@@ -15,7 +15,7 @@
 #include "ChemDisplay.h"
 //class ChemDisplay;
 
-
+enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
 //-----------------------------------------
 class ChemScreen {
 	// does this make a screen
@@ -27,6 +27,7 @@ public:
 	PeptidePos				curs_pos;
 	bool					waiting;
 	int					(*callback)(Concentration_CLI*, int, char**);
+	SCREEN_WAIT_MODE		waitmode;
 
 	//--------------
 	ChemScreen();
@@ -38,6 +39,7 @@ public:
 	const char 				*get_title(void){ return title; };
 	int						set_title(const char* newtitle);
 	int						istitle(const char* _title);
+	int						wait(ChemDisplay *display);
 
 };
 //-----------------------------------------
