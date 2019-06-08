@@ -48,13 +48,12 @@ private:
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
-	//PeptidePos				curs_pos;
-	ChemDisplayAttrib			attrib;
+//	ChemDisplayAttrib		attrib;
 
 public:
 	GFX_Base				gfx;
 
-    // selected objects
+    // main VM
 	Concentration_VM		*core;
 	// selection pointers
 	Peptide					*pep;
@@ -65,7 +64,7 @@ public:
 
 	mylist<ChemScreen> 		*screen_list;
 	ChemScreen				*current_screen;
-	ChemDisplayAttrib		*getattrib(void){ return &attrib; };
+//	ChemDisplayAttrib		*getattrib(void){ return &attrib; };
 
   	//-------------------
 	ChemDisplay();
@@ -74,34 +73,32 @@ public:
 	void	gdump(ChemDisplayColor *col){  gfx.color(col); gdump(); };
 	void	gdump();
 
-	//void	setcol(int red, int green, int blue){ 	colr = red; colg = green; colb = blue; gfx.color(colr, colg, colb); };
-//	void	grid(){ grid(col.r, col.g, col.b); }
-	void	grid(){ grid(100,100,100); }
-	void	grid(int red, int green, int blue);
-	void	clearatt();
+	void	grid(ChemDisplayAttrib *screen_attrib){ grid(screen_attrib, 100,100,100); }
+	void	grid(ChemDisplayAttrib *screen_attrib, int red, int green, int blue);
 
-	void	draw_pep(Peptide *pep);
-	void	draw_pep(Peptide *pep, int red, int green, int blue) { gfx.color(red, green, blue); draw_pep(pep); };
-	void	draw_pep(Peptide *pep, ChemDisplayColor *col) { gfx.color(col); draw_pep(pep); };
+	void	draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep);
+	void	draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep, int red, int green, int blue) { gfx.color(red, green, blue); draw_pep(screen_attrib, pep); };
+	void	draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep, ChemDisplayColor *col) {		 gfx.color(col); draw_pep(screen_attrib, pep); };
 
-	void	draw_mole(Molecule *mole, int r, int g, int b); // { gfx.color(red, green, blue); draw_mole(mole); };
-	void	draw_mole(Molecule *mole, ChemDisplayColor *col); // { gfx.color(col); draw_mole(mole); };
+	// ChemDisplayAttrib *screen_attrib,
+	void	draw_mole(ChemDisplayAttrib *screen_attrib, Molecule *mole, int r, int g, int b);
+	void	draw_mole(ChemDisplayAttrib *screen_attrib, Molecule *mole, ChemDisplayColor *col);
 
-	void	draw_match(MoleculeMatchPos *matchpos);
-	//---- new
-//	void	draw_regs(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
-//	void	draw_pep(Peptide *pep, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
-//	void	draw_mole(Peptide *mole, int offsetx, int offsety, PepPosVecType *pos, float scale, int red, int green, int blue);
+	void	draw_match(ChemDisplayAttrib *screen_attrib, MoleculeMatchPos *matchpos);
 	//---
 	void	draw_vm(Concentration_VM *vm);
-	void	draw_cellbox(int minx, int miny, int maxx,int maxy, const char *_title);
-	void	draw_box(int minx, int miny, int maxx,int maxy){ draw_cellbox(minx, miny, maxx, maxy, NULL); };
+
+	void	draw_cellbox(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
+	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy){
+		draw_cellbox(screen_attrib, minx, miny, maxx, maxy, NULL); };
+
+	void 	draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
+	void 	draw_menu(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
+	void 	draw_button(ChemDisplayAttrib *screen_attrib, ChemMenuButton *button, ChemDisplayColor *col);
+
 
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
 	int		test_screen(ChemScreen *screen, int posx, int posy);
-	void 	draw_menu_border(ChemMenu *menu);
-	void 	draw_menu(ChemMenu *menu);
-	void 	draw_button(ChemMenuButton *button, ChemDisplayColor *col);
 	//--------------
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);

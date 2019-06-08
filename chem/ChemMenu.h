@@ -17,7 +17,9 @@ class ChemMenu {
 	char				*title;
 public:
 	// you have been here before (display)
-	ChemDisplay 			*display;
+//	ChemDisplay 			*display;
+
+
 	ChemDisplayAttrib		attrib;
 	CHEMMENUBUTON_TYPE		mode;
 	mylist<ChemMenuButton> 	button_list;

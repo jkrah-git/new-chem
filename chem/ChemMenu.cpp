@@ -47,7 +47,7 @@ public:
 //------------------------------
 ChemMenu::ChemMenu() {
 	title = NULL;
-	display = NULL;
+//	display = NULL;
 	mode = UNDEF;
 	col.set(0,200,0);
 	selcol.set(200,100,0);
@@ -67,7 +67,7 @@ ChemMenu::~ChemMenu() {
 //------------------------------
 void ChemMenu::dump(void){
 	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
-	printf(".display[0x%zX]",	(long unsigned int) display);
+//	printf(".display[0x%zX]",	(long unsigned int) display);
 	printf(".title[%s]", title);
 	printf(".mode[%d]", mode);
 	printf(".col[%d,%d,%d]", col.r, col.g, col.b);
@@ -98,7 +98,7 @@ void ChemMenu::layout_buttons(void){
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 
-		current_item-> item-> attrib.gfx = attrib.gfx;
+		//current_item-> item-> attrib.gfx = attrib.gfx;
 		current_item-> item-> attrib.offsetx = offsetx;
 		current_item-> item-> attrib.offsety = offsety;
 
@@ -173,7 +173,7 @@ ChemMenuButton *ChemMenu::add_button(const char *_text){
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *new_button_item = button_list.add();
 	if ((new_button_item!=NULL)&&(new_button_item-> item!=NULL)) {
 
-		new_button_item-> item-> attrib.gfx = attrib.gfx;
+		//new_button_item-> item-> attrib.gfx = attrib.gfx;
 		new_button_item-> item-> attrib.scalex = attrib.scalex;
 		new_button_item-> item-> attrib.scaley = attrib.scaley;
 		new_button_item-> item-> sizex = button_sizex;

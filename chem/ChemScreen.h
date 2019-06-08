@@ -28,7 +28,7 @@ public:
 	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
 	bool					waiting;
-	int					(*callback)(Concentration_CLI*, int, char**);
+	int					(*renderCB)(Concentration_CLI*, int, char**);
 	SCREEN_WAIT_MODE		waitmode;
 
 	//--------------

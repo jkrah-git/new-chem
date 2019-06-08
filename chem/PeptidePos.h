@@ -30,6 +30,7 @@ public:
 	void		test();
 	PeptidePos& operator +(const PeptidePos& p);
 	PeptidePos& operator =(const PeptidePos& p);
+	PeptidePos& operator =(const PepPosVecType *v);
 	       bool operator ==(const PeptidePos& p);
 	PeptidePos();
 	virtual ~PeptidePos();

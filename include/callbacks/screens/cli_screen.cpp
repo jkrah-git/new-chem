@@ -30,9 +30,10 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 	// screen 1
 	{
 		ChemScreen *screen = cli->display.add_screen("screen1");
-		if (screen==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
+		if (screen==NULL)  {	PRINT("screen_list.add returned NULL\n"); 	return -3;	}
+
 		ChemMenu *menu = screen-> add_menu("menu1", &cli->display);
-		if (menu==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
+		if (menu==NULL)  {	PRINT("menu_list.add returned NULL\n"); 	return -3;	}
 		if (menu !=NULL) {
 			menu-> stepx = 1;
 			menu-> stepy = 0;
@@ -150,8 +151,9 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		if (strcmp(argv[0], "help")==0) {
 			//PRINT("LIST...\n");
 			//list_screens(cli, 0, NULL);
-			printf("screen name     ,..selects\n");
-			printf("screen [ add ]\n");
+			printf("off\n");
+			printf("name\n");
+			printf("name add]\n");
 			return 0;
 		}
 		//---------------- OFF
@@ -163,7 +165,6 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		}
 		//---------------- _test
 		if (strcmp(argv[0], "_test")==0) {
-			//PRINT("LIST...\n");
 			return cli_screen_test(cli, 0, NULL);
 		}
 	} // -- end (argc==1) (known commands)
@@ -209,30 +210,40 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 
 
 		//---------------
-		// argv($name, callback, [$func])
+		// argv(name, render, [func])
 		//----------------
-		if (strcmp(argv[1], "callback")==0) {
-			//PRINT(" callback : argc[%d][%s]\n", argc, argv[argc-1]);
+		if (strcmp(argv[1], "render")==0) {
+			//PRINT(" render : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) {
-				screen-> callback = NULL;
+				/*
+				screen-> renderCB = NULL;
 				printf("screen[%s].callback removed..\n", argv[0]);
+				*/
+				printf("# possible values:\n");
+				printf("null\n");
+				printf("mole\n");
 			}
 
 			if (argc==3) {
-				printf("screen[%s].callback ->[%s]\n", argv[0], argv[2]);
-
-				// argv($name, callback, mole)
-				if (strcmp(argv[2], "mole")==0) {
-					screen-> callback = screen_render_mole;
+				//------------- argv[2] = render-callback-id
+				if (strcmp(argv[2], "null")==0) {
+					screen-> renderCB = NULL;
+					printf("screen[%s].render ->[null]\n", argv[0]);
 				} // ---- end(mole)
+				//-------------
+				if (strcmp(argv[2], "mole")==0) {
+					screen-> renderCB = screen_render_mole;
+					printf("screen[%s].render ->[screen_render_mole]\n", argv[0]);
+				} // ---- end(mole)
+				//-------------
 			}
 		} // ------------------end(callback)
 
 		//---------------
-		// argv($name, scale, [$sclae])
-		ChemDisplayAttrib *screen_attrib = &screen->attrib;
+		// argv(name, scale, x | x y)
 		//----------------
 		if (strcmp(argv[1], "scale")==0) {
+			ChemDisplayAttrib *screen_attrib = &screen->attrib;
 			//PRINT(" scale : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) {
 				//printf("[%d][%d]\n", cli->display.attrib.scalex, cli->display.attrib.scaley);
@@ -259,9 +270,17 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 				screen_attrib-> scaley = sy;
 				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sy);
 			} // end(argc==3)
+		} // ------------------end(scale)
 
-
-		} // ------------------end(callback)
+		//---------------
+		// argv(name, attrib, x | x y)
+		//----------------
+		if (strcmp(argv[1], "attribs")==0) {
+			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
+			else { cli_attribs(&screen-> attrib, argc-2, &argv[2]); }
+			return 0;
+		} // ------------------end(attribs)
 
 		//---------------
 	} // -------------------------------------------- end (argc>1) ---
@@ -281,29 +300,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 	return 1;
 }
 // --------------------------
-/*
-// --------------------------// --------------------------
-int cli_screen_menu(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-
-	if (argc==0) 	{ PRINT(" callback : argc[%d][]\n", argc); }
-	else 			{ PRINT(" callback : argc[%d][%s]\n", argc, argv[argc-1]);  }
-
-	if (argc==0) {
-		// menu list
-		return 0;
-	}
-
-	if (argc==1) {
-		// menu add
-		return 0;
-	}
 
 
-
-
-	return 0;
-}
-*/
 
 // --------------------------

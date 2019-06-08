@@ -40,9 +40,10 @@ public:
 //-----------------------------------------
 ChemScreen::ChemScreen() {
 	title = NULL;
-	callback  =NULL;
+	renderCB  =NULL;
 	waiting = false;
 	waitmode = WAIT_CURS;
+	// needed for buttons
 	current_menu = NULL;
 	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
 	if (menu_list!=NULL)
@@ -74,6 +75,7 @@ void ChemScreen::dump(void){
 //-------------------------------//-------------------------------
 ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	if ((menu_list==NULL)||(display==NULL)) return NULL;
+
 	// search for existing
 	if (find_menu(_title)!=NULL)
 		return NULL;
@@ -83,18 +85,7 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
 
 		//new_menu_item-> item-> display = display;
-		if (display !=NULL) {
-			new_menu_item-> item-> display = display;
-			new_menu_item-> item-> attrib.gfx = & display-> gfx;
-
-			/*
-			new_menu_item-> item-> attrib.scalex = display-> attrib.scalex;
-			new_menu_item-> item-> attrib.scaley = display-> attrib.scaley;
-			new_menu_item-> item-> button_sizex = display-> attrib.scalex-1;
-			new_menu_item-> item-> button_sizey = display-> attrib.scaley-1;
-			*/
-
-		}
+		//if (display !=NULL) { new_menu_item-> item-> display = display; 	}
 
 		new_menu_item-> item-> settitle( _title);
 		return new_menu_item-> item;
@@ -150,7 +141,7 @@ int	ChemScreen::istitle(const char* _title){
 
 int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 	if (display==NULL) return -1;
-
+//	attrib.gfx = &display-> gfx;
 //	ChemDisplayAttrib *display_attrib = display-> getattrib();
 
 //	PepPosVecType *display_pos = display-> attrib.getpos();
@@ -165,7 +156,7 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 	if (waitmode==WAIT_CURS) {
 		// display-> curs(200,200,0);
 		if (_dump) { PRINT("curs=[%d,%d]\n", curs_pos.dim[0], curs_pos.dim[1]); }
-		display-> draw_box(curs_pos.dim[0], curs_pos.dim[1], curs_pos.dim[0], curs_pos.dim[1]);
+		display-> draw_box(&attrib, curs_pos.dim[0], curs_pos.dim[1], curs_pos.dim[0], curs_pos.dim[1]);
 
 	}
 //		draw_menus();
@@ -197,8 +188,8 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 		//	x = display_attrib-> getxcell(display-> gfx.xpos());
 		//	y = display_attrib-> getycell(display-> gfx.ypos());
 
-			x = attrib.getxcell(display-> gfx.xpos());
-			y = attrib.getycell(display-> gfx.ypos());
+			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
 
 
 			curs_pos.dim[PEPPOS_X]=x;
@@ -207,8 +198,8 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 		}
 		// ----------------
 		if (waitmode==WAIT_SCREEN) {
-			x = attrib.getxcell(display-> gfx.xpos());
-			y = attrib.getycell(display-> gfx.ypos());
+			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
 
 			if (attrib.getpos() == NULL) {
 				PRINT("NULL ATRRIB...\n");
@@ -264,8 +255,8 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 	}
 
 
-ChemDisplayAttrib 	*display_attrib = display-> getattrib();
-					display_attrib ->cp(&attrib);
+//ChemDisplayAttrib 	*display_attrib = display-> getattrib();
+//					display_attrib ->cp(&attrib);
 
 	//PRINT("curs=>");	curs_pos.dump(); NL
 	return 0;

@@ -16,9 +16,11 @@ int screen_render_mole(Concentration_CLI *cli, int argc, char **argv) {
 	//cli->display.setcol(0,100,0);
 //	cli->display.draw_vm(cli-> core);
 	//	cli->display.grid(0,0,100);
-
+	ChemScreen *screen = cli->display.current_screen;
+	if (screen==NULL) return -1;
 	cli->display.gfx.printg(("(mole)*"));
-	cli->display.draw_mole(cli->core->mole, 0, 100, 0);
+
+	cli->display.draw_mole(&screen->attrib, cli->core->mole, 0, 100, 0);
 
 	/*
 	char msg[128];

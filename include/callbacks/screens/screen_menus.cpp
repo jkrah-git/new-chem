@@ -62,21 +62,14 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		if (strcmp(argv[0], "help")==0) {
 			printf("name\n");
 			printf("name add\n");
+			printf("name step x y\n");
 			return 0;
 		}
 		//----------
 	} // -- end (argc==1) (known commands)
 
 
-	//
-
-
-	// argv($name, ?)
-	//ChemScreen *screen = cli-> display.search_screen(argv[0]);
-	//ChemMenu *ChemScreen::find_menu(const char *_title){
 	ChemMenu 	*menu =screen->find_menu(argv[0]);
-
-
 	// 	--- if argc still 1 then try to select name
 	if ((argc==1) && (menu==NULL)) {	printf("menu[%s] not found.\n", argv[1]);		return -1;	}
 
@@ -86,6 +79,9 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		// argv(name, dump)
 		//----------------
 		if (strcmp(argv[1], "dump")==0) {	menu-> dump();	return 0;		}
+		// ------------------end(dump)
+		//----------------
+		if (strcmp(argv[1], "layout")==0) {	menu-> layout_buttons();	return 0;		}
 		// ------------------end(dump)
 		// argv(name, add)
 		//----------------
@@ -98,6 +94,36 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			printf("new menu[%s] OK..\n", argv[0]);
 
 		} // ------------------end(add)
+
+
+		if (strcmp(argv[1], "step")==0) {
+			PRINT(" == argc[%d] last[%s] ==\n", argc, argv[argc-1]);
+			if (argc==2) {
+				printf("step[%d][%d]\n", menu-> stepx, menu-> stepy);
+				return 0;
+			}
+			if (argc!=4) {
+				printf("usage: step x y\n");
+				return -10;
+			}
+			int v1;
+			if (sscanf(argv[2], "%d", &v1)<1) {
+				printf("Error reading [%s]\n", argv[2]);
+				return -11;
+			}
+			int v2;
+			if (sscanf(argv[3], "%d", &v2)<1) {
+				printf("Error reading [%s]\n", argv[3]);
+				return -11;
+			}
+			menu-> stepx = v1;
+			menu-> stepy = v2;
+			printf("step[%d][%d]\n", menu-> stepx, menu-> stepy);
+			return 0;
+
+		} // ------------------end(step)
+
+
 
 		// else menu must exist
 		// =========================================

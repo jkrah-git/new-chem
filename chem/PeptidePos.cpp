@@ -70,19 +70,31 @@ void PeptidePos::dump(){
 	}
 }
 // ---------------------
-PeptidePos &PeptidePos::operator +(const PeptidePos& p) {
-//	if ((dim==NULL) || (p.dim==NULL)) return ;
-	for (int i=0; i<PepPosVecMax; i++){
-		dim[i] += p.dim[i];
+PeptidePos &PeptidePos::operator +(const PeptidePos &p) {
+	if ((dim != NULL) && (p.dim != NULL)){
+		for (int i=0; i<PepPosVecMax; i++){
+			dim[i] += p.dim[i];
+		}
 	}
 	return *this;
 }
 // ---------------------// ---------------------
-PeptidePos &PeptidePos::operator =(const PeptidePos& p) {
-//	if ((dim==NULL) || (p.dim==NULL)) return ;
-
-	for (int i=0; i<PepPosVecMax; i++){
-		dim[i] = p.dim[i];
+PeptidePos &PeptidePos::operator =(const PeptidePos &p) {
+	if ((dim != NULL) && (p.dim != NULL)){
+		for (int i=0; i<PepPosVecMax; i++){
+			dim[i] = p.dim[i];
+		}
+	}
+	return *this;
+}
+//PeptidePos& operator =(const PepPosVecType *v);
+// ---------------------// ---------------------
+PeptidePos &PeptidePos::operator =(const PepPosVecType *v) {
+	if (dim!=NULL ){
+		for (int i=0; i<PepPosVecMax; i++){
+			if (v==NULL) dim[i] = 0;
+			else		 dim[i] = v[i];
+		}
 	}
 	return *this;
 }
