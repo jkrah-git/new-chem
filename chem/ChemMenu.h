@@ -14,8 +14,8 @@
 class ChemDisplay;
 //------------------------------
 class ChemMenu {
+	char				*title;
 public:
-	const char				*title;
 	// you have been here before (display)
 	ChemDisplay 			*display;
 	ChemDisplayAttrib		attrib;
@@ -45,9 +45,12 @@ public:
 	void	draw(void);
 	void	draw_border(void);
 	void	layout_buttons(void);
-	ChemMenuButton *test_menu(int posx, int posy);
-	ChemMenuButton *add_button(void){ return add_button(NULL); };
-	ChemMenuButton *add_button(const char *_text);
+	ChemMenuButton 		*test_menu(int posx, int posy);
+	ChemMenuButton 		*add_button(void){ return add_button(NULL); };
+	ChemMenuButton 		*add_button(const char *_text);
+	const char			*gettitle(void){ return title; };
+	void				settitle(const char *_title);
+	ChemMenuButton		*findbutton(const char *_title);
 };
 //------------------------------
 //------------------------------

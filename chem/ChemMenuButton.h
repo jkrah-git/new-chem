@@ -28,6 +28,8 @@ enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
 
 // ---------------------------------------
 class ChemMenuButton {
+	char	*text;
+
 public:
 	PeptidePos			_pos;
 	ChemDisplayAttrib	attrib;
@@ -36,13 +38,14 @@ public:
 	int		sizey;
 	CHEMMENUBUTON_TYPE	mode;
 	bool		_selected;
-	const char	*text;
 	void		*data;
 	int		(*callback)(Concentration_CLI*, int, char**);
 	//----------------
 	ChemMenuButton();
 	virtual ~ChemMenuButton();
 	void	dump(void);
+	const char 	*gettext(void){ return text; };
+	void		settext(const char *_text);
 	//----------------
 //	void	draw(ChemDisplay *display, ChemDisplayColor *col);
 };

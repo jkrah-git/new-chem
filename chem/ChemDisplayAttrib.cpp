@@ -46,15 +46,39 @@ ChemDisplayAttrib::ChemDisplayAttrib(){
 	scalex = 10;
 	scaley = 10;
 	gfx	= NULL;
+	pos = NULL;
 	init();
 }
 //--------------------------
-ChemDisplayAttrib::~ChemDisplayAttrib() {}
+ChemDisplayAttrib::ChemDisplayAttrib(ChemDisplayAttrib *src) {
+	scalex = 10;
+	scaley = 10;
+	gfx	= NULL;
+	pos = NULL;
+	init();
+	// -----
+	if (src !=NULL)
+		cp(src);
+}
+//--------------------------
+ChemDisplayAttrib::~ChemDisplayAttrib() {
+	if (pos!=NULL)
+		free(pos);
+
+}
 //--------------------------
 void ChemDisplayAttrib::init() {
 	offsetx = 0;
 	offsety = 0;
-	pos = NULL;
+	if (pos == NULL) {
+		pos = (PepPosVecType*) malloc(sizeof(PepPosVecType) *PepPosVecMax);
+	}
+
+	if (pos!=NULL) {
+		pos[PEPPOS_X] = 0;
+		pos[PEPPOS_Y] = 0;
+	}
+
 }
 //--------------------------
 void ChemDisplayAttrib::dump(void) {
@@ -76,7 +100,11 @@ void ChemDisplayAttrib::dump(void) {
 }
 //--------------------------
 void ChemDisplayAttrib::setoffset(int _offsetx, int _offsety){	offsetx = _offsetx;	offsety = _offsety;}
-void ChemDisplayAttrib::setpos(PepPosVecType *_pos){	pos = _pos;	}
+void ChemDisplayAttrib::setpos(PepPosVecType *_pos){
+	if ((pos!=NULL) && (_pos!=NULL))
+			*pos = *_pos;
+
+}
 void ChemDisplayAttrib::setscale(int sx, int sy){	scalex = sx; scaley = sy;	}
 //--------------------------
 void ChemDisplayAttrib::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley){

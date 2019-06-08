@@ -23,7 +23,9 @@ class ChemScreen {
 	// TODO:fix to local
 	char					*title;
 public:
+	ChemDisplayAttrib			attrib;
 	mylist<ChemMenu> 		*menu_list;
+	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
 	bool					waiting;
 	int					(*callback)(Concentration_CLI*, int, char**);
@@ -35,11 +37,13 @@ public:
 	void	dump(void);
 	// menu inherits ' *gfx struct (scale, offset etc)
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
+	ChemMenu				*find_menu(const char *_title);
 
 	const char 				*get_title(void){ return title; };
 	int						set_title(const char* newtitle);
 	int						istitle(const char* _title);
-	int						wait(ChemDisplay *display);
+	int						wait(ChemDisplay *display) { return wait(display, false); };
+	int						wait(ChemDisplay *display, bool _dump);
 
 };
 //-----------------------------------------

@@ -92,7 +92,8 @@ ChemDisplay::ChemDisplay() {
 	screen_list = NULL;
 
 
-	attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*3);
+	// TODO: fix attrib.pos !! LEAK !!!
+	//TODO: POS // attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*3);
 
 	//	mylist<ChemScreen> 		*screen_list;
 
@@ -111,12 +112,15 @@ ChemDisplay::~ChemDisplay() {
 }
 //-------------------------------
 void ChemDisplay::dump() {
+
+	PepPosVecType *apos = attrib.getpos();
+
 	printf("ChemDisplay[0x%zX].", (long unsigned int) this);
 	printf("size[%d,%d].scale[%d,%d].off[%d,%d].pos[0x%zX]\n",
-			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
+			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, (long unsigned int)  apos);
 			//gfx.width, gfx.height, attrib.scale, col.r, col.g, col.b, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
-	if (attrib.pos !=NULL) {
-		printf(".. pos[%d,%d,%d]\n", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
+	if (apos !=NULL) {
+		printf(".. pos[%d,%d,%d]\n", apos[0], apos[1], apos[2]);
 	}
 
 
@@ -125,22 +129,25 @@ void ChemDisplay::dump() {
 }
 //-------------------------------
 void ChemDisplay::gdump() {
+	PepPosVecType *apos = attrib.getpos();
+
 	char msg[256];
 
-	sprintf(msg, "ChemDisplay[0x%zX][%s].Screen[0x%zX].size[%d,%d].scale[%d, %d].off[%d,%d].pos[0x%zX]",
+	char	pos_msg[32];
+	if (apos ==NULL)	sprintf(pos_msg, "[NULL]");
+	else				sprintf(pos_msg, "[%d,%d]", apos[PEPPOS_X], apos[PEPPOS_Y]);
+
+	sprintf(msg, "ChemDisplay[0x%zX][%s].Screen[0x%zX].size[%d,%d].scale[%d, %d].off[%d,%d].pos[%s]",
 			(long unsigned int) this,
 			gfx.title,
 			(long unsigned int) current_screen,
-			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, (long unsigned int)  attrib.pos);
+			gfx.width, gfx.height, attrib.scalex, attrib.scaley, attrib.offsetx, attrib.offsety, pos_msg);
+			//(long unsigned int)  attrib.getpos());
 			//curs_pos.dim[PEPPOS_X], curs_pos.dim[PEPPOS_Y] );
-
 
 	gfx.printg(msg);
 
-	if (attrib.pos !=NULL) {
-		sprintf(msg, ".. pos[%d,%d,%d]", attrib.pos[0], attrib.pos[1], attrib.pos[2]);
-		gfx.printg(msg);
-	}
+
 
 }
 //-------------------------------
@@ -171,7 +178,16 @@ void ChemDisplay::XXcurs(int red, int green, int blue){
 }
 //-------------------------------
 void ChemDisplay::grid(int red, int green, int blue){
+	PepPosVecType	*oldpos = attrib.getpos();
+	if (oldpos==NULL) {		PRINT("ERR: attrib NULL pos\n");		return;	}
 
+
+	ChemDisplayAttrib display_attrib(&attrib);
+	PepPosVecType	*display_pos = display_attrib.getpos();
+	if (display_pos==NULL) {		PRINT("ERR: display_pos NULL pos\n");		return;	}
+	//PRINT("display_attrib =>");	display_attrib.dump();
+	// --------------
+	/*
 	PepPosVecType	*oldpos = attrib.pos;
 	PeptidePos pos;
 
@@ -184,10 +200,13 @@ void ChemDisplay::grid(int red, int green, int blue){
 	} else {
 		attrib.pos = pos.dim;
 	}
+	*/
 	int x_steps = (gfx.width / attrib.scalex)/2;
 	int y_steps = (gfx.height / attrib.scaley)/2;
+	//PRINT("Grid <BREAK>\n"); return;
 
 
+	/*
 	for (int x=(-x_steps-oldposx); x < (x_steps-oldposx); x++) {
 		attrib.pos[PEPPOS_X] = x+oldposx;
 		int px = attrib.screenx();
@@ -196,37 +215,66 @@ void ChemDisplay::grid(int red, int green, int blue){
 
 		gfx.line(px ,0, px, gfx.height);
 	}
+*/
 
-	for (int y=(-y_steps-oldposy); y< (y_steps-oldposy); y++) {
-		attrib.pos[PEPPOS_Y] = y+oldposy;
-		int py = attrib.screeny();
+	for (int x=(-x_steps - oldpos[PEPPOS_X]); x < (x_steps - oldpos[PEPPOS_X]); x++) {
+		display_pos[PEPPOS_X] = x + oldpos[PEPPOS_X];
+		int px = display_attrib.screenx();
+		if (x==0)	gfx.color(red, green, blue);
+		else		gfx.color(red/2, green/2, blue/2);
+
+		gfx.line(px ,0, px, gfx.height);
+	}
+
+
+
+
+//	for (int y=(-y_steps-oldposy); y< (y_steps-oldposy); y++) {
+//		attrib.pos[PEPPOS_Y] = y+oldposy;
+//		int py = attrib.screeny();
+
+	for (int y=(-y_steps - oldpos[PEPPOS_Y]); y< (y_steps - oldpos[PEPPOS_Y]); y++) {
+		display_pos[PEPPOS_Y] = y + oldpos[PEPPOS_Y];
+		int py = display_attrib.screeny();
+		//---
 		if (y==0)	gfx.color(red, green, blue);
 		else		gfx.color(red/2, green/2, blue/2);
 
 		gfx.line(0, py, gfx.width, py);
 
 	}
-
+/*
 	if (attrib.pos!=NULL) {
 		attrib.pos[PEPPOS_X] = oldposx;
 		attrib.pos[PEPPOS_Y] = oldposy;
 	}
-
+*/
 
 	gfx.flush();
-	attrib.pos = oldpos;
+	//attrib.pos = oldpos;
 
 }
 //-------------------------------
-void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
-
+void ChemDisplay::draw_pep(Peptide *pep){
 	if (pep==NULL) return;
-
-	PeptidePos new_peppos;
-	PepPosVecType *newpos = new_peppos.dim;
-	PepPosVecType *saved_pos = attrib.pos;
+	PepPosVecType  	*pep_pos = pep->getpos();
+	if (pep_pos==NULL) return;
 
 
+	// --------------
+	PepPosVecType	*oldpos = attrib.getpos();
+	if (oldpos==NULL) {		PRINT("ERR: attrib NULL pos\n");		return;	}
+
+	ChemDisplayAttrib display_attrib(&attrib);
+	//PRINT("display_attrib =>");	display_attrib.dump();
+	PepPosVecType	*display_pos = display_attrib.getpos();
+	if (display_pos==NULL) {		PRINT("ERR: display_pos NULL pos\n");		return;	}
+	// --------------
+//	PeptidePos new_peppos;
+//	PepPosVecType *newpos = new_peppos.dim;
+//	PepPosVecType *saved_pos = attrib.getpos();
+
+	/* ---------
 	// if no base offset
 	if (attrib.pos==NULL) {
 		// then just use pep.pos
@@ -243,9 +291,13 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 		} //----
 		attrib.pos= newpos;
 	}
+	/ ---------
+ */
+	display_pos[PEPPOS_X] += pep_pos[PEPPOS_X];
+	display_pos[PEPPOS_Y] += pep_pos[PEPPOS_Y];
 
-	int x = attrib.screenx();
-	int y = attrib.screeny();
+	int x = display_attrib.screenx();
+	int y = display_attrib.screeny();
 	int sx = attrib.scalex/2;
 	int sy = attrib.scaley/2;
 
@@ -288,7 +340,7 @@ void ChemDisplay::draw_pep(Peptide *pep){ //, ChemDisplayColor *_col) {
 
 	//-------------
 	// (restore pos)
-	attrib.pos = saved_pos;
+	//attrib.pos = saved_pos;
 	gfx.flush();
 
 }
@@ -320,6 +372,16 @@ void ChemDisplay::draw_mole(Molecule *mole, ChemDisplayColor *col){
 //-------------------------------
 void ChemDisplay::draw_match(MoleculeMatchPos *matchpos){
 	if (matchpos==NULL) return;
+	// --------------
+	PepPosVecType	*oldpos = attrib.getpos();
+	if (oldpos==NULL) {		PRINT("ERR: attrib NULL pos\n");		return;	}
+
+	ChemDisplayAttrib display_attrib(&attrib);
+	PRINT("display_attrib =>");	display_attrib.dump();
+	PepPosVecType	*display_pos = display_attrib.getpos();
+	if (display_pos==NULL) {		PRINT("ERR: display_pos NULL pos\n");		return;	}
+	// --------------
+
 
 	ChemDisplayColor m1_col(0, 100, 0);
 	ChemDisplayColor rot_col(100, 0, 0);
@@ -346,6 +408,7 @@ void ChemDisplay::draw_match(MoleculeMatchPos *matchpos){
 		draw_mole(matchpos-> getM1(), &m1_col);
 	}
 
+	/*
 	if ((matchpos-> rotmole != NULL) && (matchpos-> rotmole-> pep_list.gethead() !=NULL)) {
 		//printf("########### ROTMOLE ############\n");
 		//matchpos-> rotmole-> dump();
@@ -364,7 +427,7 @@ void ChemDisplay::draw_match(MoleculeMatchPos *matchpos){
 		attrib.pos = matchpos-> current_pos.dim;
 		draw_pep(matchpos-> get_test_item()-> item);
 	}
-
+	*/
 	//---------------
 	gfx.flush();
 }
@@ -476,8 +539,8 @@ void ChemDisplay::draw_button(ChemMenuButton *button, ChemDisplayColor *col) {
 	int x = button-> attrib.screenx();
 	int y = button-> attrib.screeny();
 	gfx.color(col-> r, col-> g, col-> b);
-	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> text);
-	if (button-> text!=NULL)	gfx.text(button-> text, x, y);
+	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext());
+	if (button-> gettext()!=NULL)	gfx.text(button-> gettext(), x, y);
 }
 
 //------------
@@ -485,10 +548,12 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 	if (screen==NULL) return;
 	if (screen-> menu_list==NULL) return;
 
+	attrib.cp(&screen-> attrib);	// PRINT("display attribs :"); attrib.dump();
+
 	gfx.open();
 
 	while(true) {
-
+		//=======================
 		gfx.clear();
 		grid(100,100,100);
 		gdump();
@@ -515,9 +580,16 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 			}
 		}
 
-		char msg[128];
-		sprintf(msg, "== Screen[%s] %s ==", screen-> get_title(), wait_msg);		gfx.printg(msg);
 
+		char menu_msg[64];
+		if (screen->current_menu ==NULL) {
+			sprintf(menu_msg, "[]");
+		} else {
+			sprintf(menu_msg, "[%s]", screen->current_menu-> gettitle());
+		}
+
+		char msg[128];
+		sprintf(msg, "== [%s]%s%s ==", screen-> get_title(), menu_msg, wait_msg);		gfx.printg(msg);
 
 
 		// ---------------
@@ -655,6 +727,7 @@ ChemScreen *ChemDisplay::add_screen(const char* screen_title){
 //	new_item-> item-> title = screen_title;
  */
 	new_item-> item-> set_title(screen_title);
+	new_item-> item-> attrib.cp(&attrib);
 	//--------------
 	return new_item-> item;
 }
@@ -663,18 +736,6 @@ ChemScreen *ChemDisplay::search_screen(const char* screen_title){
 	ChemScreen *found_screen = NULL;
 	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->gethead();
 	while ((screen_item!=NULL)&&(screen_item-> item!=NULL)) {
-		/*
-		if ((screen_title==NULL) && (screen_item-> item->title==NULL)) {
-			found_screen = screen_item-> item;
-			break;
-		}
-		if ((screen_title!=NULL) && (screen_item-> item->title!=NULL)) {
-			if (strcmp(screen_title, screen_item-> item->title) == 0) {
-				found_screen = screen_item-> item;
-				break;
-			}
-		}
-		*/
 		if (screen_item-> item->istitle(screen_title)==0) {
 			found_screen = screen_item-> item;
 			break;

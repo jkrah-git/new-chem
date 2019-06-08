@@ -61,7 +61,9 @@ ChemMenu::ChemMenu() {
 	max_posy = 0;
 };
 //------------------------------
-ChemMenu::~ChemMenu() { };
+ChemMenu::~ChemMenu() {
+	if (title!=NULL) free(title);
+};
 //------------------------------
 void ChemMenu::dump(void){
 	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
@@ -99,9 +101,18 @@ void ChemMenu::layout_buttons(void){
 		current_item-> item-> attrib.gfx = attrib.gfx;
 		current_item-> item-> attrib.offsetx = offsetx;
 		current_item-> item-> attrib.offsety = offsety;
+
+		PepPosVecType *button_pos = current_item-> item-> attrib.getpos();
+		if (button_pos ==NULL) {	PRINT("button_pos = NULL\n");	return;		}
 		//PRINT("--- pos[%d,%d] -->\n", posx, posy); current_item-> item-> dump(); NL
-		current_item-> item-> attrib.pos[PEPPOS_X] = px;
-		current_item-> item-> attrib.pos[PEPPOS_Y] = py;
+
+//		current_item-> item-> attrib.pos[PEPPOS_X] = px;
+//		current_item-> item-> attrib.pos[PEPPOS_Y] = py;
+
+		button_pos[PEPPOS_X] = px;
+		button_pos[PEPPOS_Y] = py;
+
+
 		if (px< min_posx) min_posx = px;
 		if (py< min_posy) min_posy = py;
 		if (px> max_posx) max_posx = px;
@@ -136,23 +147,65 @@ ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
 }
 
 
+void ChemMenu::settitle(const char *_title){
+	// we always clear the old
+	if (title!=NULL)
+		free(title);
+
+	int len = 0;
+	if (_title!=NULL)
+		len = strlen(_title);
+
+	if (len>0) {
+		title = (char*) malloc(len);
+		if (title!=NULL) {
+			strcpy(title, _title);
+		}
+	}
+}
+
 //------------------------------
 ChemMenuButton *ChemMenu::add_button(const char *_text){
-	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *new_button_item = button_list.add();
+	if (_text==NULL) return NULL;
+	if(findbutton(_text)!=NULL)
+		return NULL;
 
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *new_button_item = button_list.add();
 	if ((new_button_item!=NULL)&&(new_button_item-> item!=NULL)) {
+
 		new_button_item-> item-> attrib.gfx = attrib.gfx;
 		new_button_item-> item-> attrib.scalex = attrib.scalex;
 		new_button_item-> item-> attrib.scaley = attrib.scaley;
 		new_button_item-> item-> sizex = button_sizex;
 		new_button_item-> item-> sizey = button_sizey;
-		new_button_item-> item-> text = _text;
+		new_button_item-> item-> settext(_text);
 		return new_button_item-> item;
 		PRINT("Add ..\n");
 	}
 
 	return NULL;
 }
+ChemMenuButton *ChemMenu::findbutton(const char *_title){
+	//ChemMenuButton *found_button = NULL;
+
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *next_button_item = button_list.gethead();
+	while ((next_button_item!=NULL) && (next_button_item-> item !=NULL)) {
+		if ((_title==NULL) && (next_button_item->item-> gettext() == NULL)) {
+			return next_button_item-> item;
+		}
+		if ((_title!=NULL) && (next_button_item->item-> gettext() != NULL)) {
+			if (strcmp(_title, next_button_item->item-> gettext())==0)
+				return next_button_item-> item;
+		}
+		//-----------
+		next_button_item = next_button_item->next;
+	}
+
+	return NULL;
+}
+
+//------------------------------
+
 /*
 //------------------------------
 void ChemMenu::draw_border(void){

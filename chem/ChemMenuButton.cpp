@@ -37,15 +37,20 @@ ChemMenuButton::ChemMenuButton() {
 	sizex = 30;
 	sizey = 30;
 	//attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*2);
+	/*
 	attrib.pos = _pos.dim;
 	attrib.pos[PEPPOS_X]=0;
 	attrib.pos[PEPPOS_Y]=0;
+	*/
+
 }
 // ---------------------------------------
 ChemMenuButton::~ChemMenuButton() {
 	//free(attrib.pos);
-	attrib.pos = NULL;
+	//attrib.pos = NULL;
+	if (text!=NULL) free(text);
 }
+
 // ---------------------------------------
 void ChemMenuButton::dump(void) {
 	printf("ChemMenuButton[0x%zX]:",	(long unsigned int) this);
@@ -55,6 +60,18 @@ void ChemMenuButton::dump(void) {
 	attrib.dump();	NL
 }
 // ---------------------------------------
+void ChemMenuButton::settext(const char *_text){
+	if (text!=NULL) free(text);
+	int len = strlen(_text);
+	if (len>0) {
+		text = (char*) malloc(sizeof(char)*len);
+		if (text!=NULL)
+			strcpy(text, _text);
+	}
+}
+
+
+
 /*
 void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
 	if (display==NULL) return;

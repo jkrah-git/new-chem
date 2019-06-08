@@ -49,10 +49,10 @@ private:
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
 	//PeptidePos				curs_pos;
+	ChemDisplayAttrib			attrib;
 
 public:
 	GFX_Base				gfx;
-ChemDisplayAttrib			attrib;
 
     // selected objects
 	Concentration_VM		*core;
@@ -65,7 +65,7 @@ ChemDisplayAttrib			attrib;
 
 	mylist<ChemScreen> 		*screen_list;
 	ChemScreen				*current_screen;
-
+	ChemDisplayAttrib		*getattrib(void){ return &attrib; };
 
   	//-------------------
 	ChemDisplay();
@@ -97,21 +97,20 @@ ChemDisplayAttrib			attrib;
 	void	draw_cellbox(int minx, int miny, int maxx,int maxy, const char *_title);
 	void	draw_box(int minx, int miny, int maxx,int maxy){ draw_cellbox(minx, miny, maxx, maxy, NULL); };
 
-
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
 	int		test_screen(ChemScreen *screen, int posx, int posy);
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemMenuButton *button, ChemDisplayColor *col);
-	//void	select_screen(ChemScreen *_screen);
-
 	//--------------
-	int		XXwait(ChemScreen *screen);
-	void	XXcurs(int red, int green, int blue);
-
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);
-	int			XXmain(int argc, char **argv);
+
+
+
+	int		XXmain(int argc, char **argv);
+	int		XXwait(ChemScreen *screen);
+	void	XXcurs(int red, int green, int blue);
 
 };
 
