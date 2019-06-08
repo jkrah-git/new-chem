@@ -225,9 +225,14 @@ void ChemDisplay::grid(ChemDisplayAttrib *screen_attrib, int red, int green, int
 	for (int x=(-x_steps - oldpos[PEPPOS_X]); x < (x_steps - oldpos[PEPPOS_X]); x++) {
 		display_pos[PEPPOS_X] = x + oldpos[PEPPOS_X];
 		int px = display_attrib.screenx(&gfx);
+
+		gfx.color(100, 100, 100);
+		char num[16];
+		sprintf(num, "%d", x);
+		gfx.text(num, px, 10);
+
 		if (x==0)	gfx.color(red, green, blue);
 		else		gfx.color(red/2, green/2, blue/2);
-
 		gfx.line(px ,0, px, gfx.height);
 	}
 
@@ -490,50 +495,63 @@ void ChemDisplay::draw_cellbox(ChemDisplayAttrib *screen_attrib, int min_xpos, i
 }
 //----------------------------------------------------------
 //------------------------------
-void ChemDisplay::draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu){
-	if (screen_attrib==NULL) return;
+//void ChemDisplay::draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu){
+void ChemDisplay::draw_menu_border(ChemMenu *menu){
 	if (menu==NULL) return;
-	gfx.color(0,0,100);
-	draw_box(screen_attrib, menu-> min_posx, menu-> min_posy, menu-> max_posx, menu-> max_posy);
+	gfx.color(200,200,200);
+	draw_box(&menu->attrib, menu-> min_posx, menu-> min_posy, menu-> max_posx, menu-> max_posy);
 }
 //------------------------------
-void ChemDisplay::draw_menu(ChemDisplayAttrib *screen_attrib, ChemMenu *menu){
-	if (screen_attrib==NULL) return;
+void ChemDisplay::draw_menu(ChemMenu *menu){
 	if (menu==NULL) return;
 
-	//PRINT("======\n");	menu-> dump();	PRINT("======\n");
-//	if (menu-> display==NULL) return;
 	ChemDisplayColor *c = &menu-> col;
 
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = menu-> button_list.gethead();
-	//DUMP(current_item)  NL
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 		if (current_item-> item->_selected)		c = &menu-> selcol;
 		else 									c = &menu-> col;
-
-
 		//PRINT("== > draw button\n");
 		//draw_button(screen_attrib, current_item-> item, c);
-		draw_button(screen_attrib, current_item-> item, c);
+		draw_button(&menu-> attrib, current_item-> item, c);
 		//-----
 		current_item = current_item-> next;
 	}
 	//draw_menu_border(screen_attrib, menu);
-	draw_menu_border(&menu-> attrib, menu);
+//	draw_menu_border(&menu-> attrib, menu);
+	draw_menu_border(menu);
 	//PRINT("==== end = >\n");
 };
+//------------------------------
 
-
-// void ChemMenuButton::draw(ChemDisplay *display, ChemDisplayColor *col) {
-void ChemDisplay::draw_button(ChemDisplayAttrib *screen_attrib, ChemMenuButton *button, ChemDisplayColor *col) {
-	if (screen_attrib==NULL) return;
+void ChemDisplay::draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *button, ChemDisplayColor *col) {
+//	if (menu_attrib==NULL) return;
 	if (button==NULL) return;
 	//button-> dump();
 	if (col==NULL) return;
+
+/*
+	ChemDisplayAttrib tmp_attrib = menu_attrib;
+
+	PepPosVecType *tmp_pos = tmp_attrib.getpos();
+//	PepPosVecType *menu_pos = menu_attrib->getpos();
+	PepPosVecType *button_pos = button-> attrib.getpos();
+
+	tmp_pos[PEPPOS_X] += button_pos[PEPPOS_X];
+	tmp_pos[PEPPOS_Y] += button_pos[PEPPOS_Y];
+	int x = tmp_attrib.screenx(&gfx);
+	int y = tmp_attrib.screeny(&gfx);
+	PRINT("=======================\n");
+	PRINT("menu.attrib:\n"); menu_attrib-> dump();   NL
+	PRINT("button.attrib:\n"); button-> attrib.dump();  NL
+	PRINT("=======================\n");
+*/
+
 	int x = button-> attrib.screenx(&gfx);
 	int y = button-> attrib.screeny(&gfx);
 
 	gfx.color(col-> r, col-> g, col-> b);
+	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext());
 	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext());
 	if (button-> gettext()!=NULL)	gfx.text(button-> gettext(), x, y);
 }
@@ -550,8 +568,24 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 	while(true) {
 		//=======================
 		gfx.clear();
-		grid(&screen-> attrib, 100,100,100);
-		gdump();
+		char grid_msg[32];
+		sprintf(grid_msg, "grid[?]");
+		if (screen-> gridmode==GRID_OFF) {
+			sprintf(grid_msg, "grid[off]");
+		}
+
+		if (screen-> gridmode==GRID_MOLE) {
+			grid(&screen-> attrib, 100,100,100);
+			sprintf(grid_msg, "grid[mole]");
+		}
+		if (screen-> gridmode==GRID_MENU) {
+			grid(&screen->current_menu-> attrib, 100,10,10);
+			sprintf(grid_msg, "grid[menu]");
+		}
+
+		//if (screen-> current_menu==NULL) {		}
+		//else {			grid(&screen-> attrib, 100,10,100);		}
+		//gdump();
 
 
 		{ // do title =========================
@@ -576,16 +610,12 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 				}
 			}
 
-
 			char menu_msg[64];
-			if (screen->current_menu ==NULL) {
-				sprintf(menu_msg, "[]");
-			} else {
-				sprintf(menu_msg, "[%s]", screen->current_menu-> gettitle());
-			}
+			if (screen->current_menu !=NULL) { sprintf(menu_msg, "[%s]", screen->current_menu-> gettitle()); }
+			else 							 { sprintf(menu_msg, "[]"); }
 
 			char msg[128];
-			sprintf(msg, "== [%s]%s%s ==", screen-> get_title(), menu_msg, wait_msg);		gfx.printg(msg);
+			sprintf(msg, "== [%s]%s%s %s ==", screen-> get_title(), menu_msg, wait_msg, grid_msg);		gfx.printg(msg);
 		} // end title =========================
 
 		// ---------------
@@ -597,7 +627,8 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
 		while ((current_item != NULL) && (current_item-> item != NULL)) {
 		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			draw_menu(&screen-> attrib, current_item-> item);
+			//draw_menu(&screen-> attrib, current_item-> item);
+			draw_menu(current_item-> item);
 			//-------
 			current_item = current_item->next;
 		}

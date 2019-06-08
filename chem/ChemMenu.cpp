@@ -85,44 +85,53 @@ void ChemMenu::dump(void){
 }
 //------------------------------
 void ChemMenu::layout_buttons(void){
-	int offsetx = attrib.getx();
-	int offsety = attrib.gety();
+
+	int offsetx = attrib.offsetx;
+	int offsety = attrib.offsety;
 
 	int px=0;
 	int py=0;
+
 	min_posx =0;	max_posx =0;
 	min_posy =0;	max_posy =0;
 
-
+	bool firstrun = true;
 	// test by fixing abs pos of each button
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 
+		ChemMenuButton *button = current_item-> item;
 		//current_item-> item-> attrib.gfx = attrib.gfx;
-		current_item-> item-> attrib.offsetx = offsetx;
-		current_item-> item-> attrib.offsety = offsety;
+		button-> attrib.scalex = attrib.scalex;
+		button-> attrib.scaley = attrib.scaley;
 
-		PepPosVecType *button_pos = current_item-> item-> attrib.getpos();
+		button-> attrib.offsetx = offsetx;
+		button-> attrib.offsety = offsety;
+
+		PepPosVecType *menu_pos = attrib.getpos();
+		PepPosVecType *button_pos = button-> attrib.getpos();
+
 		if (button_pos ==NULL) {	PRINT("button_pos = NULL\n");	return;		}
-		//PRINT("--- pos[%d,%d] -->\n", posx, posy); current_item-> item-> dump(); NL
+		button_pos[PEPPOS_X] = menu_pos[PEPPOS_X] + px;
+		button_pos[PEPPOS_Y] = menu_pos[PEPPOS_Y] + py;
 
-//		current_item-> item-> attrib.pos[PEPPOS_X] = px;
-//		current_item-> item-> attrib.pos[PEPPOS_Y] = py;
+		if (firstrun) {
+			min_posx = button_pos[PEPPOS_X];
+			min_posy = button_pos[PEPPOS_Y];
+			max_posx = button_pos[PEPPOS_X];
+			max_posy = button_pos[PEPPOS_Y];
+			firstrun = false;
+		} else {
 
-		button_pos[PEPPOS_X] = px;
-		button_pos[PEPPOS_Y] = py;
+			if (button_pos[PEPPOS_X]< min_posx)			min_posx = button_pos[PEPPOS_X];
+			if (button_pos[PEPPOS_Y]< min_posy)			min_posy = button_pos[PEPPOS_Y];
+			if (button_pos[PEPPOS_X]> max_posx)			max_posx = button_pos[PEPPOS_X];
+			if (button_pos[PEPPOS_Y]> max_posy)			max_posy = button_pos[PEPPOS_Y];
+		//	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
+		//	PRINT("Button:"); current_item-> item-> dump();
+		}
 
-
-		if (px< min_posx) min_posx = px;
-		if (py< min_posy) min_posy = py;
-		if (px> max_posx) max_posx = px;
-		if (py> max_posy) max_posy = py;
-
-	//	printf("ChemMenu[0x%zX]:",	(long unsigned int) this);
-	//	PRINT("Button:"); current_item-> item-> dump();
-
-
-
+		//----------------
 		px += stepx;
 		py += stepy;
 		//-----
@@ -130,23 +139,27 @@ void ChemMenu::layout_buttons(void){
 	}
 
 }
-//------------------------------
+//------------------------------//------------------------------
 ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
-	ChemMenuButton *found_item = NULL;
+//	PRINT(":  _pos[%d][%d]\n", posx, posy);
+
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		if ((current_item-> item->_pos.dim[0] == posx) &&
-			(current_item-> item->_pos.dim[1] == posy) ) {
+//		if ((current_item-> item->_pos.dim[0] == posx) &&
+//			(current_item-> item->_pos.dim[1] == posy) ) {
 
-			found_item = current_item-> item; break;
+		PepPosVecType *item_pos = current_item-> item->attrib.getpos();
+//		PRINT(":  button.pos[%d][%d]\n", item_pos[PEPPOS_X], item_pos[PEPPOS_Y]);
+
+		if ((item_pos[PEPPOS_X] == posx) && (item_pos[PEPPOS_Y] == posy) ) {
+			return current_item-> item;
 		}
 		//-----
 		current_item = current_item-> next;
 	}
-	return found_item;
+	return NULL;
 }
-
-
+//------------------------------//------------------------------
 void ChemMenu::settitle(const char *_title){
 	// we always clear the old
 	if (title!=NULL)

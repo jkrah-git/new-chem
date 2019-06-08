@@ -16,6 +16,8 @@
 //class ChemDisplay;
 
 enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
+enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
+
 //-----------------------------------------
 class ChemScreen {
 	// does this make a screen
@@ -30,6 +32,7 @@ public:
 	bool					waiting;
 	int					(*renderCB)(Concentration_CLI*, int, char**);
 	SCREEN_WAIT_MODE		waitmode;
+	SCREEN_GRID_MODE		gridmode;
 
 	//--------------
 	ChemScreen();
@@ -42,6 +45,7 @@ public:
 	const char 				*get_title(void){ return title; };
 	int						set_title(const char* newtitle);
 	int						istitle(const char* _title);
+	ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
 	int						wait(ChemDisplay *display) { return wait(display, false); };
 	int						wait(ChemDisplay *display, bool _dump);
 

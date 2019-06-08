@@ -60,9 +60,22 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 	if (argc==1) {
 		//---------------- help
 		if (strcmp(argv[0], "help")==0) {
+			printf("unsel\n");
 			printf("name\n");
+			printf("name dump\n");
 			printf("name add\n");
+			printf("name layout\n");
 			printf("name step x y\n");
+			printf("name attribs ...\n");
+			return 0;
+		}
+		//----------
+		//---------------- unsel
+		if (strcmp(argv[0], "unsel")==0) {
+			PRINT("UNSEL1\n");
+			screen-> current_menu = NULL;
+			screen->gridmode = GRID_MOLE;
+			PRINT("UNSEL2\n");
 			return 0;
 		}
 		//----------
@@ -75,16 +88,6 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 
 	// argv($name, ?, ?)
 	if (argc>1) {
-		//----------------
-		// argv(name, dump)
-		//----------------
-		if (strcmp(argv[1], "dump")==0) {	menu-> dump();	return 0;		}
-		// ------------------end(dump)
-		//----------------
-		if (strcmp(argv[1], "layout")==0) {	menu-> layout_buttons();	return 0;		}
-		// ------------------end(dump)
-		// argv(name, add)
-		//----------------
 		if (strcmp(argv[1], "add")==0) {
 			//PRINT(" ADD ..\n");
 			if (menu!=NULL) {	printf("menu[%s] already exists.\n", argv[0]);	return -2;	}
@@ -94,6 +97,19 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			printf("new menu[%s] OK..\n", argv[0]);
 
 		} // ------------------end(add)
+		// =================================================================
+		if (menu==NULL) {	printf("menu[%s] not found.\n", argv[1]);		return -1;	}
+
+		//----------------
+		// argv(name, dump)
+		//----------------
+		if (strcmp(argv[1], "dump")==0) {	menu-> dump();	return 0;		}
+		// ------------------end(dump)
+		//----------------
+		if (strcmp(argv[1], "layout")==0) {	menu-> layout_buttons();	printf("(layout)\n"); return 0;		}
+		// ------------------end(dump)
+		// argv(name, add)
+		//----------------
 
 
 		if (strcmp(argv[1], "step")==0) {
@@ -106,14 +122,10 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 				printf("usage: step x y\n");
 				return -10;
 			}
-			int v1;
-			if (sscanf(argv[2], "%d", &v1)<1) {
+			int v1,v2;
+			if ((sscanf(argv[2], "%d", &v1)<1) ||
+				(sscanf(argv[3], "%d", &v2)<1)) {
 				printf("Error reading [%s]\n", argv[2]);
-				return -11;
-			}
-			int v2;
-			if (sscanf(argv[3], "%d", &v2)<1) {
-				printf("Error reading [%s]\n", argv[3]);
 				return -11;
 			}
 			menu-> stepx = v1;
@@ -123,6 +135,13 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 
 		} // ------------------end(step)
 
+		//----------------
+		if (strcmp(argv[1], "attribs")==0) {
+			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
+			else { cli_attribs(&menu-> attrib, argc-2, &argv[2]); }
+			return 0;
+		} // ------------------end(attribs)
 
 
 		// else menu must exist
@@ -142,6 +161,8 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	if (menu!=NULL) {
+
+		screen->gridmode = GRID_MENU;
 		//-- update and draw current screen...
 		screen-> current_menu = menu;
 		// if waiting then NO callback

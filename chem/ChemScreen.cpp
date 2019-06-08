@@ -9,18 +9,23 @@
 //#include "ChemScreen.h"
 /*
 enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
+enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
+
 //-----------------------------------------
 class ChemScreen {
 	// does this make a screen
 	//----------
 	// TODO:fix to local
 	char					*title;
-	SCREEN_WAIT_MODE		waitmode;
 public:
+	ChemDisplayAttrib			attrib;
 	mylist<ChemMenu> 		*menu_list;
+	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
 	bool					waiting;
-	int					(*callback)(Concentration_CLI*, int, char**);
+	int					(*renderCB)(Concentration_CLI*, int, char**);
+	SCREEN_WAIT_MODE		waitmode;
+	SCREEN_GRID_MODE		gridmode;
 
 	//--------------
 	ChemScreen();
@@ -28,14 +33,17 @@ public:
 	void	dump(void);
 	// menu inherits ' *gfx struct (scale, offset etc)
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
+	ChemMenu				*find_menu(const char *_title);
 
 	const char 				*get_title(void){ return title; };
 	int						set_title(const char* newtitle);
 	int						istitle(const char* _title);
+	ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
+	int						wait(ChemDisplay *display) { return wait(display, false); };
+	int						wait(ChemDisplay *display, bool _dump);
 
 };
 //-----------------------------------------
-
 */
 //-----------------------------------------
 ChemScreen::ChemScreen() {
@@ -43,6 +51,7 @@ ChemScreen::ChemScreen() {
 	renderCB  =NULL;
 	waiting = false;
 	waitmode = WAIT_CURS;
+	gridmode = GRID_MOLE;
 	// needed for buttons
 	current_menu = NULL;
 	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
@@ -138,7 +147,34 @@ int	ChemScreen::istitle(const char* _title){
 	return 1;
 }
 //-------------------------------
+ChemMenuButton *ChemScreen::test_menus(PepPosVecType *screen_pos) {
+	if (screen_pos==NULL) return NULL;
 
+	PRINT("Testing[%d,%d]\n", screen_pos[0], screen_pos[1]);
+	// ChemMenuButton 		*test_menu(int posx, int posy);
+	//ChemMenuButton		*clicked_button = NULL;
+	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
+	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
+		ChemMenuButton		*tested_button = menu_item-> item ->test_menu(screen_pos[0], screen_pos[1]);
+		if (tested_button!=NULL) return tested_button;
+		//-------------
+		/*
+		// both NULL
+		if((_title==NULL) && (menu_item-> item-> gettitle()== NULL)) 	return menu_item-> item;
+		// one NULL
+		if((_title==NULL) || (menu_item-> item-> gettitle()== NULL)) 	return NULL;
+
+	//	PRINT("..(%s)\n", menu_item-> item-> gettitle());
+		if (strcmp(_title, menu_item-> item-> gettitle())==0)			return menu_item-> item;
+		*/
+		//-------------
+		menu_item = menu_item-> next;
+	}
+
+	return NULL;
+
+}
+//-------------------------------
 int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 	if (display==NULL) return -1;
 //	attrib.gfx = &display-> gfx;
@@ -195,6 +231,12 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 			curs_pos.dim[PEPPOS_X]=x;
 			curs_pos.dim[PEPPOS_Y]=y;
 			//TODO - scan menus
+//ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
+			ChemMenuButton *button = test_menus(curs_pos.dim);
+			if (button!=NULL) {
+				PRINT("Button[%s] pressed\n", button->gettext());
+			}
+
 		}
 		// ----------------
 		if (waitmode==WAIT_SCREEN) {
@@ -214,6 +256,8 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 			screen_pos[PEPPOS_X] = x;
 			screen_pos[PEPPOS_Y] = y;
 			//TODO - scan menus
+
+
 		}
 
 		// ----------------

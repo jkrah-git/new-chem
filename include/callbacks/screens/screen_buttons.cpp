@@ -130,6 +130,14 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 		} // ------------------end(add)
 
 
+		//----------------
+		if (strcmp(argv[1], "attribs")==0) {
+			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
+			else { cli_attribs(&button-> attrib, argc-2, &argv[2]); }
+			return 0;
+		} // ------------------end(attribs)
+
 
 
 

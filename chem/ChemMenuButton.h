@@ -31,7 +31,7 @@ class ChemMenuButton {
 	char	*text;
 
 public:
-	PeptidePos			_pos;
+	//PeptidePos			_pos;
 	ChemDisplayAttrib	attrib;
 
 	int		sizex;

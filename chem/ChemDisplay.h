@@ -31,6 +31,7 @@
 #define DISPLAY_EVENT_DOWN	84
 #define DISPLAY_EVENT_ESC 	27
 
+
 /*
 	// ARROWS
 	case 81:	curs_pos.dim[PEPPOS_X] --;	break;
@@ -90,11 +91,17 @@ public:
 
 	void	draw_cellbox(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
 	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy){
-		draw_cellbox(screen_attrib, minx, miny, maxx, maxy, NULL); };
+		draw_cellbox(screen_attrib, minx, miny, maxx, maxy, NULL);
+	};
 
-	void 	draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
-	void 	draw_menu(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
-	void 	draw_button(ChemDisplayAttrib *screen_attrib, ChemMenuButton *button, ChemDisplayColor *col);
+//	void 	draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
+//	void 	draw_menu(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
+	void 	draw_menu_border(ChemMenu *menu);
+	void 	draw_menu(ChemMenu *menu);
+
+
+//	void 	draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *button, ChemDisplayColor *col);
+	void 	draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *button, ChemDisplayColor *col);
 
 
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);

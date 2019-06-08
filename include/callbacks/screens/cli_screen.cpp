@@ -203,6 +203,9 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// argv(name, wait)
 		//----------------
 		if (strcmp(argv[1], "wait")==0) {
+
+			//if ((argc>2) && (strcmp(argv[2], "wait")==0)
+
 			screen->waiting = true;
 			cli->display.draw_screen(screen, cli);
 			return 0;
