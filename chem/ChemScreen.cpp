@@ -147,26 +147,21 @@ int	ChemScreen::istitle(const char* _title){
 	return 1;
 }
 //-------------------------------
-ChemMenuButton *ChemScreen::test_menus(PepPosVecType *screen_pos) {
-	if (screen_pos==NULL) return NULL;
+//ChemMenuButton *ChemScreen::test_menus(PepPosVecType *screen_pos) {
+ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 
-	PRINT("Testing[%d,%d]\n", screen_pos[0], screen_pos[1]);
-	// ChemMenuButton 		*test_menu(int posx, int posy);
-	//ChemMenuButton		*clicked_button = NULL;
+	if (display==NULL) return NULL;
+
+	//PRINT("Testing[%d,%d]\n", display-> gfx.xpos(), display-> gfx.ypos());
+
 	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
 	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
-		ChemMenuButton		*tested_button = menu_item-> item ->test_menu(screen_pos[0], screen_pos[1]);
-		if (tested_button!=NULL) return tested_button;
-		//-------------
-		/*
-		// both NULL
-		if((_title==NULL) && (menu_item-> item-> gettitle()== NULL)) 	return menu_item-> item;
-		// one NULL
-		if((_title==NULL) || (menu_item-> item-> gettitle()== NULL)) 	return NULL;
 
-	//	PRINT("..(%s)\n", menu_item-> item-> gettitle());
-		if (strcmp(_title, menu_item-> item-> gettitle())==0)			return menu_item-> item;
-		*/
+		int x = menu_item-> item-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
+		int y = menu_item-> item-> attrib.getycell(&display->gfx, display-> gfx.ypos());
+
+		ChemMenuButton		*tested_button = menu_item-> item ->test_menu(x,y);
+		if (tested_button!=NULL) return tested_button;
 		//-------------
 		menu_item = menu_item-> next;
 	}
@@ -175,8 +170,9 @@ ChemMenuButton *ChemScreen::test_menus(PepPosVecType *screen_pos) {
 
 }
 //-------------------------------
-int	ChemScreen::wait(ChemDisplay *display, bool _dump){
-	if (display==NULL) return -1;
+int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
+	if (cli==NULL) return -1;
+	if (display==NULL) return -2;
 //	attrib.gfx = &display-> gfx;
 //	ChemDisplayAttrib *display_attrib = display-> getattrib();
 
@@ -226,15 +222,18 @@ int	ChemScreen::wait(ChemDisplay *display, bool _dump){
 
 			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
 			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
-
-
 			curs_pos.dim[PEPPOS_X]=x;
 			curs_pos.dim[PEPPOS_Y]=y;
+
+
 			//TODO - scan menus
 //ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
-			ChemMenuButton *button = test_menus(curs_pos.dim);
+//			ChemMenuButton *button = test_menus(curs_pos.dim);
+			ChemMenuButton *button = test_menus(display);
 			if (button!=NULL) {
 				PRINT("Button[%s] pressed\n", button->gettext());
+				if (button->callback != NULL)
+					button->callback(cli, 0, NULL);
 			}
 
 		}

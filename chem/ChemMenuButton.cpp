@@ -57,6 +57,9 @@ void ChemMenuButton::dump(void) {
 	printf(".sizeXY[%d,%d]", sizex, sizey);
 	if ( _selected) printf("[%s]*.", text);
 	else			printf("[%s].", text);
+	printf("Callback[0x%zX]:",	(long unsigned int) callback);
+
+
 	attrib.dump();	NL
 }
 // ---------------------------------------

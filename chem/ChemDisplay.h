@@ -74,6 +74,10 @@ public:
 	void	gdump(ChemDisplayColor *col){  gfx.color(col); gdump(); };
 	void	gdump();
 
+	void	grid_axis(ChemDisplayAttrib *grid_attrib, int red, int green, int blue);
+	void	grid_axis(ChemDisplayAttrib *grid_attrib, int red, int green, int blue, int xpos, int ypos);
+	void	grid_axis(ChemDisplayAttrib *grid_attrib, int red, int green, int blue, int xpos, int ypos, int axis, bool txt);
+
 	void	grid(ChemDisplayAttrib *screen_attrib){ grid(screen_attrib, 100,100,100); }
 	void	grid(ChemDisplayAttrib *screen_attrib, int red, int green, int blue);
 
@@ -89,9 +93,9 @@ public:
 	//---
 	void	draw_vm(Concentration_VM *vm);
 
-	void	draw_cellbox(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
+	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
 	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy){
-		draw_cellbox(screen_attrib, minx, miny, maxx, maxy, NULL);
+		draw_box(screen_attrib, minx, miny, maxx, maxy, NULL);
 	};
 
 //	void 	draw_menu_border(ChemDisplayAttrib *screen_attrib, ChemMenu *menu);
@@ -105,7 +109,7 @@ public:
 
 
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
-	int		test_screen(ChemScreen *screen, int posx, int posy);
+	int		XXXtest_screen(ChemScreen *screen, int posx, int posy);
 	//--------------
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);

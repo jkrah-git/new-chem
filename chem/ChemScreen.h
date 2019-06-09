@@ -45,9 +45,11 @@ public:
 	const char 				*get_title(void){ return title; };
 	int						set_title(const char* newtitle);
 	int						istitle(const char* _title);
-	ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
-	int						wait(ChemDisplay *display) { return wait(display, false); };
-	int						wait(ChemDisplay *display, bool _dump);
+	//ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
+	ChemMenuButton			*test_menus(ChemDisplay *display);
+
+	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
+	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
 
 };
 //-----------------------------------------

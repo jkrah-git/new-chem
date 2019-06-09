@@ -157,24 +157,36 @@ void GFX_Base::box( int x, int y, int sx, int sy){
 }
 */
 //-----------------------------------------
-void GFX_Base::box( int x, int y, int sx, int sy, const char *_title){
+//void GFX_Base::box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, false);	}
+//void GFX_Base::box( int x, int y, int sx, int sy, bool fill)			{	box(x,y,sx,sy, fill);	}
+//void GFX_Base::box( int x, int y, int sx, int sy, char *txt) 			{	box(x,y,sx,sy, NULL, false);	}
+void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, bool fill){
 
-	//PRINT("txt[%s]\n", _title);
-	line(x-sx, y-sy, x+sx, y-sy);
-	line(x+sx, y-sy, x+sx, y+sy);
-	line(x+sx, y+sy, x-sx, y+sy);
-	line(x-sx, y+sy, x-sx, y-sy);
-	//PRINT("[%d,%d] +[%d][%d]\n", x, y, sx, sy);
+	if (fill) XFillRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
+	else XDrawRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 
 	if (_title!=NULL) {
 		int len = strlen(_title) * FONT_WIDTH;
 		int tx = x - (len/2);
 		int ty = y-sy;
 		text(_title, tx, ty);
-
 	}
-
 }
+
+//-----------------------------------------
+//-----------------------------------------
+//-----------------------------------------
+//void GFX_Base::box( int x, int y, int sx, int sy, bool fill){}
+
+
+//	line(x-sx, y-sy, x+sx, y-sy);
+//	line(x+sx, y-sy, x+sx, y+sy);
+//	line(x+sx, y+sy, x-sx, y+sy);
+//	line(x-sx, y+sy, x-sx, y-sy);
+
+	//color(0,0,0);
+
+
 //-----------------------------------------
 void GFX_Base::text(const char *str,  int x1, int y1){
 	if (str==NULL) return;

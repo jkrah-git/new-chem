@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 
-#include "screen_callbacks.h"
+#include "../screen_callbacks.h"
 // --------------------------
 int	cli_load_button(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
@@ -113,36 +113,48 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 		} // ------------------end(add)
 
 		// ------------------)
-		// argv(name, add)
+		// argv(name, size)
 		//----------------
-		if (strcmp(argv[1], "pos")==0) {
+		if (strcmp(argv[1], "size")==0) {
 			if (argc<3) {
-				if (button->attrib.getpos() == NULL)
-				{
-					printf("[NULL]\n");
-					return -4;
-				}
-				else {
-					printf("[%d,%d]\n", menu->attrib.getpos()[PEPPOS_X], menu->attrib.getpos()[PEPPOS_Y]);
-				}
+				printf("[%d,%d]\n", menu->button_sizex, menu->button_sizey);
+				return 0;
 			}
 
-		} // ------------------end(add)
+			if (argc==3) {
+				int s;
+				if (sscanf(argv[2], "%d", &s)<1) {
+					printf("data read error\n");
+					return -10;
+				}
+				button->sizex = s;	button->sizey = s;
+				printf("size[%d][%d]\n", s, s);
+			}
+		} // ------------------end(size)
 
 
 		//----------------
-		if (strcmp(argv[1], "attribs")==0) {
+		if (strcmp(argv[1], "attrib")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
 			else { cli_attribs(&button-> attrib, argc-2, &argv[2]); }
 			return 0;
 		} // ------------------end(attribs)
 
+		//----------------
+		if (strcmp(argv[1], "callback")==0) {
+			//PRINT(" callback : argc[%d][%s]\n", argc, argv[argc-1]);
 
+			//PRINT(" ========  callback 1..\n");
+			if (argc<3) {	button->callback = cli_callback(cli, 0 , NULL);			}
+			else {			button->callback = cli_callback(cli, argc-2, &argv[2]);		}
+			//PRINT(" ========  callback 2..\n");
+			printf("callback is: ");
+			if (button->callback ==NULL)  printf("unset\n");
+			if (button->callback !=NULL)  printf("set\n");
 
-
-
-
+			return 0;
+		} // ------------------end(callback)
 
 		// else menu must exist
 		// =========================================
@@ -151,19 +163,11 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 
 	} // -------------------------------------------- end (argc>1) ---
 	//----------------
-	//----------------
-
-/*
-	if (menu2!=NULL) {
-		//-- update and draw current screen...
-		screen-> current_menu = menu2;
-		// if waiting then NO callback
-		if (screen->waiting) {	cli-> callback = NULL;	}
-		else {					cli-> callback = draw_current_screen;	}
-		// --- draw...
-	}
-	draw_current_screen(cli, NULL, 0);
-*/
 	return 1;
 }
 // --------------------------
+
+int cli_button_select(Concentration_CLI *cli, int argc, char **argv) {
+		PRINT("===============\n");
+		return 0;
+}

@@ -1,9 +1,18 @@
 screen s1 add
+screen s1 attribs scale 100 100
+screen s1 attribs pos 1 1
+screen s1 render mole
+f newpep
+
 menu m1 add
-menu m1 attribs scale 100 100
-screen s1  attribs scale 100 100
+menu m1 attrib scale 50 30
 menu m1 step 1 0
 button b1 add
+button b1 callback cli_button_select
 button b2 add
+button b2 callback cli_button_select
+menu m1 attrib pos -6 11
+menu m1 layout
+menu unsel
+
 # screen s1 wait 
-menu m1 dump

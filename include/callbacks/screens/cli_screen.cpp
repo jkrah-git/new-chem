@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 
-#include "screen_callbacks.h"
+#include "../screen_callbacks.h"
 // --------------------------
 // --------------------------
 int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv){
@@ -192,15 +192,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// else screen must exist
 		// =========================================
 		if (screen==NULL) {	printf("screen[%s] not found.\n", argv[0]);	return -4;	}
-
-
-		//----------------
-		// argv(name, dump)
-		//----------------
 		if (strcmp(argv[1], "dump")==0) {	screen-> dump();	return 0;		}
-		// ------------------end(dump)
-		//----------------
-		// argv(name, wait)
 		//----------------
 		if (strcmp(argv[1], "wait")==0) {
 
@@ -210,9 +202,6 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			cli->display.draw_screen(screen, cli);
 			return 0;
 		} // ------------------end(wait)
-
-
-		//---------------
 		// argv(name, render, [func])
 		//----------------
 		if (strcmp(argv[1], "render")==0) {

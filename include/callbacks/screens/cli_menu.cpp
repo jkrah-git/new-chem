@@ -4,11 +4,11 @@
  *  Created on: Jun 7, 2019
  *      Author: jkrah
  */
-#include "screen_callbacks.h"
+#include "../screen_callbacks.h"
 // --------------------------
 int	cli_load_menu(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	PRINT("=========\n");
+	//PRINT("=========\n");
 	int r;
 	char name[32];
 	sprintf(name, "menu");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_menu, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
@@ -66,16 +66,14 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			printf("name add\n");
 			printf("name layout\n");
 			printf("name step x y\n");
-			printf("name attribs ...\n");
+			printf("name attrib ...\n");
 			return 0;
 		}
 		//----------
 		//---------------- unsel
 		if (strcmp(argv[0], "unsel")==0) {
-			PRINT("UNSEL1\n");
 			screen-> current_menu = NULL;
 			screen->gridmode = GRID_MOLE;
-			PRINT("UNSEL2\n");
 			return 0;
 		}
 		//----------
@@ -136,7 +134,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		} // ------------------end(step)
 
 		//----------------
-		if (strcmp(argv[1], "attribs")==0) {
+		if (strcmp(argv[1], "attrib")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
 			else { cli_attribs(&menu-> attrib, argc-2, &argv[2]); }

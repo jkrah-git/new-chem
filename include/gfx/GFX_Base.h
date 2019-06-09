@@ -62,9 +62,17 @@ public:
 	void 	close();
 	void 	point( int x, int y );								// Draw a point at (x,y)
 	void 	line( int x1, int y1, int x2, int y2 );				// Draw a line from (x1,y1) to (x2,y2)
-	//void	box( int x, int y, int s){ box(x,y,s,s); };
-	//void	box( int x, int y, int sx, int sy){ box(x,y,sx,sy,NULL); };
-	void	box( int x, int y, int sx, int sy, const char *_title);
+
+//	void	box( int x, int y, int sx, int sy, const char *_title);
+//	void	box( int x, int y, int sx, int sy, const char *_title, bool fill);
+
+
+	void box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, NULL, false);	};
+	void box( int x, int y, int sx, int sy, const char *txt) 	{	box(x,y,sx,sy, txt, false);	};
+	void box( int x, int y, int sx, int sy, const char *txt, bool fill);
+	//void box( int x, int y, int sx, int sy, bool fill);
+
+
 	void 	text(const char *str,  int x1, int y1);					// Draw a txt @(x1,y1)
 	void 	color(ChemDisplayColor *col);
 	void 	color( int red, int green, int blue );				// Change the current drawing color.

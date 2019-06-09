@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 
-#include "screen_callbacks.h"
+#include "../screen_callbacks.h"
 //int	read_arg(char *argv) {
 //	int v,r;
 //	r= sscanf(argv, "%d", &v);
@@ -19,6 +19,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 
 	// argc=0 argv()  (list)
 	if ((argc<1) ||(strcmp(argv[0], "help")==0)) {
+		printf("(attrib)\n");
 		printf("dump\n");
 		printf("pos x y\n");
 		printf("scale x y\n");
@@ -101,4 +102,37 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	//------------
 	return 0;
 }
+//----------------------
+// ChemMenuButton:: int		(*callback)(Concentration_CLI*, int, char**)
+// int		cli_callback(Concentration_CLI*, int argc, char **argv) {
+//---------------
+/*** https://www.newty.de/fpt/fpt.html#r_value ***
+ * 	// Direct solution: Function takes a char and returns a pointer to a
+	// function which is taking two floats and returns a float. <opCode>
+	// specifies which function to return
+		float (*GetPtr1(const char opCode))(float, float)
+ */
+//---------------
+int (*cli_callback(Concentration_CLI*, int argc, char **argv))(Concentration_CLI*, int argc, char **argv) {
 
+	// if (argc>0) { PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]); }
+	// else { PRINT(" attribs : argc[%d][]\n", argc); }
+
+	//PRINT("=======\n");
+	if ((argc<1) ||(strcmp(argv[0], "help")==0)) {
+		printf("(callback)\n");
+		//printf("help\n");
+		printf("cli_button_select\n");
+		return NULL;
+	}
+
+	//cli_button_select
+
+	// 1 argv(dump)
+	if (argc==1) {
+		//---------------- dump
+		if (strcmp(argv[0], "cli_button_select")==0) {	printf("[%s]\n", argv[0]); 	return cli_button_select;	}
+	} // end(argc==1)
+
+	return NULL;
+}

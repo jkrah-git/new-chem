@@ -96,24 +96,27 @@ void ChemMenu::layout_buttons(void){
 	min_posy =0;	max_posy =0;
 
 	bool firstrun = true;
-	// test by fixing abs pos of each button
+
+	// test by fixing abs pos of each button ??
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 
 		ChemMenuButton *button = current_item-> item;
-		//current_item-> item-> attrib.gfx = attrib.gfx;
-		button-> attrib.scalex = attrib.scalex;
-		button-> attrib.scaley = attrib.scaley;
-
 		button-> attrib.offsetx = offsetx;
 		button-> attrib.offsety = offsety;
+		button-> attrib.scalex = attrib.scalex;
+		button-> attrib.scaley = attrib.scaley;
+		button->sizex = (attrib.scalex *0.9f);
+		button->sizey = (attrib.scaley *0.9f);
 
 		PepPosVecType *menu_pos = attrib.getpos();
 		PepPosVecType *button_pos = button-> attrib.getpos();
-
 		if (button_pos ==NULL) {	PRINT("button_pos = NULL\n");	return;		}
+
+		//PRINT("menupos = [%d,%d]\n", menu_pos[PEPPOS_X], menu_pos[PEPPOS_Y]);
 		button_pos[PEPPOS_X] = menu_pos[PEPPOS_X] + px;
 		button_pos[PEPPOS_Y] = menu_pos[PEPPOS_Y] + py;
+
 
 		if (firstrun) {
 			min_posx = button_pos[PEPPOS_X];
