@@ -10,6 +10,13 @@
 //	int v,r;
 //	r= sscanf(argv, "%d", &v);
 //}
+// --------------------------
+int cli_redraw(Concentration_CLI *cli, int argc, char **argv) {
+	if (cli==NULL) return -1;
+	cli->display.draw_screen(cli-> display.current_screen, cli);
+	return 0;
+}
+// --------------------------
 
 int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	if (attribs==NULL) return -1;

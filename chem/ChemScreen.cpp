@@ -26,6 +26,9 @@ public:
 	int					(*renderCB)(Concentration_CLI*, int, char**);
 	SCREEN_WAIT_MODE		waitmode;
 	SCREEN_GRID_MODE		gridmode;
+	// if NULL then at test (curs_pos) at redraw
+	Molecule				*selected_mole;
+	Peptide					*selected_pep;
 
 	//--------------
 	ChemScreen();
@@ -52,8 +55,16 @@ public:
 ChemScreen::ChemScreen() {
 	title = NULL;
 	renderCB  =screen_render_mole;
-	buttonCB = screen_wait;
+	waitCB = screen_wait;
 	waiting = false;
+	selected_mole = NULL;
+	selected_pep = NULL;
+	mouse_clicked = false;
+
+	pep_index = 0;
+	moles_index = 0;
+	conc_index = 0;
+
 	waitmode = WAIT_CURS;
 	gridmode = GRID_MOLE;
 	// needed for buttons
@@ -168,8 +179,8 @@ ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (cli==NULL) return -1;
 	if (display==NULL) return -2;
-	if (buttonCB==NULL) { return 0; }
-	return buttonCB(this, cli, display);
+	if (waitCB==NULL) { return 0; }
+	return waitCB(this, cli, display);
 };
 // -------------------------------//-------------------------------//-------------------------------
 // -------------------------------//-------------------------------//-------------------------------

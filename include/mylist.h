@@ -100,6 +100,7 @@ public:
 	int				count();
 	void			clear();
 	mylist_item<T> 	*add(void);
+	//mylist_item<T> 	*count(int c);
 	mylist_item<T> 	*add(T *element){ return add(element, false); };
 	//mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
 	mylist_item<T> 	*del(mylist_item<T> *item); //'{	return del(item, false);	}

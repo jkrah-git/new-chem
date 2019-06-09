@@ -319,7 +319,7 @@ void GFX_Base::printg(char *str){
 void GFX_Base::cprintg(const char *str){
 	if (str==NULL) return;
 	if (line_pos >= height) return;
-	int x = 0;
+	int x = 5;
 	text(str,x,line_pos);
 	line_pos+= line_height;
 	flush();

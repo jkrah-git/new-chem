@@ -10,25 +10,44 @@
 // --------------------------
 int screen_render_mole(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	//cli->display.gfx.title = (const char*) "Mole";
-//	cli->display.gfx.open();
-//	cli->display.gfx.clear();
-	//cli->display.setcol(0,100,0);
-//	cli->display.draw_vm(cli-> core);
-	//	cli->display.grid(0,0,100);
+	cli->display.gfx.printg(("(mole)"));
+	//----------------
 	ChemScreen *screen = cli->display.current_screen;
-	if (screen==NULL) return -1;
-	cli->display.gfx.printg(("(mole)*"));
+	if (screen==NULL) return -2;
+
 
 	cli->display.draw_mole(&screen->attrib, cli->core->mole, 0, 100, 0);
 
-	/*
-	char msg[128];
-	if (cli->core->mole==NULL)
-		sprintf(msg, "<NULL>");
-	else
-		sprintf(msg, "Molecule[0x%zX]",	(long unsigned int) cli->core->mole);
-	cli->display.gfx.printg(msg);
-	*/
+	return 0;
+}
+
+// --------------------------
+int screen_render_match(Concentration_CLI *cli, int argc, char **argv) {
+	if (cli==NULL) return -1;
+	cli->display.gfx.printg(("(match)"));
+	//----------------
+	ChemScreen *screen = cli->display.current_screen;
+	if (screen==NULL) return -2;
+	Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
+	if (hit != NULL ) {
+		cli->core->mole = hit;
+	}
+	// void	draw_match(ChemDisplayAttrib *screen_attrib, MoleculeMatchPos *matchpos);
+
+	return 0;
+}
+
+// --------------------------
+int screen_render_vm(Concentration_CLI *cli, int argc, char **argv) {
+	if (cli==NULL) return -1;
+	cli->display.gfx.printg(("(vm)"));
+	//----------------
+	ChemScreen *screen = cli->display.current_screen;
+	if (screen==NULL) return -2;
+
+	//void ChemDisplay::draw_vm(Concentration_VM *vm){
+	//Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
+	cli->display.draw_vm(&screen->attrib, screen, cli->core);
+
 	return 0;
 }

@@ -121,15 +121,6 @@ int		list_screens(Concentration_CLI *cli, int argc, char **argv) {
 	//------
 	return c;
 }
-// --------------------------
-int draw_current_screen(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-	// nb: argc/v ignored
-	//if (argc<1)	{ PRINT(":: argc[%d],argv0[]]\n", argc); }
-	//else		{ PRINT(":: argc[%d],argv0[%s][]\n", argc, argv[0]); }
-	cli->display.draw_screen(cli-> display.current_screen, cli);
-	return 0;
-}
 
 
 // --------------------------// --------------------------
@@ -153,7 +144,8 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			//list_screens(cli, 0, NULL);
 			printf("off\n");
 			printf("name\n");
-			printf("name add]\n");
+			printf("name add\n");
+			printf("name render\n");
 			return 0;
 		}
 		//---------------- OFF
@@ -192,6 +184,12 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// else screen must exist
 		// =========================================
 		if (screen==NULL) {	printf("screen[%s] not found.\n", argv[0]);	return -4;	}
+
+		// dump
+		// wait
+		// render
+		// attrib
+
 		if (strcmp(argv[1], "dump")==0) {	screen-> dump();	return 0;		}
 		//----------------
 		if (strcmp(argv[1], "wait")==0) {
@@ -199,6 +197,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			//if ((argc>2) && (strcmp(argv[2], "wait")==0)
 
 			screen->waiting = true;
+			// ??
 			cli->display.draw_screen(screen, cli);
 			return 0;
 		} // ------------------end(wait)
@@ -214,6 +213,11 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 				printf("# possible values:\n");
 				printf("null\n");
 				printf("mole\n");
+				printf("match\n");
+				printf("vm\n");
+				printf("screen[%s].render is:", argv[0]);
+				if (screen-> renderCB==NULL) { printf("unset\n"); }
+				else 						{ printf("SET\n"); }
 			}
 
 			if (argc==3) {
@@ -228,9 +232,55 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 					printf("screen[%s].render ->[screen_render_mole]\n", argv[0]);
 				} // ---- end(mole)
 				//-------------
-			}
-		} // ------------------end(callback)
+				if (strcmp(argv[2], "match")==0) {
+					screen-> renderCB = screen_render_match;
+					printf("screen[%s].render ->[screen_render_match]\n", argv[0]);
+				} // ---- end(match)
+				//-------------
+				//-------------
+				if (strcmp(argv[2], "vm")==0) {
+					screen-> renderCB = screen_render_vm;
+					printf("screen[%s].render ->[screen_render_vm]\n", argv[0]);
+				} // ---- end(match)
+				//-------------
+			} // end(argc==3)
+		} // ------------------end(render)
+		//---------------
+		// argv(name, attrib, x | x y)
+		//----------------
+		if (strcmp(argv[1], "attrib")==0) {
+			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
+			else { cli_attribs(&screen-> attrib, argc-2, &argv[2]); }
 
+		} // ------------------end(attribs)
+		//---------------
+		// argv(name, grid, x | x y)
+		//----------------
+		if (strcmp(argv[1], "grid")==0) {
+			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+			// enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
+			if (argc<3) {
+				printf("off\n");
+				printf("mole\n");
+				printf("menu\n");
+			}
+
+			if (argc>2) {
+				if (strcmp(argv[2], "off")==0) { screen->gridmode = GRID_OFF; 	}
+				if (strcmp(argv[2], "mole")==0) { screen->gridmode = GRID_MOLE; }
+				if (strcmp(argv[2], "menu")==0) { screen->gridmode = GRID_MENU; }
+			}
+
+			switch(screen->gridmode) {
+				case GRID_OFF:	printf("grid[off]\n"); break;
+				case GRID_MOLE:	printf("grid[mole]\n"); break;
+				case GRID_MENU:	printf("grid[menu]\n"); break;
+			}
+		return 0;
+		} // ------------------end(grid)
+
+		/*
 		//---------------
 		// argv(name, scale, x | x y)
 		//----------------
@@ -263,16 +313,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sy);
 			} // end(argc==3)
 		} // ------------------end(scale)
-
-		//---------------
-		// argv(name, attrib, x | x y)
-		//----------------
-		if (strcmp(argv[1], "attribs")==0) {
-			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
-			else { cli_attribs(&screen-> attrib, argc-2, &argv[2]); }
-			return 0;
-		} // ------------------end(attribs)
+		*/
 
 		//---------------
 	} // -------------------------------------------- end (argc>1) ---
@@ -281,14 +322,13 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	if (screen!=NULL) {
-		//-- update and draw current screen...
 		cli->display.current_screen = screen;
-		// if waiting then NO callback
 		if (screen->waiting) {	cli-> callback = NULL;	}
-		else {					cli-> callback = draw_current_screen;	}
-		// --- draw...
+		else {					cli-> callback = cli_redraw;	}
+
 	}
-	draw_current_screen(cli, NULL, 0);
+	// draw_current_screen(cli, NULL, 0);
+	cli->display.draw_screen(cli-> display.current_screen, cli);
 	return 1;
 }
 // --------------------------

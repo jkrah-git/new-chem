@@ -29,6 +29,9 @@ public:
 	void		dump();
 	void		test();
 	PeptidePos& operator +(const PeptidePos& p);
+	PeptidePos& operator +(const PeptidePos* p);
+	PeptidePos& operator +(const PepPosVecType* v);
+
 	PeptidePos& operator =(const PeptidePos& p);
 	PeptidePos& operator =(const PepPosVecType *v);
 	       bool operator ==(const PeptidePos& p);

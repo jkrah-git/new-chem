@@ -61,28 +61,38 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 				printf("button[%s]=[NULL]\n", button->gettext());
 				return 0;
 			}
+		} // -- else no button pressed
+
+		// ----------------
+		if (screen-> waitmode==WAIT_CURS) {
+			x = screen-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = screen-> attrib.getycell(&display->gfx, display-> gfx.ypos());
+			screen-> curs_pos.dim[PEPPOS_X]=x;
+			screen-> curs_pos.dim[PEPPOS_Y]=y;
+
+			// ---- reset selected pep/mole
+			screen->selected_pep = NULL;
+			screen->selected_mole = NULL;
+			screen-> mouse_clicked = true;
+			if (screen-> renderCB !=NULL)
+				screen-> renderCB(cli, 0, NULL);
+			screen-> mouse_clicked = false;
+
+
+
+
+		}
+		// ----------------
+		if (screen-> waitmode==WAIT_SCREEN) {
+			x = screen-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = screen-> attrib.getycell(&display->gfx, display-> gfx.ypos());
+			if (screen-> attrib.getpos() == NULL) { 	PRINT("NULL ATRRIB...\n"); return -1;	}
+			screen_pos[PEPPOS_X] = x;
+			screen_pos[PEPPOS_Y] = y;
 		}
 
-		if (button==NULL) {
-			// ----------------
-			if (screen-> waitmode==WAIT_CURS) {
-				x = screen-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
-				y = screen-> attrib.getycell(&display->gfx, display-> gfx.ypos());
-				screen-> curs_pos.dim[PEPPOS_X]=x;
-				screen-> curs_pos.dim[PEPPOS_Y]=y;
+		// ----------------
 
-			}
-			// ----------------
-			if (screen-> waitmode==WAIT_SCREEN) {
-				x = screen-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
-				y = screen-> attrib.getycell(&display->gfx, display-> gfx.ypos());
-				if (screen-> attrib.getpos() == NULL) { 	PRINT("NULL ATRRIB...\n"); return -1;	}
-				screen_pos[PEPPOS_X] = x;
-				screen_pos[PEPPOS_Y] = y;
-			}
-
-			// ----------------
-		}
 		break;
 	//-----------------------
 	case DISPLAY_EVENT_MOUSE2:

@@ -78,6 +78,30 @@ PeptidePos &PeptidePos::operator +(const PeptidePos &p) {
 	}
 	return *this;
 }
+// ---------------------
+PeptidePos &PeptidePos::operator +(const PeptidePos *p) {
+	if ((dim != NULL) &&
+		(p != NULL) &&
+		(p-> dim != NULL)	){
+		for (int i=0; i<PepPosVecMax; i++){
+			dim[i] += p->dim[i];
+		}
+	}
+	return *this;
+}
+
+
+PeptidePos &PeptidePos::operator +(const PepPosVecType* v){
+	if ((dim != NULL) &&
+		(v != NULL) ){
+		for (int i=0; i<PepPosVecMax; i++){
+			dim[i] += v[i];
+		}
+	}
+	return *this;
+
+
+}
 // ---------------------// ---------------------
 PeptidePos &PeptidePos::operator =(const PeptidePos &p) {
 	if ((dim != NULL) && (p.dim != NULL)){

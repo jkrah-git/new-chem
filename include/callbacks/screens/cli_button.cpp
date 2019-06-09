@@ -160,9 +160,9 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 		// =========================================
 		if (button==NULL) {	printf("button[%s] not found.\n", argv[0]);	return -4;	}
 
-
 	} // -------------------------------------------- end (argc>1) ---
 	//----------------
+	cli_redraw(cli, 0, NULL);
 	return 1;
 }
 // --------------------------

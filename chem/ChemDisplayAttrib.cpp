@@ -98,6 +98,7 @@ void ChemDisplayAttrib::setpos(PepPosVecType *_pos){
 	else pos = _pos;
 
 }
+void ChemDisplayAttrib::addpos(PepPosVecType *_pos){	if (_pos!=NULL)		pos = pos + _pos;}
 void ChemDisplayAttrib::setscale(int sx, int sy){	scalex = sx; scaley = sy;	}
 //--------------------------
 void ChemDisplayAttrib::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley){

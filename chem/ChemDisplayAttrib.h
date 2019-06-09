@@ -17,10 +17,10 @@
 class ChemDisplayAttrib {
 	PeptidePos		pos;
 public:
-	int 		offsetx;
-	int 		offsety;
 	int 		scalex;
 	int 		scaley;
+	int 		offsetx;
+	int 		offsety;
 
 	// ------
  	//----------------
@@ -32,12 +32,17 @@ public:
   	//------
 	PepPosVecType	*getpos(void){ return pos.dim; };
 	void	setpos(PepPosVecType *_pos);
+	void	addpos(PepPosVecType *_pos);
 	void	setpos(PepPosVecType px, PepPosVecType py){
 		if (pos.dim!=NULL) {
 			pos.dim[PEPPOS_X]=px;
 			pos.dim[PEPPOS_Y]=py;
 		}
 	}
+
+	PepPosVecType	getposx(void){ 	if (pos.dim!=NULL) { return pos.dim[PEPPOS_X]; } return 0; }
+	PepPosVecType	getposy(void){ 	if (pos.dim!=NULL) { return pos.dim[PEPPOS_Y]; } return 0; }
+
 
   	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley);
   	void	setoffset(int _offsetx, int _offsety);

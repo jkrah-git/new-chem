@@ -25,14 +25,28 @@ class ChemScreen {
 	// TODO:fix to local
 	char					*title;
 public:
-	ChemDisplayAttrib			attrib;
+	ChemDisplayAttrib		attrib;
 	mylist<ChemMenu> 		*menu_list;
 	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
+
+
+	// stack indexs.. (we dont store pointers here just the count)
+	int						pep_index;
+	int 					moles_index;
+	int						conc_index;
+
+
+	// if NULL then at test (curs_pos) at redraw
+	Molecule				*selected_mole;
+	Peptide					*selected_pep;
+	bool					mouse_clicked;
+
 	bool					waiting;
 	SCREEN_WAIT_MODE		waitmode;
 	SCREEN_GRID_MODE		gridmode;
 	int					(*renderCB)(Concentration_CLI*, int, char**);
+	int						(*waitCB)(ChemScreen*, Concentration_CLI*, ChemDisplay*);
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
@@ -50,12 +64,12 @@ public:
 	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
 	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
 
-	int						(*buttonCB)(ChemScreen*, Concentration_CLI*, ChemDisplay*);
+
 	int						button_click(Concentration_CLI *cli, ChemDisplay *display);
 
 };
 //-----------------------------------------
-int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
+
 
 //-----------------------------------------//-----------------------------------------
 #endif /* CHEMSCREEN_H_ */

@@ -1,9 +1,9 @@
 screen s1 add
-screen s1 attribs scale 100 100
-screen s1 attribs pos 1 1
+screen s1 attrib scale 100 100
 screen s1 render mole
-f newpep
 
+
+screen s1
 menu m1 add
 menu m1 attrib scale 50 30
 menu m1 step 1 0
@@ -15,4 +15,19 @@ menu m1 attrib pos -6 11
 menu m1 layout
 menu unsel
 
-screen s1 wait 
+screen s2 add
+screen s2 attrib scale 50 50
+screen s2 render match
+menu m1 add
+button next add
+menu m1 attrib scale 40 40
+menu m1 attrib pos 10 8
+menu m1 layout
+menu unsel
+
+screen s3 add
+screen s3 attrib scale 100 50
+screen s3 grid off
+screen s3 render vm
+f newmatch
+screen s3
