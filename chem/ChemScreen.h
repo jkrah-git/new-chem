@@ -30,10 +30,9 @@ public:
 	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
 	bool					waiting;
-	int					(*renderCB)(Concentration_CLI*, int, char**);
 	SCREEN_WAIT_MODE		waitmode;
 	SCREEN_GRID_MODE		gridmode;
-
+	int					(*renderCB)(Concentration_CLI*, int, char**);
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
@@ -51,9 +50,12 @@ public:
 	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
 	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
 
+	int						(*buttonCB)(ChemScreen*, Concentration_CLI*, ChemDisplay*);
+	int						button_click(Concentration_CLI *cli, ChemDisplay *display);
+
 };
 //-----------------------------------------
-
+int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
 
 //-----------------------------------------//-----------------------------------------
 #endif /* CHEMSCREEN_H_ */

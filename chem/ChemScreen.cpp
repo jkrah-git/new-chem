@@ -45,10 +45,14 @@ public:
 };
 //-----------------------------------------
 */
+#include "../include/callbacks/screen_callbacks.h"
+
+//int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
 //-----------------------------------------
 ChemScreen::ChemScreen() {
 	title = NULL;
-	renderCB  =NULL;
+	renderCB  =screen_render_mole;
+	buttonCB = screen_wait;
 	waiting = false;
 	waitmode = WAIT_CURS;
 	gridmode = GRID_MOLE;
@@ -70,8 +74,8 @@ void ChemScreen::dump(void){
 	else				printf("ChemScreen[0x%zX].[%s]", (long unsigned int) this, title);
 	switch (waitmode) {
 	case WAIT_CURS:		printf("(curs)"); break;
-	case WAIT_SCREEN:		printf("(screen)"); break;
-	case WAIT_OBJECT:		printf("(object)"); break;
+	case WAIT_SCREEN:	printf("(screen)"); break;
+	case WAIT_OBJECT:	printf("(object)"); break;
 
 	}
 	attrib.dump(); NL;
@@ -92,10 +96,6 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item;
 	new_menu_item = menu_list->add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
-
-		//new_menu_item-> item-> display = display;
-		//if (display !=NULL) { new_menu_item-> item-> display = display; 	}
-
 		new_menu_item-> item-> settitle( _title);
 		return new_menu_item-> item;
 	}
@@ -104,7 +104,6 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 //-----------------------------------------
 ChemMenu *ChemScreen::find_menu(const char *_title){
 	if (menu_list==NULL) return NULL;
-//	ChemMenu	*found_menu = NULL;
 
 	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
 	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
@@ -117,7 +116,6 @@ ChemMenu *ChemScreen::find_menu(const char *_title){
 	//	PRINT("..(%s)\n", menu_item-> item-> gettitle());
 		if (strcmp(_title, menu_item-> item-> gettitle())==0)			return menu_item-> item;
 		menu_item = menu_item-> next;
-
 	}
 
 	return NULL;
@@ -147,11 +145,8 @@ int	ChemScreen::istitle(const char* _title){
 	return 1;
 }
 //-------------------------------
-//ChemMenuButton *ChemScreen::test_menus(PepPosVecType *screen_pos) {
 ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
-
 	if (display==NULL) return NULL;
-
 	//PRINT("Testing[%d,%d]\n", display-> gfx.xpos(), display-> gfx.ypos());
 
 	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
@@ -173,18 +168,68 @@ ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (cli==NULL) return -1;
 	if (display==NULL) return -2;
-//	attrib.gfx = &display-> gfx;
-//	ChemDisplayAttrib *display_attrib = display-> getattrib();
+	if (buttonCB==NULL) { return 0; }
+	return buttonCB(this, cli, display);
+};
+// -------------------------------//-------------------------------//-------------------------------
+// -------------------------------//-------------------------------//-------------------------------
 
-//	PepPosVecType *display_pos = display-> attrib.getpos();
-//	PepPosVecType *display_pos = display_attrib-> getpos();
+/*
+int	ChemScreen::button_click(Concentration_CLI *cli, ChemDisplay *display){
+		int x,y;
 
+		//-----------------------
+//	case DISPLAY_EVENT_MOUSE1:
+		// ----------------
+		if (waitmode==WAIT_CURS) {
+
+			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
+			curs_pos.dim[PEPPOS_X]=x;
+			curs_pos.dim[PEPPOS_Y]=y;
+
+			ChemMenuButton *button = test_menus(display);
+			if (button!=NULL) {
+				PRINT("Button[%s] pressed\n", button->gettext());
+				if (button->callback != NULL)
+					button->callback(cli, 0, NULL);
+			}
+
+		}
+		// ----------------
+		if (waitmode==WAIT_SCREEN) {
+			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
+			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
+
+			if (attrib.getpos() == NULL) {	PRINT("NULL ATRRIB...\n");		}
+
+			PepPosVecType *screen_pos = attrib.getpos();
+			if (screen_pos==NULL) { PRINT("display_pos=NULL\n"); return -2; }
+
+			screen_pos[PEPPOS_X] = x;
+			screen_pos[PEPPOS_Y] = y;
+			//TODO - scan menus
+		}
+
+		// ----------------
+//		break;
+	//-----------------------
+		return 0;
+}
+
+//-------------------------------
+int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
+	if (cli==NULL) return -1;
+	if (display==NULL) return -2;
+
+	if (buttonCB==NULL) { return 0; }
+	return buttonCB(this, cli, display);
+};
 	PepPosVecType *screen_pos = attrib.getpos();
 	if (screen_pos==NULL) { PRINT("display_pos=NULL\n"); return -2; }
 
-	//PRINT("\nscreen.attrib: ");	attrib.dump(); NL
-	//PRINT(" ==== ChemScreen ====\n"); dump(); NL
 
+	// draw curs
 	if (waitmode==WAIT_CURS) {
 		// display-> curs(200,200,0);
 		if (_dump) { PRINT("curs=[%d,%d]\n", curs_pos.dim[0], curs_pos.dim[1]); }
@@ -202,33 +247,17 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (w==27) {		if (_dump) {	PRINT("# [ESC][%d]##\n", w); }	return -110;	}
 
 	switch(w) {
-		/*
-		#define DISPLAY_EVENT_MOUSE1 1
-		#define DISPLAY_EVENT_MOUSE2 3
-		#define DISPLAY_EVENT_MOUSE3 2
-		#define DISPLAY_EVENT_MOUSEUP 4
-		#define DISPLAY_EVENT_MOUSEDOWN 5
-		*/
-	// ==== MOUSE CLICKS  =====
 	//-----------------------
 	case DISPLAY_EVENT_MOUSE1:
 		// ----------------
 		if (waitmode==WAIT_CURS) {
-		//	x = display-> attrib.getxcell(display-> gfx.xpos());
-		//	y = display-> attrib.getycell(display-> gfx.ypos());
-
-		//	x = display_attrib-> getxcell(display-> gfx.xpos());
-		//	y = display_attrib-> getycell(display-> gfx.ypos());
-
 			x = attrib.getxcell(&display->gfx, display-> gfx.xpos());
 			y = attrib.getycell(&display->gfx, display-> gfx.ypos());
 			curs_pos.dim[PEPPOS_X]=x;
 			curs_pos.dim[PEPPOS_Y]=y;
 
 
-			//TODO - scan menus
-//ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
-//			ChemMenuButton *button = test_menus(curs_pos.dim);
+			// scan menus
 			ChemMenuButton *button = test_menus(display);
 			if (button!=NULL) {
 				PRINT("Button[%s] pressed\n", button->gettext());
@@ -245,13 +274,7 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 			if (attrib.getpos() == NULL) {
 				PRINT("NULL ATRRIB...\n");
 			}
-/*
-			if (display-> attrib.pos != NULL) {
-//				(display-> attrib.pos-> dim  !=NULL)) {
-				display-> attrib.pos[PEPPOS_X]=x;
-				display-> attrib.pos[PEPPOS_Y]=y;
-			}
-*/
+
 			screen_pos[PEPPOS_X] = x;
 			screen_pos[PEPPOS_Y] = y;
 			//TODO - scan menus
@@ -282,58 +305,16 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 		attrib.scaley = attrib.scalex;
 		break;
 
-
-
-
-// ARROWS
-//	case 81:	curs_pos.dim[PEPPOS_X] --;	break;
-//	case 82:	curs_pos.dim[PEPPOS_Y] ++;	break;
-//	case 83:	curs_pos.dim[PEPPOS_X] ++;	break;
-//	case 84:	curs_pos.dim[PEPPOS_Y] --;	break;
-
+		// ARROWS
 	case DISPLAY_EVENT_LEFT:	curs_pos.dim[PEPPOS_X] --;	break;
 	case DISPLAY_EVENT_RIGHT:	curs_pos.dim[PEPPOS_Y] ++;	break;
 	case DISPLAY_EVENT_UP:		curs_pos.dim[PEPPOS_X] ++;	break;
 	case DISPLAY_EVENT_DOWN:	curs_pos.dim[PEPPOS_Y] --;	break;
+
 	}
 
-
-//ChemDisplayAttrib 	*display_attrib = display-> getattrib();
-//					display_attrib ->cp(&attrib);
-
-	//PRINT("curs=>");	curs_pos.dump(); NL
-	return 0;
-
-
-
-}
-//-------------------------------//-------------------------------
-/*
-void ChemScreen::	void			draw_menus(ChemDisplay *display);{
-	if (menu_list==NULL) return;
-	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list->gethead();
-	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-	// TODO - Menu Draw
-	//	current_item-> item-> draw();
-
-		//-------
-		current_item = current_item->next;
-	}
-
-}
-//-------------------------------
-int	ChemScreen::test_menus(int posx, int posy){
-	if (menu_list==NULL) return 0;
-
-	mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = menu_list->gethead();
-	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		// todo menu draw
-		//current_item-> item-> draw();
-		//-------
-		current_item = current_item->next;
-	}
+	// ----------------------
 	return 0;
 }
-
 */
-//-------------------------------
+// -------------------------------//-------------------------------//-------------------------------

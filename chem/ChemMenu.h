@@ -50,6 +50,7 @@ public:
 	ChemMenuButton 		*test_menu(int posx, int posy);
 	ChemMenuButton 		*add_button(void){ return add_button(NULL); };
 	ChemMenuButton 		*add_button(const char *_text);
+	int					select_menu(ChemMenuButton *button);
 	const char			*gettitle(void){ return title; };
 	void				settitle(const char *_title);
 	ChemMenuButton		*findbutton(const char *_title);

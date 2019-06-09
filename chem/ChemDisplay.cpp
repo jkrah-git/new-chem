@@ -250,50 +250,19 @@ void ChemDisplay::grid(ChemDisplayAttrib *grid_attrib, int red, int green, int b
 	PepPosVecType	*display_pos = display_attrib.getpos();
 	if (display_pos==NULL) {		PRINT("ERR: display_pos NULL pos\n");		return;	}
 
+
 	int x_steps = (gfx.width / grid_attrib-> scalex)/2;
 	int y_steps = (gfx.height / grid_attrib-> scaley)/2;
 	//PRINT("Grid <BREAK>\n"); return;
+	int xinc = x_steps/20; if (xinc<1) xinc=1;
+	int yinc = y_steps/20; if (yinc<1) yinc=1;
 
-	for (int x=(-x_steps - gridpos[PEPPOS_X]); x < (x_steps - gridpos[PEPPOS_X]); x++) {
-
+	for (int x=(-x_steps - gridpos[PEPPOS_X]); x < (x_steps - gridpos[PEPPOS_X]); x+= xinc) {
 		grid_axis(grid_attrib, red, green, blue, x, 0, 0, true);
-
-		/*
-		display_pos[PEPPOS_X] = x + gridpos[PEPPOS_X];
-		int px = display_attrib.screenx(&gfx);
-		gfx.color(100, 100, 100);
-		char num[16];
-		sprintf(num, "%d", x);
-		gfx.text(num, px, 10);
-
-//		if (x==(-gridpos[PEPPOS_X]))	gfx.color(red, green, blue);
-//		else		gfx.color(red/2, green/2, blue/2);
-
-		gfx.color(red, green, blue);
-		gfx.line(px ,0, px, gfx.height);
-		*/
 	}
 
-	for (int y=(-y_steps - gridpos[PEPPOS_Y]); y< (y_steps - gridpos[PEPPOS_Y]); y++) {
+	for (int y=(-y_steps - gridpos[PEPPOS_Y]); y< (y_steps - gridpos[PEPPOS_Y]); y+= yinc) {
 		grid_axis(grid_attrib, red, green, blue, 0, y, 1, true);
-
-		/*
-		display_pos[PEPPOS_Y] = y + gridpos[PEPPOS_Y];
-		int py = display_attrib.screeny(&gfx);
-
-		gfx.color(100, 100, 100);
-		char num[16];
-		sprintf(num, "%d", y);
-		gfx.text(num, py, 10);
-
-
-		//---
-//		if (y==(-gridpos[PEPPOS_Y]))	gfx.color(red, green, blue);
-//		else		gfx.color(red/2, green/2, blue/2);
-		gfx.color(red, green, blue);
-		gfx.line(0, py, gfx.width, py);
-		*/
-
 	}
 
 	gfx.flush();

@@ -144,22 +144,21 @@ void ChemMenu::layout_buttons(void){
 }
 //------------------------------//------------------------------
 ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
-//	PRINT(":  _pos[%d][%d]\n", posx, posy);
+
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *selected_item = NULL;
 
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-//		if ((current_item-> item->_pos.dim[0] == posx) &&
-//			(current_item-> item->_pos.dim[1] == posy) ) {
-
 		PepPosVecType *item_pos = current_item-> item->attrib.getpos();
-//		PRINT(":  button.pos[%d][%d]\n", item_pos[PEPPOS_X], item_pos[PEPPOS_Y]);
+		current_item-> item->_selected = (item_pos[PEPPOS_X] == posx) && (item_pos[PEPPOS_Y] == posy);
+		if (current_item-> item->_selected)
+			selected_item = current_item;
 
-		if ((item_pos[PEPPOS_X] == posx) && (item_pos[PEPPOS_Y] == posy) ) {
-			return current_item-> item;
-		}
 		//-----
 		current_item = current_item-> next;
 	}
+	if (selected_item !=NULL) return selected_item-> item;;
+
 	return NULL;
 }
 //------------------------------//------------------------------
@@ -201,8 +200,27 @@ ChemMenuButton *ChemMenu::add_button(const char *_text){
 
 	return NULL;
 }
+//------------------------------------------
+int	ChemMenu::select_menu(ChemMenuButton *button){
+
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *found_button_item = NULL;
+	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *next_button_item = button_list.gethead();
+	while ((next_button_item!=NULL) && (next_button_item-> item !=NULL)) {
+		if (next_button_item-> item == button) {
+			found_button_item = next_button_item;
+			button->_selected = true;
+		} else {
+			button->_selected = false;
+		}
+		//-----------
+		next_button_item = next_button_item->next;
+	}
+
+	if (found_button_item==NULL)  return -1;
+	return 0;
+}
+
 ChemMenuButton *ChemMenu::findbutton(const char *_title){
-	//ChemMenuButton *found_button = NULL;
 
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *next_button_item = button_list.gethead();
 	while ((next_button_item!=NULL) && (next_button_item-> item !=NULL)) {

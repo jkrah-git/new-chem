@@ -167,7 +167,7 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 }
 // --------------------------
 
-int cli_button_select(Concentration_CLI *cli, int argc, char **argv) {
-		PRINT("===============\n");
+int cli_button_ping(Concentration_CLI *cli, int argc, char **argv) {
+		PRINT("===> PING\n");
 		return 0;
 }

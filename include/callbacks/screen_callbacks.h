@@ -26,7 +26,7 @@ int	cli_load_menu(Concentration_CLI *cli, int argc, char **argv);
 // screen_buttons.cpp
 int cli_button(Concentration_CLI *cli, int argc, char **argv);
 int	cli_load_button(Concentration_CLI *cli, int argc, char **argv);
-int cli_button_select(Concentration_CLI *cli, int argc, char **argv);
+int cli_button_ping(Concentration_CLI *cli, int argc, char **argv);
 
 // cli_attribs.cpp
 int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv);
