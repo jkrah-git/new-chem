@@ -628,62 +628,71 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 	int px = PRINT_INDENT;
 	int py = FONT_HEIGHT;
 
+
+	ChemDisplayColor txtcol(255,255,255);
+	ChemDisplayColor red(255,0,0);
+
 	// -- backing box  ----------
 	gfx.color(&screen-> title_col);
 	gfx.box(gfx.width/2, gfx.line_height/2, gfx.width/2, gfx.line_height/2, NULL, true);
 
 	// -- title ----------
-	gfx.color(255,255,255);
+	//gfx.color(255,255,255);
+	gfx.color(&txtcol);
 	sprintf(msg, "Screen[%s]",	screen-> get_title());
-	gfx.text(msg, px, py);	px += ((strlen(msg)+1)*FONT_WIDTH);
+	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
 
 	// -- attribs ----------
 	sprintf(msg, "Pos[%d,%d] Scale[%d,%d] Offs[%d,%d]",
 			screen-> attrib.getposx(),	screen-> attrib.getposy(),
 			screen-> attrib.scalex,	screen-> attrib.scaley,
 			screen-> attrib.offsetx, screen-> attrib.offsety);
-	gfx.text(msg, px, py);	px += ((strlen(msg)+1)*FONT_WIDTH);
+	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
+
+	// --- Selected Pep/Mole -----
+	px += (FONT_WIDTH * 3);
+	sprintf(msg, "SelectedPep[0x%zX] SelectedMole[0x%zX]",
+				(long unsigned int) screen-> selected_pep,
+				(long unsigned int) screen-> selected_mole);
+	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
+
+
+	// ==============================================
+	// now do some from R-> L  (ie <--)
+	int px2 = gfx.width;
 
 	// -- render ----------
 	if (screen-> renderCB ==NULL){ sprintf(msg, "NoRender[0x%zX]", (long unsigned int) screen-> renderCB);	}
 	else 						 { sprintf(msg, "Render[0x%zX]", (long unsigned int) screen-> renderCB);	}
-	gfx.text(msg, px, py);	px += ((strlen(msg)+1)*FONT_WIDTH);
+	px2 -= ((strlen(msg))*FONT_WIDTH); 	gfx.text(msg, px2, py);
 
-	// now do some from R-> L  (ie <--)
-	int px2 = gfx.width;
 
 	// --- waiting -----
 	if (screen->waiting) {
 		//enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
 		switch(screen->waitmode) {
-		case WAIT_CURS:
-			sprintf(msg, "Waiting(curs)");
-			break;
-			//--------------
-		case WAIT_SCREEN:
-			sprintf(msg, "Waiting(screen)");
-			break;
-			//--------------
-		case WAIT_OBJECT:
-			sprintf(msg, "Waiting(object?)");
-			break;
-			//--------------
+		case WAIT_CURS:		sprintf(msg, "Waiting(curs)");		break;
+		case WAIT_SCREEN:	sprintf(msg, "Waiting(screen)");	break;
+		case WAIT_OBJECT:	sprintf(msg, "Waiting(object?)");	break;
 		} // end switch
-	} else { // screen not waing
-		sprintf(msg, "%s", "NotWait[]");
-	}
-	px2 -= ((strlen(msg))*FONT_WIDTH); 	gfx.text(msg, px2, py);
-
-	// --- Selected Pep/Mole -----
-	sprintf(msg, "SelectedPep[0x%zX] SelectedMole[0x%zX]",
-				(long unsigned int) screen-> selected_pep,
-				(long unsigned int) screen-> selected_mole);
+	} else { sprintf(msg, "%s", "NotWait[]");	}
 	px2 -= ((strlen(msg)+1)*FONT_WIDTH); 	gfx.text(msg, px2, py);
+
+
 
 	// --- Selected Menu -----
-	if (screen->current_menu ==NULL) { sprintf(msg, "()"); }
-	else 							 { sprintf(msg, "(menu[%s])", screen->current_menu-> gettitle()); }
-	px2 -= ((strlen(msg)+1)*FONT_WIDTH); 	gfx.text(msg, px2, py);
+	if (screen->current_menu ==NULL) {
+		sprintf(msg, "()");
+		px2 -= ((strlen(msg))*FONT_WIDTH); 	gfx.text(msg, px2, py);
+	}
+	else {
+		gfx.color(&red);
+		sprintf(msg, "(menu[%s])", screen->current_menu-> gettitle());
+		px2 -= ((strlen(msg)+1)*FONT_WIDTH); 	gfx.text(msg, px2, py);
+		gfx.color(&txtcol);
+
+	}
+	//px2 -= ((strlen(msg)+1)*FONT_WIDTH); 	gfx.text(msg, px2, py);
 
 
 	return;
@@ -725,105 +734,22 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		// title bar
 		draw_title_bar(screen);
 
-/* -----
-		// old title ================
-		if (false){
-			//=======================
-			// --- grid_  -----
-			char msg1[32];
-			sprintf(msg1, "%s", "");
-			//if (screen-> gridmode==GRID_OFF) {	sprintf(grid_msg, "off");	}
-
-			if (screen-> gridmode==GRID_MOLE) {
-				//grid(&screen-> attrib, 50,50,50);
-				//			screen-> attrib.getpos()[PEPPOS_X],
-				grid(&screen-> attrib, 50,50,50);
-				grid_axis(&screen-> attrib, 150,150,150);
-				sprintf(msg1, "mole");
-			}
-
-			if (screen-> gridmode==GRID_MENU) {
-				ChemDisplayAttrib display_attribs(&screen-> current_menu-> attrib);
-				display_attribs.setpos(0,0);
-				grid(&display_attribs, 50,0,0);
-				grid_axis(&display_attribs, 100,0,0);
-
-				grid_axis(&screen-> attrib, 50,50,50);
-				sprintf(msg1, "menu");
-			}
-
-			// --- wait_msg  -----
-			char msg2[32];
-			sprintf(msg2, "%s", "");
-			if (screen->waiting) {
-				//enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
-				switch(screen->waitmode) {
-				case WAIT_CURS:
-					sprintf(msg2, "curs");
-					break;
-					//--------------
-				case WAIT_SCREEN:
-					sprintf(msg2, "screen");
-					break;
-					//--------------
-				case WAIT_OBJECT:
-					sprintf(msg2, "object");
-					break;
-					//--------------
-				}
-			}
-
-			// --- menu msg ----
-			char msg3[64];
-			if (screen->current_menu !=NULL) { sprintf(msg3, "%s", screen->current_menu-> gettitle()); }
-			else 							 { sprintf(msg3, "%s", ""); }
-
-
-			char msg[256];
-			sprintf(msg, "Screen[%s] Menu[%s] Wait[%s] Grid[%s]",
-					screen-> get_title(),
-					msg3,
-					msg2,
-					msg1 );
-
-			gfx.color(255,255,255);
-			gfx.cprintg(msg);
-
-			sprintf(msg, "..Pos[%d,%d] Scale[%d,%d] Offs[%d,%d]",
-					screen-> attrib.getposx(),	screen-> attrib.getposy(),
-					screen-> attrib.scalex,	screen-> attrib.scaley,
-					screen-> attrib.offsetx, screen-> attrib.offsety);
-			gfx.printg(msg);
-			sprintf(msg, "..SelectedPep[0x%zX], SelectedMole[0x%zX]",
-					(long unsigned int) screen-> selected_pep,
-					(long unsigned int) screen-> selected_mole);
-			gfx.printg(msg);
-			// end title =========================
-		}
----- */
 		// ---------------
 		// screen (render) callback
-		if (screen-> renderCB ==NULL) {
-		//	sprintf(msg, "No Render..");			gfx.printg(msg);
+		if (screen-> renderCB !=NULL) screen-> renderCB (cli, 0, NULL);
 
-		} else	{
-		//	sprintf(msg, "Render..");			gfx.printg(msg);
-			screen-> renderCB (cli, 0, NULL);
-		}
 
-		//----------------------
-		// get all menus
+		//----- draw all menus
 		mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
 		while ((current_item != NULL) && (current_item-> item != NULL)) {
 		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			//draw_menu(&screen-> attrib, current_item-> item);
 			draw_menu(current_item-> item);
 			//-------
 			current_item = current_item->next;
 		}
 
 		// -------------------------------------------
-		gfx.printg((const char*) "End(screen).");
+		//gfx.printg((const char*) "End(screen).");
 		//-------- wait / loop
 		gfx.flush();
 		if (screen-> waiting) {

@@ -135,6 +135,8 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 	ChemScreen *screen = NULL;
 
 	//int r;
+	// argv($name, ?)
+	screen = cli-> display.search_screen(argv[0]);
 
 	// argv(help|off)
 	if (argc==1) {
@@ -159,13 +161,9 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		if (strcmp(argv[0], "_test")==0) {
 			return cli_screen_test(cli, 0, NULL);
 		}
+		if (screen==NULL) {	printf("screen[%s] not found.\n", argv[1]);		return -1;	}
 	} // -- end (argc==1) (known commands)
 
-	// argv($name, ?)
-	screen = cli-> display.search_screen(argv[0]);
-
-	// 	--- if argc still 1 then try to select name
-	if ((argc==1) && (screen==NULL)) {	printf("screen[%s] not found.\n", argv[1]);		return -1;	}
 
 	// argv($name, ?, ?)
 	if (argc>1) {
@@ -190,17 +188,25 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// render
 		// attrib
 
-		if (strcmp(argv[1], "dump")==0) {	screen-> dump();	return 0;		}
-		//----------------
-		if (strcmp(argv[1], "wait")==0) {
+		if (strcmp(argv[1], "dump")==0) {	screen-> dump();			return 0;	}
+		if (strcmp(argv[1], "wait")==0) {	screen->waiting = true;		return 0;	}
 
-			//if ((argc>2) && (strcmp(argv[2], "wait")==0)
+		// ------------------del)
+		if (strcmp(argv[1], "del")==0) {
+			if (cli->display.screen_list ==NULL) { printf("Err: NULL screen.menu_list\n");		return -25;			}
+			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list-> search(screen);
+			if (screen_item==NULL)  			{ printf("list item not found\n"); return -15;	}
 
-			screen->waiting = true;
-			// ??
-			cli->display.draw_screen(screen, cli);
-			return 0;
-		} // ------------------end(wait)
+			// if current screen
+			if (cli-> display.current_screen == screen) {
+				cli-> display.current_screen = NULL;
+				cli-> display.gfx.close();
+			};
+			cli->display.screen_list-> del(screen_item);
+			printf("del screen[%s] OK..\n", argv[0]);
+			screen =  NULL;
+		}
+		// ------------------end(del)
 		// argv(name, render, [func])
 		//----------------
 		if (strcmp(argv[1], "render")==0) {

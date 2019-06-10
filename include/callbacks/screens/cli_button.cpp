@@ -61,56 +61,64 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 		return -2;
 	}
 
-	// argc=0 argv()  (list)
-	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
+	// argc=0 argv()  or argc>=1 argv(list,)
+	if ((argc<=0)||(strcmp(argv[0], "list")==0)) {
 		cli_button_list_buttons(cli, menu);
 		return 0;
 	}
 	//ChemScreen *screen = cli->display.current_screen;
 
-	// argv(help|off)
+	// argc=1 argv(help|off)
 	if (argc==1) {
 		//---------------- help
 		if (strcmp(argv[0], "help")==0) {
+			printf("list\n");
 			printf("name\n");
 			printf("name add\n");
 			return 0;
 		}
 		//----------
+		// --- else unknown command
+ 		printf("unknown command[%s]\n", argv[0]);
+ 		return -10;
+		//----------
 	} // -- end (argc==1) (known commands)
 
-
-	//
-
-
-	// argv($name, ?)
-	//ChemScreen *screen = cli-> display.search_screen(argv[0]);
-	//ChemMenu *ChemScreen::find_menu(const char *_title){
-	// TODO: __
-	//ChemMenu 	*menu2 =screen->find_menu(argv[0]);
-
+	// argv(name,?,?)
 	ChemMenuButton		*button = menu-> findbutton(argv[0]);
-	// 	--- if argc still 1 then try to select name
-	if ((argc==1) && (button==NULL)) {	printf("button[%s] not found.\n", argv[0]);		return -1;	}
+
+	// argv(name, add)
+	if ((argc==2) && (strcmp(argv[1], "add")==0)) {
+		//PRINT(" ADD ..\n");
+		if (button!=NULL) {	printf("button[%s] already exists.\n", argv[0]);	return -2;	}
+
+		//button_list.add()
+
+		button = menu-> add_button(argv[0]);
+		if (button==NULL) {	PRINT("failed to add button[%s]..\n", argv[0]);  return -3;  }
+		printf("new button[%s] OK..\n", argv[0]);
+		menu->layout_buttons();
+		return 0;
+	}
+	// 	button must now exist
+	if (button==NULL) {	printf("button[%s] not found.\n", argv[0]);		return -1;	}
+
 
 	// argv($name, ?, ?)
 	if (argc>1) {
-		//----------------
-		// argv(name, dump)
-		//----------------
 		if (strcmp(argv[1], "dump")==0) {	button-> dump();	return 0;		}
 		// ------------------end(dump)
-		// argv(name, add)
+		// argv(name, del)
 		//----------------
-		if (strcmp(argv[1], "add")==0) {
+		if (strcmp(argv[1], "del")==0) {
 			//PRINT(" ADD ..\n");
-			if (button!=NULL) {	printf("button[%s] already exists.\n", argv[0]);	return -2;	}
-			//screen = cli->display.add_screen(argv[0]);
-			button = menu-> add_button(argv[0]);
-			if (button==NULL) {	PRINT("failed to add button[%s]..\n", argv[0]);  return -3;  }
-			printf("new button[%s] OK..\n", argv[0]);
+			mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *button_item = menu-> button_list.search(button);
+			if (button_item==NULL)  { printf("list item not found\n"); return -15;	}
+			button_item =  menu->button_list.del(button_item);
+			printf("del button[%s] OK..\n", argv[0]);
 			menu->layout_buttons();
-		} // ------------------end(add)
+		} // ------------------end(del)
+
 
 		// ------------------)
 		// argv(name, size)
@@ -120,7 +128,7 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 				printf("[%d,%d]\n", menu->button_sizex, menu->button_sizey);
 				return 0;
 			}
-
+			// TODO - cleanup
 			if (argc==3) {
 				int s;
 				if (sscanf(argv[2], "%d", &s)<1) {

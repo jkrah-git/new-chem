@@ -2,27 +2,25 @@ screen s1 add
 screen s1 attrib scale 100 100
 screen s1 render mole
 
-
-screen s1
 menu m1 add
 menu m1 attrib scale 50 30
 menu m1 step 1 0
-button b1 add
-button b1 callback cli_button_select
-button b2 add
-#button b2 callback cli_button_select
 menu m1 attrib pos -6 11
 menu m1 layout
+menu m1
+button b1 add
+button b1 callback cli_button_select
 menu unsel
 
 screen s2 add
 screen s2 attrib scale 50 50
 screen s2 render match
 menu m1 add
-button next add
 menu m1 attrib scale 40 40
 menu m1 attrib pos 10 8
 menu m1 layout
+menu m1
+button next add
 menu unsel
 
 screen s3 add

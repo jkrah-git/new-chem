@@ -41,7 +41,12 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 			attribs-> dump(); NL
 			return 0;
 		}
-	} // end(argc==1)
+
+		// --- else unknown command
+ 		printf("unknown command[%s]\n", argv[0]);
+ 		return -10;
+		//----------
+	} // -- end (argc==1) (known commands)
 	//================================
 	//---------------- pos
 	if (strcmp(argv[0], "pos")==0) {
@@ -104,8 +109,8 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	//================================
 
 
-
-	printf("[%s]?\n", argv[0]);
+	// --- else unknown command
+	printf("unknown command[%s]\n", argv[0]);
 	//------------
 	return 0;
 }

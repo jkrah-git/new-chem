@@ -76,25 +76,32 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			screen->gridmode = GRID_MOLE;
 			return 0;
 		}
+		// --- else unknown command
+ 		// printf("unknown command[%s]\n", argv[0]);
+ 		// return -10;
 		//----------
 	} // -- end (argc==1) (known commands)
 
 
 	ChemMenu 	*menu =screen->find_menu(argv[0]);
+
+	// argv(name, add)
+	if ((argc==2) && (strcmp(argv[1], "add")==0)) {
+		//PRINT(" ADD ..\n");
+		if (menu!=NULL) {	printf("menu[%s] already exists.\n", argv[0]);	return -2;	}
+		//screen = cli->display.add_screen(argv[0]);
+		menu = screen-> add_menu(argv[0], &cli-> display);
+		if (menu==NULL) {	PRINT("failed to add menu[%s]..\n", argv[0]);  return -3;  }
+		printf("new menu[%s] OK..\n", argv[0]);
+		return 0;
+	}
+
+
 	// 	--- if argc still 1 then try to select name
 	if ((argc==1) && (menu==NULL)) {	printf("menu[%s] not found.\n", argv[1]);		return -1;	}
 
 	// argv($name, ?, ?)
 	if (argc>1) {
-		if (strcmp(argv[1], "add")==0) {
-			//PRINT(" ADD ..\n");
-			if (menu!=NULL) {	printf("menu[%s] already exists.\n", argv[0]);	return -2;	}
-			//screen = cli->display.add_screen(argv[0]);
-			menu = screen-> add_menu(argv[0], &cli-> display);
-			if (menu==NULL) {	PRINT("failed to add menu[%s]..\n", argv[0]);  return -3;  }
-			printf("new menu[%s] OK..\n", argv[0]);
-
-		} // ------------------end(add)
 		// =================================================================
 		if (menu==NULL) {	printf("menu[%s] not found.\n", argv[1]);		return -1;	}
 
@@ -102,14 +109,26 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		// argv(name, dump)
 		//----------------
 		if (strcmp(argv[1], "dump")==0) {	menu-> dump();	return 0;		}
-		// ------------------end(dump)
-		//----------------
 		if (strcmp(argv[1], "layout")==0) {	menu-> layout_buttons();	printf("(layout)\n"); return 0;		}
-		// ------------------end(dump)
-		// argv(name, add)
-		//----------------
 
+		// ----------------
+		// argv(name, del)
+		//-----------------
+		if (strcmp(argv[1], "del")==0) {
+			if (screen-> menu_list==NULL) {		printf("Err: NULL screen.menu_list\n");		return -25;			}
+			//PRINT(" DEL ..\n");
+			mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen-> menu_list-> search(menu);
+			if (menu_item==NULL)  { printf("list item not found\n"); return -15;	}
+			screen-> menu_list-> del(menu_item);
+			if (screen-> current_menu == menu) { screen-> current_menu  = NULL; };
+			printf("del menu[%s] OK..\n", argv[0]);
+			return 0;
 
+		}
+
+		// ----------------
+		// argv(name, step)
+		//-----------------
 		if (strcmp(argv[1], "step")==0) {
 			PRINT(" == argc[%d] last[%s] ==\n", argc, argv[argc-1]);
 			if (argc==2) {
@@ -131,7 +150,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			printf("step[%d][%d]\n", menu-> stepx, menu-> stepy);
 			return 0;
 
-		} // ------------------end(step)
+		} // -------end(step)
 
 		//----------------
 		if (strcmp(argv[1], "attrib")==0) {
@@ -139,9 +158,9 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
 			else { cli_attribs(&menu-> attrib, argc-2, &argv[2]); }
 			return 0;
-		} // ------------------end(attribs)
+		} // -------end(attribs)
 
-
+/*
 		// else menu must exist
 		// =========================================
 		if (menu==NULL) {	printf("menu[%s] not found.\n", argv[0]);	return -4;	}
@@ -152,6 +171,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		//----------------
 		if (strcmp(argv[1], "dump")==0) {	menu-> dump();	return 0;		}
 		// ------------------end(dump)
+*/
 		//---------------
 	} // -------------------------------------------- end (argc>1) ---
 	//----------------
