@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 #include "VM_Command.h"
-#include "Concentration_VM.Commands/base.cpp"
+#include "callbacks/Concentration_VM.Commands/base.cpp"
 #include <stdio.h>
 #include <string.h>
 

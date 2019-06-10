@@ -13,10 +13,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#define FONT_HEIGHT 10
-// TODOL (duplcate define)
-#define FONT_HEIGHT 10
-#define FONT_WIDTH 10
+
+#define FONT_HEIGHT 	10
+#define FONT_WIDTH 		6
+#define PRINT_INDENT 	5		// printg indent
 // ---------------------------------------
 #define CHEM_DEF_COLR 100
 #define CHEM_DEF_COLG 100

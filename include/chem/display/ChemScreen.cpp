@@ -48,7 +48,7 @@ public:
 };
 //-----------------------------------------
 */
-#include "../include/callbacks/screen_callbacks.h"
+#include "callbacks/screen_callbacks.h"
 
 //int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
 //-----------------------------------------
@@ -60,6 +60,8 @@ ChemScreen::ChemScreen() {
 	selected_mole = NULL;
 	selected_pep = NULL;
 	mouse_clicked = false;
+
+	title_col.set(0, 100, 0);
 
 	pep_index = 0;
 	moles_index = 0;

@@ -14,7 +14,7 @@
  */
 // -------------------------------
 #include "Molecule.h"
-#include "../include/mylist.h"
+#include "mylist.h"
 #include "mybuffer.h"
 // -------------
 typedef float ConcLevelType;

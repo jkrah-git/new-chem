@@ -7,8 +7,8 @@
 
 #ifndef CHEMDISPLAYATTRIB_H_
 #define CHEMDISPLAYATTRIB_H_
-#include "PeptidePos.h"
-#include "../include/gfx/GFX_Base.h"
+#include "../PeptidePos.h"
+#include "../../gfx/GFX_Base.h"
 // ---------------------------------------
 
 

@@ -1,6 +1,6 @@
 
 
-#include "../Concentration_VM.h"
+#include "chem/Concentration_VM.h"
 
 //=======================
 //===  BASE commands  ===

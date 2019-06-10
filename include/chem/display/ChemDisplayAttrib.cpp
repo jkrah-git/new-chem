@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "ChemDisplayAttrib.h"
-#include "../include/debug.h"
+#include "debug.h"
 class ChemDisplay;
 
 /*

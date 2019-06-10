@@ -11,7 +11,7 @@
 
 //#include "../mylist.h"
 //class ChemMenuList;
-#include "Concentration_VM.h"
+#include "../Concentration_VM.h"
 //#include "../include/gfx/GFX_Base.h"
 #include "ChemDisplayAttrib.h"
 #include "ChemMenu.h"
@@ -90,6 +90,8 @@ public:
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *button, ChemDisplayColor *col);
+
+	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
 	//--------------
 	ChemScreen *add_screen(const char* screen_title);

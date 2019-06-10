@@ -40,14 +40,21 @@ int screen_render_match(Concentration_CLI *cli, int argc, char **argv) {
 // --------------------------
 int screen_render_vm(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	cli->display.gfx.printg(("(vm)"));
-	//----------------
-	ChemScreen *screen = cli->display.current_screen;
-	if (screen==NULL) return -2;
 
-	//void ChemDisplay::draw_vm(Concentration_VM *vm){
-	//Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
-	cli->display.draw_vm(&screen->attrib, screen, cli->core);
+	// callback intercept
+	if (argc==0) {
+		//cli->display.gfx.printg(("(vm)"));
+		//----------------
+		ChemScreen *screen = cli->display.current_screen;
+		if (screen==NULL) return -2;
+
+		//void ChemDisplay::draw_vm(Concentration_VM *vm){
+		//Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
+		cli->display.draw_vm(&screen->attrib, screen, cli->core);
+		return 0;
+	}
+
+
 
 	return 0;
 }

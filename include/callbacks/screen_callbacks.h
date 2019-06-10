@@ -8,7 +8,7 @@
 #ifndef SCREEN_CALLBACKS_H_
 #define SCREEN_CALLBACKS_H_
 
-#include "../../chem/Concentration_CLI.h"
+#include "chem/Concentration_CLI.h"
 
 // cli_attribs.cpp
 int cli_redraw(Concentration_CLI *cli, int argc, char **argv);

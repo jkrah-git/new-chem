@@ -11,12 +11,12 @@
 // -------------------
 //#include "Concentration_CLI_External_Commands.cpp"
 
-#include "Concentration_CLI.Callbacks/base.cpp"
-#include "Concentration_CLI.Callbacks/vars.cpp"
-#include "Concentration_CLI.Callbacks/match.cpp"
+#include "callbacks/Concentration_CLI.Callbacks/base.cpp"
+#include "callbacks/Concentration_CLI.Callbacks/vars.cpp"
+#include "callbacks/Concentration_CLI.Callbacks/match.cpp"
 //#include "Concentration_CLI.Callbacks/display.cpp"
 //#include "../include/callbacks/menu/menu_callbacks.h"
-#include "../include/callbacks/screen_callbacks.h"
+#include "callbacks/screen_callbacks.h"
 // -------------------
 //---------------------------------//---------------------------------
 /*

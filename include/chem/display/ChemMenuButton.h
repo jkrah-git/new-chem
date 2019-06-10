@@ -19,8 +19,8 @@
  */
 
 enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
-#include "Concentration_VM.h"
-#include "../include/gfx/GFX_Base.h"
+#include "../Concentration_VM.h"
+#include "gfx/GFX_Base.h"
 #include "ChemDisplayAttrib.h"
 //#include "ChemDisplay.h"
 //class ChemDisplay;

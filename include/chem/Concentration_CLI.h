@@ -11,7 +11,7 @@
 #include "Concentration.h"
 #include "CLI_Command.h"
 #include "Concentration_VM.h"
-#include "ChemDisplay.h"
+#include "display/ChemDisplay.h"
 
 #undef DEBUG
 //#define DEBUG

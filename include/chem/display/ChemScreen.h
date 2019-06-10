@@ -29,7 +29,7 @@ public:
 	mylist<ChemMenu> 		*menu_list;
 	ChemMenu				*current_menu;
 	PeptidePos				curs_pos;
-
+	ChemDisplayColor 		title_col;
 
 	// stack indexs.. (we dont store pointers here just the count)
 	int						pep_index;

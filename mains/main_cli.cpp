@@ -6,7 +6,7 @@
  */
 
 //===============================================================
-#include "../chem/Concentration_CLI.h"
+#include "../include/chem/Concentration_CLI.h"
 //===============================================================
 char  **get_args(mylist<CLI_Command> *menu);
 

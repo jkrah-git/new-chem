@@ -13,7 +13,7 @@
  *
  */
 // -------------------------------
-#include "../include/mylist.h"
+#include "../mylist.h"
 #include "Peptide.h"
 
 //#include "MoleculeMatchPos.h"
