@@ -8,8 +8,6 @@
 
 - Click on Project / Properties
   - C/C++ Build -> Settings 
-    - Cross G++ Linker / Libraries 
 	- !! SELECT ALL CONFIGURATIONS !!
-		[ + X11 , + readline ]
-    - Build Aritifacts (TAB) - for each build env 
-
+    - Cross G++ Compiler / include dir: <SRC>/include
+    - Cross G++ Linker / Libraries :X11,readline

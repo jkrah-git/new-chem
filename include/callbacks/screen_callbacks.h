@@ -20,7 +20,6 @@ int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv);
 int cli_screen(Concentration_CLI *cli, int argc, char **argv);
 int cli_screen_redraw(Concentration_CLI *cli, int argc, char **argv); //int draw_current_screen(Concentration_CLI *cli, int argc, char **argv);
 
-
 // screen_menus.cpp
 int	cli_load_menu(Concentration_CLI *cli, int argc, char **argv);
 int cli_menu(Concentration_CLI *cli, int argc, char **argv);

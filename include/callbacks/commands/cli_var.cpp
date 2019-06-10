@@ -1,3 +1,5 @@
+#include "../command_callbacks.h"
+
 /*
  * vars.cpp
  *

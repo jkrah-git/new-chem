@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 #include "VM_Command.h"
-#include "callbacks/Concentration_VM.Commands/base.cpp"
+//#include "callbacks/Concentration_VM.Commands/base.cpp"
 #include <stdio.h>
 #include <string.h>
 
@@ -92,7 +92,7 @@ VM_Command_Set::VM_Command_Set() {};
 //---------------------------------
 void VM_Command_Set::load_commands(){
 	//cli_load_commands(this, 0, NULL);
-	vm_load_cmd_base(this);
+	//vm_load_cmd_base(this);
 }
 
 

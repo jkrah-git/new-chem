@@ -1,4 +1,4 @@
-
+#include "../command_callbacks.h"
 
 //=======================
 //===  BASE commands  ===
@@ -223,6 +223,7 @@ int	cli_basehelp(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------------//---------------------------------
+
 //---------------------------------//---------------------------------
 //int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
 //=======================
@@ -323,7 +324,6 @@ int		cli_dump_pep(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------------//---------------------------------
-
 //---------------------------------//---------------------------------
 //int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
 //=======================

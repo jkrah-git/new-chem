@@ -1,3 +1,4 @@
+#include "../command_callbacks.h"
 //=======================
 //=======================
 //===  match commands  ===
