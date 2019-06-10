@@ -15,6 +15,7 @@
 //#include "../include/gfx/GFX_Base.h"
 #include "ChemDisplayAttrib.h"
 #include "ChemMenu.h"
+#include "ChemPeplistDisplay.h"
 
 //class ChemScreen;
 #include "ChemScreen.h"
@@ -65,7 +66,11 @@ public:
 
 	mylist<ChemScreen> 		*screen_list;
 	ChemScreen				*current_screen;
-//	ChemDisplayAttrib		*getattrib(void){ return &attrib; };
+	// display selected displays..
+	ChemScreen				*display_screen;
+
+
+	//	ChemDisplayAttrib		*getattrib(void){ return &attrib; };
 
   	//-------------------
 	ChemDisplay();
@@ -90,12 +95,14 @@ public:
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *button, ChemDisplayColor *col);
+	void	draw_peplist(ChemPeplistDisplay *peplist, ChemDisplayColor *col);
 
 	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
 	//--------------
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);
+	int			del_screen(ChemScreen *screen);
 
 	//---- header defined
 	Peptide *draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep, int red, int green, int blue)	{ 		gfx.color(red, green, blue); return draw_pep(screen_attrib, pep); };

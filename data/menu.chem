@@ -27,5 +27,17 @@ screen s3 add
 screen s3 attrib scale 100 50
 screen s3 grid off
 screen s3 render vm
+screen s2
 f newmatch
+match next
+match next
+
+pep push 0x10
+pep push 0x11
+pep push 0x12
+pep push 0x13
+
 screen s3
+peplist p1 add
+peplist p1 attrib scale 100 100
+peplist p1 src core

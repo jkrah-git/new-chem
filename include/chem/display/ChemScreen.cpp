@@ -63,22 +63,23 @@ ChemScreen::ChemScreen() {
 
 	title_col.set(0, 100, 0);
 
-	pep_index = 0;
-	moles_index = 0;
-	conc_index = 0;
+	// peplist_list = NULL;
+	//pep_index = 0;
+	//moles_index = 0;
+	//conc_index = 0;
 
 	waitmode = WAIT_CURS;
 	gridmode = GRID_MOLE;
 	// needed for buttons
 	current_menu = NULL;
-	menu_list = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
-	if (menu_list!=NULL)
-		menu_list-> init();
+	menu_list2 = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
+	if (menu_list2!=NULL)
+		menu_list2-> init();
 
 }
 //-----------------------------------------
 ChemScreen::~ChemScreen() {
-	if (menu_list!=NULL) free(menu_list);
+	if (menu_list2!=NULL) free(menu_list2);
 	if (title ==NULL) 	free(title);
 }
 //-----------------------------------------
@@ -95,19 +96,19 @@ void ChemScreen::dump(void){
 	//PRINT("== pre menu dump ==");
 	//printf("ChemScreen[0x%zX].[0x%zX]", (long unsigned int) this, title);
 	printf("Menus: ");
-	DUMP(menu_list)
+	DUMP(menu_list2)
 
 }
 //-------------------------------//-------------------------------
 ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
-	if ((menu_list==NULL)||(display==NULL)) return NULL;
+	if ((menu_list2==NULL)||(display==NULL)) return NULL;
 
 	// search for existing
 	if (find_menu(_title)!=NULL)
 		return NULL;
 
 	mylist<ChemMenu>::mylist_item<ChemMenu> *new_menu_item;
-	new_menu_item = menu_list->add();
+	new_menu_item = menu_list2->add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
 		new_menu_item-> item-> settitle( _title);
 		return new_menu_item-> item;
@@ -116,9 +117,9 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 }
 //-----------------------------------------
 ChemMenu *ChemScreen::find_menu(const char *_title){
-	if (menu_list==NULL) return NULL;
+	if (menu_list2==NULL) return NULL;
 
-	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
+	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list2-> gethead();
 	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
 
 		// both NULL
@@ -162,7 +163,7 @@ ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 	if (display==NULL) return NULL;
 	//PRINT("Testing[%d,%d]\n", display-> gfx.xpos(), display-> gfx.ypos());
 
-	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list-> gethead();
+	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = menu_list2-> gethead();
 	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
 
 		int x = menu_item-> item-> attrib.getxcell(&display->gfx, display-> gfx.xpos());
@@ -184,7 +185,68 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (waitCB==NULL) { return 0; }
 	return waitCB(this, cli, display);
 };
-// -------------------------------//-------------------------------//-------------------------------
+#include <string.h>
+// -------------------------------
+ChemPeplistDisplay		*ChemScreen::find_peplist(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = peplist_list.gethead();
+	while ((peplist_item!=NULL)&&(peplist_item-> item!=NULL)) {
+
+		if ((peplist_item-> item->getname()==NULL) && (_title==NULL)) { return peplist_item-> item;		}
+		if ((peplist_item-> item->getname()==NULL) || (_title==NULL)) { return NULL;					}
+		if (strcmp(peplist_item-> item->getname(), _title)==0) 		  { return peplist_item-> item;		}
+		//----
+		peplist_item = peplist_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemPeplistDisplay		*ChemScreen::add_peplist(const char *_title){
+	if (_title==NULL) return NULL;
+
+	ChemPeplistDisplay *result = find_peplist(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = peplist_list.add();
+	if (peplist_item==NULL) { return NULL; }
+	if (peplist_item-> item==NULL) { peplist_list.del(peplist_item); return NULL; }
+	// (else)  peplist_item-> item  is good
+	int r = peplist_item-> item-> setname(_title);
+	if (r<0) { PRINT("setname failed[%d]\n", r); return NULL; }
+	return peplist_item-> item;
+}
+// -------------------------------
+int						ChemScreen::del_peplist(const char *_title){
+	//if (_title==NULL) return -1;
+	ChemPeplistDisplay *found_peplist =find_peplist(_title);
+	if (found_peplist==NULL) return -1;
+
+	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = peplist_list.search(found_peplist);
+	if (peplist_item==NULL) return -2;
+
+	peplist_list.del(peplist_item);
+	return 0;
+}
+// -------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------
+//-------------------------------//-------------------------------
 // -------------------------------//-------------------------------//-------------------------------
 
 /*

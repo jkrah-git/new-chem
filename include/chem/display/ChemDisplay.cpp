@@ -82,21 +82,14 @@ ChemDisplay::ChemDisplay() {
 //	attrib.scalex = 30;
 //	attrib.scaley = 20;
 
-	current_screen = NULL;
 	core = NULL;
 	pep = NULL;
 	mole = NULL;
 	conc = NULL;
 	concvol = NULL;
 	matchpos = NULL;
-//	menu_list = NULL;
-	screen_list = NULL;
-
-
-	// TODO: fix attrib.pos !! LEAK !!!
-	//TODO: POS // attrib.pos = (PepPosVecType*) malloc(sizeof(PepPosVecType)*3);
-
-	//	mylist<ChemScreen> 		*screen_list;
+	current_screen = NULL;
+	display_screen = NULL;
 
 	screen_list = (mylist<ChemScreen>*) malloc(sizeof(mylist<ChemScreen>));
 	if (screen_list!=NULL) {
@@ -378,12 +371,14 @@ Molecule *ChemDisplay::draw_mole(ChemDisplayAttrib *screen_attrib, Molecule *mol
 	gfx.printg(msg);
 	if (mole==NULL) return NULL;
 
+	//PRINT("======== screen_attrib :"); 	screen_attrib-> dump(); NL
 	//-------------------
 	// test cursor pos...
 
 	Molecule *hit = NULL;
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
+
 		Peptide *pep = draw_pep(screen_attrib, current_item-> item, col);
 		if (pep!=NULL) { hit = mole; }
 		//---
@@ -491,7 +486,6 @@ void ChemDisplay::draw_vm(ChemDisplayAttrib *screen_attrib, ChemScreen *screen, 
 	if (screen==NULL) return;
 	if (vm==NULL) return;
 
-
 	char str[128];
 	sprintf(str, "REGS: Pep[0x%zX] Mole[0x%zX] Conc[0x%zX] Vol[0x%zX]",
 			(long unsigned int) vm->pep,
@@ -504,6 +498,35 @@ void ChemDisplay::draw_vm(ChemDisplayAttrib *screen_attrib, ChemScreen *screen, 
 	gfx.printg(str);
 
 
+	// mylist<ChemPeplistDisplay>	peplist_list;
+
+	/*
+	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = screen-> peplist_list.gethead();
+	while ((peplist_item!=NULL)&&(peplist_item-> item !=NULL)) {
+
+		PRINT("peplist_item found..\n");
+		peplist_item-> dump(); NL
+		//------------
+		peplist_item = peplist_item->next;
+	}
+	*/
+
+
+
+	/*
+	if (peplist_item==NULL) {
+		PRINT("creating new peplist..\n");
+		peplist_item =  screen-> peplist_list.add();
+		if (peplist_item==NULL) {
+			PRINT("creating new peplist failed..\n"); return;
+		}
+		PRINT("create new peplist ok..\n");
+		peplist_item->item =
+	}
+	PRINT("peplist_item :\n"); 	peplist_item-> dump(); NL
+*/
+
+/*
 	// 10 x 5 cells (top left)
 	int colums = 4;
 	int rows = 5;
@@ -545,7 +568,7 @@ void ChemDisplay::draw_vm(ChemDisplayAttrib *screen_attrib, ChemScreen *screen, 
 
 		} // --next x
 	} // -- next y
-
+*/
 	//---------------
 	gfx.flush();
 }
@@ -614,8 +637,58 @@ void ChemDisplay::draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *bu
 
 	gfx.color(col-> r, col-> g, col-> b);
 	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext(), true);
-	gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext(), true);
+	//gfx.box(x,y,button-> sizex/2, button-> sizey/2, button-> gettext(), true);
 	if (button-> gettext()!=NULL)	gfx.text(button-> gettext(), x, y);
+};
+//------------------------------
+
+void ChemDisplay::draw_peplist(ChemPeplistDisplay *peplistDisplay, ChemDisplayColor *col) {
+	if (peplistDisplay==NULL) return;
+
+	PRINT("======== \n");
+	int c = peplistDisplay-> index;
+	int x = 0;
+	int y = 0;
+	PRINT("====== peplist ===\n");
+	DUMP(peplistDisplay)
+	PRINT("======\n");
+
+	if (col==NULL) col = &peplistDisplay->col;
+
+//void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
+	gfx.color(col-> r, col-> g, col-> b);
+	gfx.color(100, 100, 100);
+	while (true) {
+		char 	label[16];
+		// try to get next peptide
+		mylist<Peptide>::mylist_item<Peptide>  *pep_item = peplistDisplay-> get(c);
+
+		if ((pep_item!=NULL) && (pep_item->item !=NULL)) {
+			sprintf(label, "[0x%X]", pep_item-> item->get());
+			printf("[%d][%d]='%s'\n", x, y, label);
+			draw_box(&peplistDisplay-> attrib, x,y,x,y, label);
+			//b = menu.add_button(label);
+			c++;
+			pep_item = pep_item-> next;
+		} else {
+			sprintf(label, "[]");
+			printf("[%d][%d]=''\n", x, y);
+			draw_box(&peplistDisplay-> attrib, x,y,x,y, label);
+			//b = menu.add_button("-");
+		}
+		//if (b==NULL) { PRINT("peplist.menu button failed\n"); return -1; }
+
+		// horizont
+		if (++x >= peplistDisplay-> width) {
+			x=0;
+			if (++y >= peplistDisplay-> height)
+				return;
+		} //--------------
+		// ---- end while
+	}
+
+	return ;
+
 }
 //-------------------------------------------
 void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
@@ -701,12 +774,11 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 	if (cli==NULL) return;
 	if (screen==NULL) return;
-	if (screen-> menu_list==NULL) return;
 
 	//attrib.cp(&screen-> attrib);	// PRINT("display attribs :"); attrib.dump();
 
 	gfx.open();
-
+	display_screen = screen;
 	while(true) {
 		//=======================
 		gfx.clear();
@@ -738,15 +810,31 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		// screen (render) callback
 		if (screen-> renderCB !=NULL) screen-> renderCB (cli, 0, NULL);
 
-
 		//----- draw all menus
-		mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list-> gethead();
+		if (screen-> menu_list2!=NULL) {
+			mylist<ChemMenu>::mylist_item<ChemMenu> *current_item = screen-> menu_list2-> gethead();
+			while ((current_item != NULL) && (current_item-> item != NULL)) {
+			//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+				draw_menu(current_item-> item);
+				//-------
+				current_item = current_item->next;
+			}
+		} // end menus
+
+
+		// ------------------
+		//void	draw_peplist(ChemPeplistDisplay *peplist, ChemDisplayColor *col);
+		//
+		mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *current_item = screen-> peplist_list.gethead();
 		while ((current_item != NULL) && (current_item-> item != NULL)) {
 		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			draw_menu(current_item-> item);
+			draw_peplist(current_item-> item, NULL);
 			//-------
 			current_item = current_item->next;
 		}
+
+
+
 
 		// -------------------------------------------
 		//gfx.printg((const char*) "End(screen).");
@@ -801,6 +889,19 @@ ChemScreen *ChemDisplay::search_screen(const char* screen_title){
 }
 
 //-------------------------------//-------------------------------
+int	ChemDisplay::del_screen(ChemScreen *screen){
+	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = screen_list->search(screen);
+	if (screen_item==NULL) return -1;
+
+	// if current screen
+	if (current_screen == screen) {	current_screen = NULL;	gfx.close(); }
+
+	screen_list-> del(screen_item);
+
+	return 0;
+}
+
+
 //-------------------------------//-------------------------------
 
 

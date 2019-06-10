@@ -189,10 +189,28 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// attrib
 
 		if (strcmp(argv[1], "dump")==0) {	screen-> dump();			return 0;	}
-		if (strcmp(argv[1], "wait")==0) {	screen->waiting = true;		return 0;	}
+
+		// ---------wait
+		if (strcmp(argv[1], "wait")==0) {
+
+			// TODO add: display_screen (overrides current_screen) / need to have del.screen
+			screen->waiting = true;
+			//cli->display.current_screen = screen;
+			cli->display.display_screen = screen;
+			cli->display.draw_screen(screen, cli);
+			cli->display.display_screen = NULL;
+			return 0;
+		}
 
 		// ------------------del)
 		if (strcmp(argv[1], "del")==0) {
+
+
+			int r = cli->display.del_screen(screen);
+			if (r==0) 	printf("del screen[%s] OK..\n", argv[0]);
+			else		printf("del screen[%s] Returned[%d]..\n", argv[0], r);
+			return r;
+			/*
 			if (cli->display.screen_list ==NULL) { printf("Err: NULL screen.menu_list\n");		return -25;			}
 			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list-> search(screen);
 			if (screen_item==NULL)  			{ printf("list item not found\n"); return -15;	}
@@ -205,6 +223,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			cli->display.screen_list-> del(screen_item);
 			printf("del screen[%s] OK..\n", argv[0]);
 			screen =  NULL;
+			*/
 		}
 		// ------------------end(del)
 		// argv(name, render, [func])
