@@ -107,8 +107,14 @@ public:
 	//---- header defined
 	Peptide *draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep, int red, int green, int blue)	{ 		gfx.color(red, green, blue); return draw_pep(screen_attrib, pep); };
 	Peptide *draw_pep(ChemDisplayAttrib *screen_attrib, Peptide *pep, ChemDisplayColor *col)		{		 gfx.color(col); return draw_pep(screen_attrib, pep); };
-	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
-	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy){		draw_box(screen_attrib, minx, miny, maxx, maxy, NULL);	};	//
+
+	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy)
+	{ draw_box(screen_attrib, minx, miny, maxx, maxy, NULL);	};
+	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title)
+	{ draw_box(screen_attrib, minx, miny, maxx, maxy, _title, NULL);	};
+
+	void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title, ChemDisplayColor *txtCol);
+
 
 
 

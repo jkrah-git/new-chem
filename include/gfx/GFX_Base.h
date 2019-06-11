@@ -31,6 +31,10 @@ public:
 	ChemDisplayColor(void){ r=CHEM_DEF_COLR; g=CHEM_DEF_COLG; b=CHEM_DEF_COLB; };
 	ChemDisplayColor(int red, int green, int blue){ r=red; g=green; b=blue; };
 	void	set(int red, int green, int blue){ r=red; g=green; b=blue; };
+	void	dump(void){
+		printf("[0x%zX].r[%d]g[%d]b[%d]", (long unsigned int) this, r, g, b);
+	}
+
 };
 
 //-----------------------------------------
@@ -69,7 +73,10 @@ public:
 
 	void box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, NULL, false);	};
 	void box( int x, int y, int sx, int sy, const char *txt) 	{	box(x,y,sx,sy, txt, false);	};
-	void box( int x, int y, int sx, int sy, const char *txt, bool fill);
+	void box( int x, int y, int sx, int sy, const char *txt, bool fill)
+	{	box(x,y,sx,sy, txt, NULL, false);	};
+	void box( int x, int y, int sx, int sy, const char *txt, ChemDisplayColor *txtcol, bool fill);
+
 	//void box( int x, int y, int sx, int sy, bool fill);
 
 

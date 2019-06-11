@@ -11,14 +11,17 @@
 class ChemPeplistDisplay {
 	mylist<Peptide>		*pep_list;
 	char				*name;
-	ChemMenu			menu;
 
-	// (number of data cells) use for layout
-	int					width;
-	int					height;
 public:
 	int					index;
 	ChemDisplayAttrib	attrib;
+	//ChemMenu			menu;
+	// (number of data cells) use for layout
+	int					width;
+	int					height;
+	ChemDisplayColor 		col;
+	ChemDisplayColor 		selcol;
+
 	//----------------------
 	ChemPeplistDisplay();
 	virtual ~ChemPeplistDisplay();
@@ -29,10 +32,7 @@ public:
 	char				*getname(void){ return name; };
 	//-----------
 	int					setname(const char *_name);
-	//Peptide				*get(int _index);
-	// try to build w x h menu of cells
-	int					build(void);
-
+	mylist<Peptide>::mylist_item<Peptide>  *get(int index);
 };
 //-------------------------------------------
  */
@@ -55,6 +55,7 @@ void ChemPeplistDisplay::dump(void) {
 			(long unsigned int) this,
 			(long unsigned int) pep_list,
 			index, width, height);
+	printf("Col:[%d][%d][%d] SelCol[%d][%d][%d]:", col.r, col.g, col.b, selcol.r , selcol.g, selcol.b);
 	attrib.dump(); NL
 	//menu.dump();
 	printf("Peplist=> \n");
@@ -87,7 +88,7 @@ mylist<Peptide>::mylist_item<Peptide>  *ChemPeplistDisplay::get(int index){
 }
 
 // try to build w x h menu of cells
-int	ChemPeplistDisplay::build(void){
+/*int	ChemPeplistDisplay::build(void){
 	//menu.button_list.clear();
 
 	PRINT("======== \n");
@@ -95,9 +96,6 @@ int	ChemPeplistDisplay::build(void){
 	int x = 0;
 	int y = 0;
 	PRINT("====== peplist ===\n");
-
-
-
 	mylist<Peptide>::mylist_item<Peptide>  *pep = NULL;
 	if (pep_list!=NULL) {
 		pep_list->dump();
@@ -138,3 +136,4 @@ int	ChemPeplistDisplay::build(void){
 
 	return c;
 }
+*/

@@ -160,16 +160,22 @@ void GFX_Base::box( int x, int y, int sx, int sy){
 //void GFX_Base::box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, false);	}
 //void GFX_Base::box( int x, int y, int sx, int sy, bool fill)			{	box(x,y,sx,sy, fill);	}
 //void GFX_Base::box( int x, int y, int sx, int sy, char *txt) 			{	box(x,y,sx,sy, NULL, false);	}
-void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, bool fill){
+void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, ChemDisplayColor *txtcol, bool fill){
 
 	if (fill) XFillRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 	else XDrawRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 
 	if (_title!=NULL) {
 		int len = strlen(_title) * FONT_WIDTH;
-		int tx = x - (len/2);
-		int ty = y-sy;
-		text(_title, tx, ty);
+		//int tx = x - (len/2);
+		//int ty = y-sy;
+		x -=  (len/2);
+		y += (line_height/2);
+		if (txtcol != NULL) {
+			//PRINT("col = "); txtcol-> dump(); NL
+			color(txtcol);
+		}
+		text(_title, x, y);
 	}
 }
 

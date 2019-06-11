@@ -104,6 +104,60 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 		printf("del[%s] ok\n", argv[0]);
 		return 0;
 	}
+
+	if (strcmp(argv[1], "size")==0) {
+		int r = -1;
+		if (argc>2) {
+
+			int px,py;
+			if ((sscanf(argv[2], "%d", &px)<1) ||
+				(sscanf(argv[3], "%d", &py)<1))	{
+				printf("data error\n");
+				return -10;
+			}
+			peplist->width = px;
+			peplist->height = py;
+			printf("size[%d,%d]\n", peplist->width, peplist->height);
+			r = 0;
+		}
+
+		printf("size[%d,%d]\n", peplist->width, peplist->height);
+		return r;
+
+	}
+
+	if (strcmp(argv[1], "index")==0) {
+		//PRINT(" DEL ..\n");
+		int r = screen->del_peplist(argv[0]);
+		if (r<0) { printf("del[%s] failed[%d]\n", argv[0], r); return -2; }
+		printf("del[%s] ok\n", argv[0]);
+		return 0;
+	}
+
+
+
+	//-----------------
+	if (strcmp(argv[1], "src")==0) {
+		if (argc==2) {
+			printf("n\n");
+			printf("core\n");
+		//	printf("core\n");
+		}
+
+		if (strcmp(argv[2], "null")==0) {
+			peplist->set_pep_list(NULL);
+			printf("del[%s] ok\n", argv[0]);
+		}
+		if (strcmp(argv[2], "core")==0) {
+			peplist->set_pep_list(&cli->core->peptide_stack);
+			printf("del[%s] ok\n", argv[0]);
+		}
+
+		if (peplist->get_pep_list() == NULL) 	{ printf("src is: Unset\n"); return 0; }
+		else 							{ printf("src is: Set\n"); return 0; }
+
+
+	} // -------end(src)
 	//----------------
 	if (strcmp(argv[1], "attrib")==0) {
 		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
@@ -112,26 +166,9 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 		return 0;
 	} // -------end(attribs)
 	//-----------------
-	if (strcmp(argv[1], "src")==0) {
-		if (argc==2) {
-			printf("core\n");
-		//	printf("core\n");
-			if (peplist->get_pep_list() == NULL) 	{ printf("src is: Unset\n"); return 0; }
-			else 							{ printf("src is: Set\n"); return 0; }
-		}
-
-		if (strcmp(argv[2], "core")==0) {
-			peplist->set_pep_list(&cli->core->peptide_stack);
-			printf("del[%s] ok\n", argv[0]);
-		}
-	} // -------end(src)
-	//-----------------
-	if (strcmp(argv[1], "build")==0) {
-		if (argc==2) {
-			int r = peplist->build();
-			printf("build=[%d]\n", r);
-			return r;
-		}
+	if (strcmp(argv[1], "col")==0) {
+		if (argc<3) { cli_col(&peplist-> col, 0, NULL); }
+		else { cli_col(&peplist-> col, argc-2, &argv[2]); }
 	} // -------end(build)
 	//----------------
 

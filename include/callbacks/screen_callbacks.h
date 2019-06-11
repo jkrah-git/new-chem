@@ -15,6 +15,8 @@
 int cli_redraw(Concentration_CLI *cli, int argc, char **argv);
 int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv);
 int (*cli_callback(Concentration_CLI*, int argc, char **argv))(Concentration_CLI*, int argc, char **argv);
+int	cli_col(ChemDisplayColor *col, int argc, char **argv);
+
 
 // cli_screen.cpp
 int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv);

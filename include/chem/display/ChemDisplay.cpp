@@ -575,14 +575,22 @@ void ChemDisplay::draw_vm(ChemDisplayAttrib *screen_attrib, ChemScreen *screen, 
 //###############################################################################
 //void ChemDisplay::draw_box(int min_xpos, int min_ypos, int max_xpos,int max_ypos) {
 // draw
-void ChemDisplay::draw_box(ChemDisplayAttrib *screen_attrib, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title){
+//void ChemDisplay::draw_box(ChemDisplayAttrib *screen_attrib, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title){
+
+void ChemDisplay::draw_box(ChemDisplayAttrib *screen_attrib, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title, ChemDisplayColor *txtCol){
 	if (screen_attrib==NULL) return;
 
-	int minx = screen_attrib-> screenx(&gfx, screen_attrib-> offsetx, min_xpos);// - attrib.scalex/2;
-	int maxx = screen_attrib-> screenx(&gfx, screen_attrib-> offsetx, max_xpos);// + attrib.scalex/2;
+
+
+	ChemDisplayAttrib draw_attrib(screen_attrib);
+	draw_attrib.offsetx = screen_attrib->getx();
+	draw_attrib.offsety = screen_attrib->gety();
+
+	int minx = draw_attrib. screenx(&gfx, draw_attrib. offsetx, min_xpos);// - attrib.scalex/2;
+	int maxx = draw_attrib. screenx(&gfx, draw_attrib. offsetx, max_xpos);// + attrib.scalex/2;
 	// screen y cords inverted
-	int maxy = screen_attrib-> screeny(&gfx, screen_attrib-> offsety, min_ypos);// - attrib.scaley/2;
-	int miny = screen_attrib-> screeny(&gfx, screen_attrib-> offsety, max_ypos);// + attrib.scaley/2;
+	int maxy = draw_attrib. screeny(&gfx, draw_attrib. offsety, min_ypos);// - attrib.scaley/2;
+	int miny = draw_attrib. screeny(&gfx, draw_attrib. offsety, max_ypos);// + attrib.scaley/2;
 	//PRINT("==: [%d,%d]->[%d,%d]\n", minx, miny, maxx, maxy);
 
 
@@ -590,10 +598,10 @@ void ChemDisplay::draw_box(ChemDisplayAttrib *screen_attrib, int min_xpos, int m
 	int py = miny+((maxy-miny)/2);
 	//PRINT("scale[%d,%d]\n", attrib.scalex, attrib.scaley);
 
-	int sx = (maxx-minx)/2 + (screen_attrib-> scalex/2);
-	int sy = (maxy-miny)/2 + (screen_attrib-> scaley/2);
-
-	gfx.box(px,py, sx , sy , _title);
+	int sx = (maxx-minx)/2 + (draw_attrib. scalex/2);
+	int sy = (maxy-miny)/2 + (draw_attrib. scaley/2);
+	//if (txtCol!=NULL) gfx.color(txtCol);
+	gfx.box(px,py, sx , sy , _title, txtCol, false);
 	//PRINT("offset[%d,%d] size[%d,%d]\n",  px,  py, sx, sy);
 }
 //----------------------------------------------------------
@@ -645,47 +653,82 @@ void ChemDisplay::draw_button(ChemDisplayAttrib *menu_attrib, ChemMenuButton *bu
 void ChemDisplay::draw_peplist(ChemPeplistDisplay *peplistDisplay, ChemDisplayColor *col) {
 	if (peplistDisplay==NULL) return;
 
-	PRINT("======== \n");
+	//PRINT("======== \n");
 	int c = peplistDisplay-> index;
 	int x = 0;
 	int y = 0;
-	PRINT("====== peplist ===\n");
-	DUMP(peplistDisplay)
-	PRINT("======\n");
+	//PRINT("====== peplist ===\n");	DUMP(peplistDisplay)	PRINT("======\n");
 
-	if (col==NULL) col = &peplistDisplay->col;
+	if (col==NULL)	col = &peplistDisplay->col;
+	ChemDisplayColor txtcol;
+	//gfx.color(col-> r, col-> g, col-> b);
 
-//void	draw_box(ChemDisplayAttrib *screen_attrib, int minx, int miny, int maxx,int maxy, const char *_title);
-	gfx.color(col-> r, col-> g, col-> b);
-	gfx.color(100, 100, 100);
+
+	int max_items = peplistDisplay-> count();
+	int num_pages = max_items / (peplistDisplay-> width * peplistDisplay-> height);
+	int current_page = c / ( peplistDisplay-> width * peplistDisplay-> height );
+
+
+	// Draw CElls -----------------------------------
 	while (true) {
+
 		char 	label[16];
 		// try to get next peptide
 		mylist<Peptide>::mylist_item<Peptide>  *pep_item = peplistDisplay-> get(c);
+		txtcol.set(col-> r, col-> g, col-> b);
 
 		if ((pep_item!=NULL) && (pep_item->item !=NULL)) {
+			//gfx.color(col-> r, col-> g, col-> b);
+			//txtcol.set(col-> r, col-> g, col-> b);
 			sprintf(label, "[0x%X]", pep_item-> item->get());
-			printf("[%d][%d]='%s'\n", x, y, label);
-			draw_box(&peplistDisplay-> attrib, x,y,x,y, label);
-			//b = menu.add_button(label);
 			c++;
 			pep_item = pep_item-> next;
 		} else {
+			//gfx.color(col-> r/2, col-> g/2, col-> b/2);
+			txtcol.set(col-> r/2, col-> g/2, col-> b/2);
 			sprintf(label, "[]");
-			printf("[%d][%d]=''\n", x, y);
-			draw_box(&peplistDisplay-> attrib, x,y,x,y, label);
-			//b = menu.add_button("-");
 		}
-		//if (b==NULL) { PRINT("peplist.menu button failed\n"); return -1; }
+		gfx.color(col-> r, col-> g, col-> b);
+		draw_box(&peplistDisplay-> attrib, x,y,x,y, label, &txtcol);
 
+		if ((x==0)||(y==0)) {
+			gfx.color(col);
+
+			if (x==0) {
+				ChemDisplayAttrib display_attrib(&peplistDisplay-> attrib);
+				display_attrib.offsetx -= 2;
+				sprintf(label, "0x%x", (x*y) );
+				draw_box(&display_attrib, x-1,y,x-1,y, label);
+			}
+
+			if (y==0) {
+				ChemDisplayAttrib display_attrib(&peplistDisplay-> attrib);
+				display_attrib.offsety -= 2;
+				sprintf(label, "0x%x", x);
+				//gfx.color(col-> r, col-> g, col-> b);
+				draw_box(&display_attrib, x,y+1,x,y+1, label);
+			}
+
+			if ((x==0)&&(y==0)) {
+				ChemDisplayAttrib display_attrib(&peplistDisplay-> attrib);
+				display_attrib.offsetx -= 2;
+				display_attrib.offsety -= 2;
+				sprintf(label, "Pg %d/%d", current_page+1, num_pages+1);
+				//gfx.color(col-> r, col-> g, col-> b);
+				draw_box(&display_attrib, x-1,y+1,x-1,y+1, label);
+			}
+		}
+
+		/// next cell
 		// horizont
 		if (++x >= peplistDisplay-> width) {
 			x=0;
-			if (++y >= peplistDisplay-> height)
+			if (--y <= - peplistDisplay-> height)
 				return;
 		} //--------------
 		// ---- end while
 	}
+	//-------------------------------------------------
 
 	return ;
 
@@ -707,7 +750,8 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 
 	// -- backing box  ----------
 	gfx.color(&screen-> title_col);
-	gfx.box(gfx.width/2, gfx.line_height/2, gfx.width/2, gfx.line_height/2, NULL, true);
+	//gfx.box(gfx.width/2, gfx.line_height/2, gfx.width/2, gfx.line_height/2, NULL, true);
+	gfx.box(gfx.width/2, gfx.line_height/2, gfx.width/2, gfx.line_height/2, NULL, &screen-> title_col, true);
 
 	// -- title ----------
 	//gfx.color(255,255,255);
@@ -792,12 +836,12 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 			grid_axis(&screen-> attrib, 150,150,150);
 			break;
 		case GRID_MENU:
-			ChemDisplayAttrib display_attribs(&screen-> current_menu-> attrib);
-			display_attribs.setpos(0,0);
-			grid(&display_attribs, 50,0,0);
-			grid_axis(&display_attribs, 100,0,0);
-			// also draw in screen axis
-			//grid_axis(&screen-> attrib, 50,50,50);
+			if (screen-> current_menu!=NULL) {
+				ChemDisplayAttrib display_attribs(&screen-> current_menu-> attrib);
+				display_attribs.setpos(0,0);
+				grid(&display_attribs, 50,0,0);
+				grid_axis(&display_attribs, 100,0,0);
+			}
 			break;
 
 		}

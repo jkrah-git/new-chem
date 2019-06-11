@@ -17,7 +17,51 @@ int cli_redraw(Concentration_CLI *cli, int argc, char **argv) {
 	return 0;
 }
 // --------------------------
+int	cli_col(ChemDisplayColor *col, int argc, char **argv) {
+	if (col==NULL) return -1;
 
+//	if (argc>0) { PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]); }
+//	else { PRINT(" attribs : argc[%d][]\n", argc); }
+
+	// argc=0 argv()  (list)
+	if ((argc<2) ||(strcmp(argv[0], "help")==0)) {
+		printf("r g b\n");
+		return 0;
+	}
+	//================================
+	// 1 argv(dump)
+	if (argc==1) {
+		//---------------- dump
+		if (strcmp(argv[0], "dump")==0) {
+			col-> dump(); NL
+			return 0;
+		}
+	}
+
+	//---------------- dump
+	if (strcmp(argv[0], "dump")==0) {
+		col-> dump(); NL
+		return 0;
+	}
+
+	if (argc==3) {
+		int r,g,b;
+		if ((sscanf(argv[0], "%d", &r)<1) ||
+			(sscanf(argv[1], "%d", &g)<1) ||
+			(sscanf(argv[2], "%d", &b)<1))	{
+			printf("data error\n");
+			return -10;
+		}
+		col->set(r,g,b);
+		printf("col[%d,%d,%d]\n", r,g,b);
+		return 0;
+
+
+	}
+	return -1;
+}
+
+// --------------------------
 int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	if (attribs==NULL) return -1;
 
