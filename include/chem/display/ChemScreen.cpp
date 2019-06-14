@@ -53,7 +53,7 @@ public:
 //int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
 //-----------------------------------------
 ChemScreen::ChemScreen() {
-	title = NULL;
+	name = NULL;
 	renderCB  =screen_render_mole;
 	waitCB = screen_wait;
 	waiting = false;
@@ -81,12 +81,13 @@ ChemScreen::ChemScreen() {
 //-----------------------------------------
 ChemScreen::~ChemScreen() {
 //	if (menu_list2!=NULL) free(menu_list2);
-	if (title ==NULL) 	free(title);
+//	if (title ==NULL) 	free(title);
 }
 //-----------------------------------------
 void ChemScreen::dump(void){
-	if (title==NULL)	printf("ChemScreen[0x%zX].[-]", (long unsigned int) this);
-	else				printf("ChemScreen[0x%zX].[%s]", (long unsigned int) this, title);
+	//if (title==NULL)	printf("ChemScreen[0x%zX].[-]", (long unsigned int) this);
+	//else
+	printf("ChemScreen[0x%zX].[%s]", (long unsigned int) this, name.get());
 	switch (waitmode) {
 	case WAIT_CURS:		printf("(curs)"); break;
 	case WAIT_SCREEN:	printf("(screen)"); break;
@@ -114,7 +115,7 @@ ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 //	new_menu_item = menu_list2->add();
 	new_menu_item = menu_list.add();
 	if((new_menu_item!=NULL) && (new_menu_item-> item !=NULL)) {
-		new_menu_item-> item-> settitle( _title);
+		new_menu_item-> item-> title.set( _title);
 		return new_menu_item-> item;
 	}
 	return NULL;
@@ -128,18 +129,19 @@ ChemMenu *ChemScreen::find_menu(const char *_title){
 	while((menu_item!=NULL) && (menu_item-> item !=NULL)) {
 
 		// both NULL
-		if((_title==NULL) && (menu_item-> item-> gettitle()== NULL)) 	return menu_item-> item;
+		if((_title==NULL) && (menu_item-> item-> title.get()== NULL)) 	return menu_item-> item;
 		// one NULL
-		if((_title==NULL) || (menu_item-> item-> gettitle()== NULL)) 	return NULL;
+		if((_title==NULL) || (menu_item-> item-> title.get()== NULL)) 	return NULL;
 
 	//	PRINT("..(%s)\n", menu_item-> item-> gettitle());
-		if (strcmp(_title, menu_item-> item-> gettitle())==0)			return menu_item-> item;
+		if (strcmp(_title, menu_item-> item-> title.get())==0)			return menu_item-> item;
 		menu_item = menu_item-> next;
 	}
 
 	return NULL;
 }
 //-------------------------------//-------------------------------//-------------------------------
+/*
 int	ChemScreen::set_title(const char* newtitle){
 	if (newtitle==NULL) return -1;
 
@@ -163,6 +165,7 @@ int	ChemScreen::istitle(const char* _title){
 	}
 	return 1;
 }
+*/
 //-------------------------------
 ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 	if (display==NULL) return NULL;

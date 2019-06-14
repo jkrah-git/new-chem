@@ -15,8 +15,10 @@
 
 // ---------------------------------------
 class ChemDisplayCoords {
-	PeptidePos		pos;
+	//PeptidePos		pos;
 public:
+	int			posx;
+	int			posy;
 	int 		scalex;
 	int 		scaley;
 	int 		offsetx;
@@ -28,7 +30,8 @@ public:
   	void	init(void);
   	void	dump(void);
   	//------
-	PepPosVecType	*getpos(void){ return pos.dim; };
+/*
+  	PepPosVecType	*getpos(void){ return pos.dim; };
 	void	setpos(PepPosVecType *_pos);
 	void	addpos(PepPosVecType *_pos);
 	void	setpos(PepPosVecType px, PepPosVecType py){
@@ -40,11 +43,12 @@ public:
 
 	PepPosVecType	getposx(void){ 	if (pos.dim!=NULL) { return pos.dim[PEPPOS_X]; } return 0; }
 	PepPosVecType	getposy(void){ 	if (pos.dim!=NULL) { return pos.dim[PEPPOS_Y]; } return 0; }
-
+*/
 
   	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley);
   	void	setoffset(int _offsetx, int _offsety);
   	void	setscale(int sx, int sy);
+/*
   	void	cp(ChemDisplayCoords *src) {
   		if (src!=NULL) {
   			offsetx = src-> offsetx;
@@ -55,7 +59,7 @@ public:
 
   		}
   	}
-
+*/
   	// get local(x,y) (ie 0,0 = centre)
   	int		getx(void);
   	int		gety(void);

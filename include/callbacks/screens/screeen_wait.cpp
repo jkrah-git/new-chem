@@ -14,16 +14,20 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 	if (cli==NULL) return -1;
 	if (display==NULL) return -2;
 
-	PepPosVecType *screen_pos = screen-> coords.getpos();
-	if (screen_pos==NULL) { PRINT("display_pos=NULL\n"); return -2; }
-	bool _dump = false;
+//	PepPosVecType *screen_pos = screen-> coords.getpos();
+//	if (screen_pos==NULL) { PRINT("display_pos=NULL\n"); return -2; }
+	bool _dump = false;;
 
 	// draw curs
 	if (screen-> waitmode==WAIT_CURS) {
 		// display-> curs(200,200,0);
 		if (_dump) { PRINT("curs=[%d,%d]\n", screen-> curs_pos.dim[0], screen-> curs_pos.dim[1]); }
 		display->gfx.color(100,100,100);
-		display-> draw_box(&screen-> coords, screen-> curs_pos.dim[0], screen-> curs_pos.dim[1], screen-> curs_pos.dim[0], screen-> curs_pos.dim[1]);
+		display-> draw_box(&screen-> coords,
+							screen-> curs_pos.dim[0] - screen-> coords.posx,
+							screen-> curs_pos.dim[1] - screen-> coords.posy,
+							screen-> curs_pos.dim[0] - screen-> coords.posx,
+							screen-> curs_pos.dim[1] - screen-> coords.posy);
 
 	}
 //		draw_menus();
@@ -56,10 +60,10 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 			if (button->callback != NULL) {
 				//int r = button-> select_menu(button);
 				int r = button->callback(cli, 0, NULL);
-				printf("button[%s]=[%d]\n", button->gettext(), r);
+				printf("button[%s]=[%d]\n", button->text.get(), r);
 				return r;
 			} else {
-				printf("button[%s]=[NULL]\n", button->gettext());
+				printf("button[%s]=[NULL]\n", button->text.get());
 				return 0;
 			}
 		} // -- else no button pressed
@@ -68,8 +72,9 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 		if (screen-> waitmode==WAIT_CURS) {
 			x = screen-> coords.getxcell(&display->gfx, display-> gfx.xpos());
 			y = screen-> coords.getycell(&display->gfx, display-> gfx.ypos());
-			screen-> curs_pos.dim[PEPPOS_X]=x;
-			screen-> curs_pos.dim[PEPPOS_Y]=y;
+
+			screen-> curs_pos.dim[PEPPOS_X]= x;
+			screen-> curs_pos.dim[PEPPOS_Y]= y;
 
 			// ---- reset selected pep/mole
 			screen->selected_pep = NULL;
@@ -79,17 +84,16 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 				screen-> renderCB(cli, 0, NULL);
 			screen-> mouse_clicked = false;
 
-
-
-
 		}
 		// ----------------
 		if (screen-> waitmode==WAIT_SCREEN) {
 			x = screen-> coords.getxcell(&display->gfx, display-> gfx.xpos());
 			y = screen-> coords.getycell(&display->gfx, display-> gfx.ypos());
-			if (screen-> coords.getpos() == NULL) { 	PRINT("NULL ATRRIB...\n"); return -1;	}
-			screen_pos[PEPPOS_X] = x;
-			screen_pos[PEPPOS_Y] = y;
+			//if (screen-> coords.getpos() == NULL) { 	PRINT("NULL ATRRIB...\n"); return -1;	}
+//			screen_pos[PEPPOS_X] = x;
+//			screen_pos[PEPPOS_Y] = y;
+			 screen-> coords.posx = x;
+			 screen-> coords.posy = y;
 		}
 
 		// ----------------

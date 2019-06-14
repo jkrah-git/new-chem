@@ -45,7 +45,7 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 		}
 		//screen->callback = cli_gfx_screens_cb1;
 		//screen->waiting = false;
-		cli->display.current_screen = screen;
+		cli->display.selected_screen = screen;
 	}
 	//return 0;
 	{
@@ -80,7 +80,7 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 		}
 		//screen->callback = cli_gfx_screens_cb2;
 		//screen->waiting = true;
-		cli->display.current_screen = screen;
+		cli->display.selected_screen = screen;
 	}
 
 	{
@@ -111,17 +111,16 @@ int		list_screens(Concentration_CLI *cli, int argc, char **argv) {
 	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list->gethead();
 	while ((screen_item!=NULL)&&(screen_item-> item!=NULL)) {
 
-		if (screen_item->item== cli->display.current_screen)
-			printf("[%s]*\n", screen_item->item->get_title());
+		if (screen_item->item== cli->display.selected_screen)
+			printf("[%s]*\n", screen_item->item->name.get());
 		else
-			printf("[%s]\n", screen_item->item->get_title());
+			printf("[%s]\n", screen_item->item->name.get());
 		screen_item = screen_item->next;
 		c++;
 	}
 	//------
 	return c;
 }
-
 
 // --------------------------// --------------------------
 int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
@@ -192,10 +191,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 
 		// ---------wait
 		if (strcmp(argv[1], "wait")==0) {
-
-			// TODO add: display_screen (overrides current_screen) / need to have del.screen
 			screen->waiting = true;
-			//cli->display.current_screen = screen;
 			cli->display.display_screen = screen;
 			cli->display.draw_screen(screen, cli);
 			cli->display.display_screen = NULL;
@@ -273,7 +269,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		//---------------
 		// argv(name, attrib, x | x y)
 		//----------------
-		if (strcmp(argv[1], "attrib")==0) {
+		if (strcmp(argv[1], "coords")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) { cli_coords(&screen-> coords, 0, NULL); }
 			else { cli_coords(&screen-> coords, argc-2, &argv[2]); }
@@ -347,13 +343,13 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	if (screen!=NULL) {
-		cli->display.current_screen = screen;
+		cli->display.selected_screen = screen;
 		if (screen->waiting) {	cli-> callback = NULL;	}
 		else {					cli-> callback = cli_redraw;	}
 
 	}
 	// draw_current_screen(cli, NULL, 0);
-	cli->display.draw_screen(cli-> display.current_screen, cli);
+	cli->display.draw_screen(cli-> display.selected_screen, cli);
 	return 1;
 }
 // --------------------------

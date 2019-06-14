@@ -25,20 +25,12 @@ int cli_button_list_buttons(Concentration_CLI *cli, ChemMenu *menu){
 	int c=0;
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *button_item = menu -> button_list.gethead();
 	while ((button_item!=NULL)&&(button_item-> item!=NULL)) {
-		/*
-		if (menu_item-> item == screen->current_menu)
-			printf("[%s]*\n", menu_item->item->gettitle());
-		else
-			printf("[%s]\n", menu_item->item->gettitle());
-		*/
-		printf("[%s]\n", button_item->item->gettext());
-		//button_item-> item-> dump();
-
+		printf("[%s]\n", button_item->item->text.get());
 		//------------
 		button_item = button_item->next;
 		c++;
 	}
-	//*/
+	printf("[%d] buttons found\n", c);
 	//------
 	return c;
 }
@@ -49,7 +41,7 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.current_screen;
+	ChemScreen *screen = cli->display.selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen\n");
 		return -1;
@@ -75,6 +67,7 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 			printf("list\n");
 			printf("name\n");
 			printf("name add\n");
+			printf("name coords\n");
 			return 0;
 		}
 		//----------
@@ -129,7 +122,6 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 				printf("[%d,%d]\n",button->sizex, button->sizey);
 				return 0;
 			}
-			// TODO - cleanup
 			if (argc==3) {
 				int s;
 				if (sscanf(argv[2], "%d", &s)<1) {
@@ -149,11 +141,6 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 				button->sizex = sx;	button->sizey = sy;
 				printf("size[%d][%d]\n", sx, sy);
 			}
-
-
-
-
-
 		} // ------------------end(size)
 
 

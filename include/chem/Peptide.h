@@ -36,7 +36,7 @@ public:
 	virtual ~Peptide(){};
 
 	//--------------------------------
-	// TODO: if really going public then rm these setter/getters
+	// TODO 99: if really going public then rm these setter/getters
 	void  		set(PepSig newsig) { sig = newsig; };
 	void  		setrot(PepRot newrot) { rot = newrot; };
 	PepSig 		get(){	return sig;	};

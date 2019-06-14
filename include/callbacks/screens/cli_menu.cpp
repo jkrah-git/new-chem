@@ -26,9 +26,9 @@ int cli_menu_list_menus(Concentration_CLI *cli, ChemScreen *screen){
 	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen->menu_list.gethead();
 	while ((menu_item!=NULL)&&(menu_item-> item!=NULL)) {
 		if (menu_item-> item == screen->current_menu)
-			printf("[%s]*\n", menu_item->item->gettitle());
+			printf("[%s]*\n", menu_item->item->title.get());
 		else
-			printf("[%s]\n", menu_item->item->gettitle());
+			printf("[%s]\n", menu_item->item->title.get());
 		//------------
 		menu_item = menu_item->next;
 		c++;
@@ -44,7 +44,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.current_screen;
+	ChemScreen *screen = cli->display.selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -67,7 +67,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			printf("name add\n");
 			printf("name layout\n");
 			printf("name step x y\n");
-			printf("name attrib ...\n");
+			printf("name coords ...\n");
 			return 0;
 		}
 		//----------
@@ -156,7 +156,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		} // -------end(step)
 
 		//----------------
-		if (strcmp(argv[1], "attrib")==0) {
+		if (strcmp(argv[1], "coords")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) { cli_coords(&screen-> coords, 0, NULL); }
 			else { cli_coords(&menu-> coords, argc-2, &argv[2]); }
@@ -207,7 +207,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 
 	}
 	//draw_current_screen(cli, NULL, 0);
-	cli->display.draw_screen(cli-> display.current_screen, cli);
+	cli->display.draw_screen(cli-> display.selected_screen, cli);
 	return 1;
 }
 // --------------------------

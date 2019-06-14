@@ -155,7 +155,7 @@ Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM
 	core = &vm;
 	if (core!=NULL)
 		core-> concvol = &cvol;
-		display.core = core;
+	//	display.core = core;
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}

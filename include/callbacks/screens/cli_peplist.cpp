@@ -20,22 +20,16 @@ int	cli_load_peplist(Concentration_CLI *cli, int argc, char **argv){
 int cli_peplist_list(Concentration_CLI *cli, ChemScreen *screen){
 	if (cli==NULL) return -1;
 	if (screen==NULL) return -2;
-	//if (screen->menu_list2==NULL) return -3;
 
 	int c=0;
-//	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = screen-> peplist_list.gethead();
-	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = screen-> get_peplost_head();
+	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = screen-> peplist_list.gethead();
 
 	while ((peplist_item!=NULL)&&(peplist_item-> item!=NULL)) {
-
-	//	if (menu_item-> item == screen->current_menu)	printf("[%s]*\n", menu_item->item->gettitle());
-	//	else
 		printf("[%s]\n", peplist_item->item->name.get());
 		//------------
 		peplist_item = peplist_item->next;
 		c++;
 	}
-	//*/
 	//------
 	return c;
 }
@@ -46,7 +40,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli->core==NULL) return -2;
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.current_screen;
+	ChemScreen *screen = cli->display.selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -159,7 +153,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 
 	} // -------end(src)
 	//----------------
-	if (strcmp(argv[1], "attrib")==0) {
+	if (strcmp(argv[1], "coords")==0) {
 		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 		if (argc<3) { cli_coords(&peplist-> coords, 0, NULL); }
 		else { cli_coords(&peplist-> coords, argc-2, &argv[2]); }

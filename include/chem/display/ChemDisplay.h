@@ -8,16 +8,7 @@
 #ifndef CHEMDISPLAY_H_
 #define CHEMDISPLAY_H_
 // ----------------
-
-//#include "../mylist.h"
-//class ChemMenuList;
 #include "../Concentration_VM.h"
-//#include "../include/gfx/GFX_Base.h"
-#include "ChemDisplayCoords.h"
-#include "ChemMenu.h"
-#include "ChemPeplistDisplay.h"
-
-//class ChemScreen;
 #include "ChemScreen.h"
 
 #define DISPLAY_EVENT_MOUSE1 1
@@ -33,39 +24,19 @@
 #define DISPLAY_EVENT_ESC 	27
 
 
-/*
-	// ARROWS
-	case 81:	curs_pos.dim[PEPPOS_X] --;	break;
-	case 82:	curs_pos.dim[PEPPOS_Y] ++;	break;
-	case 83:	curs_pos.dim[PEPPOS_X] ++;	break;
-	case 84:	curs_pos.dim[PEPPOS_Y] --;	break;
-	}
-*/
-
 //====================================
 // ----------------
 class ChemDisplay {
 private:
-	// does this make a screen
 	ChemMenu				*add_menu(const char *_title);
 	void					draw_menus(void);
 	int						test_menus(int posx, int posy);
 
 public:
 	GFX_Base				gfx;
-
-    // main VM
-	Concentration_VM		*core;
-	// selection pointers
-	Peptide					*pep;
-	Molecule				*mole;
-	Concentration			*conc;
-	ConcentrationVolume 	*concvol;
-	MoleculeMatchPos 		*matchpos;
-
 	mylist<ChemScreen> 		*screen_list;
-	ChemScreen				*current_screen;
-	// display selected displays..
+	ChemScreen				*selected_screen;
+	// display_screen overrides current_screen - use to wait on non selected screen
 	ChemScreen				*display_screen;
 
   	//-------------------
@@ -102,19 +73,12 @@ public:
 
 	Peptide *draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep, int red, int green, int blue)	{ 		gfx.color(red, green, blue); return draw_pep(screen_coords, pep); };
 	Peptide *draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep, ChemDisplayColor *col)		{		 gfx.color(col); return draw_pep(screen_coords, pep); };
-
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy)
-	{ draw_box(screen_coords, minx, miny, maxx, maxy, NULL);	};
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title)
-	{ draw_box(screen_coords, minx, miny, maxx, maxy, _title, NULL);	};
+	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy)		{ draw_box(screen_coords, minx, miny, maxx, maxy, NULL);	};
+	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title)	{ draw_box(screen_coords, minx, miny, maxx, maxy, _title, NULL);	};
 
 	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title, ChemDisplayColor *txtCol);
-
-
-
-
 };
-
+// ----------------
 
 
 #endif /* CHEMDISPLAY_H_ */

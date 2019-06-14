@@ -57,8 +57,8 @@ ChemDisplayCoords::ChemDisplayCoords(ChemDisplayCoords *src) {
 //	pos = NULL;
 	init();
 	// -----
-	if (src !=NULL)
-		cp(src);
+	//if (src !=NULL)	cp(src);
+	if (src !=NULL)	*this = *src;
 }
 //--------------------------
 ChemDisplayCoords::~ChemDisplayCoords() {
@@ -67,11 +67,14 @@ ChemDisplayCoords::~ChemDisplayCoords() {
 }
 //--------------------------
 void ChemDisplayCoords::init() {
+	posx = 0;
+	posy = 0;
 	offsetx = 0;
 	offsety = 0;
+
 	//if (pos == NULL) {	pos = (PepPosVecType*) malloc(sizeof(PepPosVecType) *PepPosVecMax);	}
 	//if (pos!=NULL) {		pos[PEPPOS_X] = 0;		pos[PEPPOS_Y] = 0;	}
-	pos.init();
+	//pos.init();
 
 }
 //--------------------------
@@ -84,13 +87,15 @@ void ChemDisplayCoords::dump(void) {
 	}
 	*/
 	printf(".offset[%d,%d].pos", offsetx, offsety);
-	if (pos.dim==NULL) {		printf("[NULL]");	}
-	else {						printf("[%d,%d]", pos.dim[PEPPOS_X], pos.dim[PEPPOS_Y]);	}
+	//if (pos.dim==NULL) {		printf("[NULL]");	}
+	//else {						printf("[%d,%d]", pos.dim[PEPPOS_X], pos.dim[PEPPOS_Y]);	}
+	printf(".pos[%d,%d]", posx, posy);
 	printf(".scale[%d,%d]", scalex, scaley);
 	//printf(".getxy[%d,%d]", screenx(), screeny());
 
 }
 //--------------------------
+/*
 void ChemDisplayCoords::setoffset(int _offsetx, int _offsety){	offsetx = _offsetx;	offsety = _offsety;}
 void ChemDisplayCoords::setpos(PepPosVecType *_pos){
 	//if ((pos!=NULL) && (_pos!=NULL))		*pos = *_pos;
@@ -98,31 +103,30 @@ void ChemDisplayCoords::setpos(PepPosVecType *_pos){
 	else pos = _pos;
 
 }
-void ChemDisplayCoords::addpos(PepPosVecType *_pos){	if (_pos!=NULL)		pos = pos + _pos;}
 void ChemDisplayCoords::setscale(int sx, int sy){	scalex = sx; scaley = sy;	}
+//--------------------------
+void ChemDisplayCoords::addpos(PepPosVecType *_pos){	if (_pos!=NULL)		pos = pos + _pos;}
 //--------------------------
 void ChemDisplayCoords::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley){
 	offsetx = _offsetx;
 	offsety = _offsety;
-	if (pos.dim !=NULL) pos = _pos;
+	//if (pos.dim !=NULL) pos = _pos;
 	scalex = _scalex;
 	scaley = _scaley;
 }
+*/
 // TODO normalise or protect offsets..
 //--------------------------
 int ChemDisplayCoords::getx(void){
-	int px = offsetx;
-	if (pos.dim !=NULL)	{
-		px += (pos.dim[PEPPOS_X] * scalex);
-	}
+	int px = offsetx + (posx *scalex);
+	//if (pos.dim !=NULL)	{	px += (pos.dim[PEPPOS_X] * scalex);	}
+
 	return px;
 }
 //--------------------------
 int ChemDisplayCoords::gety(void){
-	int py = offsety;
-	if (pos.dim !=NULL)	{
-		py += (pos.dim[PEPPOS_Y] * scaley);
-	}
+	int py = offsety + (posy * scaley);
+	//if (pos.dim !=NULL)	{		py += (pos.dim[PEPPOS_Y] * scaley);	}
 	return py;
 }
 //--------------------------
@@ -157,7 +161,7 @@ int ChemDisplayCoords::getycell(GFX_Base *gfx, int screeny){
 	float yf = y / (float)scaley;
 	//PRINT("xf=[%f]\n", xf);
 	y = - round(yf);
-	//PRINT("x=[%d]\n", x);
+	//PRINT("y=[%d]\n", y);
 	return y;
 
 

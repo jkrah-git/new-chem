@@ -7,35 +7,27 @@
 //class ChemMenuButton;
 #ifndef CHEMMENUBUTON_H_
 #define CHEMMENUBUTON_H_
-/*
-     // selected objects
-	Concentration_VM			*core;
-	Peptide						*pep;
-	Molecule					*mole;
-	Concentration				*conc;
-	ConcentrationVolume 		*concvol;
-	MoleculeMatchPos 			*matchpos;
 
- */
-
-enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
+//enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
 #include "../Concentration_VM.h"
 #include "gfx/GFX_Base.h"
 #include "ChemDisplayCoords.h"
+#include "../../MyString.h"
 //#include "ChemDisplay.h"
 //class ChemDisplay;
 
 
 // ---------------------------------------
 class ChemMenuButton {
-	char	*text;
+//	char	*text;
 
 public:
+	MyString	text;
 	ChemDisplayCoords	coords;
 
 	int		sizex;
 	int		sizey;
-	CHEMMENUBUTON_TYPE	mode;
+	//CHEMMENUBUTON_TYPE	mode;
 	bool		_selected;
 	void		*data;
 	int		(*callback)(Concentration_CLI*, int, char**);
@@ -43,8 +35,8 @@ public:
 	ChemMenuButton();
 	virtual ~ChemMenuButton();
 	void	dump(void);
-	const char 	*gettext(void){ return text; };
-	void		settext(const char *_text);
+//	const char 	*gettext(void){ return text.get(); };
+//	void		settext(const char *_text);
 	//----------------
 //	void	draw(ChemDisplay *display, ChemDisplayColor *col);
 };

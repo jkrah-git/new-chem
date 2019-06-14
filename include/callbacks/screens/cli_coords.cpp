@@ -13,7 +13,7 @@
 // --------------------------
 int cli_redraw(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	cli->display.draw_screen(cli-> display.current_screen, cli);
+	cli->display.draw_screen(cli-> display.selected_screen, cli);
 	return 0;
 }
 // --------------------------
@@ -94,9 +94,17 @@ int	cli_coords(ChemDisplayCoords *coods, int argc, char **argv) {
 	//================================
 	//---------------- pos
 	if (strcmp(argv[0], "pos")==0) {
+
+/*
 		PepPosVecType *p = coods->getpos();
 		if (p==NULL) {	printf("pos[NULL]\n");	return -20;	}
 		if (argc<3)  {	printf("pos[%d,%d]\n", p[PEPPOS_X], p[PEPPOS_Y]);	return 0;		}
+*/
+	//	PepPosVecType *p = coods->getpos();
+	//	if (p==NULL) {	printf("pos[NULL]\n");	return -20;	}
+		if (argc<3)  {	printf("pos[%d,%d]\n", coods->posx, coods->posy);	return 0;		}
+
+
 
 		int px,py;
 		if ((sscanf(argv[1], "%d", &px)<1) ||
@@ -104,8 +112,10 @@ int	cli_coords(ChemDisplayCoords *coods, int argc, char **argv) {
 			printf("data error\n");
 			return -10;
 		}
-		coods->setpos(px, py);
-		printf("pos[%d,%d]\n", p[PEPPOS_X], p[PEPPOS_Y]);
+	//	coods->setpos(px, py);
+		coods->posx = px;
+		coods->posy = py;
+		printf("pos[%d,%d]\n", coods->posx, coods->posy);
 		return 0;
 	} // end argv(pos)
 	//================================

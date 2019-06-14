@@ -29,7 +29,7 @@ public:
  */
 // ---------------------------------------
 ChemMenuButton::ChemMenuButton() {
-	mode = UNDEF;
+//	mode = UNDEF;
 	_selected = false;
 	text = NULL;
 	data = NULL;
@@ -48,23 +48,24 @@ ChemMenuButton::ChemMenuButton() {
 ChemMenuButton::~ChemMenuButton() {
 	//free(attrib.pos);
 	//attrib.pos = NULL;
-	if (text!=NULL) free(text);
+	//if (text!=NULL) free(text);
 }
 
 // ---------------------------------------
 void ChemMenuButton::dump(void) {
 	printf("ChemMenuButton[0x%zX]:",	(long unsigned int) this);
 	printf(".sizeXY[%d,%d]", sizex, sizey);
-	if ( _selected) printf("[%s]*.", text);
-	else			printf("[%s].", text);
+	if ( _selected) printf("[%s]*.", text.get());
+	else			printf("[%s].", text.get());
 	printf("Callback[0x%zX]:",	(long unsigned int) callback);
 
 
 	coords.dump();	NL
 }
 // ---------------------------------------
+/*
 void ChemMenuButton::settext(const char *_text){
-	if (text!=NULL) free(text);
+//	if (text!=NULL) free(text);
 	int len = strlen(_text);
 	if (len>0) {
 		text = (char*) malloc(sizeof(char)*len);
@@ -72,7 +73,7 @@ void ChemMenuButton::settext(const char *_text){
 			strcpy(text, _text);
 	}
 }
-
+*/
 
 
 /*
