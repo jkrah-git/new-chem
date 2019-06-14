@@ -26,8 +26,8 @@ public:
 	bool	operator ==(const char *p);
 
 	// return number of lines
-	int		lines(void);
-	char *getline(char *ptr);
+	//int		lines(void);
+	//char *getline(char *ptr);
 
 };
 

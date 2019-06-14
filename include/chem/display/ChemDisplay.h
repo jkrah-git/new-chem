@@ -59,8 +59,8 @@ public:
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
-	void	draw_peplist(ChemPeplistDisplay *peplist, ChemDisplayColor *col);
-	void	draw_molelist(ChemMolelistDisplay *molelist, ChemDisplayColor *col);
+	void	draw_peplist(ChemPeplistDisplay *peplist);
+	void	draw_molelist(ChemMolelistDisplay *molelist);
 	//--------------
 	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
