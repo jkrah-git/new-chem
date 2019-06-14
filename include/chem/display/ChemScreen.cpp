@@ -199,14 +199,7 @@ ChemPeplistDisplay		*ChemScreen::find_peplist(const char *_title){
 	//if (_title==NULL) return NULL;
 	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = peplist_list.gethead();
 	while ((peplist_item!=NULL)&&(peplist_item-> item!=NULL)) {
-
-	//	if ((peplist_item-> item->getname()==NULL) && (_title==NULL)) { return peplist_item-> item;		}
-	//	if ((peplist_item-> item->getname()==NULL) || (_title==NULL)) { return NULL;					}
-	//	if (strcmp(peplist_item-> item->getname(), _title)==0) 		  { return peplist_item-> item;		}
-
-
 		if (peplist_item-> item->name == _title) return peplist_item-> item;
-
 		//----
 		peplist_item = peplist_item->next;
 	}
@@ -224,8 +217,6 @@ ChemPeplistDisplay		*ChemScreen::add_peplist(const char *_title){
 	if (peplist_item==NULL) { return NULL; }
 	if (peplist_item-> item==NULL) { peplist_list.del(peplist_item); return NULL; }
 	// (else)  peplist_item-> item  is good
-
-//	int r = peplist_item-> item-> setname(_title);
 //	if (r<0) { PRINT("setname failed[%d]\n", r); return NULL; }
 	peplist_item-> item-> name.set(_title);
 	return peplist_item-> item;
@@ -243,6 +234,44 @@ int						ChemScreen::del_peplist(const char *_title){
 	return 0;
 }
 // -------------------------------
+// -------------------------------
+ChemMolelistDisplay		*ChemScreen::find_molelist(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *molelist_item = molelist_list.gethead();
+	while ((molelist_item!=NULL)&&(molelist_item-> item!=NULL)) {
+		if (molelist_item-> item->name == _title) return molelist_item-> item;
+		//----
+		molelist_item = molelist_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemMolelistDisplay		*ChemScreen::add_molelist(const char *_title){
+	if (_title==NULL) return NULL;
 
+	ChemMolelistDisplay *result = find_molelist(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *molelist_item = molelist_list.add();
+	if (molelist_item==NULL) { return NULL; }
+	if (molelist_item-> item==NULL) { molelist_list.del(molelist_item); return NULL; }
+
+	// (else)  molelist_item-> item  is good
+	molelist_item-> item-> name.set(_title);
+	return molelist_item-> item;
+}
+// -------------------------------
+int						ChemScreen::del_molelist(const char *_title){
+	ChemMolelistDisplay *found_molelist =find_molelist(_title);
+	if (found_molelist==NULL) return -1;
+
+	mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *molelist_item = molelist_list.search(found_molelist);
+	if (molelist_item==NULL) return -2;
+
+	molelist_list.del(molelist_item);
+	return 0;
+}
+// -------------------------------
 
 // -------------------------------//-------------------------------//-------------------------------

@@ -165,7 +165,8 @@ void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, ChemDispla
 	if (fill) XFillRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 	else XDrawRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 
-	if (_title!=NULL) {
+	/*
+if (_title!=NULL) {
 		int len = strlen(_title) * FONT_WIDTH;
 		//int tx = x - (len/2);
 		//int ty = y-sy;
@@ -176,7 +177,49 @@ void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, ChemDispla
 			color(txtcol);
 		}
 		text(_title, x, y);
+}
+
+	 */
+	if (_title==NULL) 	return;
+	int len=strlen(_title);
+	if (len<1) return;
+
+
+	// count (extra) lines
+	y  -= (line_height/2);
+	for (unsigned int i=0; i<len; i++) {
+		if (_title[i]=='\n') {
+			y  -= (line_height/2);
+			//printf("line [%s]@[%d]\n", _title, i);
+		}
 	}
+
+	// make a copy
+	char *txt = (char*) malloc(sizeof(char)*len);
+	if (txt==NULL) return;
+	strcpy(txt, _title);
+
+
+
+	// start splitting
+	char delim[] = "\n";
+	char *ptr = strtok(txt, delim);
+
+
+	while(ptr!=NULL) {
+		unsigned int width = strlen(ptr) * FONT_WIDTH;
+		//printf("line[%s]\n", ptr);
+		int tx = x - (width/2);
+		y  += (line_height);
+		if (txtcol != NULL) {
+			//PRINT("col = "); txtcol-> dump(); NL
+			color(txtcol);
+		}
+		text(ptr, tx, y);
+		ptr = strtok(NULL, delim);
+	}
+
+	free(txt);
 }
 
 //-----------------------------------------

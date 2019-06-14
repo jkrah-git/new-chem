@@ -14,6 +14,7 @@
 #include "ChemMenu.h"
 #include "ChemDisplay.h"
 #include "ChemPeplistDisplay.h"
+#include "ChemMolelistDisplay.h"
 class ChemDisplay;
 #include "../../MyString.h"
 enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
@@ -26,6 +27,7 @@ public:
 	ChemDisplayCoords		coords;
 
  mylist<ChemPeplistDisplay>	peplist_list;
+ mylist<ChemMolelistDisplay>	molelist_list;
 	mylist<ChemMenu> 		menu_list;
 
 	PeptidePos				curs_pos;
@@ -57,6 +59,11 @@ public:
 	ChemPeplistDisplay		*add_peplist(const char *_title);
 	ChemPeplistDisplay		*find_peplist(const char *_title);
 	int						del_peplist(const char *_title);
+
+	ChemMolelistDisplay		*add_molelist(const char *_title);
+	ChemMolelistDisplay		*find_molelist(const char *_title);
+	int						del_molelist(const char *_title);
+
 
 
 };

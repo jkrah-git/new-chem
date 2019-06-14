@@ -1,27 +1,32 @@
 // -------------------
-#include "../chem/Concentration_CLI.h"
+#include "chem/Concentration_CLI.h"
 
 
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
-//#include <readline/readline.h>
-//#include <readline/history.h>
-#include "../include/debug.h"
-#include "../chem/Peptide.h"
-#include "../chem/Molecule.h"
-#include "../chem/Concentration.h"
-//#include "../chem/mybuffer.h"
-//#include "../chem/MoleculeMatchPos.h"
-//#include "../chem/Concentration_CLI.h"
-#include "../chem/CLI_Command.h"
-//#include "../include/mylist.h"
-//#include "../include/gfx/MoleDisplay.h"
-#include "../chem/ChemDisplay.h"
-#include "../chem/CLI_Command.h"
-#include "../include/common.h"
+#include "debug.h"
+/*
+#include "chem/Peptide.h"
+#include "chem/Molecule.h"
+#include "chem/Concentration.h"
+#include "chem/CLI_Command.h"
+#include "chem/display/ChemDisplay.h"
+*/
+#include "common.h"
+#include "MyString.h"
+int main(int argc, char **argv){
+	printf("Hellow world\n");
 
+	MyString msg;
+	msg.set("This \nis a test");
 
+	msg.dump(); NL
+	return 0;
+
+}
+
+/*
 ///=================== need to be declared externally
 const char 	**build_args(void);
 int 	run(int argc, char **argv);
@@ -439,3 +444,4 @@ int run(int argc, char **argv) {
 }
 //=======================================================
 
+*/

@@ -20,10 +20,14 @@ public:
 	void	dump(void);
 	void	set(const char *_str);
 	int		len(void);
+
+
 	MyString& operator =(const char *p);
 	bool	operator ==(const char *p);
 
-
+	// return number of lines
+	int		lines(void);
+	char *getline(char *ptr);
 
 };
 

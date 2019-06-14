@@ -21,7 +21,7 @@ int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv){
 }// --------------------------// --------------------------// --------------------------
 int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	if (cli->display.screen_list ==NULL) return -2;
+	//if (cli->display.screen_list2 ==NULL) return -2;
 
 	//PRINT(".. screens ..\n");
 	//cli->display.screen_list-> clear();
@@ -106,9 +106,9 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 int		list_screens(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	if (cli->display.screen_list==NULL) return -2;
 	int c=0;
-	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list->gethead();
+
+	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list.gethead();
 	while ((screen_item!=NULL)&&(screen_item-> item!=NULL)) {
 
 		if (screen_item->item== cli->display.selected_screen)

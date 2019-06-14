@@ -327,6 +327,7 @@ void Concentration_CLI::load_commands() {
 	cli_load_menu(this,0, NULL);
 	cli_load_button(this,0, NULL);
 	cli_load_peplist(this,0, NULL);
+	cli_load_molelist(this,0, NULL);
 }
 
 //---------------------------------//---------------------------------

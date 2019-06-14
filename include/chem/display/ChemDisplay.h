@@ -8,7 +8,7 @@
 #ifndef CHEMDISPLAY_H_
 #define CHEMDISPLAY_H_
 // ----------------
-#include "../Concentration_VM.h"
+#include "chem/Concentration_VM.h"
 #include "ChemScreen.h"
 
 #define DISPLAY_EVENT_MOUSE1 1
@@ -27,14 +27,11 @@
 //====================================
 // ----------------
 class ChemDisplay {
-private:
-	ChemMenu				*add_menu(const char *_title);
-	void					draw_menus(void);
-	int						test_menus(int posx, int posy);
 
 public:
 	GFX_Base				gfx;
-	mylist<ChemScreen> 		*screen_list;
+	mylist<ChemScreen> 		screen_list;
+
 	ChemScreen				*selected_screen;
 	// display_screen overrides current_screen - use to wait on non selected screen
 	ChemScreen				*display_screen;
@@ -49,7 +46,6 @@ public:
 	void	grid_axis(ChemDisplayCoords *grid_coords, int red, int green, int blue);
 	void	grid_axis(ChemDisplayCoords *grid_coords, int red, int green, int blue, int xpos, int ypos);
 	void	grid_axis(ChemDisplayCoords *grid_coords, int red, int green, int blue, int xpos, int ypos, int axis, bool txt);
-
 	void	grid(ChemDisplayCoords *screen_coords){ grid(screen_coords, 100,100,100); }
 	void	grid(ChemDisplayCoords *screen_coords, int red, int green, int blue);
 
@@ -59,11 +55,13 @@ public:
 	Molecule	*draw_match(ChemDisplayCoords *screen_coords, MoleculeMatchPos *matchpos);
 	//---
 	void	draw_vm(ChemDisplayCoords *screen_coords, ChemScreen *screen, Concentration_VM *vm);
+
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
 	void	draw_peplist(ChemPeplistDisplay *peplist, ChemDisplayColor *col);
-
+	void	draw_molelist(ChemMolelistDisplay *molelist, ChemDisplayColor *col);
+	//--------------
 	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
 	//--------------
