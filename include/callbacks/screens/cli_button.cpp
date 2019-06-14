@@ -125,7 +125,8 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 		//----------------
 		if (strcmp(argv[1], "size")==0) {
 			if (argc<3) {
-				printf("[%d,%d]\n", menu->button_sizex, menu->button_sizey);
+				// printf("[%d,%d]\n", menu->button_sizex, menu->button_sizey);
+				printf("[%d,%d]\n",button->sizex, button->sizey);
 				return 0;
 			}
 			// TODO - cleanup
@@ -138,14 +139,29 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 				button->sizex = s;	button->sizey = s;
 				printf("size[%d][%d]\n", s, s);
 			}
+			if (argc==4) {
+				int sx,sy;
+				if ((sscanf(argv[2], "%d", &sx)<1)||
+					(sscanf(argv[3], "%d", &sy)<1)){
+					printf("data read error\n");
+					return -10;
+				}
+				button->sizex = sx;	button->sizey = sy;
+				printf("size[%d][%d]\n", sx, sy);
+			}
+
+
+
+
+
 		} // ------------------end(size)
 
 
 		//----------------
-		if (strcmp(argv[1], "attrib")==0) {
+		if (strcmp(argv[1], "coords")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
-			else { cli_attribs(&button-> attrib, argc-2, &argv[2]); }
+			if (argc<3) { cli_coords(&screen-> coords, 0, NULL); }
+			else { cli_coords(&button-> coords, argc-2, &argv[2]); }
 			return 0;
 		} // ------------------end(attribs)
 

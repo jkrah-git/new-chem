@@ -27,8 +27,8 @@ class ChemScreen {
 	char					*title;
 public:
 	 mylist<ChemPeplistDisplay>	peplist_list;
-	ChemDisplayAttrib		attrib;
-	mylist<ChemMenu> 		*menu_list2;
+	ChemDisplayCoords		coords;
+	//mylist<ChemMenu> 		*menu_list2;
 	// todo: menulist2
 	mylist<ChemMenu> 		menu_list;
 

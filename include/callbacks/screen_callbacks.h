@@ -13,7 +13,7 @@
 // cli includes
 // cli_attribs.cpp
 int cli_redraw(Concentration_CLI *cli, int argc, char **argv);
-int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv);
+int	cli_coords(ChemDisplayCoords *coords, int argc, char **argv);
 int (*cli_callback(Concentration_CLI*, int argc, char **argv))(Concentration_CLI*, int argc, char **argv);
 int	cli_col(ChemDisplayColor *col, int argc, char **argv);
 

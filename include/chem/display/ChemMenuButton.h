@@ -21,7 +21,7 @@
 enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
 #include "../Concentration_VM.h"
 #include "gfx/GFX_Base.h"
-#include "ChemDisplayAttrib.h"
+#include "ChemDisplayCoords.h"
 //#include "ChemDisplay.h"
 //class ChemDisplay;
 
@@ -31,8 +31,7 @@ class ChemMenuButton {
 	char	*text;
 
 public:
-	//PeptidePos			_pos;
-	ChemDisplayAttrib	attrib;
+	ChemDisplayCoords	coords;
 
 	int		sizex;
 	int		sizey;

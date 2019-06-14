@@ -19,10 +19,11 @@ int	cli_load_menu(Concentration_CLI *cli, int argc, char **argv){
 int cli_menu_list_menus(Concentration_CLI *cli, ChemScreen *screen){
 	if (cli==NULL) return -1;
 	if (screen==NULL) return -2;
-	if (screen->menu_list2==NULL) return -3;
+//	if (screen->menu_list2==NULL) return -3;
 
 	int c=0;
-	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen->menu_list2->gethead();
+//	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen->menu_list2->gethead();
+	mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen->menu_list.gethead();
 	while ((menu_item!=NULL)&&(menu_item-> item!=NULL)) {
 		if (menu_item-> item == screen->current_menu)
 			printf("[%s]*\n", menu_item->item->gettitle());
@@ -115,11 +116,13 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		// argv(name, del)
 		//-----------------
 		if (strcmp(argv[1], "del")==0) {
-			if (screen-> menu_list2==NULL) {		printf("Err: NULL screen.menu_list\n");		return -25;			}
+//			if (screen-> menu_list2==NULL) {		printf("Err: NULL screen.menu_list\n");		return -25;			}
 			//PRINT(" DEL ..\n");
-			mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen-> menu_list2-> search(menu);
+//			mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen-> menu_list2-> search(menu);
+			mylist<ChemMenu>::mylist_item<ChemMenu> *menu_item = screen-> menu_list.search(menu);
 			if (menu_item==NULL)  { printf("list item not found\n"); return -15;	}
-			screen-> menu_list2-> del(menu_item);
+//			screen-> menu_list2-> del(menu_item);
+			screen-> menu_list.del(menu_item);
 			if (screen-> current_menu == menu) { screen-> current_menu  = NULL; };
 			printf("del menu[%s] OK..\n", argv[0]);
 			return 0;
@@ -155,8 +158,8 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		//----------------
 		if (strcmp(argv[1], "attrib")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
-			else { cli_attribs(&menu-> attrib, argc-2, &argv[2]); }
+			if (argc<3) { cli_coords(&screen-> coords, 0, NULL); }
+			else { cli_coords(&menu-> coords, argc-2, &argv[2]); }
 			return 0;
 		} // -------end(attribs)
 

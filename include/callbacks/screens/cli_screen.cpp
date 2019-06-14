@@ -275,8 +275,8 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		//----------------
 		if (strcmp(argv[1], "attrib")==0) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-			if (argc<3) { cli_attribs(&screen-> attrib, 0, NULL); }
-			else { cli_attribs(&screen-> attrib, argc-2, &argv[2]); }
+			if (argc<3) { cli_coords(&screen-> coords, 0, NULL); }
+			else { cli_coords(&screen-> coords, argc-2, &argv[2]); }
 
 		} // ------------------end(attribs)
 		//---------------

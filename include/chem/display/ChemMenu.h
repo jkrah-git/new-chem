@@ -9,6 +9,8 @@
 #define CHEMMENU_H_
 //class ChemDisplay;
 #include "ChemMenuButton.h"
+
+// TODO: do I even need a menu - ie just use buttonlist on screen
 //#include "ChemDisplayAttrib.h"
 //#include "ChemDisplay.h"
 class ChemDisplay;
@@ -20,7 +22,7 @@ public:
 //	ChemDisplay 			*display;
 
 
-	ChemDisplayAttrib		attrib;
+	ChemDisplayCoords		coords;
 	CHEMMENUBUTON_TYPE		mode;
 	mylist<ChemMenuButton> 	button_list;
 	ChemDisplayColor 		col;

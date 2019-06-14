@@ -38,7 +38,7 @@ public:
  */
 ChemPeplistDisplay::ChemPeplistDisplay() {
 	pep_list = NULL;
-	name = NULL;
+//	name = NULL;
 	index = 0;
 	width = 3;
 	height = 3;
@@ -46,17 +46,18 @@ ChemPeplistDisplay::ChemPeplistDisplay() {
 	selcol.set(100,100,0);
 }
 ChemPeplistDisplay::~ChemPeplistDisplay() {
-	if (name!=NULL) free(name);
+	//if (name!=NULL) free(name);
 
 };
 //-------------------------------------------
 void ChemPeplistDisplay::dump(void) {
-	printf("ChemDisplay[0x%zX].pep_list[0x%zX].index[%d]size[%d,%d]\n",
+	printf("ChemDisplay[0x%zX].[%s].pep_list[0x%zX].index[%d]size[%d,%d]\n",
 			(long unsigned int) this,
+			name.get(),
 			(long unsigned int) pep_list,
 			index, width, height);
 	printf("Col:[%d][%d][%d] SelCol[%d][%d][%d]:", col.r, col.g, col.b, selcol.r , selcol.g, selcol.b);
-	attrib.dump(); NL
+	coords.dump(); NL
 	//menu.dump();
 	printf("Peplist=> \n");
 	if (pep_list!=NULL) {
@@ -64,6 +65,7 @@ void ChemPeplistDisplay::dump(void) {
 	}
 
 }
+/*
 #include <string.h>
 //-------------------------------------------
 int	ChemPeplistDisplay::setname(const char *_name){
@@ -78,6 +80,7 @@ int	ChemPeplistDisplay::setname(const char *_name){
 	strcpy(name, _name);
 	return 0;
 }
+*/
 //-------------------------------------------
 //Peptide	*ChemPeplistDisplay::get(int _index){}
 //-------------------------------------------

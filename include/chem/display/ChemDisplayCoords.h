@@ -14,19 +14,17 @@
 
 
 // ---------------------------------------
-class ChemDisplayAttrib {
+class ChemDisplayCoords {
 	PeptidePos		pos;
 public:
 	int 		scalex;
 	int 		scaley;
 	int 		offsetx;
 	int 		offsety;
-
-	// ------
  	//----------------
-  	ChemDisplayAttrib();
-  	ChemDisplayAttrib(ChemDisplayAttrib *src);
-  	virtual ~ChemDisplayAttrib();
+  	ChemDisplayCoords();
+  	ChemDisplayCoords(ChemDisplayCoords *src);
+  	virtual ~ChemDisplayCoords();
   	void	init(void);
   	void	dump(void);
   	//------
@@ -47,20 +45,13 @@ public:
   	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley);
   	void	setoffset(int _offsetx, int _offsety);
   	void	setscale(int sx, int sy);
-  	void	cp(ChemDisplayAttrib *src) {
+  	void	cp(ChemDisplayCoords *src) {
   		if (src!=NULL) {
-  		//	gfx = 	  src-> gfx;
   			offsetx = src-> offsetx;
   			offsety = src-> offsety;
   			scalex = src-> scalex;
   			scaley = src-> scaley;
   			pos = src-> pos;
-  			/*
-  			if ((pos!=NULL) &&(src-> pos!=NULL)) {
-  				pos[PEPPOS_X] = src-> pos[PEPPOS_X];
-  				pos[PEPPOS_Y] = src-> pos[PEPPOS_Y];
-  			}
-  			*/
 
   		}
   	}
@@ -70,15 +61,6 @@ public:
   	int		gety(void);
   	int		getx(int offx, int posx);
   	int		gety(int offy, int posy);
-/*
-  	int		getxcell(int screenx);
-  	int		getycell(int screeny);
-  	// get final screen(x,y)
-  	int		screenx(void);
-  	int		screeny(void);
-  	int		screenx(int offx, int posx);
-  	int		screeny(int offy, int posy);
-*/
   	int		getxcell(GFX_Base *gfx, int screenx);
   	int		getycell(GFX_Base *gfx, int screeny);
   	// get final screen(x,y)

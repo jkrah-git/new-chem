@@ -1,5 +1,5 @@
 /*
- * cli_attribs.cpp
+ * cli_coods.cpp
  *
  *  Created on: Jun 8, 2019
  *      Author: jkrah
@@ -62,8 +62,8 @@ int	cli_col(ChemDisplayColor *col, int argc, char **argv) {
 }
 
 // --------------------------
-int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
-	if (attribs==NULL) return -1;
+int	cli_coords(ChemDisplayCoords *coods, int argc, char **argv) {
+	if (coods==NULL) return -1;
 
 //	if (argc>0) { PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]); }
 //	else { PRINT(" attribs : argc[%d][]\n", argc); }
@@ -82,7 +82,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	if (argc==1) {
 		//---------------- dump
 		if (strcmp(argv[0], "dump")==0) {
-			attribs-> dump(); NL
+			coods-> dump(); NL
 			return 0;
 		}
 
@@ -94,7 +94,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	//================================
 	//---------------- pos
 	if (strcmp(argv[0], "pos")==0) {
-		PepPosVecType *p = attribs->getpos();
+		PepPosVecType *p = coods->getpos();
 		if (p==NULL) {	printf("pos[NULL]\n");	return -20;	}
 		if (argc<3)  {	printf("pos[%d,%d]\n", p[PEPPOS_X], p[PEPPOS_Y]);	return 0;		}
 
@@ -104,7 +104,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 			printf("data error\n");
 			return -10;
 		}
-		attribs->setpos(px, py);
+		coods->setpos(px, py);
 		printf("pos[%d,%d]\n", p[PEPPOS_X], p[PEPPOS_Y]);
 		return 0;
 	} // end argv(pos)
@@ -113,7 +113,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	//---------------- scale
 	if (strcmp(argv[0], "scale")==0) {
 		if (argc<3) {
-			printf("scale[%d,%d]\n", attribs-> scalex, attribs-> scaley);
+			printf("scale[%d,%d]\n", coods-> scalex, coods-> scaley);
 			return 0;
 		}
 		//attribs-> dump();
@@ -123,9 +123,9 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 			printf("data error\n");
 			return -10;
 		}
-		attribs->scalex  = px;
-		attribs->scaley  = py;
-		printf("scale[%d,%d]\n", attribs-> scalex, attribs-> scaley);
+		coods->scalex  = px;
+		coods->scaley  = py;
+		printf("scale[%d,%d]\n", coods-> scalex, coods-> scaley);
 
 		return 0;
 	} // end argv(scale)
@@ -135,7 +135,7 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 	//---------------- offset
 	if (strcmp(argv[0], "offset")==0) {
 		if (argc<3) {
-			printf("offset[%d,%d]\n", attribs-> offsetx, attribs-> offsety);
+			printf("offset[%d,%d]\n", coods-> offsetx, coods-> offsety);
 			return 0;
 		}
 		//attribs-> dump();
@@ -145,9 +145,9 @@ int	cli_attribs(ChemDisplayAttrib *attribs, int argc, char **argv) {
 			printf("data error\n");
 			return -10;
 		}
-		attribs->offsetx = px;
-		attribs->offsety = py;
-		printf("offset[%d,%d]\n", attribs-> offsetx, attribs-> offsety);
+		coods->offsetx = px;
+		coods->offsety = py;
+		printf("offset[%d,%d]\n", coods-> offsetx, coods-> offsety);
 		return 0;
 	} // end argv(pos)
 	//================================

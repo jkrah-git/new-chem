@@ -73,7 +73,7 @@ void ChemMenu::dump(void){
 	printf(".col[%d,%d,%d]", col.r, col.g, col.b);
 	printf(".selcol[%d,%d,%d]", selcol.r, selcol.g, selcol.b);
 	printf(".step[%d,%d].box[%d,%d][%d][%d]\n", stepx, stepy, min_posx, min_posy, max_posx, max_posy);
-	attrib.dump(); NL
+	coords.dump(); NL
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 		current_item-> item->dump();
@@ -86,8 +86,8 @@ void ChemMenu::dump(void){
 //------------------------------
 void ChemMenu::layout_buttons(void){
 
-	int offsetx = attrib.offsetx;
-	int offsety = attrib.offsety;
+	int offsetx = coords.offsetx;
+	int offsety = coords.offsety;
 
 	int px=0;
 	int py=0;
@@ -102,15 +102,15 @@ void ChemMenu::layout_buttons(void){
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
 
 		ChemMenuButton *button = current_item-> item;
-		button-> attrib.offsetx = offsetx;
-		button-> attrib.offsety = offsety;
-		button-> attrib.scalex = attrib.scalex;
-		button-> attrib.scaley = attrib.scaley;
-		button->sizex = (attrib.scalex *0.9f);
-		button->sizey = (attrib.scaley *0.9f);
+		button-> coords.offsetx = offsetx;
+		button-> coords.offsety = offsety;
+		button-> coords.scalex = coords.scalex;
+		button-> coords.scaley = coords.scaley;
+		button->sizex = (coords.scalex *0.9f);
+		button->sizey = (coords.scaley *0.9f);
 
-		PepPosVecType *menu_pos = attrib.getpos();
-		PepPosVecType *button_pos = button-> attrib.getpos();
+		PepPosVecType *menu_pos = coords.getpos();
+		PepPosVecType *button_pos = button-> coords.getpos();
 		if (button_pos ==NULL) {	PRINT("button_pos = NULL\n");	return;		}
 
 		//PRINT("menupos = [%d,%d]\n", menu_pos[PEPPOS_X], menu_pos[PEPPOS_Y]);
@@ -149,7 +149,7 @@ ChemMenuButton *ChemMenu::test_menu(int posx, int posy){
 
 	mylist<ChemMenuButton>::mylist_item<ChemMenuButton> *current_item = button_list.gethead();
 	while ((current_item!=NULL)&&(current_item-> item!=NULL)) {
-		PepPosVecType *item_pos = current_item-> item->attrib.getpos();
+		PepPosVecType *item_pos = current_item-> item->coords.getpos();
 		current_item-> item->_selected = (item_pos[PEPPOS_X] == posx) && (item_pos[PEPPOS_Y] == posy);
 		if (current_item-> item->_selected)
 			selected_item = current_item;
@@ -189,8 +189,8 @@ ChemMenuButton *ChemMenu::add_button(const char *_text){
 	if ((new_button_item!=NULL)&&(new_button_item-> item!=NULL)) {
 
 		//new_button_item-> item-> attrib.gfx = attrib.gfx;
-		new_button_item-> item-> attrib.scalex = attrib.scalex;
-		new_button_item-> item-> attrib.scaley = attrib.scaley;
+		new_button_item-> item-> coords.scalex = coords.scalex;
+		new_button_item-> item-> coords.scaley = coords.scaley;
 		new_button_item-> item-> sizex = button_sizex;
 		new_button_item-> item-> sizey = button_sizey;
 		new_button_item-> item-> settext(_text);

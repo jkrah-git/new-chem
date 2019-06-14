@@ -60,7 +60,7 @@ void ChemMenuButton::dump(void) {
 	printf("Callback[0x%zX]:",	(long unsigned int) callback);
 
 
-	attrib.dump();	NL
+	coords.dump();	NL
 }
 // ---------------------------------------
 void ChemMenuButton::settext(const char *_text){

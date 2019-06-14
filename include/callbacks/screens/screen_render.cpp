@@ -20,7 +20,7 @@ int screen_render_mole(Concentration_CLI *cli, int argc, char **argv) {
 	if (screen==NULL) return -2;
 
 	//PRINT("======== screen->attrib :"); 	screen->attrib.dump(); NL
-	cli-> display.draw_mole(&screen->attrib, cli->core->mole, 0, 100, 0);
+	cli-> display.draw_mole(&screen->coords, cli->core->mole, 0, 100, 0);
 
 	return 0;
 }
@@ -38,7 +38,7 @@ int screen_render_match(Concentration_CLI *cli, int argc, char **argv) {
 
 	//PRINT("======== screen->attrib :"); 	screen->attrib.dump(); NL	screen-> dump();
 
-	Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
+	Molecule *hit = cli->display.draw_match(&screen->coords, &cli->core->matchpos);
 	if (hit != NULL ) {		cli->core->mole = hit;	}
 	// void	draw_match(ChemDisplayAttrib *screen_attrib, MoleculeMatchPos *matchpos);
 
@@ -64,7 +64,7 @@ int screen_render_vm(Concentration_CLI *cli, int argc, char **argv) {
 
 		//void ChemDisplay::draw_vm(Concentration_VM *vm){
 		//Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
-		cli->display.draw_vm(&screen->attrib, screen, cli->core);
+		cli->display.draw_vm(&screen->coords, screen, cli->core);
 		// hit for 'vm' could be different thinga
 		// if (hit != NULL ) {		cli->core->mole = hit;	}
 		return 0;

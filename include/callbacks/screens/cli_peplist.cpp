@@ -30,7 +30,7 @@ int cli_peplist_list(Concentration_CLI *cli, ChemScreen *screen){
 
 	//	if (menu_item-> item == screen->current_menu)	printf("[%s]*\n", menu_item->item->gettitle());
 	//	else
-		printf("[%s]\n", peplist_item->item->getname());
+		printf("[%s]\n", peplist_item->item->name.get());
 		//------------
 		peplist_item = peplist_item->next;
 		c++;
@@ -161,8 +161,8 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 	//----------------
 	if (strcmp(argv[1], "attrib")==0) {
 		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-		if (argc<3) { cli_attribs(&peplist-> attrib, 0, NULL); }
-		else { cli_attribs(&peplist-> attrib, argc-2, &argv[2]); }
+		if (argc<3) { cli_coords(&peplist-> coords, 0, NULL); }
+		else { cli_coords(&peplist-> coords, argc-2, &argv[2]); }
 		return 0;
 	} // -------end(attribs)
 	//-----------------
