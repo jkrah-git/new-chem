@@ -71,11 +71,10 @@ public:
 //	void	box( int x, int y, int sx, int sy, const char *_title, bool fill);
 
 
-	void box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, NULL, false);	};
-	void box( int x, int y, int sx, int sy, const char *txt) 	{	box(x,y,sx,sy, txt, false);	};
-	void box( int x, int y, int sx, int sy, const char *txt, bool fill)
-	{	box(x,y,sx,sy, txt, NULL, false);	};
-	void box( int x, int y, int sx, int sy, const char *txt, ChemDisplayColor *txtcol, bool fill);
+	void box( int x, int y, int sx, int sy)								{	box(x,y,sx,sy, NULL,NULL, NULL, false);	};
+	void box( int x, int y, int sx, int sy, const char *txt) 			{	box(x,y,sx,sy, txt, NULL, NULL, false);	};
+	//void box( int x, int y, int sx, int sy, const char *txt, bool fill)	{	box(x,y,sx,sy, txt, NULL, NULL, false);	};
+	void box( int x, int y, int sx, int sy, const char *txt, ChemDisplayColor *boxcol, ChemDisplayColor *txtcol, bool fill);
 
 	//void box( int x, int y, int sx, int sy, bool fill);
 

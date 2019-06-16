@@ -29,14 +29,10 @@ public:
  mylist<ChemPeplistDisplay>	peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
 	mylist<ChemMenu> 		menu_list;
+	ChemMenu				*current_menu;
 
 	//PeptidePos				curs_pos;
 	ChemDisplayColor 		title_col;
-
-	ChemMenu				*current_menu;
-//	Molecule				*selected_mole;
-//	Peptide					*selected_pep;
-//	bool					mouse_clicked;
 
 	bool					waiting;
 	SCREEN_WAIT_MODE		waitmode;

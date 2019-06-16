@@ -136,6 +136,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 			printf("n\n");
 			printf("core\n");
 		//	printf("core\n");
+			return 0;
 		}
 
 		if (strcmp(argv[2], "null")==0) {

@@ -160,28 +160,15 @@ void GFX_Base::box( int x, int y, int sx, int sy){
 //void GFX_Base::box( int x, int y, int sx, int sy)						{	box(x,y,sx,sy, false);	}
 //void GFX_Base::box( int x, int y, int sx, int sy, bool fill)			{	box(x,y,sx,sy, fill);	}
 //void GFX_Base::box( int x, int y, int sx, int sy, char *txt) 			{	box(x,y,sx,sy, NULL, false);	}
-void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, ChemDisplayColor *txtcol, bool fill){
+void GFX_Base::box( int x, int y, int sx, int sy, const char *_title, ChemDisplayColor *boxcol, ChemDisplayColor *txtcol, bool fill){
 
+	if (boxcol != NULL) {	color(boxcol);		}
 	if (fill) XFillRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 	else XDrawRectangle(display,window,gc, x-sx, y-sy, sx*2, sy*2);
 
-	/*
-if (_title!=NULL) {
-		int len = strlen(_title) * FONT_WIDTH;
-		//int tx = x - (len/2);
-		//int ty = y-sy;
-		x -=  (len/2);
-		y += (line_height/2);
-		if (txtcol != NULL) {
-			//PRINT("col = "); txtcol-> dump(); NL
-			color(txtcol);
-		}
-		text(_title, x, y);
-}
 
-	 */
 	if (_title==NULL) 	return;
-	int len=strlen(_title);
+	unsigned int len=strlen(_title);
 	if (len<1) return;
 
 
@@ -211,10 +198,7 @@ if (_title!=NULL) {
 		//printf("line[%s]\n", ptr);
 		int tx = x - (width/2);
 		y  += (line_height);
-		if (txtcol != NULL) {
-			//PRINT("col = "); txtcol-> dump(); NL
-			color(txtcol);
-		}
+		if (txtcol != NULL) {	color(txtcol);		}
 		text(ptr, tx, y);
 		ptr = strtok(NULL, delim);
 	}

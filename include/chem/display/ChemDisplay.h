@@ -78,9 +78,10 @@ public:
 	ChemScreen *search_screen(const char* screen_title);
 	int			del_screen(ChemScreen *screen);
 
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy);
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title);
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title, ChemDisplayColor *txtCol);
+	void	draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos);
+	void	draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title);
+	void	draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title, ChemDisplayColor *boxcol, ChemDisplayColor *txtcol);
+
 };
 // ----------------
 
