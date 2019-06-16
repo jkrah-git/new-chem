@@ -43,12 +43,12 @@ int cli_button_ping(Concentration_CLI *cli, int argc, char **argv);
 
 //----------------------
 // screeen_wait.cpp
-int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
+int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display);
 
 // screen_render.cpp
-int screen_render_mole(Concentration_CLI *cli, int argc, char **argv);
-int screen_render_match(Concentration_CLI *cli, int argc, char **argv);
-int screen_render_vm(Concentration_CLI *cli, int argc, char **argv);
+int screen_render_mole(Concentration_CLI *cli, ChemScreen *screen, bool mouseclick);
+int screen_render_match(Concentration_CLI *cli, ChemScreen *screen, bool mouseclick);
+int screen_render_vm(Concentration_CLI *cli, ChemScreen *screen, bool mouseclick);
 
 
 

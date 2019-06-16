@@ -30,19 +30,19 @@ public:
  mylist<ChemMolelistDisplay>	molelist_list;
 	mylist<ChemMenu> 		menu_list;
 
-	PeptidePos				curs_pos;
+	//PeptidePos				curs_pos;
 	ChemDisplayColor 		title_col;
 
 	ChemMenu				*current_menu;
-	Molecule				*selected_mole;
-	Peptide					*selected_pep;
-	bool					mouse_clicked;
+//	Molecule				*selected_mole;
+//	Peptide					*selected_pep;
+//	bool					mouse_clicked;
 
 	bool					waiting;
 	SCREEN_WAIT_MODE		waitmode;
 	SCREEN_GRID_MODE		gridmode;
-	int						(*renderCB)(Concentration_CLI*, int, char**);
-	int						(*waitCB)(ChemScreen*, Concentration_CLI*, ChemDisplay*);
+	int						(*renderCB)(Concentration_CLI *cli, ChemScreen *screen, bool mouseclick);
+	int						(*waitCB)(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display);
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();

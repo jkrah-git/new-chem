@@ -13,7 +13,7 @@
 // --------------------------
 int cli_redraw(Concentration_CLI *cli, int argc, char **argv) {
 	if (cli==NULL) return -1;
-	cli->display.draw_screen(cli-> display.selected_screen, cli);
+	cli->display.draw_screen(cli->display.selected_screen, cli);
 	return 0;
 }
 // --------------------------

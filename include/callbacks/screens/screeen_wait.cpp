@@ -9,15 +9,17 @@
 // --------------------------
 // --------------------------
 
-int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display){
+//int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display){
+int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display){
 	if (screen==NULL) return -1;
-	if (cli==NULL) return -1;
-	if (display==NULL) return -2;
+	if (cli==NULL) return -2;
+	if (display==NULL) return -3;
 
 //	PepPosVecType *screen_pos = screen-> coords.getpos();
 //	if (screen_pos==NULL) { PRINT("display_pos=NULL\n"); return -2; }
 	bool _dump = false;;
 
+/*
 	// draw curs
 	if (screen-> waitmode==WAIT_CURS) {
 		// display-> curs(200,200,0);
@@ -30,6 +32,7 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 							screen-> curs_pos.dim[1] - screen-> coords.posy);
 
 	}
+*/
 //		draw_menus();
 	int x=0;
 	int y=0;
@@ -70,19 +73,18 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 
 		// ----------------
 		if (screen-> waitmode==WAIT_CURS) {
+			/*
 			x = screen-> coords.getxcell(&display->gfx, display-> gfx.xpos());
 			y = screen-> coords.getycell(&display->gfx, display-> gfx.ypos());
-
 			screen-> curs_pos.dim[PEPPOS_X]= x;
 			screen-> curs_pos.dim[PEPPOS_Y]= y;
-
+			 */
 			// ---- reset selected pep/mole
-			screen->selected_pep = NULL;
-			screen->selected_mole = NULL;
-			screen-> mouse_clicked = true;
-			if (screen-> renderCB !=NULL)
-				screen-> renderCB(cli, 0, NULL);
-			screen-> mouse_clicked = false;
+			//screen->selected_pep = NULL;
+			//screen->selected_mole = NULL;
+			//screen-> mouse_clicked = true;
+			display->draw_screen(screen, cli, true);
+			//screen-> mouse_clicked = false;
 
 		}
 		// ----------------
@@ -125,11 +127,12 @@ int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display
 
 
 		// ARROWS
+		/*
 	case DISPLAY_EVENT_LEFT:	screen-> curs_pos.dim[PEPPOS_X] --;	break;
 	case DISPLAY_EVENT_RIGHT:	screen-> curs_pos.dim[PEPPOS_Y] ++;	break;
 	case DISPLAY_EVENT_UP:		screen-> curs_pos.dim[PEPPOS_X] ++;	break;
 	case DISPLAY_EVENT_DOWN:	screen-> curs_pos.dim[PEPPOS_Y] --;	break;
-
+		*/
 	}
 
 

@@ -186,11 +186,11 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		screen->gridmode = GRID_MENU;
 		//-- update and draw current screen...
 		// if waiting then NO callback
-/*
+
 		screen-> current_menu = menu;
 		if (screen->waiting) {	cli-> callback = NULL;	}
 		else {					cli-> callback = cli_redraw;	}
-*/
+
 //		else cli->display.draw_screen(cli-> display.current_screen, cli);
 		// --- draw...
 

@@ -70,7 +70,11 @@ ChemDisplay::ChemDisplay() {
 	gfx.height = 800;
 
 	selected_screen = NULL;
-	display_screen = NULL;
+	//display_screen = NULL;
+	selected_mole = NULL;
+	selected_pep = NULL;
+
+
 
 }
 //-------------------------------
@@ -164,17 +168,38 @@ void ChemDisplay::grid(ChemDisplayCoords *grid_coords, int red, int green, int b
 
 }
 //-------------------------------
-Peptide *ChemDisplay::draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep){
-	if ((screen_coords==NULL)||(pep==NULL)) return NULL;
+Peptide *ChemDisplay::draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick, int red, int green, int blue){
+	gfx.color(red, green, blue);
+	return draw_pep(screen, coords, pep, mouseclick);
+};
+Peptide *ChemDisplay::draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick, ChemDisplayColor *col){
+	gfx.color(col);
+	return draw_pep(screen, coords, pep, mouseclick);
+};
+
+//-------------------------------
+Peptide *ChemDisplay::draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick){
+	if ((screen==NULL)||(pep==NULL)) return NULL;
 
 	PepPosVecType  	*pep_pos = pep->getpos();
 	if (pep_pos==NULL) return NULL;
 
-	ChemDisplayCoords display_coords(screen_coords);
+	if (coords ==NULL)
+		coords = &screen-> coords;
+	ChemDisplayCoords display_coords(coords);
 	//-------------------
 	display_coords.posx += pep_pos[PEPPOS_X];
 	display_coords.posy += pep_pos[PEPPOS_Y];
 
+	//-------------------
+	// test mouseclick
+	Peptide *hit = NULL;
+	if ((mouseclick)&&display_coords.hit(&gfx)) {
+		hit = pep;
+		if (hit!=NULL) { selected_pep = hit; }
+	}
+
+	// draw pep
 	int x = display_coords.screenx(&gfx);
 	int y = display_coords.screeny(&gfx);
 
@@ -216,32 +241,31 @@ Peptide *ChemDisplay::draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep){
 
 	//-------------
 	gfx.flush();
-	//-------------------
-	// test cursor pos...
-	Peptide *hit = NULL;
 
-	if ((display_screen!=NULL) &&
-		(display_screen->mouse_clicked) &&
-		(display_coords.posx == display_screen->curs_pos.dim[PEPPOS_X]) &&
-		(display_coords.posy == display_screen->curs_pos.dim[PEPPOS_Y])) {
 
-		hit = pep;
-		if (display_screen->selected_pep==NULL) {
-			display_screen->selected_pep = pep;
+	/*
+	if ((screen!=NULL) &&
+		(screen->mouse_clicked)){ // &&
+		//(display_coords.posx == screen->curs_pos.dim[PEPPOS_X]) &&
+		//(display_coords.posy == screen->curs_pos.dim[PEPPOS_Y])) {
+		if (display_coords.hit(&gfx))
+		{	hit = pep;
+			if (hit!=NULL) { selected_pep = hit; }
 		}
 	}
+	*/
 
 	return hit;
 }
 //-------------------------------
-Molecule *ChemDisplay::draw_mole(ChemDisplayCoords *screen_coords, Molecule *mole, int r, int g, int b){
-	if (screen_coords==NULL) return NULL;
+Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, int r, int g, int b){
+	if (screen==NULL) return NULL;
 	ChemDisplayColor col(r,g,b);
-	return draw_mole(screen_coords, mole, &col);
+	return draw_mole(screen, coords, mole, mouseclick, &col);
 }
 //-------------------------------
-Molecule *ChemDisplay::draw_mole(ChemDisplayCoords *screen_coords, Molecule *mole, ChemDisplayColor *col){
-	if (screen_coords==NULL) return NULL;
+Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col){
+	if (screen==NULL) return NULL;
 
 	char msg[128];
 	sprintf(msg, "Molecule[0x%zX]",	(long unsigned int) mole);
@@ -253,26 +277,20 @@ Molecule *ChemDisplay::draw_mole(ChemDisplayCoords *screen_coords, Molecule *mol
 	mylist<Peptide>::mylist_item<Peptide> 	*current_item = mole-> pep_list.gethead();
 	while  ((current_item != NULL) && (current_item-> item !=NULL)){
 
-		Peptide *pep = draw_pep(screen_coords, current_item-> item, col);
+		Peptide *pep = draw_pep(screen, coords, current_item-> item, mouseclick, col);
 		if (pep!=NULL) { hit = mole; }
 		//---
 		current_item = current_item-> next;
 	}
 
-	if ((display_screen!=NULL) &&
-		(display_screen->mouse_clicked) &&
-		(hit!=NULL)) {
-		if (display_screen->selected_mole==NULL) {
-			display_screen->selected_mole = hit;
-		}
-		return hit;
+	if ((mouseclick) &&	(hit!=NULL)) {
+			selected_mole = hit;
 	}
-	return NULL;
+	return hit;
 }
 //-------------------------------
-Molecule *ChemDisplay::draw_match(ChemDisplayCoords *screen_coords, MoleculeMatchPos *matchpos){
-	if (screen_coords==NULL) return NULL;
-	// --------------
+Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick){
+	if (screen==NULL) return NULL;
 	if (matchpos==NULL) return NULL;
 
 	ChemDisplayColor m1_col(0, 100, 0);
@@ -304,7 +322,7 @@ Molecule *ChemDisplay::draw_match(ChemDisplayCoords *screen_coords, MoleculeMatc
 		gfx.color(&m1_col);
 		gfx.cprintg((const char*) "M1");
 
-		mole = draw_mole(screen_coords, matchpos-> getM1(), &m1_col);
+		mole = draw_mole(screen, coords, matchpos-> getM1(), mouseclick, &m1_col);
 		if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
 	}
 
@@ -313,11 +331,11 @@ Molecule *ChemDisplay::draw_match(ChemDisplayCoords *screen_coords, MoleculeMatc
 		gfx.color(&rot_col);
 		gfx.cprintg("rotemole");
 
-		ChemDisplayCoords display_coords(screen_coords);
+		ChemDisplayCoords display_coords(screen-> coords);
 		display_coords.posx += matchpos-> current_pos.dim[PEPPOS_X];
 		display_coords.posy += matchpos-> current_pos.dim[PEPPOS_Y];
 
-		mole = draw_mole(&display_coords, matchpos-> rotmole, &rot_col);
+		mole = draw_mole(screen, &display_coords, matchpos-> rotmole, mouseclick, &rot_col);
 		if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
 	}
 
@@ -326,11 +344,11 @@ Molecule *ChemDisplay::draw_match(ChemDisplayCoords *screen_coords, MoleculeMatc
 		gfx.color(&item_col);
 		gfx.cprintg("test_item");
 
-		ChemDisplayCoords display_coords(screen_coords);
+		ChemDisplayCoords display_coords(screen-> coords);
 		display_coords.posx += matchpos-> current_pos.dim[PEPPOS_X];
 		display_coords.posy += matchpos-> current_pos.dim[PEPPOS_Y];
 
-		draw_pep(&display_coords, matchpos-> get_test_item()-> item);
+		draw_pep(screen, &display_coords, matchpos-> get_test_item()-> item, mouseclick, &item_col);
 
 	}
 	//---------------
@@ -339,8 +357,8 @@ Molecule *ChemDisplay::draw_match(ChemDisplayCoords *screen_coords, MoleculeMatc
 }
 //void draw_pepstack_row(mylist<Peptide>  *pep_list, int index, int width, int posx, posy){}
 //-------------------------------
-void ChemDisplay::draw_vm(ChemDisplayCoords *screen_coords, ChemScreen *screen, Concentration_VM *vm){
-	if (screen_coords==NULL) return;
+void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
+	if (screen==NULL) return;
 	if (screen==NULL) return;
 	if (vm==NULL) return;
 
@@ -356,77 +374,6 @@ void ChemDisplay::draw_vm(ChemDisplayCoords *screen_coords, ChemScreen *screen, 
 	gfx.printg(str);
 
 
-	// mylist<ChemPeplistDisplay>	peplist_list;
-
-	/*
-	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = screen-> peplist_list.gethead();
-	while ((peplist_item!=NULL)&&(peplist_item-> item !=NULL)) {
-
-		PRINT("peplist_item found..\n");
-		peplist_item-> dump(); NL
-		//------------
-		peplist_item = peplist_item->next;
-	}
-	*/
-
-
-
-	/*
-	if (peplist_item==NULL) {
-		PRINT("creating new peplist..\n");
-		peplist_item =  screen-> peplist_list.add();
-		if (peplist_item==NULL) {
-			PRINT("creating new peplist failed..\n"); return;
-		}
-		PRINT("create new peplist ok..\n");
-		peplist_item->item =
-	}
-	PRINT("peplist_item :\n"); 	peplist_item-> dump(); NL
-*/
-
-/*
-	// 10 x 5 cells (top left)
-	int colums = 4;
-	int rows = 5;
-	int posx = -1;
-	int posy = 6;
-	Peptide 	*hit = NULL;
-
-
-	mylist<Peptide>::mylist_item<Peptide>  *pep_item;
-	pep_item = vm-> peptide_stack.offset(screen-> pep_index);
-	if (pep_item==NULL) {
-		screen-> pep_index = 0;
-		pep_item = vm-> peptide_stack.gethead();
-	}
-
-	for (int y=0; y<rows; y++) {
-		for (int x=0; x<colums; x++) {
-			int px = posx + x;
-			int py = posy - y;
-
-			PeptidePos p;
-			p.dim[PEPPOS_X] = px;
-			p.dim[PEPPOS_X] = px;
-			ChemDisplayAttrib display_coords(screen_coords);
-			display_coords.addpos(p.dim);
-
-
-			char sig[16];
-			//-----------------------------
-			if ((pep_item==NULL)||(pep_item-> item==NULL)) {
-				// draw NULL - void	draw_box(ChemDisplayAttrib *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title);
-				sprintf(sig, "-");
-				draw_box(&display_coords, px, py, px, py, sig);
-			} else {
-				//sprintf(sig, "%d", pep_item->item->get());
-				hit = draw_pep(&display_coords, pep_item-> item);
-				pep_item = pep_item->next;
-			}
-
-		} // --next x
-	} // -- next y
-*/
 	//---------------
 	gfx.flush();
 }
@@ -434,6 +381,14 @@ void ChemDisplay::draw_vm(ChemDisplayCoords *screen_coords, ChemScreen *screen, 
 //void ChemDisplay::draw_box(int min_xpos, int min_ypos, int max_xpos,int max_ypos) {
 // draw
 //void ChemDisplay::draw_box(ChemDisplayAttrib *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title){
+
+void ChemDisplay::draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy){
+	draw_box(screen_coords, minx, miny, maxx, maxy, NULL);
+};
+void ChemDisplay::draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title){
+	draw_box(screen_coords, minx, miny, maxx, maxy, _title, NULL);
+};
+//---------------------------------------
 
 void ChemDisplay::draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title, ChemDisplayColor *txtCol){
 	if (screen_coords==NULL) return;
@@ -512,9 +467,11 @@ void ChemDisplay::draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *bu
 };
 //------------------------------
 
-void ChemDisplay::draw_peplist(ChemPeplistDisplay *peplistDisplay) {
+void ChemDisplay::draw_peplist(ChemScreen *screen, ChemPeplistDisplay *peplistDisplay, bool mouseclick) {
+	if (screen==NULL) return;
 	if (peplistDisplay==NULL) return;
 
+	screen-> dump();
 	//PRINT("======== \n");
 	int c = peplistDisplay-> index;
 	int x = 0;
@@ -538,18 +495,15 @@ void ChemDisplay::draw_peplist(ChemPeplistDisplay *peplistDisplay) {
 
 		if ((pep_item!=NULL) && (pep_item->item !=NULL)) {
 
-			// test cursor pos...
-			if ((display_screen!=NULL) &&
-				(display_screen->mouse_clicked) &&
-				((peplistDisplay-> coords.posx +x) == display_screen->curs_pos.dim[PEPPOS_X]) &&
-				((peplistDisplay-> coords.posy +y) == display_screen->curs_pos.dim[PEPPOS_Y])) {
-
-				//if (display_screen->selected_pep==NULL) {
-				display_screen->selected_pep = pep_item->item;
-				//}
+			//-------------------
+			// test mouseclick
+			Peptide *hit = NULL;
+			if ((mouseclick)&& (peplistDisplay-> coords.hit(&gfx, x, y))) {
+				hit = pep_item->item;
+				if (hit!=NULL) { selected_pep = hit; }
 			}
 
-			if (display_screen->selected_pep ==pep_item->item)	col = peplistDisplay->selcol;
+			if (selected_pep ==pep_item->item)	col = peplistDisplay->selcol;
 			else col = peplistDisplay->col;
 
 			//txtcol.set(col-> r, col-> g, col-> b);
@@ -608,7 +562,8 @@ void ChemDisplay::draw_peplist(ChemPeplistDisplay *peplistDisplay) {
 
 }
 //-------------------------------------------
-void ChemDisplay::draw_molelist(ChemMolelistDisplay *molelistDisplay) {
+void ChemDisplay::draw_molelist(ChemScreen *screen, ChemMolelistDisplay *molelistDisplay, bool mouseclick) {
+	if (screen==NULL) return;
 	if (molelistDisplay==NULL) return;
 
 	//PRINT("======== \n");
@@ -634,18 +589,16 @@ void ChemDisplay::draw_molelist(ChemMolelistDisplay *molelistDisplay) {
 
 		if ((mole_item!=NULL) && (mole_item->item !=NULL)) {
 
-			// test cursor pos...
-			if ((display_screen!=NULL) &&
-				(display_screen->mouse_clicked) &&
-				((molelistDisplay-> coords.posx +x) == display_screen->curs_pos.dim[PEPPOS_X]) &&
-				((molelistDisplay-> coords.posy +y) == display_screen->curs_pos.dim[PEPPOS_Y])) {
-
-				//if (display_screen->selected_mole==NULL) {
-					display_screen->selected_mole = mole_item->item;
-				//}
+			//-------------------
+			// test mouseclick
+			Molecule *hit = NULL;
+			if ((mouseclick)&& (molelistDisplay-> coords.hit(&gfx, x, y))) {
+				hit = mole_item->item;
+				if (hit!=NULL) { selected_mole = hit; }
 			}
 
-			if (display_screen->selected_mole ==mole_item->item)	col = molelistDisplay->selcol;
+
+			if (selected_mole ==mole_item->item)	col = molelistDisplay->selcol;
 			else col = molelistDisplay->col;
 
 
@@ -743,8 +696,8 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 	// --- Selected Pep/Mole -----
 	px += (FONT_WIDTH * 3);
 	sprintf(msg, "SelectedPep[0x%zX] SelectedMole[0x%zX]",
-				(long unsigned int) screen-> selected_pep,
-				(long unsigned int) screen-> selected_mole);
+				(long unsigned int) selected_pep,
+				(long unsigned int) selected_mole);
 	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
 
 
@@ -790,14 +743,14 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 	return;
 }
 //-------------------------------------------
-void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
+void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool mouseclick){
 	if (cli==NULL) return;
 	if (screen==NULL) return;
 
 	//attrib.cp(&screen-> attrib);	// PRINT("display attribs :"); attrib.dump();
 
 	gfx.open();
-	display_screen = screen;
+	//display_screen = screen;
 	while(true) {
 		//=======================
 		gfx.clear();
@@ -827,8 +780,8 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		draw_title_bar(screen);
 
 		// ---------------
-		// screen (render) callback
-		if (screen-> renderCB !=NULL) screen-> renderCB (cli, 0, NULL);
+		// screen (render) callback (Concentration_CLI *cli, ChemScreen *screen_
+		if (screen-> renderCB !=NULL) screen-> renderCB (cli, screen, mouseclick);
 
 	{
 		//----- draw all menus
@@ -846,7 +799,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *current_peplist_item = screen-> peplist_list.gethead();
 		while ((current_peplist_item != NULL) && (current_peplist_item-> item != NULL)) {
 		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			draw_peplist(current_peplist_item-> item);
+			draw_peplist(screen, current_peplist_item-> item, mouseclick);
 			//-------
 			current_peplist_item = current_peplist_item->next;
 		}
@@ -857,7 +810,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *current_molelist_item = screen-> molelist_list.gethead();
 		while ((current_molelist_item != NULL) && (current_molelist_item-> item != NULL)) {
 			PRINT("==== ChemMolelistDisplay = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			draw_molelist(current_molelist_item-> item);
+			draw_molelist(screen, current_molelist_item-> item, mouseclick);
 			//-------
 			current_molelist_item = current_molelist_item->next;
 		}
@@ -868,7 +821,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli){
 		//gfx.printg((const char*) "End(screen).");
 		//-------- wait / loop
 		gfx.flush();
-		if (screen-> waiting) {
+		if ((screen-> waiting) &&(!mouseclick)) {
 			int r = screen-> wait(cli, this);
 			// allow escape out
 			if (r <0) {

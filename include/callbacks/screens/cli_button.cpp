@@ -173,7 +173,7 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 
 	} // -------------------------------------------- end (argc>1) ---
 	//----------------
-	cli_redraw(cli, 0, NULL);
+	cli_redraw(cli, NULL, 0);
 	return 1;
 }
 // --------------------------

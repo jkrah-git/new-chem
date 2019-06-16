@@ -67,6 +67,9 @@ public:
   	int		gety(int offy, int posy);
   	int		getxcell(GFX_Base *gfx, int screenx);
   	int		getycell(GFX_Base *gfx, int screeny);
+  	bool 	hit(GFX_Base *gfx);
+  	bool 	hit(GFX_Base *gfx, int posx, int posy);
+
   	// get final screen(x,y)
   	int		screenx(GFX_Base *gfx);
   	int		screeny(GFX_Base *gfx);

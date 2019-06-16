@@ -31,10 +31,13 @@ class ChemDisplay {
 public:
 	GFX_Base				gfx;
 	mylist<ChemScreen> 		screen_list;
-
 	ChemScreen				*selected_screen;
+	Molecule				*selected_mole;
+	Peptide					*selected_pep;
+
+
 	// display_screen overrides current_screen - use to wait on non selected screen
-	ChemScreen				*display_screen;
+//	ChemScreen				*display_screen;
 
   	//-------------------
 	ChemDisplay();
@@ -49,31 +52,34 @@ public:
 	void	grid(ChemDisplayCoords *screen_coords){ grid(screen_coords, 100,100,100); }
 	void	grid(ChemDisplayCoords *screen_coords, int red, int green, int blue);
 
-	Peptide 	*draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep);
-	Molecule	*draw_mole(ChemDisplayCoords *screen_coords, Molecule *mole, int r, int g, int b);
-	Molecule	*draw_mole(ChemDisplayCoords *screen_coords, Molecule *mole, ChemDisplayColor *col);
-	Molecule	*draw_match(ChemDisplayCoords *screen_coords, MoleculeMatchPos *matchpos);
+	//Peptide 	*draw_pep(ChemScreen *screen, Peptide *pep);
+	Peptide 	*draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick, int red, int green, int blue);
+	Peptide 	*draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick, ChemDisplayColor *col);
+	Peptide		*draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick);
+
+	Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, int r, int g, int b);
+	Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
+
+	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick);
 	//---
-	void	draw_vm(ChemDisplayCoords *screen_coords, ChemScreen *screen, Concentration_VM *vm);
+	void	draw_vm(ChemScreen *screen, Concentration_VM *vm);
 
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
-	void	draw_peplist(ChemPeplistDisplay *peplist);
-	void	draw_molelist(ChemMolelistDisplay *molelist);
+	void	draw_peplist(ChemScreen *screen, ChemPeplistDisplay *peplist, bool mouseclick);
+	void	draw_molelist(ChemScreen *screen, ChemMolelistDisplay *molelist, bool mouseclick);
 	//--------------
 	void	draw_title_bar(ChemScreen *screen);
-	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli);
+	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli){ draw_screen(screen, cli, false); };
+	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool mouseclick);
 	//--------------
 	ChemScreen *add_screen(const char* screen_title);
 	ChemScreen *search_screen(const char* screen_title);
 	int			del_screen(ChemScreen *screen);
 
-	Peptide *draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep, int red, int green, int blue)	{ 		gfx.color(red, green, blue); return draw_pep(screen_coords, pep); };
-	Peptide *draw_pep(ChemDisplayCoords *screen_coords, Peptide *pep, ChemDisplayColor *col)		{		 gfx.color(col); return draw_pep(screen_coords, pep); };
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy)		{ draw_box(screen_coords, minx, miny, maxx, maxy, NULL);	};
-	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title)	{ draw_box(screen_coords, minx, miny, maxx, maxy, _title, NULL);	};
-
+	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy);
+	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title);
 	void	draw_box(ChemDisplayCoords *screen_coords, int minx, int miny, int maxx,int maxy, const char *_title, ChemDisplayColor *txtCol);
 };
 // ----------------

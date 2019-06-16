@@ -163,8 +163,17 @@ int ChemDisplayCoords::getycell(GFX_Base *gfx, int screeny){
 	y = - round(yf);
 	//PRINT("y=[%d]\n", y);
 	return y;
+}
+bool ChemDisplayCoords::hit(GFX_Base *gfx) {
+	if (gfx==NULL) return false;
+	return hit(gfx, posx, posy);
+}
+//--------------------------
 
-
+bool ChemDisplayCoords::hit(GFX_Base *gfx, int x, int y) {
+	if (gfx==NULL) return false;
+	return ( (getxcell(gfx, gfx-> xpos())==x) &&
+			 (getycell(gfx, gfx-> ypos())==y));
 }
 //--------------------------
 int ChemDisplayCoords::screenx(GFX_Base *gfx){

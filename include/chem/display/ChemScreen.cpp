@@ -13,23 +13,27 @@ enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
 
 //-----------------------------------------
 class ChemScreen {
-	// does this make a screen
-	//----------
-	// TODO:fix to local
-	char					*title;
 public:
-	ChemDisplayAttrib			attrib;
-	mylist<ChemMenu> 		*menu_list;
-	ChemMenu				*current_menu;
+	MyString				name;
+	ChemDisplayCoords		coords;
+
+ mylist<ChemPeplistDisplay>	peplist_list;
+ mylist<ChemMolelistDisplay>	molelist_list;
+	mylist<ChemMenu> 		menu_list;
+
 	PeptidePos				curs_pos;
-	bool					waiting;
-	int					(*renderCB)(Concentration_CLI*, int, char**);
-	SCREEN_WAIT_MODE		waitmode;
-	SCREEN_GRID_MODE		gridmode;
-	// if NULL then at test (curs_pos) at redraw
+	ChemDisplayColor 		title_col;
+
+	ChemMenu				*current_menu;
 	Molecule				*selected_mole;
 	Peptide					*selected_pep;
+	bool					mouse_clicked;
 
+	bool					waiting;
+	SCREEN_WAIT_MODE		waitmode;
+	SCREEN_GRID_MODE		gridmode;
+	int						(*renderCB)(Concentration_CLI *cli, ChemScreen *screen);
+	int						(*waitCB)(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display);
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
@@ -38,12 +42,20 @@ public:
 	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
 	ChemMenu				*find_menu(const char *_title);
 
-	const char 				*get_title(void){ return title; };
-	int						set_title(const char* newtitle);
-	int						istitle(const char* _title);
-	ChemMenuButton			*test_menus(PepPosVecType *screen_pos);
-	int						wait(ChemDisplay *display) { return wait(display, false); };
-	int						wait(ChemDisplay *display, bool _dump);
+	ChemMenuButton			*test_menus(ChemDisplay *display);
+	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
+	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
+	//mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *get_peplost_head(void){ return peplist_list.gethead(); };
+
+	ChemPeplistDisplay		*add_peplist(const char *_title);
+	ChemPeplistDisplay		*find_peplist(const char *_title);
+	int						del_peplist(const char *_title);
+
+	ChemMolelistDisplay		*add_molelist(const char *_title);
+	ChemMolelistDisplay		*find_molelist(const char *_title);
+	int						del_molelist(const char *_title);
+
+
 
 };
 //-----------------------------------------
@@ -57,9 +69,9 @@ ChemScreen::ChemScreen() {
 	renderCB  =screen_render_mole;
 	waitCB = screen_wait;
 	waiting = false;
-	selected_mole = NULL;
-	selected_pep = NULL;
-	mouse_clicked = false;
+	//selected_mole = NULL;
+	//selected_pep = NULL;
+	//mouse_clicked = false;
 
 	title_col.set(0, 100, 0);
 
@@ -88,12 +100,15 @@ void ChemScreen::dump(void){
 	//if (title==NULL)	printf("ChemScreen[0x%zX].[-]", (long unsigned int) this);
 	//else
 	printf("ChemScreen[0x%zX].[%s]", (long unsigned int) this, name.get());
-	switch (waitmode) {
-	case WAIT_CURS:		printf("(curs)"); break;
-	case WAIT_SCREEN:	printf("(screen)"); break;
-	case WAIT_OBJECT:	printf("(object)"); break;
-
+	if (waiting) {
+		printf("waiting");
+		switch (waitmode) {
+		case WAIT_CURS:		printf("(curs)"); break;
+		case WAIT_SCREEN:	printf("(screen)"); break;
+		case WAIT_OBJECT:	printf("(object)"); break;
+		}
 	}
+	//printf("mouse_clicked[%d]", mouse_clicked);
 	coords.dump(); NL;
 	//PRINT("== pre menu dump ==");
 	//printf("ChemScreen[0x%zX].[0x%zX]", (long unsigned int) this, title);
@@ -191,7 +206,8 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (cli==NULL) return -1;
 	if (display==NULL) return -2;
 	if (waitCB==NULL) { return 0; }
-	return waitCB(this, cli, display);
+	//Concentration_CLI *cli, ChemScreen *screen
+	return waitCB(cli, this, display);
 };
 #include <string.h>
 // -------------------------------
