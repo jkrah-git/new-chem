@@ -67,6 +67,9 @@ public:
 	void 	draw_menu_border(ChemMenu *menu);
 	void 	draw_menu(ChemMenu *menu);
 	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
+
+	void	draw_pepdisp(ChemScreen *screen, ChemPepDisplay *pepdis, bool mouseclick);
+	void	draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bool mouseclick);
 	void	draw_peplist(ChemScreen *screen, ChemPeplistDisplay *peplist, bool mouseclick);
 	void	draw_molelist(ChemScreen *screen, ChemMolelistDisplay *molelist, bool mouseclick);
 	//--------------

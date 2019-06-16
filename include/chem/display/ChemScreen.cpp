@@ -211,6 +211,95 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 };
 #include <string.h>
 // -------------------------------
+
+
+// -------------------------------
+ChemMoleDisplay		*ChemScreen::find_mole(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *mole_item = mole_list.gethead();
+	while ((mole_item!=NULL)&&(mole_item-> item!=NULL)) {
+		if (mole_item-> item->name == _title) return mole_item-> item;
+		//----
+		mole_item = mole_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemMoleDisplay		*ChemScreen::add_mole(const char *_title){
+	if (_title==NULL) return NULL;
+
+	ChemMoleDisplay *result = find_mole(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *mole_item = mole_list.add();
+	if (mole_item==NULL) { return NULL; }
+	if (mole_item-> item==NULL) { mole_list.del(mole_item); return NULL; }
+	// (else)  mole_item-> item  is good
+//	if (r<0) { PRINT("setname failed[%d]\n", r); return NULL; }
+	mole_item-> item-> name.set(_title);
+	return mole_item-> item;
+}
+// -------------------------------
+int				ChemScreen::del_mole(const char *_title){
+	//if (_title==NULL) return -1;
+	ChemMoleDisplay *found_mole =find_mole(_title);
+	if (found_mole==NULL) return -1;
+
+	mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *mole_item = mole_list.search(found_mole);
+	if (mole_item==NULL) return -2;
+
+	mole_list.del(mole_item);
+	return 0;
+}
+// -------------------------------
+
+
+
+// -------------------------------
+ChemPepDisplay		*ChemScreen::find_pep(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemPepDisplay>::mylist_item<ChemPepDisplay> *pep_item = pep_list.gethead();
+	while ((pep_item!=NULL)&&(pep_item-> item!=NULL)) {
+		if (pep_item-> item->name == _title) return pep_item-> item;
+		//----
+		pep_item = pep_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemPepDisplay		*ChemScreen::add_pep(const char *_title){
+	if (_title==NULL) return NULL;
+
+	ChemPepDisplay *result = find_pep(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemPepDisplay>::mylist_item<ChemPepDisplay> *pep_item = pep_list.add();
+	if (pep_item==NULL) { return NULL; }
+	if (pep_item-> item==NULL) { pep_list.del(pep_item); return NULL; }
+	// (else)  pep_item-> item  is good
+//	if (r<0) { PRINT("setname failed[%d]\n", r); return NULL; }
+	pep_item-> item-> name.set(_title);
+	return pep_item-> item;
+}
+// -------------------------------
+int						ChemScreen::del_pep(const char *_title){
+	//if (_title==NULL) return -1;
+	ChemPepDisplay *found_pep =find_pep(_title);
+	if (found_pep==NULL) return -1;
+
+	mylist<ChemPepDisplay>::mylist_item<ChemPepDisplay> *pep_item = pep_list.search(found_pep);
+	if (pep_item==NULL) return -2;
+
+	pep_list.del(pep_item);
+	return 0;
+}
+// -------------------------------
+
+
+
+
 ChemPeplistDisplay		*ChemScreen::find_peplist(const char *_title){
 	//if (_title==NULL) return NULL;
 	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item = peplist_list.gethead();
@@ -250,6 +339,7 @@ int						ChemScreen::del_peplist(const char *_title){
 	return 0;
 }
 // -------------------------------
+
 // -------------------------------
 ChemMolelistDisplay		*ChemScreen::find_molelist(const char *_title){
 	//if (_title==NULL) return NULL;

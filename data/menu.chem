@@ -58,10 +58,33 @@ screen s5 add
 screen s5 coords scale 100 50
 screen s5 grid off
 screen s5 render vm
-
 peplist p1 add
 peplist p1 coords scale 50 20
 peplist p1 coords pos -6 14
+peplist p1 size 16 2
+peplist p1 src core
+molelist m1 add
+molelist m1 coords scale 80 40
+molelist m1 coords pos -2 2
+molelist m1 size 4 4
+molelist m1 src core
+
+screen s6 add
+screen s6 coords scale 100 50
+screen s6 grid off
+screen s6 render vm
+
+pepdisp p1 add
+pepdisp p1 coords scale 30 30
+pepdisp p1 coords pos -5 10
+
+moledisp m1 add
+moledisp m1 coords scale 30 30
+moledisp m1 coords pos 5 10
+
+peplist p1 add
+peplist p1 coords scale 50 20
+peplist p1 coords pos 6 5
 peplist p1 size 16 2
 peplist p1 src core
 
@@ -70,4 +93,7 @@ molelist m1 coords scale 80 40
 molelist m1 coords pos -2 2
 molelist m1 size 4 4
 molelist m1 src core
+
+mole ld
+pep ld
 

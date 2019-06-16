@@ -61,6 +61,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		peplist = screen-> add_peplist(argv[0]);
 		if (peplist==NULL) {	PRINT("failed to add peplist[%s]..\n", argv[0]);  return -3;  }
+		peplist->set_pep_list(&cli->core->peptide_stack);
 		printf("new peplist[%s] OK..\n", argv[0]);
 		return 0;
 	}

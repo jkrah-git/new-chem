@@ -48,7 +48,7 @@ public:
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(Peptide *new_pep);
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(PeptidePos *_pos);
 
-	// move to helper
+	// TODO: move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };
 	int			rand(int count, int tries, PepSig min, PepSig max);
 	void		test(void);

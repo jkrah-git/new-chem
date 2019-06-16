@@ -23,6 +23,12 @@ int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv);
 int cli_screen(Concentration_CLI *cli, int argc, char **argv);
 int cli_screen_redraw(Concentration_CLI *cli, int argc, char **argv); //int draw_current_screen(Concentration_CLI *cli, int argc, char **argv);
 
+
+int	cli_load_pepdisp(Concentration_CLI *cli, int argc, char **argv);
+int cli_pepdisp(Concentration_CLI *cli, int argc, char **argv);
+int	cli_load_moledisp(Concentration_CLI *cli, int argc, char **argv);
+int cli_moledisp(Concentration_CLI *cli, int argc, char **argv);
+
 // cli_peplist.cpp
 int	cli_load_peplist(Concentration_CLI *cli, int argc, char **argv);
 int cli_peplist(Concentration_CLI *cli, int argc, char **argv);

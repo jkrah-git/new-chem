@@ -14,7 +14,7 @@
 //-------------------------------------------
 class ChemPepDisplay {
 public:
-	Peptide				*pep;
+	Peptide				**pep;
 
 
 public:
@@ -27,10 +27,10 @@ public:
 	ChemPepDisplay();
 	virtual ~ChemPepDisplay();
 	//----
-	Peptide				*get_pep(void) { return pep; };
-	void				set_pep(Peptide *_pep) { pep = _pep; };
+	void				dump(void);
+	Peptide				*get_pep(void) { return *pep; };
+	void				set_pep(Peptide **_pep) { pep = _pep; };
 	//-----------
-
 };
-
+//-------------------------------------------
 #endif /* CHEMPEPDISPLAY_H_ */

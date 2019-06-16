@@ -12,133 +12,73 @@
 class ChemDisplay;
 
 /*
-
 // ---------------------------------------
-class ChemDisplayAttrib {
-
+class ChemDisplayCoords {
 public:
+	int			posx;
+	int			posy;
+	int 		scalex;
+	int 		scaley;
 	int 		offsetx;
 	int 		offsety;
-  PepPosVecType	*pos;
-	float 		scale;
-	GFX_Base	*gfx;
-	// ------
  	//----------------
-  	ChemDisplayAttrib();
-  	virtual ~ChemDisplayAttrib();
+  	ChemDisplayCoords();
+  	ChemDisplayCoords(ChemDisplayCoords *src);
+  	virtual ~ChemDisplayCoords();
   	void	dump(void);
   	//------
-  	void	set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scale);
-  	void	setoffset(int _offsetx, int _offsety);
-  	void	setpos(PepPosVecType *_pos);
-  	void	setscale(int _scale);
-
-
   	int		getx(void);
   	int		gety(void);
+  	int		getx(int offx, int posx);
+  	int		gety(int offy, int posy);
+  	int		getxcell(GFX_Base *gfx, int screenx);
+  	int		getycell(GFX_Base *gfx, int screeny);
+  	bool 	hit(GFX_Base *gfx);
+  	bool 	hit(GFX_Base *gfx, int posx, int posy);
 
+  	// get final screen(x,y)
+  	int		screenx(GFX_Base *gfx);
+  	int		screeny(GFX_Base *gfx);
+  	int		screenx(GFX_Base *gfx, int offx, int posx);
+  	int		screeny(GFX_Base *gfx, int offy, int posy);
 };
 //--------------------------
-
-
- */
+*/
 ChemDisplayCoords::ChemDisplayCoords(){
+	posx = 0;
+	posy = 0;
+	offsetx = 0;
+	offsety = 0;
 	scalex = 10;
 	scaley = 10;
-//	gfx	= NULL;
-//	pos = NULL;
-	init();
 }
 //--------------------------
 ChemDisplayCoords::ChemDisplayCoords(ChemDisplayCoords *src) {
+	posx = 0;
+	posy = 0;
+	offsetx = 0;
+	offsety = 0;
 	scalex = 10;
 	scaley = 10;
-//	gfx	= NULL;
-//	pos = NULL;
-	init();
 	// -----
 	//if (src !=NULL)	cp(src);
 	if (src !=NULL)	*this = *src;
 }
 //--------------------------
-ChemDisplayCoords::~ChemDisplayCoords() {
-	// if (pos!=NULL)		free(pos);
-
-}
-//--------------------------
-void ChemDisplayCoords::init() {
-	posx = 0;
-	posy = 0;
-	offsetx = 0;
-	offsety = 0;
-
-	//if (pos == NULL) {	pos = (PepPosVecType*) malloc(sizeof(PepPosVecType) *PepPosVecMax);	}
-	//if (pos!=NULL) {		pos[PEPPOS_X] = 0;		pos[PEPPOS_Y] = 0;	}
-	//pos.init();
-
-}
+ChemDisplayCoords::~ChemDisplayCoords() {}
 //--------------------------
 void ChemDisplayCoords::dump(void) {
 	printf("ChemDisplayCoords[0x%zX]:",	(long unsigned int) this);
-	/*
-	printf("gfx[0x%zX]:",	(long unsigned int) gfx);
-	if (gfx!=NULL) {
-		printf("([%d]x[%d]):", gfx->width, gfx->height);
-	}
-	*/
 	printf(".offset[%d,%d].pos", offsetx, offsety);
-	//if (pos.dim==NULL) {		printf("[NULL]");	}
-	//else {						printf("[%d,%d]", pos.dim[PEPPOS_X], pos.dim[PEPPOS_Y]);	}
 	printf(".pos[%d,%d]", posx, posy);
 	printf(".scale[%d,%d]", scalex, scaley);
-	//printf(".getxy[%d,%d]", screenx(), screeny());
-
 }
 //--------------------------
-/*
-void ChemDisplayCoords::setoffset(int _offsetx, int _offsety){	offsetx = _offsetx;	offsety = _offsety;}
-void ChemDisplayCoords::setpos(PepPosVecType *_pos){
-	//if ((pos!=NULL) && (_pos!=NULL))		*pos = *_pos;
-	if ((_pos==NULL)) pos.init();
-	else pos = _pos;
-
-}
-void ChemDisplayCoords::setscale(int sx, int sy){	scalex = sx; scaley = sy;	}
 //--------------------------
-void ChemDisplayCoords::addpos(PepPosVecType *_pos){	if (_pos!=NULL)		pos = pos + _pos;}
-//--------------------------
-void ChemDisplayCoords::set(int _offsetx, int _offsety, PepPosVecType *_pos, int _scalex, int _scaley){
-	offsetx = _offsetx;
-	offsety = _offsety;
-	//if (pos.dim !=NULL) pos = _pos;
-	scalex = _scalex;
-	scaley = _scaley;
-}
-*/
-// TODO normalise or protect offsets..
-//--------------------------
-int ChemDisplayCoords::getx(void){
-	int px = offsetx + (posx *scalex);
-	//if (pos.dim !=NULL)	{	px += (pos.dim[PEPPOS_X] * scalex);	}
-
-	return px;
-}
-//--------------------------
-int ChemDisplayCoords::gety(void){
-	int py = offsety + (posy * scaley);
-	//if (pos.dim !=NULL)	{		py += (pos.dim[PEPPOS_Y] * scaley);	}
-	return py;
-}
-//--------------------------
-int ChemDisplayCoords::getx(int offx, int posx){
-	return  offx + (posx *scalex);
-}
-
-//--------------------------
-int ChemDisplayCoords::gety(int offy, int posy){
-	return  offy + (posy *scaley);
-}
-
+int ChemDisplayCoords::getx(void)				{ return offsetx + (posx *scalex);	}
+int ChemDisplayCoords::gety(void)				{ return offsety + (posy * scaley);	}
+int ChemDisplayCoords::getx(int offx, int posx)	{ return offx + (posx *scalex);	}
+int ChemDisplayCoords::gety(int offy, int posy)	{ return offy + (posy *scaley); }
 
 //--------------------------
 int ChemDisplayCoords::getxcell(GFX_Base *gfx, int screenx){

@@ -13,6 +13,8 @@
 
 #include "ChemMenu.h"
 #include "ChemDisplay.h"
+#include "ChemPepDisplay.h"
+#include "ChemMoleDisplay.h"
 #include "ChemPeplistDisplay.h"
 #include "ChemMolelistDisplay.h"
 class ChemDisplay;
@@ -26,8 +28,14 @@ public:
 	MyString				name;
 	ChemDisplayCoords		coords;
 
+	mylist<ChemPepDisplay>	pep_list;
+	mylist<ChemMoleDisplay>	mole_list;
+
+
  mylist<ChemPeplistDisplay>	peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
+
+
 	mylist<ChemMenu> 		menu_list;
 	ChemMenu				*current_menu;
 
@@ -51,6 +59,15 @@ public:
 	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
 	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
 	//mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *get_peplost_head(void){ return peplist_list.gethead(); };
+
+	ChemPepDisplay			*add_pep(const char *_title);
+	ChemPepDisplay			*find_pep(const char *_title);
+	int						del_pep(const char *_title);
+
+	ChemMoleDisplay			*add_mole(const char *_title);
+	ChemMoleDisplay			*find_mole(const char *_title);
+	int						del_mole(const char *_title);
+
 
 	ChemPeplistDisplay		*add_peplist(const char *_title);
 	ChemPeplistDisplay		*find_peplist(const char *_title);

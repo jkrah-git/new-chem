@@ -61,6 +61,7 @@ int cli_molelist(Concentration_CLI *cli, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		molelist = screen-> add_molelist(argv[0]);
 		if (molelist==NULL) {	PRINT("failed to add molelist[%s]..\n", argv[0]);  return -3;  }
+		molelist->set_mole_list(&cli->core->molecule_stack);
 		printf("new molelist[%s] OK..\n", argv[0]);
 		return 0;
 	}

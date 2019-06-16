@@ -465,7 +465,27 @@ void ChemDisplay::draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *bu
 	//if (button-> gettext()!=NULL)	gfx.text(button-> gettext(), x, y);
 };
 //------------------------------
+void ChemDisplay::draw_pepdisp(ChemScreen *screen, ChemPepDisplay *pepdis, bool mouseclick){
+	if (screen==NULL) return;
+	if (pepdis==NULL) return;
+	if (pepdis-> pep == NULL) return;
+	if (*pepdis->pep==NULL) return;
+	//Peptide 	*draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick, int red, int green, int blue);
+	//Peptide		*draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Peptide *pep, bool mouseclick);
+	draw_pep(screen, &pepdis->coords, *pepdis->pep, mouseclick);
 
+};
+//------------------------------
+//------------------------------
+void ChemDisplay::draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bool mouseclick){
+	if (screen==NULL) return;
+	if (moledis==NULL) return;
+	if (moledis-> mole == NULL) return;
+	if (*moledis->mole==NULL) return;
+	//Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
+	draw_mole(screen, &moledis->coords, *moledis-> mole, mouseclick, &moledis->col );
+};
+//------------------------------
 void ChemDisplay::draw_peplist(ChemScreen *screen, ChemPeplistDisplay *peplistDisplay, bool mouseclick) {
 	if (screen==NULL) return;
 	if (peplistDisplay==NULL) return;
@@ -783,6 +803,31 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 			current_menu_item = current_menu_item->next;
 		}
 	}
+
+	{	// draw pep disp
+		// ------------------
+		mylist<ChemPepDisplay>::mylist_item<ChemPepDisplay> *current_pep_item = screen-> pep_list.gethead();
+		while ((current_pep_item != NULL) && (current_pep_item-> item != NULL)) {
+		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+			draw_pepdisp(screen, current_pep_item-> item, mouseclick);
+			//-------
+			current_pep_item = current_pep_item->next;
+		}
+	}
+	{	// draw mole disp
+		// ------------------
+		mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *current_mole_item = screen-> mole_list.gethead();
+		while ((current_mole_item != NULL) && (current_mole_item-> item != NULL)) {
+		//	PRINT("==== menu = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+			draw_moledisp(screen, current_mole_item-> item, mouseclick);
+			//-------
+			current_mole_item = current_mole_item->next;
+		}
+	}
+
+
+
+
 
 	{	// draw pep lists
 		// ------------------
