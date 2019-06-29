@@ -1,0 +1,34 @@
+screen mole add
+screen mole coords scale 100 100
+screen mole render mole
+
+screen match add
+screen match coords scale 50 50
+screen match render match
+
+screen vm add
+screen vm coords scale 30 30
+screen vm coords pos -5 7
+
+screen vm grid off
+screen vm render match
+
+pepdisp p1 add
+pepdisp p1 coords scale 30 30
+pepdisp p1 coords pos -5 10
+
+moledisp m1 add
+moledisp m1 coords scale 30 30
+moledisp m1 coords pos 5 10
+
+peplist p1 add
+peplist p1 coords scale 50 20
+peplist p1 coords pos 6 5
+peplist p1 size 16 2
+peplist p1 src core
+
+molelist m1 add
+molelist m1 coords scale 80 40
+molelist m1 coords pos -2 2
+molelist m1 size 4 4
+molelist m1 src core

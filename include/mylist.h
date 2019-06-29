@@ -324,7 +324,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 
 
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *start, int steps){
-	if (steps==0) return start;
+	//if (steps==0) return start;
 	mylist_item<T> *item = NULL;
     int c = steps;
 
@@ -335,11 +335,12 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 			item = item-> prev;
 		}
 	} else {
-		// steps>0
+		// steps>=0
 		if (start==NULL) start = head;
 		item = start;
-		while ((item!=NULL) && (c-->0)) {
+		while ((item!=NULL) && (c>0)) {
 			item = item-> next;
+			c--;
 		}
 	}
 	return item;

@@ -11,49 +11,65 @@
 
 
 class Molecule;
-
 //----------------------------------
+enum MatchPos_State { INV, READY, NOMATCH, MATCH };
+//----
 class MoleculeMatchPos {
 private:
+	MatchPos_State	state;
 	Molecule	*mole1;
 	Molecule	*mole2;
 	mylist<Peptide>::mylist_item<Peptide>	*test_item;
-
-public:
-	void		rotatemole();
-//---
+	//----------
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
 	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
-	Molecule	*rotmole;
+	//bool		active;
+	// todo: turn to full item?>
+	Molecule	rotmole;
 
+	void		rotatemole();
+
+public:
 	//---------
 	MoleculeMatchPos();
 	virtual 	~MoleculeMatchPos();
 
+ MatchPos_State	get_state(void){ return state; };
+	Molecule	*getM1(){ return mole1; }
+	Molecule 	*getM2(){ return mole2; }
 	mylist<Peptide>::mylist_item<Peptide>	*get_test_item(){  return test_item; };
+	PeptidePos	*get_start_pos(void) { return &start_pos; }
+	PeptidePos	*get_end_pos(void) { return &end_pos; }
+	PeptidePos	*get_current_pos(void) { return &current_pos; }
+	PepRot		get_rotation(void){ return rotation; }
+	Molecule	*get_rotmole(void) { return &rotmole; }
 
 	void		setM1(Molecule *_mole){ mole1 = _mole; }
 	void		setM2(Molecule *_mole){ mole2 = _mole; }
-	Molecule *	getM1(){ return mole1; }
-	Molecule *	getM2(){ return mole2; }
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
-	void		clear(){ mole1 = NULL; mole2 = NULL; test_item = NULL; }
-
+	void		clear();
 	void		render();
 	void		dump();
 	//---------
 	int		start();
 	//			resets root_item
-
+	//-----------------------
 	int			nextpos();
-	// returns: -1=(end), 0=(ok), 1=(newrot),
-
-	int			nextmatch();
+	// returns: -2 (no items) -1=(end), 0=(start), 1=(next_item),2=(nextX),3=(nextY),4=(nextRot)
+	//-----------------------
+	int			match_pep(Peptide *pep1, Peptide *pep2);
+	// returns: -2=(miss) -1=(no_match) 0=(no_active), 1=(match)
+	//-----------------------
+	int			OLDnextmatch_item();
 	//	returns: r= -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
 
-	void		test();
+	int			match_item();
+	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
+
+	int			match_mole();
+
 
 };
 //----------------------------------

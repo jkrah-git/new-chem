@@ -408,7 +408,7 @@ void Molecule::testrot(void){
 		c[i] = 0;
 
 	char bina[16], binb[16];
-	char match[16];
+	//char match[16];
 
 	Peptide p;
 	char ca, cb;
@@ -428,9 +428,9 @@ void Molecule::testrot(void){
 			sprintb(binb, b, '0');
 
 		//	printf("molecule.testrot: [0x%02x 0x%02x](%c,%c) =%d\n",  a,b, ca,cb, t);
-			if (p.match(b)) { sprintf(match, "(Match)"); }
-			else { sprintf(match, "()"); }
-			printf("molecule.testrot: [0x%02x 0x%02x][0b%s,0b%s](%c,%c)%s=%d\n",  a,b, bina, binb, ca,cb, match, t);
+		//	if (p.match(b)) { sprintf(match, "(Match)"); }
+		//	else { sprintf(match, "()"); }
+		//	printf("molecule.testrot: [0x%02x 0x%02x][0b%s,0b%s](%c,%c)%s=%d\n",  a,b, bina, binb, ca,cb, match, t);
 
 			if ((t<0) || (t>3)) t=0;
 			c[t]++;

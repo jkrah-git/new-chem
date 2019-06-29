@@ -287,14 +287,15 @@ PepRot		Peptide::OLDgetrot(PepSig parentSig){
 	return (char) rot;
 }
 // -------------------------------
+/*
 bool Peptide::match(PepSig MatchSig){
-	/*
-  - ?? 0bX..... = 2x127 sets  (OR)
-  - Match = 0bXXsseett.... = 4x64 sets
-  - active elements ... 0bXXsstttt  .. match 0bYYsseett
-  - ss = match.strength = 0-3
-  - eett = match. energy/temp deltas = (0-3) = { 0,1,2 ,-1 }
-	 */
+
+  // ?? 0bX..... = 2x127 sets  (OR)
+  // Match = 0bXXsseett.... = 4x64 sets
+  // active elements ... 0bXXsstttt  .. match 0bYYsseett
+  //	- ss = match.strength = 0-3
+  	// - eett = match. energy/temp deltas = (0-3) = { 0,1,2 ,-1 }
+
 	// 128+64  =192    = 1100 0000 = 0xC0
 	// 256 - 192 = 63  = 0011 1111 = 0x3F
 	PepSig m1,m2;
@@ -319,6 +320,7 @@ bool Peptide::match(PepSig MatchSig){
 
 	return true;
 }
+*/
 // ---------------------// ---------------------
 Peptide &Peptide::operator =(const Peptide& p) {
 	sig = p.sig;

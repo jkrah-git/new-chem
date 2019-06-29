@@ -361,7 +361,7 @@ int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 		}
 
 		if (strcmp(argv[0], "rot" ) == 0) {
-			cli-> core-> mole = cli->core->matchpos.rotmole;
+			cli-> core-> mole = cli->core->matchpos.get_rotmole();
 			return 0;
 		}
 
@@ -371,7 +371,7 @@ int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 			printf("bad offset [%s].\n", argv[0]);
 			return -20;
 		}
-		//printf("..load [%d]\n", off);
+		printf("..load [%d]\n", off);
 		item = cli-> core-> molecule_stack.offset(off);
 	}
 

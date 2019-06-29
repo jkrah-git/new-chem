@@ -303,14 +303,14 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 			(long unsigned int) matchpos->getM1(),
 			(long unsigned int) matchpos->getM2(),
 
-			matchpos-> current_pos.dim[PEPPOS_X],
-			matchpos-> current_pos.dim[PEPPOS_Y],
-			matchpos-> rotation,
+			matchpos-> get_current_pos()-> dim[PEPPOS_X],
+			matchpos-> get_current_pos()-> dim[PEPPOS_Y],
+			matchpos-> get_rotation(),
 
-			matchpos-> start_pos.dim[PEPPOS_X],
-			matchpos-> start_pos.dim[PEPPOS_Y],
-			matchpos-> end_pos.dim[PEPPOS_X],
-			matchpos-> end_pos.dim[PEPPOS_Y]);
+			matchpos-> get_start_pos()-> dim[PEPPOS_X],
+			matchpos-> get_start_pos()-> dim[PEPPOS_Y],
+			matchpos-> get_end_pos()-> dim[PEPPOS_X],
+			matchpos-> get_end_pos()-> dim[PEPPOS_Y]);
 	gfx.printg(str);
 
 	Molecule *hit = NULL;
@@ -327,15 +327,15 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 	}
 
 	// ------------------- ROTMOLE
-	if ((matchpos-> rotmole != NULL) && (matchpos-> rotmole-> pep_list.gethead() !=NULL)) {
+	if ((matchpos-> get_rotmole() != NULL) && (matchpos-> get_rotmole()-> pep_list.gethead() !=NULL)) {
 		gfx.color(&rot_col);
 		gfx.cprintg("rotemole");
 
 		ChemDisplayCoords display_coords(screen-> coords);
-		display_coords.posx += matchpos-> current_pos.dim[PEPPOS_X];
-		display_coords.posy += matchpos-> current_pos.dim[PEPPOS_Y];
+		display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
+		display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
 
-		mole = draw_mole(screen, &display_coords, matchpos-> rotmole, mouseclick, &rot_col);
+		mole = draw_mole(screen, &display_coords, matchpos-> get_rotmole(), mouseclick, &rot_col);
 		if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
 	}
 
@@ -345,8 +345,8 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 		gfx.cprintg("test_item");
 
 		ChemDisplayCoords display_coords(screen-> coords);
-		display_coords.posx += matchpos-> current_pos.dim[PEPPOS_X];
-		display_coords.posy += matchpos-> current_pos.dim[PEPPOS_Y];
+		display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
+		display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
 
 		draw_pep(screen, &display_coords, matchpos-> get_test_item()-> item, mouseclick, &item_col);
 
