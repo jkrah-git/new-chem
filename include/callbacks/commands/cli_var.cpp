@@ -432,20 +432,21 @@ int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	if (vm-> mole==NULL)  return -10;
 
+	PRINT("argc=[%d].", argc); for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	int r=0;
+	//int n=0;
 	int hex;
-	if (argc>0) {
-		for (int i=0; i<argc; i++)
-
+	for (int i=0; i<argc; i++){
 		if ( sscanf(argv[i], "0x%x", &hex) <0) {
-			printf("bad sig[%s].\n", argv[0]);
+			printf("bad sig #[%d]=[%s].\n", i, argv[i]);
 			return -20;
 		}
 		r = vm-> mole->addpep(hex);
 		LOG("addpep = [%d] = [%d]\n", hex, r);
 	}
+	return argc;
 
-	return r;
+
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------

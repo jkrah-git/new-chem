@@ -324,7 +324,6 @@ CLI_Command  *search_cli_cmd_list(mylist<CLI_Command> *cmd_list, const char *nam
 	}
 	return cmd;
 }
-
 //---------------------------------
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv){
 	if ((cmd_list==NULL) || (argc<1) || (argv==NULL)) return -100;
@@ -335,7 +334,7 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 
 	// if not in  base command list..
 	if (cmd==NULL) {
-		// if no-callto
+		// fwd to 'callto' or 'not found' error (-110)
 		if (run_callto==NULL) {	last_result =  -110;	}
 		else {	last_result = run_callto(argc, argv);		}
 
@@ -349,10 +348,12 @@ int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv)
 		}
 
 		//LOG("[%s].[%d]\n", argv[0], last_result);
-
+/*
 		if (cmd->callback !=NULL) {
 			cmd->callback(this, 0, NULL);
 		}
+*/
+
 	} // end base command
 
 	if (last_result == -110) printf("[%s].Command Not Found\n", argv[0]);

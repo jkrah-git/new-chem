@@ -30,7 +30,7 @@ public:
  */
 //----------------//----------------
 CLI_Command::CLI_Command() {
-	callback = NULL;
+//	callback = NULL;
 	operation = NULL;
 	for (int i=0; i<CLI_COMMAND_MAX_NAME; i++)
 		name[i] = '\0';

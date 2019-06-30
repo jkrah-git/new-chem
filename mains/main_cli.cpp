@@ -24,27 +24,19 @@ char 	**build_args(void){
 	//cli.load_commands();
 	display.load_commands();
 	cli.run_callto = run_callto;
-	//return cli.get_possible_args(&cli.base_cmdlist);
 	return get_possible_args();
 }
 //-----------------------------------
 int 	run(int argc, char **argv){
 	return cli.run(&cli.base_cmdlist, argc, argv);
 }
-
-
+//-----------------------------------
 int 	run_callto(int argc, char **argv){
-	//PRINT("====\n");
-	//int r = cli.run(&cli.base_cmdlist, argc, argv);
-	//if (r==-110) r = display.run(&display.display_cmdlist, argc, argv);
 	return display.run(&display.display_cmdlist, argc, argv);
 }
 //===============================================================
-//char 						**args = NULL;
-extern char 		**args;// = NULL;
-// char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
+extern char 		**args;
 char  **get_possible_args(void){
-
 //	PRINT("start.possible_args[0x%zX]\n", (long unsigned int)  args);
 	if (args!=NULL) {
 		int c=0;
@@ -88,14 +80,9 @@ char  **get_possible_args(void){
 			i++;
 		}
 	}
-
-
-
 	// terminate word array
 	args[i] = NULL;
 //	PRINT("final_null[0x%zX]=[%d]\n", (long unsigned int)  args, i);
-
-
 	if (args!=NULL) {
 		int c=0;
 		while (args[c] != NULL) {
@@ -103,7 +90,8 @@ char  **get_possible_args(void){
 			c++;
 		}
 	}
-
 	//possible_args = args;
 	return args;
 }
+
+//-----------------------------------------------------------------------------
