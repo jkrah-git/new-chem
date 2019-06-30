@@ -60,9 +60,11 @@ public:
 };
 //-----------------------------------------
 */
-#include "callbacks/screen_callbacks.h"
-
+//#include "callbacks/screen_callbacks.h"
+int screen_render_mole(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 //int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display);
+//int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display);
+int	screen_wait(ChemDisplay *display, ChemScreen *screen);
 //-----------------------------------------
 ChemScreen::ChemScreen() {
 	name = NULL;
@@ -81,9 +83,9 @@ ChemScreen::ChemScreen() {
 	//conc_index = 0;
 
 	waitmode = WAIT_CURS;
-	gridmode = GRID_MOLE;
+	gridmode = GRID_ON;
 	// needed for buttons
-	current_menu = NULL;
+	//current_menu = NULL;
 	/*
 	menu_list2 = (mylist<ChemMenu> *) malloc(sizeof(mylist<ChemMenu>));
 	if (menu_list2!=NULL)
@@ -114,9 +116,10 @@ void ChemScreen::dump(void){
 	//printf("ChemScreen[0x%zX].[0x%zX]", (long unsigned int) this, title);
 	printf("Menus: ");
 //	DUMP(menu_list2)
-	menu_list.dump();
+//	menu_list.dump();
 
 }
+/*******************************
 //-------------------------------//-------------------------------
 ChemMenu	*ChemScreen::add_menu(const char *_title, ChemDisplay *display){
 //	if ((menu_list2==NULL)||(display==NULL)) return NULL;
@@ -155,6 +158,7 @@ ChemMenu *ChemScreen::find_menu(const char *_title){
 
 	return NULL;
 }
+*******************************/
 //-------------------------------//-------------------------------//-------------------------------
 /*
 int	ChemScreen::set_title(const char* newtitle){
@@ -182,6 +186,7 @@ int	ChemScreen::istitle(const char* _title){
 }
 */
 //-------------------------------
+/*******************
 ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 	if (display==NULL) return NULL;
 	//PRINT("Testing[%d,%d]\n", display-> gfx.xpos(), display-> gfx.ypos());
@@ -201,13 +206,15 @@ ChemMenuButton	*ChemScreen::test_menus(ChemDisplay *display) {
 	return NULL;
 
 }
+*******************/
 //-------------------------------
 int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 	if (cli==NULL) return -1;
 	if (display==NULL) return -2;
 	if (waitCB==NULL) { return 0; }
 	//Concentration_CLI *cli, ChemScreen *screen
-	return waitCB(cli, this, display);
+	//return waitCB(cli, this, display);
+	return waitCB(display, this);
 };
 #include <string.h>
 // -------------------------------

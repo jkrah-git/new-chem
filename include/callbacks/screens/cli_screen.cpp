@@ -8,31 +8,35 @@
 #include "../screen_callbacks.h"
 // --------------------------
 // --------------------------
-int	cli_load_screen(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_screen(ChemDisplay *display, int argc, char **argv){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "screen");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_screen, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "screen");	r = display-> addcmd(&display-> display_cmdlist, 	cli_screen, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 
 	//cli_screen_test(cli, 0, NULL);
 
 	return 0;
 }// --------------------------// --------------------------// --------------------------
-int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//if (cli->display.screen_list2 ==NULL) return -2;
+int	cli_screen_test(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
+	//if (display-> screen_list2 ==NULL) return -2;
 
 	//PRINT(".. screens ..\n");
-	//cli->display.screen_list-> clear();
-	//PRINT("========= screen_list.clear =========\n");		cli->display.screen_list-> dump();
+	//display-> screen_list-> clear();
+	//PRINT("========= screen_list.clear =========\n");		display-> screen_list-> dump();
 
 	// screen 1
 	{
-		ChemScreen *screen = cli->display.add_screen("screen1");
+		ChemScreen *screen = display-> add_screen("screen1");
 		if (screen==NULL)  {	PRINT("screen_list.add returned NULL\n"); 	return -3;	}
 
-		ChemMenu *menu = screen-> add_menu("menu1", &cli->display);
+		/**************************
+		ChemMenu *menu = screen-> add_menu("menu1", display);
 		if (menu==NULL)  {	PRINT("menu_list.add returned NULL\n"); 	return -3;	}
 		if (menu !=NULL) {
 			menu-> stepx = 1;
@@ -43,14 +47,15 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 			menu->layout_buttons();
 			//PRINT("======> final menu ====>\n");		menu-> dump();		PRINT("<======> final menu ===\n");
 		}
+		*******************/
 		//screen->callback = cli_gfx_screens_cb1;
 		//screen->waiting = false;
-		cli->display.selected_screen = screen;
+		display-> selected_screen = screen;
 	}
 	//return 0;
 	{
 		PRINT(":: searching...\n");
-		ChemScreen *screen = cli->display.search_screen("screen1");
+		ChemScreen *screen = display-> search_screen("screen1");
 		if (screen==NULL) {
 			PRINT(":: FAILED Not Found..\n");
 			return -10;
@@ -65,9 +70,11 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 
 	// screen 2
 	{
-		ChemScreen *screen = cli->display.add_screen("screen2");
+		ChemScreen *screen = display-> add_screen("screen2");
 		if (screen==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
-		ChemMenu *menu = screen-> add_menu("menu2", &cli->display);
+
+		/*******************
+		ChemMenu *menu = screen-> add_menu("menu2", display);
 		if (menu==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
 		if (menu !=NULL) {
 			menu-> stepx = 0;
@@ -78,14 +85,15 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 			menu->layout_buttons();
 			//PRINT("======> final menu ====>\n");		menu-> dump();		PRINT("<======> final menu ===\n");
 		}
+		*******************/
 		//screen->callback = cli_gfx_screens_cb2;
 		//screen->waiting = true;
-		cli->display.selected_screen = screen;
+		display-> selected_screen = screen;
 	}
 
 	{
 		PRINT(":: searching...\n");
-		ChemScreen *screen = cli->display.search_screen("screen2");
+		ChemScreen *screen = display-> search_screen("screen2");
 		if (screen==NULL) {
 			PRINT(":: FAILED Not Found..\n");
 			return -10;
@@ -104,14 +112,16 @@ int	cli_screen_test(Concentration_CLI *cli, int argc, char **argv){
 }
 
 // --------------------------
-int		list_screens(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
+int		list_screens(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	int c=0;
 
-	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list.gethead();
+	mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = display-> screen_list.gethead();
 	while ((screen_item!=NULL)&&(screen_item-> item!=NULL)) {
 
-		if (screen_item->item== cli->display.selected_screen)
+		if (screen_item->item== display-> selected_screen)
 			printf("[%s]*\n", screen_item->item->name.get());
 		else
 			printf("[%s]\n", screen_item->item->name.get());
@@ -123,19 +133,21 @@ int		list_screens(Concentration_CLI *cli, int argc, char **argv) {
 }
 
 // --------------------------// --------------------------
-int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
+int cli_screen(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 
 	// argc=0 argv()  (list)
 	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
-		list_screens(cli, 0, NULL);
+		list_screens(display, 0, NULL);
 		return 0;
 	}
 	ChemScreen *screen = NULL;
 
 	//int r;
 	// argv($name, ?)
-	screen = cli-> display.search_screen(argv[0]);
+	screen = display-> search_screen(argv[0]);
 
 	// argv(help|off)
 	if (argc==1) {
@@ -152,13 +164,13 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		//---------------- OFF
 		if (strcmp(argv[0], "off")==0) {
 			//PRINT("LIST...\n");
-			cli-> display.gfx.close();
+			display-> gfx.close();
 			cli-> callback = NULL;
 			return 0;
 		}
 		//---------------- _test
 		if (strcmp(argv[0], "_test")==0) {
-			return cli_screen_test(cli, 0, NULL);
+			return cli_screen_test(display, 0, NULL);
 		}
 		if (screen==NULL) {	printf("screen[%s] not found.\n", argv[1]);		return -1;	}
 	} // -- end (argc==1) (known commands)
@@ -172,7 +184,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		if (strcmp(argv[1], "add")==0) {
 			//PRINT(" ADD ..\n");
 			if (screen!=NULL) {	printf("screen[%s] already exists.\n", argv[0]);	return -2;	}
-			screen = cli->display.add_screen(argv[0]);
+			screen = display-> add_screen(argv[0]);
 			if (screen==NULL) {	PRINT("failed to add screeen[%s]..\n", argv[0]);  return -3;  }
 			printf("new screen[%s] OK..\n", argv[0]);
 
@@ -192,9 +204,9 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		// ---------wait
 		if (strcmp(argv[1], "wait")==0) {
 			screen->waiting = true;
-			//cli->display.display_screen = screen;
-			cli->display.draw_screen(screen, cli);
-			//cli->display.display_screen = NULL;
+			//display-> display_screen = screen;
+			display-> draw_screen(screen, cli);
+			//display-> display_screen = NULL;
 			return 0;
 		}
 
@@ -202,21 +214,21 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 		if (strcmp(argv[1], "del")==0) {
 
 
-			int r = cli->display.del_screen(screen);
+			int r = display-> del_screen(screen);
 			if (r==0) 	printf("del screen[%s] OK..\n", argv[0]);
 			else		printf("del screen[%s] Returned[%d]..\n", argv[0], r);
 			return r;
 			/*
-			if (cli->display.screen_list ==NULL) { printf("Err: NULL screen.menu_list\n");		return -25;			}
-			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = cli->display.screen_list-> search(screen);
+			if (display-> screen_list ==NULL) { printf("Err: NULL screen.menu_list\n");		return -25;			}
+			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = display-> screen_list-> search(screen);
 			if (screen_item==NULL)  			{ printf("list item not found\n"); return -15;	}
 
 			// if current screen
-			if (cli-> display.current_screen == screen) {
-				cli-> display.current_screen = NULL;
-				cli-> display.gfx.close();
+			if (display-> current_screen == screen) {
+				display-> current_screen = NULL;
+				display-> gfx.close();
 			};
-			cli->display.screen_list-> del(screen_item);
+			display-> screen_list-> del(screen_item);
 			printf("del screen[%s] OK..\n", argv[0]);
 			screen =  NULL;
 			*/
@@ -282,21 +294,21 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
 			// enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
 			if (argc<3) {
+				printf("on\n");
 				printf("off\n");
-				printf("mole\n");
-				printf("menu\n");
+				//printf("menu\n");
 			}
 
 			if (argc>2) {
 				if (strcmp(argv[2], "off")==0) { screen->gridmode = GRID_OFF; 	}
-				if (strcmp(argv[2], "mole")==0) { screen->gridmode = GRID_MOLE; }
-				if (strcmp(argv[2], "menu")==0) { screen->gridmode = GRID_MENU; }
+				if (strcmp(argv[2], "on")==0) { screen->gridmode = GRID_ON; }
+				//if (strcmp(argv[2], "menu")==0) { screen->gridmode = GRID_MENU; }
 			}
 
 			switch(screen->gridmode) {
 				case GRID_OFF:	printf("grid[off]\n"); break;
-				case GRID_MOLE:	printf("grid[mole]\n"); break;
-				case GRID_MENU:	printf("grid[menu]\n"); break;
+				case GRID_ON:	printf("grid[on]\n"); break;
+				//case GRID_MENU:	printf("grid[menu]\n"); break;
 			}
 		return 0;
 		} // ------------------end(grid)
@@ -309,7 +321,7 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 			ChemDisplayAttrib *screen_attrib = &screen->attrib;
 			//PRINT(" scale : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) {
-				//printf("[%d][%d]\n", cli->display.attrib.scalex, cli->display.attrib.scaley);
+				//printf("[%d][%d]\n", display-> attrib.scalex, display-> attrib.scaley);
 				printf("[%d][%d]\n", screen_attrib-> scalex, screen_attrib-> scaley);
 			}
 
@@ -343,13 +355,13 @@ int cli_screen(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	if (screen!=NULL) {
-		cli->display.selected_screen = screen;
-		if (screen->waiting) {	cli-> callback = NULL;	}
-		else {					cli-> callback = cli_redraw;	}
+		display-> selected_screen = screen;
+		if (screen->waiting) {	display-> callback = NULL;	}
+		else {					display-> callback = cli_redraw;	}
 
 	}
 	// draw_current_screen(cli, NULL, 0);
-	cli->display.draw_screen(cli-> display.selected_screen, cli);
+	display-> draw_screen(display-> selected_screen, cli);
 	return 1;
 }
 // --------------------------

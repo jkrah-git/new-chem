@@ -11,7 +11,8 @@
 #include "Concentration.h"
 #include "CLI_Command.h"
 #include "Concentration_VM.h"
-#include "display/ChemDisplay.h"
+#include "KeyValPair.h"
+//#include "display/ChemDisplay.h"
 
 #undef DEBUG
 //#define DEBUG
@@ -26,7 +27,7 @@
 
 #define MAX_ARGS 16
 #define MAX_LINELEN 128
-class Concentration_CLI;
+//class Concentration_CLI;
 //=================================================
 
 
@@ -35,8 +36,10 @@ CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name);
 //-------------------------------------------
 class Concentration_CLI {
 private:
+	Concentration_VM			*selected_vm;
+	mylist<Concentration_VM>	vm_list;
+
 public:
-	Concentration_VM			*core;
 	int							last_result;
 // TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -54,19 +57,30 @@ public:
 	char 						**args;
 
 	//---------------
-	ChemDisplay 				display;
+	//ChemDisplay 				display;
 
-
+//	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
+	int 	(*run_callto)(int argc, char **argv);
 
 	//void 	(*run_callback)(char *msg);
 	int		(*callback)(Concentration_CLI*, int, char**);
 
 
-	Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm);
+	Concentration_CLI(ConcentrationVolume &cvol); //, Concentration_VM &vm);
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();
 	void 	test();
+
+	//bool	is_selected(Peptide *pep);
+	//bool	is_selected(Molecule *mole);
+	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
+ 	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
+ 	Concentration_VM	*add_vm(void);
+//Concentration_VM		*find_vm(Molecule *m1, Molecule *m2);
+	int					del_vm(Concentration_VM *_vm);
+	int					list_vms(void);
+	int					pop_vm(void);
 
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
 	int		argstr(char *dest, int max, int argc, char **argv);

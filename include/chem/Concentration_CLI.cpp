@@ -16,7 +16,7 @@
 //#include "callbacks/Concentration_CLI.Callbacks/match.cpp"
 //#include "Concentration_CLI.Callbacks/display.cpp"
 //#include "../include/callbacks/menu/menu_callbacks.h"
-#include "callbacks/screen_callbacks.h"
+//#include "callbacks/screen_callbacks.h"
 #include "callbacks/command_callbacks.h"
 // -------------------
 //---------------------------------//---------------------------------
@@ -26,6 +26,7 @@ class Concentration_CLI {
 private:
 public:
 	Concentration_VM			*core;
+	mylist<Concentration_VM>	vm_list;
 	int							last_result;
 
 	mylist<CLI_Command>			base_cmdlist;
@@ -132,6 +133,9 @@ void Concentration_CLI::dump() {
 //			(long unsigned int) conc,
 //			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
+	printf("vms..\n");
+	vm_list.dump();
+
 	base_cmdlist_dump(); 	//printf("'Base' Commands..\n");	base_cmdlist.dump();
 	dump_cmdlist_dump(); 	//printf("'dump' Commands..\n");	dump_cmdlist.dump();
 	load_cmdlist_dump(); 	//printf("'load' Commands..\n");	load_cmdlist.dump();
@@ -143,19 +147,22 @@ void Concentration_CLI::dump() {
 	var_cmdlist_dump(); 	//printf("'var' Commands..\n");		var_cmdlist.dump();
 	var_list_dump(); 		//printf("Variables..\n");		vars_list.dump();
 	//printf("last_result = [%d] : last_line = [%s]\n", last_result, last_line);
-	display.dump();
+	//display.dump();
 }
 //---------------------------------
 
-Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol, Concentration_VM &vm) {
+Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol){ //, Concentration_VM &vm) {
 	//memset(last_line, '\0', MAX_LINELEN);
 	args = NULL;
 	callback = NULL;
+	run_callto = NULL;
 	last_result = 0;
-	core = &vm;
-	if (core!=NULL)
-		core-> concvol = &cvol;
-	//	display.core = core;
+	selected_vm = add_vm();
+
+//	selected_vm = &vm;
+//	if (selected_vm!=NULL)
+//		selected_vm-> concvol = &cvol;
+
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}
@@ -173,7 +180,7 @@ void Concentration_CLI::test() {
 	if ((cmd!=NULL) && (cmd-> item !=NULL)) {
 		PRINT("==============\n");
 		PRINT(" .. cmd.test() =>\n");
-		cmd-> item -> test();
+		//cmd-> item -> test();
 	}
 	PRINT("==============\n");
 	PRINT(" .. load_commands =>\n"); //dump();
@@ -196,6 +203,70 @@ void Concentration_CLI::test() {
 	PRINT(" .. END ..\n");
 }
 //---------------------------------
+/*
+bool Concentration_CLI::is_selected(Peptide *pep){
+	if (core!=NULL) return (core->pep = pep);
+	else return false;
+}
+bool Concentration_CLI::is_selected(Molecule *mole){
+	if (core!=NULL) return (core->mole = mole);
+	else return false;
+}
+*/
+
+
+//---------------------------------//---------------------------------//---------------------------------
+
+Concentration_VM *Concentration_CLI::add_vm(void){
+
+	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.add();
+	if (vm_item==NULL) { return NULL; }
+	if (vm_item-> item==NULL) { vm_list.del(vm_item); return NULL; }
+	// (else)  pep_item-> item  is good
+	//vm_item-> item-> name.set(_title);
+	return vm_item-> item;
+	return NULL;
+}
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::del_vm(Concentration_VM *_vm){
+	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.search(_vm);
+	if (vm_item==NULL) return -2;
+	vm_list.del(vm_item);
+	return 0;
+}
+
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::pop_vm(void){
+	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.gettail();
+	if (vm_item==NULL) return -1;
+	if ((vm_item-> item != NULL)&& (vm_item-> item ==selected_vm)) {
+		vm_list.del(vm_item);
+		vm_item = vm_list.gettail();
+		if ((vm_item!=NULL) && (vm_item-> item !=NULL))
+			selected_vm = vm_item-> item;
+		else
+			selected_vm = NULL;
+	} else {
+		vm_list.del(vm_item);
+	}
+	return 0;
+}
+
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::list_vms(void){
+	int c=0;
+	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.gethead();
+	while ((vm_item!=NULL)&&(vm_item-> item!=NULL)) {
+
+		if (vm_item-> item == selected_vm) 	printf("Concentration_VM[0x%zX]*\n", (long unsigned int) vm_item-> item);
+		else 							printf("Concentration_VM[0x%zX]\n", (long unsigned int) vm_item-> item);
+		//
+		vm_item = vm_item->next;
+		c++;
+	}
+	//------
+	return c;
+}
 //---------------------------------//---------------------------------//---------------------------------
 int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name){
 	if ((cmd_list==NULL)||(op==NULL)||(name==NULL)) return -1;
@@ -239,7 +310,7 @@ int	Concentration_CLI::runline(mylist<CLI_Command> *cmd_list, char *line) {
 	//return r;
 }
 //-----------------------------------
-CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
+CLI_Command  *search_cli_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
 	CLI_Command  *cmd = NULL;
 	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = cmd_list-> gethead();
 	while ((next_item!=NULL) && (next_item-> item != NULL)) {
@@ -258,40 +329,46 @@ CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
 int	Concentration_CLI::run(mylist<CLI_Command> *cmd_list, int argc, char **argv){
 	if ((cmd_list==NULL) || (argc<1) || (argv==NULL)) return -100;
 
-	CLI_Command  *cmd = search_cmd_list(cmd_list, argv[0]);
+	// start with base command list..
+	CLI_Command  *cmd = search_cli_cmd_list(cmd_list, argv[0]);
 	last_result = 0;
+
+	// if not in  base command list..
 	if (cmd==NULL) {
-		printf("[%s].Command Not Found\n", argv[0]);
-		last_result =  -110;
-	} else
+		// if no-callto
+		if (run_callto==NULL) {	last_result =  -110;	}
+		else {	last_result = run_callto(argc, argv);		}
+
+	} else { // is base command
+		// check/run base_command,operator
 		if (cmd-> operation==NULL) {
 			printf("[%s].Command.operation NULL\n", argv[0]);
 			last_result =  -111;
-	}
-
-	if (last_result>=0)  {
-		last_result = cmd-> operation(this, argc-1, &argv[1]);
-		LOG("[%s].[%d]\n", argv[0], last_result);
-		if (cmd->callback !=NULL) {
-			//cmd->callback(last_result);
-			cmd->callback(this, 0, NULL);
+		} else  {
+			last_result = cmd-> operation(this, argc-1, &argv[1]);
 		}
 
-	}
+		//LOG("[%s].[%d]\n", argv[0], last_result);
 
+		if (cmd->callback !=NULL) {
+			cmd->callback(this, 0, NULL);
+		}
+	} // end base command
+
+	if (last_result == -110) printf("[%s].Command Not Found\n", argv[0]);
+
+	// Cli.callbak
 	if (callback!=NULL) {
-/*
-		char cmd[128];
-		char line[256];
-		argstr(cmd, 127, argc, argv);
-		sprintf(line, "Command[%s] Result[%d]", cmd, last_result);
-		printf("Callback:%s\n", line);
-		run_callback(line);
-		*/
 		callback(this, argc-1, &argv[1]);
 	}
 
+	// if base command - include (callto)(final callbacks)
+	if ((cmd!=NULL)&&(run_callto !=NULL)) {
+		run_callto(0, NULL);
+	}
 
+
+	//PRINT("final.last_result=[%d]\n", last_result);
 	return last_result;
 }
 //---------------------------------
@@ -322,7 +399,10 @@ void Concentration_CLI::load_commands() {
 	cli_load_base(this, 0, NULL);
 	cli_load_vars(this, 0, NULL);
 	cli_load_match(this, 0, NULL);
+	cli_load_vm(this, 0, NULL);
 	//cli_load_gfx(this, 0, NULL);
+
+	/* moved to void ChemDisplay::load_display_commands(void){
 	cli_load_screen(this, 0, NULL);
 	cli_load_menu(this,0, NULL);
 	cli_load_button(this,0, NULL);
@@ -330,6 +410,7 @@ void Concentration_CLI::load_commands() {
 	cli_load_moledisp(this,0, NULL);
 	cli_load_peplist(this,0, NULL);
 	cli_load_molelist(this,0, NULL);
+	*/
 }
 
 //---------------------------------//---------------------------------

@@ -9,12 +9,12 @@
 #define CHEMMENUBUTON_H_
 
 //enum CHEMMENUBUTON_TYPE { UNDEF, CORE, PEP, MOLE, CONC, CONCVOL, MATCHPOS };
-#include "../Concentration_VM.h"
-#include "gfx/GFX_Base.h"
+//#include "../Concentration_VM.h"
+//#include "gfx/GFX_Base.h"
+//#include "ChemDisplay.h"
 #include "ChemDisplayCoords.h"
 #include "../../MyString.h"
-//#include "ChemDisplay.h"
-//class ChemDisplay;
+class ChemDisplay;
 
 
 // ---------------------------------------
@@ -30,7 +30,7 @@ public:
 	//CHEMMENUBUTON_TYPE	mode;
 	bool		_selected;
 	void		*data;
-	int		(*callback)(Concentration_CLI*, int, char**);
+	int		(*callback)(ChemDisplay*, int, char**);
 	//----------------
 	ChemMenuButton();
 	virtual ~ChemMenuButton();

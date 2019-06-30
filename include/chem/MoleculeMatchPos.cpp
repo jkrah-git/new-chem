@@ -203,8 +203,8 @@ int	MoleculeMatchPos::start(){
 
 	test_item = NULL;
 	current_pos.init();
-	rotation = -1;
-	//if (rotmole!=NULL) rotmole->clear();
+	rotation = 4;
+	//rotatemole();
 	return 0;
 }
 

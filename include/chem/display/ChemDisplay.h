@@ -8,8 +8,12 @@
 #ifndef CHEMDISPLAY_H_
 #define CHEMDISPLAY_H_
 // ----------------
-#include "chem/Concentration_VM.h"
+#include "chem/Concentration_CLI.h"
+//#include "chem/Concentration_CLI.h"
 #include "ChemScreen.h"
+#include "Display_Command.h"
+//class Display_Command;
+#include "gfx/GFX_Base.h"
 
 #define DISPLAY_EVENT_MOUSE1 1
 #define DISPLAY_EVENT_MOUSE2 3
@@ -25,26 +29,37 @@
 
 
 //====================================
+//class ChemDisplay;
 // ----------------
 class ChemDisplay {
-
+	Concentration_CLI 		*cli;
 public:
 	GFX_Base				gfx;
 	mylist<ChemScreen> 		screen_list;
 	ChemScreen				*selected_screen;
 	Molecule				*selected_mole;
 	Peptide					*selected_pep;
+	int		(*callback)(ChemDisplay *, int, char**);
 
+
+	mylist<Display_Command>			display_cmdlist;
 
 	// display_screen overrides current_screen - use to wait on non selected screen
 //	ChemScreen				*display_screen;
 
   	//-------------------
-	ChemDisplay();
+	ChemDisplay(Concentration_CLI *_cli);
 	virtual ~ChemDisplay();
 	void	dump();
 	void	gdump(ChemDisplayColor *col){  gfx.color(col); gdump(); };
 	void	gdump();
+
+
+	int		addcmd(mylist<Display_Command> *cmd_list, int 	(*op)(ChemDisplay *, int, char**), char *name);
+	Concentration_CLI		*get_cli(void) { return cli; };
+	void					load_commands(void);
+	int		run(mylist<Display_Command> *cmd_list, int argc, char **argv);
+
 
 	void	grid_axis(ChemDisplayCoords *grid_coords, int red, int green, int blue);
 	void	grid_axis(ChemDisplayCoords *grid_coords, int red, int green, int blue, int xpos, int ypos);
@@ -64,14 +79,14 @@ public:
 	//---
 	void	draw_vm(ChemScreen *screen, Concentration_VM *vm);
 
-	void 	draw_menu_border(ChemMenu *menu);
-	void 	draw_menu(ChemMenu *menu);
-	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
+//	void 	draw_menu_border(ChemMenu *menu);
+//	void 	draw_menu(ChemMenu *menu);
+//	void 	draw_button(ChemDisplayCoords *menu_coords, ChemMenuButton *button, ChemDisplayColor *col);
 
 	void	draw_pepdisp(ChemScreen *screen, ChemPepDisplay *pepdis, bool mouseclick);
 	void	draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bool mouseclick);
-	void	draw_peplist(ChemScreen *screen, ChemPeplistDisplay *peplist, bool mouseclick);
-	void	draw_molelist(ChemScreen *screen, ChemMolelistDisplay *molelist, bool mouseclick);
+	void	draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemPeplistDisplay *peplist, bool mouseclick);
+	void	draw_molelist(ChemScreen *screen, Concentration_CLI *cli, ChemMolelistDisplay *molelist, bool mouseclick);
 	//--------------
 	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli){ draw_screen(screen, cli, false); };

@@ -15,7 +15,7 @@
 class ChemMoleDisplay {
 public:
 	Molecule				**mole;
-
+	//Concentration_VM		*vm;
 
 public:
 	MyString				name;

@@ -7,12 +7,14 @@
 
 #include "../screen_callbacks.h"
 // --------------------------
-int	cli_load_molelist(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_molelist(ChemDisplay *display, int argc, char **argv){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	//PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "molelist");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_molelist, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "molelist");	r = display-> addcmd(&display-> display_cmdlist, 	cli_molelist, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 // --------------------------
@@ -35,12 +37,15 @@ int cli_molelist_list(Concentration_CLI *cli, ChemScreen *screen){
 }
 
 // --------------------------// --------------------------
-int cli_molelist(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-	if (cli->core==NULL) return -2;
+int cli_molelist(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.selected_screen;
+	ChemScreen *screen = display-> selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -61,7 +66,8 @@ int cli_molelist(Concentration_CLI *cli, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		molelist = screen-> add_molelist(argv[0]);
 		if (molelist==NULL) {	PRINT("failed to add molelist[%s]..\n", argv[0]);  return -3;  }
-		molelist->set_mole_list(&cli->core->molecule_stack);
+		//molelist->set_mole_list(&vm->molecule_stack);
+		molelist->set_vm(vm);
 		printf("new molelist[%s] OK..\n", argv[0]);
 		return 0;
 	}
@@ -130,21 +136,23 @@ int cli_molelist(Concentration_CLI *cli, int argc, char **argv) {
 	}
 
 
-
+/*
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
 		if (argc==2) {
-			printf("n\n");
+			printf("null\n");
 			printf("core\n");
-		//	printf("core\n");
+			return 0;
 		}
 
 		if (strcmp(argv[2], "null")==0) {
-			molelist->set_mole_list(NULL);
+			//molelist->set_mole_list(NULL);
+			molelist->set_vm(NULL);
 			printf("del[%s] ok\n", argv[0]);
 		}
 		if (strcmp(argv[2], "core")==0) {
-			molelist->set_mole_list(&cli->core->molecule_stack);
+			//molelist->set_mole_list(&vm->molecule_stack);
+			molelist->set_vm(vm);
 			printf("del[%s] ok\n", argv[0]);
 		}
 
@@ -153,6 +161,7 @@ int cli_molelist(Concentration_CLI *cli, int argc, char **argv) {
 
 
 	} // -------end(src)
+*/
 	//----------------
 	if (strcmp(argv[1], "coords")==0) {
 		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);

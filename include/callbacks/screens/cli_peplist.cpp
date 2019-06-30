@@ -7,18 +7,22 @@
 
 #include "../screen_callbacks.h"
 // --------------------------
-int	cli_load_peplist(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_peplist(ChemDisplay *display, int argc, char **argv){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	//PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "peplist");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_peplist, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "peplist");	r = display-> addcmd(&display-> display_cmdlist, 	cli_peplist, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 // --------------------------
 // --------------------------
-int cli_peplist_list(Concentration_CLI *cli, ChemScreen *screen){
-	if (cli==NULL) return -1;
+int cli_peplist_list(ChemDisplay *display, ChemScreen *screen){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	if (screen==NULL) return -2;
 
 	int c=0;
@@ -35,12 +39,15 @@ int cli_peplist_list(Concentration_CLI *cli, ChemScreen *screen){
 }
 
 // --------------------------// --------------------------
-int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-	if (cli->core==NULL) return -2;
+int cli_peplist(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.selected_screen;
+	ChemScreen *screen = display-> selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -48,7 +55,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 
 	// argc=0 argv()  (list)
 	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
-		cli_peplist_list(cli, screen);
+		cli_peplist_list(display, screen);
 		return 0;
 	}
 
@@ -61,7 +68,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		peplist = screen-> add_peplist(argv[0]);
 		if (peplist==NULL) {	PRINT("failed to add peplist[%s]..\n", argv[0]);  return -3;  }
-		peplist->set_pep_list(&cli->core->peptide_stack);
+		peplist->set_pep_list(&vm->peptide_stack);
 		printf("new peplist[%s] OK..\n", argv[0]);
 		return 0;
 	}
@@ -71,7 +78,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 	if (argc==1) {
 		//---------------- help
 		if (strcmp(argv[0], "help")==0) {	printf("name\n");	return 0;		}
-		if (strcmp(argv[0], "list")==0) {	cli_peplist_list(cli, screen);	 return 0;	}
+		if (strcmp(argv[0], "list")==0) {	cli_peplist_list(display, screen);	 return 0;	}
 
 		// end of argc=1 - peplist must be set
 		if (peplist==NULL){	printf("peplist[%s] not found.\n", argv[1]);		return -1;	}
@@ -145,7 +152,7 @@ int cli_peplist(Concentration_CLI *cli, int argc, char **argv) {
 			printf("del[%s] ok\n", argv[0]);
 		}
 		if (strcmp(argv[2], "core")==0) {
-			peplist->set_pep_list(&cli->core->peptide_stack);
+			peplist->set_pep_list(&vm->peptide_stack);
 			printf("del[%s] ok\n", argv[0]);
 		}
 

@@ -11,9 +11,12 @@
 //	r= sscanf(argv, "%d", &v);
 //}
 // --------------------------
-int cli_redraw(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-	cli->display.draw_screen(cli->display.selected_screen, cli);
+int cli_redraw(ChemDisplay *display, int argc, char **argv) {
+	//PRINT("======\n");
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
+	display-> draw_screen(display-> selected_screen, cli);
 	return 0;
 }
 // --------------------------
@@ -197,7 +200,7 @@ int (*cli_callback(Concentration_CLI*, int argc, char **argv))(Concentration_CLI
 	// 1 argv(dump)
 	if (argc==1) {
 		//---------------- dump
-		if (strcmp(argv[0], "cli_button_select")==0) {	printf("[%s]\n", argv[0]); 	return cli_button_ping;	}
+		//if (strcmp(argv[0], "cli_button_select")==0) {	printf("[%s]\n", argv[0]); 	return cli_button_ping;	}
 	} // end(argc==1)
 
 	return NULL;

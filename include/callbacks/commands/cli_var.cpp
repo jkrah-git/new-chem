@@ -27,20 +27,23 @@ int	cli_stack(Concentration_CLI *cli, int argc, char **argv){
 
 	return 	cli-> run(&cli-> stack_cmdlist, argc,  &argv[0]);
 }
+#include <string.h>
 //---------------------------------//---------------------------------
 int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
 	if (argc<1) {
-		cli->core-> dumpstacks();	 printf(".. use [pep|mole|conc to filter dump.\n");
+		vm-> dumpstacks();	 printf(".. use [pep|mole|conc to filter dump.\n");
 	} else {
-		if (strcmp(argv[0], "pep") ==0)  {	printf("peptide_stack ==> ");	 cli->core->  peptide_stack.dump();	 }
-		if (strcmp(argv[0], "mole") ==0) {	printf("molecule_stack ==> ");	 cli->core-> molecule_stack.dump();	 }
-		if (strcmp(argv[0], "conc") ==0) {	printf("concentration_stack ==> ");	 cli->core-> concentration_stack.dump();	 }
+		if (strcmp(argv[0], "pep") ==0)  {	printf("peptide_stack ==> ");	 vm->  peptide_stack.dump();	 }
+		if (strcmp(argv[0], "mole") ==0) {	printf("molecule_stack ==> ");	 vm-> molecule_stack.dump();	 }
+		if (strcmp(argv[0], "conc") ==0) {	printf("concentration_stack ==> ");	 vm-> concentration_stack.dump();	 }
 	}
 
 	return 0;
@@ -48,7 +51,9 @@ int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -62,39 +67,39 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 			(strcmp(argv[0], "all") ==0) ){
 			printf("peptide_stack ==> clear\n");
 			// check if selected
-			if (cli-> core-> pep != NULL) {
-				if ( cli->core-> peptide_stack.search(cli-> core-> pep) != NULL ) {
-					cli-> core-> pep = NULL;
+			if (vm-> pep != NULL) {
+				if ( vm-> peptide_stack.search(vm-> pep) != NULL ) {
+					vm-> pep = NULL;
 				}
 			}
 			//--
-			cli->core-> peptide_stack.clear();
+			vm-> peptide_stack.clear();
 		}
 		// -------------------------
 		if ((strcmp(argv[0], "mole") ==0) ||
 			(strcmp(argv[0], "all") ==0) ){
 			printf("molecule_stack ==> clear\n");
 			// check if selected
-			if (cli-> core-> mole != NULL) {
-				if ( cli->core-> molecule_stack.search(cli-> core-> mole) != NULL ) {
-					cli-> core-> mole = NULL;
+			if (vm-> mole != NULL) {
+				if ( vm-> molecule_stack.search(vm-> mole) != NULL ) {
+					vm-> mole = NULL;
 				}
 			}
 			//--
-			cli->core-> molecule_stack.clear();
+			vm-> molecule_stack.clear();
 		}
 		// -------------------------
 		if ((strcmp(argv[0], "conc") ==0) ||
 			(strcmp(argv[0], "all") ==0) ){
 			printf("concentration_stack ==> clear\n");
 			// check if selected
-			if (cli-> core-> conc != NULL) {
-				if ( cli->core-> concentration_stack.search(cli-> core-> conc) != NULL ) {
-					cli-> core-> conc = NULL;
+			if (vm-> conc != NULL) {
+				if ( vm-> concentration_stack.search(vm-> conc) != NULL ) {
+					vm-> conc = NULL;
 				}
 			}
 			//--
-			cli->core-> concentration_stack.clear();
+			vm-> concentration_stack.clear();
 		}
 	}
 
@@ -124,7 +129,8 @@ int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -133,19 +139,19 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	mylist<Peptide>::mylist_item<Peptide>  *new_item;
 	if (argc==0) {
-		new_item = cli-> core-> peptide_stack.add();
+		new_item = vm-> peptide_stack.add();
 		if (new_item ==NULL) return -10;
 		if (new_item-> item ==NULL) return -11;
 
-		if (cli-> core-> pep==NULL) {
-			cli-> core-> pep = new_item-> item;
+		if (vm-> pep==NULL) {
+			vm-> pep = new_item-> item;
 		} else {
-			*new_item-> item = *cli-> core-> pep;
+			*new_item-> item = *vm-> pep;
 		}
 
 	} else {
 		for (int i=0; i<argc; i++) {
-			new_item = cli-> core-> peptide_stack.add();
+			new_item = vm-> peptide_stack.add();
 			if (new_item ==NULL) return -10;
 			if (new_item-> item ==NULL) return -11;
 
@@ -163,27 +169,30 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
-	mylist<Peptide>::mylist_item<Peptide>  *tail = cli-> core-> peptide_stack.gettail();
+	mylist<Peptide>::mylist_item<Peptide>  *tail = vm-> peptide_stack.gettail();
 	if (tail ==NULL) return -10;
 	if (tail-> item ==NULL) return -11;
 
 	//*cli-> core-> pep = *tail-> item;
-	if (cli-> core-> pep == tail-> item) {
-		cli-> core-> pep = NULL;
+	if (vm-> pep == tail-> item) {
+		vm-> pep = NULL;
 	}
-	cli-> core-> peptide_stack.del(tail);
+	vm-> peptide_stack.del(tail);
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -192,7 +201,7 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 	mylist<Peptide>::mylist_item<Peptide>  *item = NULL;
 
 	if (argc<1) {
-		item = cli-> core-> peptide_stack.gettail();
+		item = vm-> peptide_stack.gettail();
 	} else {
 		int off;
 		if ( sscanf(argv[0], "%d", &off) <0) {
@@ -200,20 +209,21 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		//printf("..load [%d]\n", off);
-		item = cli-> core-> peptide_stack.offset(off);
+		item = vm-> peptide_stack.offset(off);
 	}
 
 	// ----------- save
 	if (item ==NULL) return -10;
 	if (item-> item ==NULL) return -11;
-	cli-> core-> pep = item-> item;
+	vm-> pep = item-> item;
 
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -230,8 +240,8 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 		return -20;
 	}
 	PepSig sig = hex;
-	if (cli-> core-> pep !=NULL) {
-		cli-> core-> pep-> set(sig);
+	if (vm-> pep !=NULL) {
+		vm-> pep-> set(sig);
 	}
 
 	return 0;
@@ -239,7 +249,8 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -263,11 +274,11 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 	}
 
 
-	if (cli-> core-> pep !=NULL) {
+	if (vm-> pep !=NULL) {
 	//	cli-> core-> pep-> pos.dim[0] = posx;
 	//	cli-> core-> pep-> pos.dim[1] = posy;
 	//	PepPosVecType	*pos = cli-> core-> pep-> getpos();
-		cli-> core-> pep-> setpos(posx, posy, 0);
+		vm-> pep-> setpos(posx, posy, 0);
 	}
 
 	return 0;
@@ -281,7 +292,9 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 //=======================
 //---------------------------------//---------------------------------
 int	cli_mole(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -100;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -297,28 +310,31 @@ int	cli_mole(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
 	mylist<Molecule>::mylist_item<Molecule>  *new_item = NULL;
-	new_item = cli-> core-> molecule_stack.add();
+	new_item = vm-> molecule_stack.add();
 	if (new_item ==NULL) return -10;
 	if (new_item-> item ==NULL) return -11;
 
-	if (cli-> core-> mole==NULL) {
-		cli-> core-> mole = new_item-> item;
+	if (vm-> mole==NULL) {
+		vm-> mole = new_item-> item;
 	} else {
-		*new_item-> item = *cli-> core-> mole;
+		*new_item-> item = *vm-> mole;
 	}
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_pop(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -327,44 +343,38 @@ int	cli_mole_pop(Concentration_CLI *cli, int argc, char **argv){
 
 
 
-	mylist<Molecule>::mylist_item<Molecule>  *tail = cli-> core-> molecule_stack.gettail();
+	mylist<Molecule>::mylist_item<Molecule>  *tail = vm-> molecule_stack.gettail();
 	if (tail ==NULL) return -10;
 	if (tail-> item ==NULL) return -11;
 
 	//*cli-> core-> pep = *tail-> item;
-	if (cli-> core-> mole == tail-> item) {
-		cli-> core-> mole = NULL;
+	if (vm-> mole == tail-> item) {
+		vm-> mole = NULL;
 	}
-	cli-> core-> molecule_stack.del(tail);
+	vm-> molecule_stack.del(tail);
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	mylist<Molecule>::mylist_item<Molecule>  *item = NULL;
 
 	if (argc<1) {
-		item = cli-> core-> molecule_stack.gettail();
+		item = vm-> molecule_stack.gettail();
 	} else {
 
-
-		if (strcmp(argv[0], "m1" ) == 0) {
-			cli-> core-> mole = cli->core->matchpos.getM1();
+		if (strcmp(argv[0], "help" ) == 0) {
+			printf("[ m1|m2|rot|+n|-1]\n");
 			return 0;
 		}
 
-		if (strcmp(argv[0], "m2" ) == 0) {
-			cli-> core-> mole = cli->core->matchpos.getM2();
-			return 0;
-		}
-
-		if (strcmp(argv[0], "rot" ) == 0) {
-			cli-> core-> mole = cli->core->matchpos.get_rotmole();
-			return 0;
-		}
-
+		if (strcmp(argv[0], "m1" ) == 0) {	vm-> mole = vm->matchpos.getM1(); return 0; }
+		if (strcmp(argv[0], "m2" ) == 0) {	vm-> mole = vm->matchpos.getM2(); return 0; }
+		if (strcmp(argv[0], "rot" ) == 0) {	vm-> mole = vm->matchpos.get_rotmole();	return 0;	}
 
 		int off;
 		if ( sscanf(argv[0], "%d", &off) <0) {
@@ -372,13 +382,13 @@ int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		printf("..load [%d]\n", off);
-		item = cli-> core-> molecule_stack.offset(off);
+		item = vm-> molecule_stack.offset(off);
 	}
 
 	// ----------- save
 	if (item ==NULL) return -10;
 	if (item-> item ==NULL) return -11;
-	cli-> core-> mole = item-> item;
+	vm-> mole = item-> item;
 
 /// old
 //	if (argc<1) {
@@ -392,14 +402,16 @@ int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 
 	int r = -100;
 	int c=0;
-	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
+	mylist<Peptide>::mylist_item<Peptide>  *item = vm-> peptide_stack.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
-		r = cli-> core-> mole->addpep(item-> item-> get());
+		r = vm-> mole->addpep(item-> item-> get());
 		if (r<0) { LOG("addpep = [%d]\n", r); }
 		else { c++; }
 		// ---
@@ -415,8 +427,10 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 
 	int r=0;
 	int hex;
@@ -427,7 +441,7 @@ int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
 			printf("bad sig[%s].\n", argv[0]);
 			return -20;
 		}
-		r = cli-> core-> mole->addpep(hex);
+		r = vm-> mole->addpep(hex);
 		LOG("addpep = [%d] = [%d]\n", hex, r);
 	}
 
@@ -436,12 +450,14 @@ int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_deltail(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 	int r=0;
 
-	if (cli-> core-> mole->pep_list.gettail()!=NULL) {
-		cli-> core-> mole->pep_list.del(cli-> core-> mole->pep_list.gettail());
+	if (vm-> mole->pep_list.gettail()!=NULL) {
+		vm-> mole->pep_list.del(vm-> mole->pep_list.gettail());
 	}
 
 
@@ -453,13 +469,15 @@ int	cli_mole_deltail(Concentration_CLI *cli, int argc, char **argv){
 
 //---------------------------------//---------------------------------
 int	cli_mole_frompep(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 
-	cli-> core-> mole->clear();
-	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> peptide_stack.gethead();
+	vm-> mole->clear();
+	mylist<Peptide>::mylist_item<Peptide>  *item = vm-> peptide_stack.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
-		mylist<Peptide>::mylist_item<Peptide> *new_item = cli-> core-> mole-> pep_list.add();
+		mylist<Peptide>::mylist_item<Peptide> *new_item = vm-> mole-> pep_list.add();
 		if (new_item==NULL)
 			return -20;
 
@@ -471,13 +489,15 @@ int	cli_mole_frompep(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int	cli_mole_topep(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 
 	//cli-> core-> mole->clear();
-	mylist<Peptide>::mylist_item<Peptide>  *item = cli-> core-> mole-> pep_list.gethead();
+	mylist<Peptide>::mylist_item<Peptide>  *item = vm-> mole-> pep_list.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
-		mylist<Peptide>::mylist_item<Peptide> *new_item = cli-> core-> peptide_stack.add();
+		mylist<Peptide>::mylist_item<Peptide> *new_item = vm-> peptide_stack.add();
 		if (new_item==NULL)
 			return -20;
 
@@ -490,8 +510,10 @@ int	cli_mole_topep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_tovar(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> mole==NULL)  return -10;
 
 	if (argc<1) {
 		printf("usage: mole tovar VARNAME\n");
@@ -500,7 +522,7 @@ int	cli_mole_tovar(Concentration_CLI *cli, int argc, char **argv){
 
 //	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], argv[1]);
 	char 	name[20];
-	sprintf(name, "0x%zX", (long unsigned int) cli-> core-> mole);
+	sprintf(name, "0x%zX", (long unsigned int) vm-> mole);
 	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], name);
 	if (item==NULL) {
 		printf("failed to set var[%s]\n", argv[0]);
@@ -513,8 +535,9 @@ int	cli_mole_tovar(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_fromvar(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	//if (cli-> core-> mole==NULL)  return -10;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	if (argc<1) {
 		printf("usage: mole fromvar VARNAME\n");
@@ -534,10 +557,10 @@ int	cli_mole_fromvar(Concentration_CLI *cli, int argc, char **argv){
 
  	mylist<Molecule>::mylist_item<Molecule> *item;
  	//item = cli->core-> concvol->mole_list.search( (Molecule*) ptr);
- 	item = cli->core->molecule_stack.search( (Molecule*) ptr);
+ 	item = vm->molecule_stack.search( (Molecule*) ptr);
  	if (item==NULL) return -10;
 	if (item-> item == NULL) return -11;
-	cli->core-> mole = item-> item;
+	vm-> mole = item-> item;
 
 	return 0;
 }
@@ -569,55 +592,60 @@ int	cli_conc(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_push(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	mylist<Concentration>::mylist_item<Concentration>  *new_item = NULL;
 
 	// ../chem/Concentration.h:33: note: candidates are: Concentration::Concentration(Molecule*)
-	new_item = cli-> core->concentration_stack.add();
+	new_item = vm->concentration_stack.add();
 	if (new_item ==NULL) return -10;
 	if (new_item-> item ==NULL) return -11;
 
 	// if nothing selected - (select new) (and leave entry blank)
-	if (cli-> core-> conc==NULL) {	   // (or use current mole)
-		if (cli-> core-> mole != NULL) {
-			new_item-> item->setmole(cli-> core-> mole);
+	if (vm-> conc==NULL) {	   // (or use current mole)
+		if (vm-> mole != NULL) {
+			new_item-> item->setmole(vm-> mole);
 		}
-		cli-> core-> conc = new_item-> item;	// select
+		vm-> conc = new_item-> item;	// select
 	} else { // copy in selected to new
-		*new_item-> item = *cli-> core-> conc;
+		*new_item-> item = *vm-> conc;
 	}
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_pop(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
-	mylist<Concentration>::mylist_item<Concentration>  *tail = cli-> core-> concentration_stack.gettail();
+	mylist<Concentration>::mylist_item<Concentration>  *tail = vm-> concentration_stack.gettail();
 	if (tail ==NULL) return -10;
 	if (tail-> item ==NULL) return -11;
 
 	//*cli-> core-> pep = *tail-> item;
-	if (cli-> core-> conc == tail-> item) {
-		cli-> core-> conc = NULL;
+	if (vm-> conc == tail-> item) {
+		vm-> conc = NULL;
 	}
-	cli-> core-> concentration_stack.del(tail);
+	vm-> concentration_stack.del(tail);
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_ld(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
 
 	if (argc<1) {
-		item = cli-> core-> concentration_stack.gettail();
+		item = vm-> concentration_stack.gettail();
 	} else {
 		int off;
 		if ( sscanf(argv[0], "%d", &off) <0) {
@@ -625,39 +653,43 @@ int	cli_conc_ld(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		//printf("..load [%d]\n", off);
-		item = cli-> core-> concentration_stack.offset(off);
+		item = vm-> concentration_stack.offset(off);
 	}
 
 	// ----------- save
 	if (item ==NULL) return -10;
 	if (item-> item ==NULL) return -11;
-	cli-> core-> conc = item-> item;
+	vm-> conc = item-> item;
 
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_mole(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
-	if (cli-> core-> mole == NULL) {
+	if (vm-> mole == NULL) {
 		printf("Need to select mole!\n");
 		return -1;
 	}
 
-	if (cli-> core-> conc == NULL) {
+	if (vm-> conc == NULL) {
 		printf("Need to select conc!\n");
 		return -1;
 	}
 
-	cli-> core-> conc->setmole(cli-> core-> mole);
+	vm-> conc->setmole(vm-> mole);
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> conc == NULL) {
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> conc == NULL) {
 		printf("Need to select conc!\n");
 		return -1;
 	}
@@ -674,8 +706,8 @@ int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
 		}
 		printf("adj=[%f]\n", adj);
 
-		if (adj <0) {	cli-> core-> conc-> take(adj);	}
-		if (adj >0) {	cli-> core-> conc-> put(adj);	}
+		if (adj <0) {	vm-> conc-> take(adj);	}
+		if (adj >0) {	vm-> conc-> put(adj);	}
 
 		return 0;
 	}
@@ -687,7 +719,7 @@ int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
 		if (sscanf(argv[0], "%f" , &val) <1) { printf("err: cant read val..\n"); return -3; }
 		if (sscanf(argv[1], "%f" , &delta) <1) { printf("err: cant read delta..\n"); return -3; }
 		printf("set=[%f][%f]\n", val, delta);
-		cli-> core-> conc-> set(val, delta);
+		vm-> conc-> set(val, delta);
 		return 0;
 	}
 
@@ -699,47 +731,51 @@ int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_commit(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> conc == NULL) {
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> conc == NULL) {
 		printf("Need to select conc!\n");
 		return -1;
 	}
 
-	cli-> core-> conc-> commit();
+	vm-> conc-> commit();
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_tovol(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> concvol ==NULL) return -2;
-	if (cli-> core-> conc == NULL) {
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> concvol ==NULL) return -2;
+	if (vm-> conc == NULL) {
 		printf("Need to select conc!\n");
 		return -3;
 	}
 
 
 	ConcLevelType r = 0;
-	Molecule	*m = cli-> core-> conc-> getmole();
+	Molecule	*m = vm-> conc-> getmole();
 
 	if (m==NULL) {
 		printf("Conc needs Molecule..\n");
 		return -3;
 	}
 
-	ConcLevelType val = cli-> core-> conc-> get();
-	ConcLevelType delta = cli-> core-> conc-> getdelta();
+	ConcLevelType val = vm-> conc-> get();
+	ConcLevelType delta = vm-> conc-> getdelta();
 	// if val!=0 then put/take - else just set delta
 	if (val > 0) {
-		cli-> core-> concvol->put(m, val);
+		vm-> concvol->put(m, val);
 		printf("add[%f]=[%f]\n", val, r);
 	}
 	if (val < 0) {
-		cli-> core-> concvol->take(m, -val);
+		vm-> concvol->take(m, -val);
 		printf("take[%f]=[%f]\n", -val, r);
 	}
 	if (val == 0) {
-		cli-> core-> concvol->set(m, val, delta);
+		vm-> concvol->set(m, val, delta);
 		printf("set[%f][%f]=[%f]\n", val, delta, r);
 	}
 
@@ -748,15 +784,17 @@ int	cli_conc_tovol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_fromvol(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> concvol ==NULL) return -2;
-	if (cli-> core-> mole == NULL) {
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> concvol ==NULL) return -2;
+	if (vm-> mole == NULL) {
 		printf("Need to select mole first!\n");
 		return -3;
 	}
 
 	////Concentration	*molesearch(Molecule	*m);
-	cli-> core-> conc = cli-> core-> concvol->molesearch(cli-> core-> mole);
+	vm-> conc = vm-> concvol->molesearch(vm-> mole);
 	/*
 
 	ConcLevelType r = 0;
@@ -777,9 +815,11 @@ int	cli_conc_fromvol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_tovar(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
-	if (cli-> core-> concvol ==NULL) return -2;
-	if (cli-> core-> conc == NULL) {
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	if (vm-> concvol ==NULL) return -2;
+	if (vm-> conc == NULL) {
 		printf("Need to select conc first!\n");
 		return -3;
 	}
@@ -791,7 +831,7 @@ int	cli_conc_tovar(Concentration_CLI *cli, int argc, char **argv){
 
 //	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], argv[1]);
 	char 	name[20];
-	sprintf(name, "0x%zX", (long unsigned int) cli-> core-> conc);
+	sprintf(name, "0x%zX", (long unsigned int) vm-> conc);
 
 	mylist<KeyValPair>::mylist_item<KeyValPair>  *item = cli->var_list.set(argv[0], name);
 	if (item==NULL) {
@@ -804,7 +844,9 @@ int	cli_conc_tovar(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//if (cli-> core-> mole==NULL)  return -10;
 
 	if (argc<1) {
@@ -825,10 +867,10 @@ int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
 
  	mylist<Concentration>::mylist_item<Concentration> *item;
  	//item = cli->core-> concvol->mole_list.search( (Molecule*) ptr);
- 	item = cli->core->concentration_stack.search( (Concentration*) ptr);
+ 	item = vm->concentration_stack.search( (Concentration*) ptr);
  	if (item==NULL) return -10;
 	if (item-> item == NULL) return -11;
-	cli->core-> conc = item-> item;
+	vm-> conc = item-> item;
 
 
 	return 0;
@@ -844,7 +886,9 @@ int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
 //=======================
 //---------------------------------//---------------------------------
 int	cli_var(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -860,14 +904,18 @@ int	cli_var(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int	cli_var_help(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	cli-> var_cmdlist_dump();
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_get(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	if (argc<1) {
 		printf("usage: var get name\n");
 		return -1;
@@ -885,7 +933,9 @@ int	cli_var_get(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	if (argc<2) {
 		printf("usage: var set name value\n");
 		return -1;
@@ -921,7 +971,9 @@ int	cli_var_set(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_clear(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	if (argc!=1) {
 		printf("usage: var clear name\n");
 		return -1;
@@ -939,7 +991,9 @@ int	cli_var_clear(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_del(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	if (argc!=1) {
 		printf("usage: var clear name\n");
 		return -1;
@@ -953,7 +1007,9 @@ int	cli_var_del(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
-	if ((cli==NULL) || (cli-> core ==NULL)) return -1;
+	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -990,6 +1046,8 @@ int	cli_var_run(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	int r;
 	char name[32];
@@ -1021,7 +1079,6 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "addpep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_addpep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "deltail"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_deltail, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
-
 
 	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);

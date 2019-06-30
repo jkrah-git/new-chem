@@ -43,7 +43,9 @@ int run_args(char *line){
 	}
 
 	add_history(buf);
-	return run(c, argv);
+	int r = run(c, argv);
+	//printf("r = [%d]\n", r);
+	return r;
 	//int r = run(cmd_list, c, argv);
 }
 

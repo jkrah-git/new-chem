@@ -4,12 +4,12 @@
  *  Created on: Jan 26, 2019
  *      Author: jkrah
  */
-#include <stdio.h>
 #include "CLI_Command.h"
 //-----
 #undef DEBUG
 //#define DEBUG
 #include "../include/debug.h"
+#include <stdio.h>
 /*
  //----------------
 class Concentration_CLI;
@@ -42,6 +42,8 @@ CLI_Command::CLI_Command() {
 void CLI_Command::dump(){
 	printf("CLI_Command::[0x%zX] name[%s] operation[0x%zX]",	(long unsigned int) this, name, (long unsigned int) operation);
 }
+
+/*
 //---------------------------------//---------------------------------
 // local test cmd
 int		cli_cmd_test(Concentration_CLI *cli, int argc, char **argv){
@@ -73,7 +75,7 @@ void CLI_Command::test(){
 	PRINT("final dump..\n");
 	dump();
 }
-
+*/
 
 
 //---------------------------------

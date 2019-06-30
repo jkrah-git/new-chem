@@ -9,10 +9,14 @@
 // --------------------------
 // --------------------------
 
-//int	screen_wait(ChemScreen *screen, Concentration_CLI *cli, ChemDisplay *display){
-int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display){
+
+//int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display){
+int	screen_wait(ChemDisplay *display, ChemScreen *screen){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	if (screen==NULL) return -1;
-	if (cli==NULL) return -2;
+	//if (cli==NULL) return -2;
 	if (display==NULL) return -3;
 
 	bool _dump = false;;
@@ -27,7 +31,7 @@ int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display
 	if (_dump) { PRINT("# waiting.. recieved[%d]\n", w); }
 	if (w==27) {		if (_dump) {	PRINT("# [ESC][%d]##\n", w); }	return -110;	}
 
-	ChemMenuButton *button = NULL;
+	//ChemMenuButton *button = NULL;
 	switch(w) {
 		/*
 		#define DISPLAY_EVENT_MOUSE1 1
@@ -40,6 +44,7 @@ int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display
 	//-----------------------
 	case DISPLAY_EVENT_MOUSE1:
 
+		/*************************
 		// scan menus
 		button = screen-> test_menus(display);
 		if (button!=NULL) {
@@ -54,7 +59,7 @@ int	screen_wait(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display
 				return 0;
 			}
 		} // -- else no button pressed
-
+		************************/
 		// ----------------
 		if (screen-> waitmode==WAIT_CURS) {
 			display->draw_screen(screen, cli, true);

@@ -13,7 +13,9 @@
 
 //-------------------------------------------
 class ChemMolelistDisplay {
-	mylist<Molecule>		*mole_list;
+	//mylist<Molecule>		*mole_list;
+	Concentration_VM		*vm;
+
 public:
 	MyString				name;
 	ChemDisplayCoords		coords;
@@ -30,9 +32,16 @@ public:
 	virtual ~ChemMolelistDisplay();
 	void	dump(void);
 	//----
-	mylist<Molecule>		*get_mole_list(void) { return mole_list; };
-	void				set_mole_list(mylist<Molecule> *_mole_list) { mole_list = _mole_list; };
-	int					count(void){ if (mole_list==NULL) return 0; return mole_list->count(); };
+	mylist<Molecule>		*get_mole_list(void) { //return mole_list; };
+		if (vm==NULL) return NULL;
+		return &vm->molecule_stack;
+	}
+	//void				set_mole_list(mylist<Molecule> *_mole_list) { mole_list = _mole_list; };
+	void				set_vm(Concentration_VM *_vm) { vm = _vm; };
+	int					count(void){ //if (mole_list==NULL) return 0; return mole_list->count(); };
+		if (vm==NULL) return -1;
+		return vm->molecule_stack.count();
+	}
 	//-----------
 	mylist<Molecule>::mylist_item<Molecule>  *get(int index);
 };

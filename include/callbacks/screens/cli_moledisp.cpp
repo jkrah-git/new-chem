@@ -7,18 +7,22 @@
 
 #include "../screen_callbacks.h"
 // --------------------------
-int	cli_load_moledisp(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_moledisp(ChemDisplay *display, int argc, char **argv){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	//PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "moledisp");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_moledisp, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "moledisp");	r = display-> addcmd(&display-> display_cmdlist, 	cli_moledisp, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 // --------------------------
 // --------------------------
-int cli_moledisp_list(Concentration_CLI *cli, ChemScreen *screen){
-	if (cli==NULL) return -1;
+int cli_moledisp_list(ChemDisplay *display, ChemScreen *screen){
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	if (screen==NULL) return -2;
 
 	int c=0;
@@ -35,12 +39,15 @@ int cli_moledisp_list(Concentration_CLI *cli, ChemScreen *screen){
 }
 
 // --------------------------// --------------------------
-int cli_moledisp(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-	if (cli->core==NULL) return -2;
+int cli_moledisp(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.selected_screen;
+	ChemScreen *screen = display-> selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -48,7 +55,7 @@ int cli_moledisp(Concentration_CLI *cli, int argc, char **argv) {
 
 	// argc=0 argv()  (list)
 	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
-		cli_moledisp_list(cli, screen);
+		cli_moledisp_list(display, screen);
 		return 0;
 	}
 
@@ -61,7 +68,7 @@ int cli_moledisp(Concentration_CLI *cli, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		mole = screen-> add_mole(argv[0]);
 		if (mole==NULL) {	PRINT("failed to add mole[%s]..\n", argv[0]);  return -3;  }
-		mole->set_mole(&cli->core->mole);
+		mole->set_mole(&vm->mole);
 		printf("new mole[%s] OK..\n", argv[0]);
 		return 0;
 	}
@@ -71,7 +78,7 @@ int cli_moledisp(Concentration_CLI *cli, int argc, char **argv) {
 	if (argc==1) {
 		//---------------- help
 		if (strcmp(argv[0], "help")==0) {	printf("name\n");	return 0;		}
-		if (strcmp(argv[0], "list")==0) {	cli_moledisp_list(cli, screen);	 return 0;	}
+		if (strcmp(argv[0], "list")==0) {	cli_moledisp_list(display, screen);	 return 0;	}
 
 		// end of argc=1 - mole must be set
 		if (mole==NULL){	printf("mole[%s] not found.\n", argv[1]);		return -1;	}
@@ -145,7 +152,7 @@ int cli_moledisp(Concentration_CLI *cli, int argc, char **argv) {
 			printf("del[%s] ok\n", argv[0]);
 		}
 		if (strcmp(argv[2], "core")==0) {
-			mole->set_mole(&cli->core->mole);
+			mole->set_mole(&vm->mole);
 			printf("del[%s] ok\n", argv[0]);
 		}
 

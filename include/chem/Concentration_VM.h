@@ -25,13 +25,13 @@ public:
 	mylist<Peptide>				peptide_stack;
 	mylist<Molecule>			molecule_stack;
 	mylist<Concentration>		concentration_stack;
+	MoleculeMatchPos			matchpos;
 
 	Peptide						*pep;
 	Molecule					*mole;
 	Concentration				*conc;
 	ConcentrationVolume 		*concvol;
 
-	MoleculeMatchPos			matchpos;
 
 
 	//-----------

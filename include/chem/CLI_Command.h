@@ -8,7 +8,7 @@
 #ifndef CLI_COMMAND_H_
 #define CLI_COMMAND_H_
 //================================================
-#include "../include/KeyValPair.h"
+//#include "../include/KeyValPair.h"
 
 #define CLI_COMMAND_MAX_NAME 	32
 //-----------------------------

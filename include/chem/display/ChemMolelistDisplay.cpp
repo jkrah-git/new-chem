@@ -35,7 +35,7 @@ public:
 //-------------------------------------------
  */
 ChemMolelistDisplay::ChemMolelistDisplay() {
-	mole_list = NULL;
+	vm = NULL;
 	index = 0;
 	width = 3;
 	height = 3;
@@ -46,23 +46,23 @@ ChemMolelistDisplay::ChemMolelistDisplay() {
 ChemMolelistDisplay::~ChemMolelistDisplay() {}
 //-------------------------------------------
 void ChemMolelistDisplay::dump(void) {
-	printf("ChemMolelistDisplay[0x%zX].[%s].mole_list[0x%zX].index[%d]size[%d,%d]\n",
+	printf("ChemMolelistDisplay[0x%zX].[%s].vm[0x%zX].index[%d]size[%d,%d]\n",
 			(long unsigned int) this,
 			name.get(),
-			(long unsigned int) mole_list,
+			(long unsigned int) vm,
 			index, width, height);
 	printf("Col:[%d][%d][%d] SelCol[%d][%d][%d]:", col.r, col.g, col.b, selcol.r , selcol.g, selcol.b);
 	coords.dump(); NL
-	printf("MoleList=> \n");
-	if (mole_list!=NULL) {
-		mole_list-> dump(); NL
+	printf("vm=> \n");
+	if (vm!=NULL) {
+		vm-> dump(); NL
 	}
 
 }
 //-------------------------------------------
 mylist<Molecule>::mylist_item<Molecule>  *ChemMolelistDisplay::get(int index){
-	if (mole_list==NULL) return NULL;
-	if (index==0) return mole_list-> gethead();
-	return mole_list-> offset(index);
+	if (vm==NULL) return NULL;
+	if (index==0) return vm->molecule_stack.gethead();
+	return vm->molecule_stack.offset(index);
 }
 //-------------------------------------------

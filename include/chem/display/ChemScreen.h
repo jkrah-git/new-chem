@@ -11,16 +11,17 @@
 //#include "../include/gfx/GFX_Base.h"
 //#include "ChemDisplayAttrib.h"
 
-#include "ChemMenu.h"
-#include "ChemDisplay.h"
+//#include "ChemDisplay.h"
+//#include "ChemMenu.h"
 #include "ChemPepDisplay.h"
 #include "ChemMoleDisplay.h"
 #include "ChemPeplistDisplay.h"
 #include "ChemMolelistDisplay.h"
+
 class ChemDisplay;
 #include "../../MyString.h"
 enum SCREEN_WAIT_MODE { WAIT_CURS, WAIT_SCREEN, WAIT_OBJECT };
-enum SCREEN_GRID_MODE { GRID_OFF, GRID_MOLE, GRID_MENU };
+enum SCREEN_GRID_MODE { GRID_OFF, GRID_ON };
 
 //-----------------------------------------
 class ChemScreen {
@@ -36,8 +37,8 @@ public:
  mylist<ChemMolelistDisplay>	molelist_list;
 
 
-	mylist<ChemMenu> 		menu_list;
-	ChemMenu				*current_menu;
+//	mylist<ChemMenu> 		menu_list;
+//	ChemMenu				*current_menu;
 
 	//PeptidePos				curs_pos;
 	ChemDisplayColor 		title_col;
@@ -45,17 +46,17 @@ public:
 	bool					waiting;
 	SCREEN_WAIT_MODE		waitmode;
 	SCREEN_GRID_MODE		gridmode;
-	int						(*renderCB)(Concentration_CLI *cli, ChemScreen *screen, bool mouseclick);
-	int						(*waitCB)(Concentration_CLI *cli, ChemScreen *screen, ChemDisplay *display);
+	int						(*renderCB)(ChemDisplay *, ChemScreen *screen, bool mouseclick);
+	int						(*waitCB)(ChemDisplay *, ChemScreen *screen);
 	//--------------
 	ChemScreen();
 	virtual ~ChemScreen();
 	void	dump(void);
 	// menu inherits ' *gfx struct (scale, offset etc)
-	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
-	ChemMenu				*find_menu(const char *_title);
+//	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
+//	ChemMenu				*find_menu(const char *_title);
 
-	ChemMenuButton			*test_menus(ChemDisplay *display);
+//	ChemMenuButton			*test_menus(ChemDisplay *display);
 	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
 	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
 	//mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *get_peplost_head(void){ return peplist_list.gethead(); };

@@ -7,12 +7,14 @@
 
 #include "../screen_callbacks.h"
 // --------------------------
-int	cli_load_button(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_button(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "button");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_button, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "button");	r = display-> addcmd(&display-> display_cmdlist, 	cli_button, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 // --------------------------
@@ -36,12 +38,13 @@ int cli_button_list_buttons(Concentration_CLI *cli, ChemMenu *menu){
 }
 
 // --------------------------// --------------------------
-int cli_button(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-
+int cli_button(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.selected_screen;
+	ChemScreen *screen = display-> selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen\n");
 		return -1;
@@ -173,12 +176,11 @@ int cli_button(Concentration_CLI *cli, int argc, char **argv) {
 
 	} // -------------------------------------------- end (argc>1) ---
 	//----------------
-	cli_redraw(cli, NULL, 0);
+	cli_redraw(display, NULL, 0);
 	return 1;
 }
 // --------------------------
-
-int cli_button_ping(Concentration_CLI *cli, int argc, char **argv) {
-		PRINT("===> PING\n");
-		return 0;
-}
+//int cli_button_ping(Concentration_CLI *cli, int argc, char **argv) {
+//		PRINT("===> PING\n");
+//		return 0;
+//}

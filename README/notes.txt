@@ -11,16 +11,12 @@ Chem Conc Engine
   - 2d structure but expandable to (N`d)
   - chem structure + physical map
   - periodic table  = affiliation strengths?
+   - active sites 
+
+* active sites 
+  - Part A/B - m1=(base) m2=(active)
+  - Sub matches.. (other chems active sites)
   
-  - active sites ??
-
-* ?? active sites  ??
-  ?? reactive site representation ? O-clash ???
-    OK if O never matches O .. but not accept.
-    Subsite matches.. (other chems active sites)
-  - AS can be ANY / ALL .. 
-  - each AS has physical map
-
 * Cells 
   -  (isolated) mix of conc's
   - expandable & nestable (organelle's vs skeletal)
@@ -217,15 +213,18 @@ NB: CLI = (*core, menus, display)
 
 TODO
 -----
-1.1 DONE -- update addpep - new rotation rules and relative rotations
-1..1 = menu - **buttons
-1.2 port cli cmds???
+-- test data
+-- Enzymes - (base) inbuild funcionts
+  - move mtach to VM
+  - add vmlist to cli
+  - core is spawned by starting match??
+  
+-- port cli cmds???
 	- start VM commands .. callbacks ?
 	- new cli/gfx commands
 		- screen modes;
 		- select / display VM items (register/stack/match)
 			 
-1.3 create new tests --
 
 2.1 fixup match - (seed map) - transcribe?
 3.  funcs - (if match then while (load payload) {execute payload })

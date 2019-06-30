@@ -6,12 +6,14 @@
  */
 #include "../screen_callbacks.h"
 // --------------------------
-int	cli_load_menu(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+int	cli_load_menu(ChemDisplay *display, int argc, char **argv){
+	if (display==NULL) return -1;
+	//Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 	//PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "menu");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_menu, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "menu");	r = display-> addcmd(&display-> display_cmdlist, 	cli_menu, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 // --------------------------
@@ -39,12 +41,13 @@ int cli_menu_list_menus(Concentration_CLI *cli, ChemScreen *screen){
 }
 
 // --------------------------// --------------------------
-int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
-	if (cli==NULL) return -1;
-
+int cli_menu(ChemDisplay *display, int argc, char **argv) {
+	if (display==NULL) return -1;
+	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+	//------
 
 	//if (cli->display.current_screen==NULL) {
-	ChemScreen *screen = cli->display.selected_screen;
+	ChemScreen *screen = display-> selected_screen;
 	if (screen==NULL) {
 		printf("need to select a screen first\n");
 		return -1;
@@ -91,7 +94,7 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		//PRINT(" ADD ..\n");
 		if (menu!=NULL) {	printf("menu[%s] already exists.\n", argv[0]);	return -2;	}
 		//screen = cli->display.add_screen(argv[0]);
-		menu = screen-> add_menu(argv[0], &cli-> display);
+		menu = screen-> add_menu(argv[0], display);
 		if (menu==NULL) {	PRINT("failed to add menu[%s]..\n", argv[0]);  return -3;  }
 		printf("new menu[%s] OK..\n", argv[0]);
 		return 0;
@@ -188,8 +191,8 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 		// if waiting then NO callback
 
 		screen-> current_menu = menu;
-		if (screen->waiting) {	cli-> callback = NULL;	}
-		else {					cli-> callback = cli_redraw;	}
+		if (screen->waiting) {	display-> callback = NULL;	}
+		else {					display-> callback = cli_redraw;	}
 
 //		else cli->display.draw_screen(cli-> display.current_screen, cli);
 		// --- draw...
@@ -199,15 +202,15 @@ int cli_menu(Concentration_CLI *cli, int argc, char **argv) {
 			//-- update and draw current screen...
 			screen-> current_menu = menu;
 			// if waiting then NO callback
-			if (screen->waiting) {	cli-> callback = NULL;	}
-			else {					cli-> callback = cli_redraw;	}
+			if (screen->waiting) {	display-> callback = NULL;	}
+			else {					display-> callback = cli_redraw;	}
 	// --- draw...
 
 
 
 	}
 	//draw_current_screen(cli, NULL, 0);
-	cli->display.draw_screen(cli-> display.selected_screen, cli);
+	display-> draw_screen(display-> selected_screen, cli);
 	return 1;
 }
 // --------------------------
