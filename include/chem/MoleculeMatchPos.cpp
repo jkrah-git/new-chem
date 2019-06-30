@@ -319,14 +319,15 @@ int	MoleculeMatchPos::match_pep(Peptide *pep1, Peptide *pep2){
 // -------------------------------
 int	MoleculeMatchPos::match_item(void){
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
+	// todo: how to signal (next_pep) back to next_mole
 	// ---------------------------------------------------------------------------
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
 	// nextpos
-	int result  = nextpos();
+	int result_nextpos  = nextpos();
 	// nextpos() returns: -2 (no items) -1=(end), 0=(start), 1=(next_item),2=(nextX),3=(nextY),4=(nextRot)
-	if (result== -1) return -4;		// (END)
-	if (result <0) return result-20;
+	if (result_nextpos== -1) return -4;		// (END)
+	if (result_nextpos <0) return result_nextpos-20;
 	if (test_item ==NULL) return -12;
 
 
@@ -345,6 +346,10 @@ int	MoleculeMatchPos::match_item(void){
 
 	// ---check (mole1) pos for testpos...
 	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);
+	PRINT("test-pos="); testpos.dump(); NL
+	PRINT("test_pep(M1)==");	DUMP(test_pep); NL
+	PRINT("test_item(M2)==");	DUMP(test_item-> item); NL
+
 
 	if (test_item-> item->sig <128) {
 		// if not active and no test_pep then: return NEXT (0)
@@ -411,10 +416,13 @@ int	MoleculeMatchPos::match_mole(){
 		while (m == 0) {
 			m =match_item();
 			//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
+			PRINT("==> match[%d]\n", m);
 		}
 		if (m==1) return 1;		//  1=(MATCH)
 		if (m!=-4) {
+			//PRINT("===> reset[%d]\n", m);
 			test_item =NULL;
+			//rotation =4;
 			m =0;
 		}
 	}
