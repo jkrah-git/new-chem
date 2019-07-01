@@ -390,6 +390,7 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 	if (screen==NULL) return NULL;
 	if (matchpos==NULL) return NULL;
 
+	// todo: system-colors - maybe use var_list ??
 	ChemDisplayColor m1_col(0, 100, 0);
 	ChemDisplayColor rot_col(100, 0, 0);
 	ChemDisplayColor item_col(0, 0, 200);

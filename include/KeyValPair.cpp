@@ -52,18 +52,17 @@ void KeyValList::dump(){
 mylist<KeyValPair>::mylist_item<KeyValPair>  *KeyValList::search(char *searchkey){
   if (strlen(searchkey)<1)	return NULL;
 
-  mylist<KeyValPair>::mylist_item<KeyValPair>  *result = NULL;
+  //mylist<KeyValPair>::mylist_item<KeyValPair>  *result = NULL;
   mylist<KeyValPair>::mylist_item<KeyValPair>  *item = keyvalues.gethead();
 
   while ((item!=NULL) && (item->item!=NULL)){
 	  if (strcmp(item-> item->key, searchkey)==0) {
-		  result = item;
-		  break;
+		  return item;
 	  }
 	  //----------------------
 	  item = item->next;
   }
-  return result;
+  return NULL;
 }
 //-------------------------------
 char 	*KeyValList::get(char *searchkey){
