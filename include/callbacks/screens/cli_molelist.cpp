@@ -135,7 +135,12 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 		return 0;
 	}
 
-
+	//-----------------
+	if (strcmp(argv[1], "src")==0) {
+		molelist->set_vm(vm);
+		printf("src updated..\n");
+		return 0;
+	}
 /*
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {

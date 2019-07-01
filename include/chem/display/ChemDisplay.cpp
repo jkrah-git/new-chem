@@ -386,6 +386,12 @@ Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, 
 	return hit;
 }
 //-------------------------------
+int ChemDisplay::keyval_set_col(char *keyname, ChemDisplayColor *col){
+	if ((keyname==NULL) ||(col==NULL)) return -1;
+	return -1;
+
+}
+//-------------------------------
 Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick){
 	if (screen==NULL) return NULL;
 	if (matchpos==NULL) return NULL;

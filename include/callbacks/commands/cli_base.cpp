@@ -229,8 +229,9 @@ int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 
 
-	cli-> dump();
-	return 	0; //cli-> run(&cli-> dump_cmdlist, argc,  &argv[0]);
+	//cli-> dump();
+	cli-> run(&cli-> dump_cmdlist, argc,  &argv[0]);
+	return 0;
 }
 //---------------------------------//---------------------------------
 int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){

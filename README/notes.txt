@@ -72,18 +72,6 @@ TODO 1. chem structure
     =======================
   - console
     =======================
-    Done
-	- stack -  dump|push|pop|clear  pep|mole|conc
-	- autocmd (think bash prompt) - displ, clear etc
-	Todo
-	- finish matches
-	- dump() formatting.. (mole dump/render)
-	
-	Later..
-	- cmdlist .. hard to embed <end command>
-	
-
-
 
     =======================
   - conc.match (c2); (M1, M2)
@@ -108,8 +96,7 @@ TODO 1. chem structure
   - ?? match pep vs code peps ??
   - multiple match reactants (O),(A,B,C ..)
     - sub (match) process..
-   
- 
+    
   ============================
   - IPC / multithread
   - multi-conc or multi-vols ??
@@ -158,8 +145,6 @@ Tally.rot[2]=[2]
 Tally.rot[3]=[1]
 ---------------------------------------------
 With this model rotations are rare, and early terminations possible. 
-
-
 
 ---------------   
 (Qq) CHARGE BITS
@@ -212,15 +197,27 @@ xxx xxx ...
 NB: CLI = (*core, menus, display)
 
 TODO
+---- match_funcs (enz) 
+  -- (vs) opcode (VM) 
+  -- think about transcode/script
 -----
 -- test data
 -- bugs: mole_match - fwd testing?? - add match_item
--- Enzymes - (base) inbuilt functions  - ConcEngine 
-  - enz_func(Molecule *m, (int=callback(VM *vm, argc , argv))
-  - VM Opcodes
+-- Enzymes - (base) inbuilt functions  - 
+
+ConcEngine 
+  - enz_func    =(Name, Molecule* (func(vm*, argc , argv))
+  - opcode_func =(Opcode*, (func(vm*, argc , argv))
+  - help files (help/*.txt)
+  --------------------------
+  - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
+  --------------------------
+  - bound (mole/opcode) via CLI 
+  
+
+
 -- port cli cmds???
 	- start VM commands .. callbacks ?
-		 
 
 3.  funcs - (if match then while (load payload) {execute payload })
 		- transcribe(payload) 
