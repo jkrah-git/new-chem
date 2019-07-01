@@ -393,6 +393,7 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 	ChemDisplayColor m1_col(0, 100, 0);
 	ChemDisplayColor rot_col(100, 0, 0);
 	ChemDisplayColor item_col(0, 0, 200);
+	ChemDisplayColor matched_col(100, 0, 200);
 
 	char str[128];
 	sprintf(str, "Match[0x%zX], M1[0x%zX]->M2[0x%zX], Pos[%d,%d],Rot=[%d]. Box[%d,%d][%d,%d]",
@@ -448,6 +449,26 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 		draw_pep(screen, &display_coords, matchpos-> get_test_item()-> item, mouseclick, &item_col);
 
 	}
+	//---------------
+
+	// -------------- matched item
+	if (matchpos-> get_matched_item()!=NULL) {
+		gfx.color(&matched_col);
+		gfx.cprintg("matched_item");
+
+		ChemDisplayCoords display_coords(screen-> coords);
+		display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
+		display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
+
+		draw_pep(screen, &display_coords, matchpos-> get_matched_item()-> item, mouseclick, &matched_col);
+
+	}
+	//---------------
+
+
+
+
+
 	//---------------
 	gfx.flush();
 	return hit;

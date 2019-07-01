@@ -20,6 +20,7 @@ private:
 	Molecule	*mole1;
 	Molecule	*mole2;
 	mylist<Peptide>::mylist_item<Peptide>	*test_item;
+	mylist<Peptide>::mylist_item<Peptide>	*matched_item;
 	//----------
 	PeptidePos 	start_pos;
 	PeptidePos 	end_pos;
@@ -40,6 +41,7 @@ public:
 	Molecule	*getM1(){ return mole1; }
 	Molecule 	*getM2(){ return mole2; }
 	mylist<Peptide>::mylist_item<Peptide>	*get_test_item(){  return test_item; };
+	mylist<Peptide>::mylist_item<Peptide>	*get_matched_item(){  return matched_item; };
 	PeptidePos	*get_start_pos(void) { return &start_pos; }
 	PeptidePos	*get_end_pos(void) { return &end_pos; }
 	PeptidePos	*get_current_pos(void) { return &current_pos; }

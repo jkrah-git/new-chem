@@ -82,6 +82,7 @@ void MoleculeMatchPos::clear(){
 	mole1 = NULL;
 	mole2 = NULL;
 	test_item = NULL;
+	matched_item = NULL;
 	start_pos.init();
 	end_pos.init();
 	current_pos.init();
@@ -218,8 +219,8 @@ void MoleculeMatchPos::rotatemole() {
 	mole1-> getbounds(&min1, &max1);
 	rotmole.getbounds(&min2, &max2);
 
-	printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
-	printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
+	//printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
+	//printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 	// void		getbounds(PeptidePos *min, PeptidePos *max);
 	//mole->
 	// sub size m2 from min
@@ -239,7 +240,7 @@ void MoleculeMatchPos::rotatemole() {
 
 	// reset new head
 	test_item  = rotmole.pep_list.gethead();
-
+	matched_item = NULL;
 }
 //----------------------------------//----------------------------------
 int	MoleculeMatchPos::nextpos(){
@@ -330,7 +331,6 @@ int	MoleculeMatchPos::match_item(void){
 	if (result_nextpos <0) return result_nextpos-20;
 	if (test_item ==NULL) return -12;
 
-
 	PeptidePos testpos;
 	// testpos =   current_pos + test_item-> item-> pos;
 	// todo: FIX vector adds	//
@@ -339,30 +339,32 @@ int	MoleculeMatchPos::match_item(void){
 	testpos.dim[PEPPOS_X] = test_item_pos[PEPPOS_X] + current_pos.dim[PEPPOS_X];
 	testpos.dim[PEPPOS_Y] = test_item_pos[PEPPOS_Y] + current_pos.dim[PEPPOS_Y];
 
+	// ---check (mole1) pos for testpos...
+	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);
+//	PRINT("test-pos=>"); testpos.dump(); NL
+//	PRINT("test_pep(M1)==\n");	DUMP(test_pep); NL
+//	PRINT("test_item(M2)==\n");	DUMP(test_item-> item); NL
+
+	//--------------------------
 	// if not active and no test_pep then: return NEXT (0)
 	// if not active and test_pep then: return COLSSION (-1)
 	// if active :  if (no test_pep) then: return -2=(MISS)
 	// if active :  if (no match) then: return -3=(NOMATCH)
-
-	// ---check (mole1) pos for testpos...
-	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);
-	PRINT("test-pos="); testpos.dump(); NL
-	PRINT("test_pep(M1)==");	DUMP(test_pep); NL
-	PRINT("test_item(M2)==");	DUMP(test_item-> item); NL
-
-
+	//--------------------------
 	if (test_item-> item->sig <128) {
-		// if not active and no test_pep then: return NEXT (0)
-		// if not active and test_pep then: return COLSSION (-1)
 		if (test_pep==NULL) return 0;	// NEXT (0)
 		else return -1;					// COLSSION (-1)
 	} // else active
-	// if active :  if (no test_pep) then: return -2=(MISS)
-	// if active :  if (no match) then: return -3=(NOMATCH)
 	if (test_pep==NULL) return -2; 		// -2=(MISS(pep)
+	// test 2 peps
 	int match = match_pep(test_pep->item,  test_item-> item);
 	if (match!=1) return -3; 			// -3=(NOMATCH)
 	// -------------------------------------
+	matched_item = test_item;
+	return 1; //  1=(MATCH)
+}
+/*************
+
 	PRINT("found pep -> "); test_pep-> dump(); NL
 	PRINT("test_item-> "); test_item-> dump(); NL
 	//----------------
@@ -400,29 +402,33 @@ int	MoleculeMatchPos::match_item(void){
 	sprintb(bin0, (char) energy, '0');		printf("energy=[%s]\n", bin0);
 	sprintb(bin0, (char) temp, '0');		printf("temp=[%s]\n", bin0);
 	printf("####################################\n");
-
 	//---------------------------------
 	return 1; //  1=(MATCH)
 }
+****************/
 //----------------------------------
 int	MoleculeMatchPos::match_mole(){
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
 	// match_mole() returns -1=(NOMATCH), 0=(END), 1=(MATCH)
 
+	// until end
 	int m =0;
-	// while no match and not end
-	while ((m!=1) && (m!=-4)) {
-		while (m == 0) {
+	while (m!=-4) {
+		while (m >= 0) {
 			m =match_item();
-			//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
-			PRINT("==> match[%d]\n", m);
+			//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)			//PRINT("==> match[%d]\n", m);
+
+			// if 'last_item' then test 'matched_item'
+			if ((m>=0) && (test_item-> next ==NULL)) {
+				// PRINT("==> tail[%d]\n", m);
+				if (matched_item !=NULL) return 1;
+			}
 		}
-		if (m==1) return 1;		//  1=(MATCH)
-		if (m!=-4) {
-			//PRINT("===> reset[%d]\n", m);
-			test_item =NULL;
-			//rotation =4;
+		// if not end then (re)start next pos
+		if (m != -4) {
+			// start next item..
+			test_item = NULL;
 			m =0;
 		}
 	}

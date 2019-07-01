@@ -322,7 +322,11 @@ int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
 	new_item = vm-> molecule_stack.add();
 	if (new_item ==NULL) return -10;
 	if (new_item-> item ==NULL) return -11;
+	vm-> mole = new_item-> item;
+	return 0;
+}
 
+/******
 	if (vm-> mole==NULL) {
 		vm-> mole = new_item-> item;
 	} else {
@@ -330,6 +334,7 @@ int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
 	}
 	return 0;
 }
+******/
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_pop(Concentration_CLI *cli, int argc, char **argv){
@@ -432,7 +437,7 @@ int	cli_mole_addpep(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	if (vm-> mole==NULL)  return -10;
 
-	PRINT("argc=[%d].", argc); for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+	//PRINT("argc=[%d].", argc); for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}	NL
 	int r=0;
 	//int n=0;
 	int hex;

@@ -214,19 +214,14 @@ NB: CLI = (*core, menus, display)
 TODO
 -----
 -- test data
--- Enzymes - (base) inbuild funcionts
-  - enz_func(Molecule *m, int = callback(VM *vm, argc , argv))
-
-  - core is spawned by starting match??
-  
+-- bugs: mole_match - fwd testing?? - add match_item
+-- Enzymes - (base) inbuilt functions  - ConcEngine 
+  - enz_func(Molecule *m, (int=callback(VM *vm, argc , argv))
+  - VM Opcodes
 -- port cli cmds???
 	- start VM commands .. callbacks ?
-	- new cli/gfx commands
-		- screen modes;
-		- select / display VM items (register/stack/match)
-			 
+		 
 
-2.1 fixup match - (seed map) - transcribe?
 3.  funcs - (if match then while (load payload) {execute payload })
 		- transcribe(payload) 
 
