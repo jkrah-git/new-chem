@@ -11,6 +11,7 @@
 #include "Concentration.h"
 #include "CLI_Command.h"
 #include "Concentration_VM.h"
+#include "ChemEngine.h"
 #include "KeyValPair.h"
 //#include "display/ChemDisplay.h"
 
@@ -36,6 +37,7 @@ CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name);
 //-------------------------------------------
 class Concentration_CLI {
 private:
+	ChemEngine					chem_engine;
 	Concentration_VM			*selected_vm;
 	mylist<Concentration_VM>	vm_list;
 
@@ -58,6 +60,9 @@ public:
 
 	//---------------
 	//ChemDisplay 				display;
+
+
+
 
 //	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
 	int 	(*run_callto)(int argc, char **argv);

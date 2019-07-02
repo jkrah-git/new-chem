@@ -133,6 +133,10 @@ void Concentration_CLI::dump() {
 //			(long unsigned int) conc,
 //			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
+	printf("ChemEngine:\n");
+	chem_engine.dump();
+
+
 	printf("vms..\n");
 	vm_list.dump();
 

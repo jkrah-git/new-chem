@@ -400,6 +400,7 @@ void Molecule::test2(void){
 
 }
 // -------------------------------
+/**************
 void Molecule::testrot(void){
 	// count of each score (and c[4] = sum/total count)
 	int c[5];
@@ -443,6 +444,7 @@ void Molecule::testrot(void){
 
 	printf("\n");
 }
+********************/
 // -------------------------------
 // -------------------------------
 // -------------------------------
