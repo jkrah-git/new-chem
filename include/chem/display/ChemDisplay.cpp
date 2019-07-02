@@ -130,7 +130,7 @@ void ChemDisplay::load_commands(void){
 	cli_load_moledisp(this,0, NULL);
 	cli_load_peplist(this,0, NULL);
 	cli_load_molelist(this,0, NULL);
-
+	cli_load_concdisp(this,0, NULL);
 //	cli_load_menu(this,0, NULL);
 //	cli_load_button(this,0, NULL);
 }
@@ -354,6 +354,7 @@ Peptide *ChemDisplay::draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Pe
 
 	return hit;
 }
+
 //-------------------------------
 Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, int r, int g, int b){
 	if (screen==NULL) return NULL;
@@ -385,12 +386,9 @@ Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, 
 	}
 	return hit;
 }
-//-------------------------------
-int ChemDisplay::keyval_set_col(char *keyname, ChemDisplayColor *col){
-	if ((keyname==NULL) ||(col==NULL)) return -1;
-	return -1;
 
-}
+//-------------------------------
+//int ChemDisplay::keyval_set_col(char *keyname, ChemDisplayColor *col){	if ((keyname==NULL) ||(col==NULL)) return -1;	return -1;}
 //-------------------------------
 Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick){
 	if (screen==NULL) return NULL;
@@ -484,7 +482,6 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 //-------------------------------
 void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 	if (screen==NULL) return;
-	if (screen==NULL) return;
 	if (vm==NULL) return;
 
 	char str[128];
@@ -502,6 +499,24 @@ void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 	//---------------
 	gfx.flush();
 }
+
+//-------------------------------
+void ChemDisplay::draw_conc_displ(ChemScreen *screen){
+	if (screen==NULL) return;
+
+	// draw pep
+	int x = screen->conc_display.coords.screenx(&gfx);
+	int y = screen->conc_display.coords.screeny(&gfx);
+
+	int sx = screen->conc_display.coords.scalex/2;
+	int sy = screen->conc_display.coords.scaley/2;
+
+	gfx.box(x,y,sx, sy, NULL);
+
+
+
+}
+
 //###############################################################################
 //void ChemDisplay::draw_box(int min_xpos, int min_ypos, int max_xpos,int max_ypos) {
 // draw
@@ -989,6 +1004,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 		}
 
 
+		draw_conc_displ(screen);
 
 		// -------------------------------------------
 		//gfx.printg((const char*) "End(screen).");

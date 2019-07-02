@@ -30,6 +30,9 @@ int cli_pepdisp(ChemDisplay *display, int argc, char **argv);
 int	cli_load_moledisp(ChemDisplay *display, int argc, char **argv);
 int cli_moledisp(ChemDisplay *display, int argc, char **argv);
 
+int cli_load_concdisp(ChemDisplay *display, int argc, char **argv);
+int cli_concdisp(ChemDisplay *display, int argc, char **argv);
+
 // cli_peplist.cpp
 int	cli_load_peplist(ChemDisplay *display, int argc, char **argv);
 int cli_peplist(ChemDisplay *display, int argc, char **argv);

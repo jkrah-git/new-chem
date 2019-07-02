@@ -75,10 +75,11 @@ public:
 	Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, int r, int g, int b);
 	Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
 
-	int 		keyval_set_col(char *keyname, ChemDisplayColor *col);
+	//int 		keyval_set_col(char *keyname, ChemDisplayColor *col);
 	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick);
 	//---
-	void	draw_vm(ChemScreen *screen, Concentration_VM *vm);
+	void		draw_vm(ChemScreen *screen, Concentration_VM *vm);
+	void		draw_conc_displ(ChemScreen *screen);
 
 //	void 	draw_menu_border(ChemMenu *menu);
 //	void 	draw_menu(ChemMenu *menu);

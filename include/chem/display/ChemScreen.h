@@ -17,6 +17,7 @@
 #include "ChemMoleDisplay.h"
 #include "ChemPeplistDisplay.h"
 #include "ChemMolelistDisplay.h"
+#include "ChemConcDisplay.h"
 
 class ChemDisplay;
 #include "../../MyString.h"
@@ -29,11 +30,12 @@ public:
 	MyString				name;
 	ChemDisplayCoords		coords;
 
+	ChemConcDisplay			conc_display;
+
 	mylist<ChemPepDisplay>	pep_list;
 	mylist<ChemMoleDisplay>	mole_list;
 
-
- mylist<ChemPeplistDisplay>	peplist_list;
+ mylist<ChemPeplistDisplay>		peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
 
 

@@ -112,9 +112,14 @@ void ChemScreen::dump(void){
 	}
 	//printf("mouse_clicked[%d]", mouse_clicked);
 	coords.dump(); NL;
+
+	printf("conc_display:\n");
+	conc_display.dump();
+
+
 	//PRINT("== pre menu dump ==");
 	//printf("ChemScreen[0x%zX].[0x%zX]", (long unsigned int) this, title);
-	printf("Menus: ");
+//	printf("Menus: ");
 //	DUMP(menu_list2)
 //	menu_list.dump();
 
