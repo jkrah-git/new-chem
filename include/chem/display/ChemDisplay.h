@@ -79,7 +79,7 @@ public:
 	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick);
 	//---
 	void		draw_vm(ChemScreen *screen, Concentration_VM *vm);
-	void		draw_conc_displ(ChemScreen *screen);
+	void		draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_display);
 
 //	void 	draw_menu_border(ChemMenu *menu);
 //	void 	draw_menu(ChemMenu *menu);

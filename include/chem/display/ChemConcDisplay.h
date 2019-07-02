@@ -21,6 +21,8 @@ private:
 	int		next;
 	int		num_items;
 	float	*data;
+	float	min;
+	float	max;
 	// get payload-offset from linea index ([0]=oldest [max]=newest)
 	int		circ_index(int index);
 
@@ -41,7 +43,7 @@ private:
 	Concentration		*conc;
 public:
 	CircBuffer				buf;
-	//MyString				name;
+	MyString				name;
 	ChemDisplayCoords		coords;
 	ChemDisplayColor 		col;
 	ChemDisplayColor 		selcol;

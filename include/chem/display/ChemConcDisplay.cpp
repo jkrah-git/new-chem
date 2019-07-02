@@ -31,6 +31,8 @@ CircBuffer::CircBuffer(){
 	next = 0;
 	num_items = 0;
 	data = NULL;
+	min = 0.0f;
+	max = 0.0f;
 }
 CircBuffer::~CircBuffer(){
 	if (data!=NULL) free(data);
@@ -38,7 +40,8 @@ CircBuffer::~CircBuffer(){
 //-----------------------------
 void	CircBuffer::dump(void){
 	printf("CircBuffer[0x%zX]:", (long unsigned int) this) ;
-	printf("Size[%d].Max[%d].Last[%d]:", size, num_items, next);
+	printf("Size[%d].Num[%d].Last[%d]:", size, num_items, next);
+	printf("Min[%.3f].Max[%.3f]\n", min, max);
 	printf(" *data[0x%zX]..\n", (long unsigned int) data) ;
 	if (data!=NULL) {
 		printf("RAW:");
@@ -87,6 +90,9 @@ void CircBuffer::clear(void){
 //-----------------------------
 void	CircBuffer::add(float _data){
 	data[next] = _data;
+	if (_data < min) min = _data;
+	if (_data > max) max = _data;
+
 	next++;
 
 	if (next >= size)
@@ -145,7 +151,7 @@ ChemConcDisplay::ChemConcDisplay() {
 ChemConcDisplay::~ChemConcDisplay() {}
 //-----------------------------
 void ChemConcDisplay::dump(void){
-		printf("ChemConcDisplay[0x%zX], Conc[0x%zX]\n", (long unsigned int) this,  (long unsigned int)  conc) ;
+		printf("ChemConcDisplay[0x%zX],[%s].Conc[0x%zX]\n", (long unsigned int) this,  name.get(), (long unsigned int)  conc) ;
 		buf.dump();
 		coords.dump(); NL
 		col.dump(); selcol.dump(); NL

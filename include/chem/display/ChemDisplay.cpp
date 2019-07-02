@@ -159,27 +159,29 @@ int	ChemDisplay::run(mylist<Display_Command> *cmd_list, int argc, char **argv){
 
 	//-------------------
 	if ((cmd_list!=NULL) && (argc>0) && (argv!=NULL)) {
-		Display_Command  *cmd = search_display_cmd_list(&display_cmdlist, argv[0]);
+		if (argv[0][0] != '#') {
+			Display_Command  *cmd = search_display_cmd_list(&display_cmdlist, argv[0]);
 
-		//PRINT("search ===\n");		DUMP(cmd); NL
+			//PRINT("search ===\n");		DUMP(cmd); NL
 
-		if (cmd==NULL) {
-			printf("[%s].Command Not Found\n", argv[0]);
-			last_result =  -110;
-		} else
-			if (cmd-> operation==NULL) {
-				printf("[%s].Command.operation NULL\n", argv[0]);
-				last_result =  -111;
-		}
-
-		if (last_result>=0)  {
-			last_result = cmd-> operation(this, argc-1, &argv[1]);
-			LOG("[%s].[%d]\n", argv[0], last_result);
-			if (cmd->callback !=NULL) {
-				//cmd->callback(last_result);
-				cmd->callback(this, 0, NULL);
+			if (cmd==NULL) {
+				printf("[%s].Command Not Found\n", argv[0]);
+				last_result =  -110;
+			} else
+				if (cmd-> operation==NULL) {
+					printf("[%s].Command.operation NULL\n", argv[0]);
+					last_result =  -111;
 			}
-		}
+
+			if (last_result>=0)  {
+				last_result = cmd-> operation(this, argc-1, &argv[1]);
+				LOG("[%s].[%d]\n", argv[0], last_result);
+				if (cmd->callback !=NULL) {
+					//cmd->callback(last_result);
+					cmd->callback(this, 0, NULL);
+				}
+			}
+		}// end '#'
 	} // else argc ==0
 	// ---------------------------------
 
@@ -501,15 +503,16 @@ void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 }
 
 //-------------------------------
-void ChemDisplay::draw_conc_displ(ChemScreen *screen){
+void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_display){
 	if (screen==NULL) return;
+	if (conc_display==NULL) return;
 
 	// draw pep
-	int x = screen->conc_display.coords.screenx(&gfx);
-	int y = screen->conc_display.coords.screeny(&gfx);
+	int x = conc_display-> coords.screenx(&gfx);
+	int y = conc_display-> coords.screeny(&gfx);
 
-	int sx = screen->conc_display.coords.scalex/2;
-	int sy = screen->conc_display.coords.scaley/2;
+	int sx = conc_display-> coords.scalex/2;
+	int sy = conc_display-> coords.scaley/2;
 
 	gfx.box(x,y,sx, sy, NULL);
 
@@ -1004,7 +1007,20 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 		}
 
 
-		draw_conc_displ(screen);
+		// draw mole lists
+		// ------------------
+		mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *current_conc = screen-> conc_list.gethead();
+		while ((current_conc != NULL) && (current_conc-> item != NULL)) {
+		//	PRINT("==== ChemMolelistDisplay = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+			draw_conc_displ(screen, current_conc-> item);
+			//-------
+			current_conc = current_conc->next;
+		}
+
+
+
+
+	//	draw_conc_displ(screen);
 
 		// -------------------------------------------
 		//gfx.printg((const char*) "End(screen).");

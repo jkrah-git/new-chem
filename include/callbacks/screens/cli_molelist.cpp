@@ -127,13 +127,6 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 
 	}
 
-	if (strcmp(argv[1], "index")==0) {
-		//PRINT(" DEL ..\n");
-		int r = screen->del_molelist(argv[0]);
-		if (r<0) { printf("del[%s] failed[%d]\n", argv[0], r); return -2; }
-		printf("del[%s] ok\n", argv[0]);
-		return 0;
-	}
 
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
@@ -141,7 +134,32 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 		printf("src updated..\n");
 		return 0;
 	}
-/*
+	//----------------
+	if (strcmp(argv[1], "coords")==0) {
+		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
+		if (argc<3) { cli_coords(&molelist-> coords, 0, NULL); }
+		else { cli_coords(&molelist-> coords, argc-2, &argv[2]); }
+		return 0;
+	} // -------end(attribs)
+	//-----------------
+	if (strcmp(argv[1], "col")==0) {
+		if (argc<3) { cli_col(&molelist-> col, 0, NULL); }
+		else { cli_col(&molelist-> col, argc-2, &argv[2]); }
+	} // -------end(build)
+	//----------------
+	return 0;
+}
+
+/****************
+	if (strcmp(argv[1], "index")==0) {
+		//PRINT(" DEL ..\n");
+		int r = screen->del_molelist(argv[0]);
+		if (r<0) { printf("del[%s] failed[%d]\n", argv[0], r); return -2; }
+		printf("del[%s] ok\n", argv[0]);
+		return 0;
+	}
+****************/
+/**********************
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
 		if (argc==2) {
@@ -166,24 +184,11 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 
 
 	} // -------end(src)
-*/
-	//----------------
-	if (strcmp(argv[1], "coords")==0) {
-		//PRINT(" attribs : argc[%d][%s]\n", argc, argv[argc-1]);
-		if (argc<3) { cli_coords(&molelist-> coords, 0, NULL); }
-		else { cli_coords(&molelist-> coords, argc-2, &argv[2]); }
-		return 0;
-	} // -------end(attribs)
-	//-----------------
-	if (strcmp(argv[1], "col")==0) {
-		if (argc<3) { cli_col(&molelist-> col, 0, NULL); }
-		else { cli_col(&molelist-> col, argc-2, &argv[2]); }
-	} // -------end(build)
-	//----------------
+**********************/
 
 	//----------------
 	//----------------
-	/*
+/**********************
 	if (menu!=NULL) {
 
 		screen->gridmode = GRID_MENU;
@@ -201,7 +206,7 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 	}
 	//draw_current_screen(cli, NULL, 0);
 	cli->display.draw_screen(cli-> display.current_screen, cli);
-	*/
 	return 1;
 }
+**********************/
 // --------------------------

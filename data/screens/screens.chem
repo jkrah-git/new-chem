@@ -8,7 +8,6 @@ screen match render match
 
 screen vm add
 screen vm coords scale 30 30
-# screen vm coords pos -5 7
 screen vm coords pos -3 3
 screen vm grid off
 screen vm render match
@@ -19,24 +18,24 @@ pepdisp p1 coords pos -5 10
 
 moledisp m1 add
 moledisp m1 coords scale 30 30
-# moledisp m1 coords pos 5 10
 moledisp m1 coords pos 7 2
 
 peplist p1 add
 peplist p1 coords scale 50 20
-# peplist p1 coords pos 6 5
 peplist p1 coords pos -6 -4
 peplist p1 size 16 2
 peplist p1 src core
 
 molelist m1 add
-# molelist m1 coords scale 80 40
 molelist m1 coords scale 60 37
-# molelist m1 coords pos -2 2
 molelist m1 coords pos -4 -6
 molelist m1 size 4 4
 molelist m1 src core
 
-
-var set peptide_default_color 0 0 200
-
+screen conc add
+screen conc coords scale 30 30
+screen conc coords pos -3 3
+screen conc grid off
+screen conc render vm
+concdisp c1 add
+concdisp c1 coords scale 200 100

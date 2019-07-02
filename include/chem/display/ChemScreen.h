@@ -30,10 +30,10 @@ public:
 	MyString				name;
 	ChemDisplayCoords		coords;
 
-	ChemConcDisplay			conc_display;
 
 	mylist<ChemPepDisplay>	pep_list;
 	mylist<ChemMoleDisplay>	mole_list;
+	mylist<ChemConcDisplay>	conc_list;
 
  mylist<ChemPeplistDisplay>		peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
@@ -67,9 +67,13 @@ public:
 	ChemPepDisplay			*find_pep(const char *_title);
 	int						del_pep(const char *_title);
 
-	ChemMoleDisplay			*add_mole(const char *_title);
 	ChemMoleDisplay			*find_mole(const char *_title);
+	ChemMoleDisplay			*add_mole(const char *_title);
 	int						del_mole(const char *_title);
+
+	ChemConcDisplay			*add_conc(const char *_title);
+	ChemConcDisplay			*find_conc(const char *_title);
+	int						del_conc(const char *_title);
 
 
 	ChemPeplistDisplay		*add_peplist(const char *_title);

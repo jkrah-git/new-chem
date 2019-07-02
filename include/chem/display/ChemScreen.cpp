@@ -114,7 +114,7 @@ void ChemScreen::dump(void){
 	coords.dump(); NL;
 
 	printf("conc_display:\n");
-	conc_display.dump();
+	conc_list.dump();
 
 
 	//PRINT("== pre menu dump ==");
@@ -225,7 +225,7 @@ int	ChemScreen::wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump){
 // -------------------------------
 
 
-// -------------------------------
+//=================  -------------------------------
 ChemMoleDisplay		*ChemScreen::find_mole(const char *_title){
 	//if (_title==NULL) return NULL;
 	mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *mole_item = mole_list.gethead();
@@ -239,7 +239,6 @@ ChemMoleDisplay		*ChemScreen::find_mole(const char *_title){
 // -------------------------------
 ChemMoleDisplay		*ChemScreen::add_mole(const char *_title){
 	if (_title==NULL) return NULL;
-
 	ChemMoleDisplay *result = find_mole(_title);
 	if (result!=NULL) return NULL;
 	// (else) result = NULL
@@ -247,8 +246,7 @@ ChemMoleDisplay		*ChemScreen::add_mole(const char *_title){
 	mylist<ChemMoleDisplay>::mylist_item<ChemMoleDisplay> *mole_item = mole_list.add();
 	if (mole_item==NULL) { return NULL; }
 	if (mole_item-> item==NULL) { mole_list.del(mole_item); return NULL; }
-	// (else)  mole_item-> item  is good
-//	if (r<0) { PRINT("setname failed[%d]\n", r); return NULL; }
+
 	mole_item-> item-> name.set(_title);
 	return mole_item-> item;
 }
@@ -264,8 +262,46 @@ int				ChemScreen::del_mole(const char *_title){
 	mole_list.del(mole_item);
 	return 0;
 }
-// -------------------------------
+//=================  -------------------------------
 
+//=================  -------------------------------
+ChemConcDisplay		*ChemScreen::find_conc(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *conc_item = conc_list.gethead();
+	while ((conc_item!=NULL)&&(conc_item-> item!=NULL)) {
+		if (conc_item-> item->name == _title) return conc_item-> item;
+		//----
+		conc_item = conc_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemConcDisplay		*ChemScreen::add_conc(const char *_title){
+	if (_title==NULL) return NULL;
+	ChemConcDisplay *result = find_conc(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *conc_item = conc_list.add();
+	if (conc_item==NULL) { return NULL; }
+	if (conc_item-> item==NULL) { conc_list.del(conc_item); return NULL; }
+
+	conc_item-> item-> name.set(_title);
+	return conc_item-> item;
+}
+// -------------------------------
+int				ChemScreen::del_conc(const char *_title){
+	//if (_title==NULL) return -1;
+	ChemConcDisplay *found_conc =find_conc(_title);
+	if (found_conc==NULL) return -1;
+
+	mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *conc_item = conc_list.search(found_conc);
+	if (conc_item==NULL) return -2;
+
+	conc_list.del(conc_item);
+	return 0;
+}
+//=================  -------------------------------
 
 
 // -------------------------------
