@@ -34,6 +34,9 @@ public:
 	void	clear(void);
 	void	add(float _data);
 	int		get(int index, float *_data);
+	int		count(void){ return num_items; };
+	float		get_min(void) { return min; };
+	float		get_max(void) { return max; };
 };
 //-----------------------------
 

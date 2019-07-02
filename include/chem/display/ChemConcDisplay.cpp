@@ -117,7 +117,7 @@ int		CircBuffer::get(int index, float *_data){
 	if (data==NULL)	return -1;
 	int ci = circ_index(index);
 	if (ci<0) return -2;
-	*data = data[ci];
+	*_data = data[ci];
 	return 0;
 }
 //-----------------------------

@@ -515,9 +515,44 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 	int sy = conc_display-> coords.scaley/2;
 
 	gfx.box(x,y,sx, sy, NULL);
+	int c = conc_display->buf.count();
+	float min = conc_display-> buf.get_min();
+	float max = conc_display-> buf.get_max();
 
+	PRINT("c=[%d] min=[%.3f] max=[%.3f]\n", c, min, max);
+	if (c<=1) return;
 
+	float scalex = conc_display->coords.scalex / (c-1);
+	float scaley =  - conc_display->coords.scaley / (max-min);
 
+	int old_posx = 0;
+	int old_posy = 0;
+	int posx =0;
+	int posy =0;
+	bool first = true;
+
+	for (int i=0; i<c; i++) {
+		float v;
+		int r = conc_display->buf.get(i, &v);
+		if (r<0) break;
+
+		posx = (i * scalex) + x - sx;
+		posy = ((v-min) * scaley) + y + sy;
+
+		PRINT("i=[%d] v[%.3f] posx=[%d] posy=[%d]\n", i, v, posx, posy);
+		if (!first) { gfx.line(old_posx, old_posy, posx, posy);	}
+
+		first = false;
+		old_posx = posx;
+		old_posy = posy;
+	}
+	Concentration *cp = conc_display->get_conc();
+
+	char 	msg[128];
+	sprintf(msg, "Conc[0x%zX]/Mole[0x%zX]", (long unsigned int) conc_display->get_conc());
+	gfx.text(msg,  x-sx, y-sy);
+	sprintf(msg, "Min: %.3f", min);		gfx.text(msg,  x+sx, y+sy);
+	sprintf(msg, "Max: %.3f", max);		gfx.text(msg,  x+sx, y-sy);
 }
 
 //###############################################################################
