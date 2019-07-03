@@ -15,7 +15,7 @@ int screen_render_mole(ChemDisplay *display, ChemScreen *screen, bool mouseclick
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	display-> gfx.printg((render_mole));
 	//----------------
@@ -33,7 +33,7 @@ int screen_render_match(ChemDisplay *display, ChemScreen *screen, bool mouseclic
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	display-> gfx.printg((render_match));
 	//----------------
@@ -55,30 +55,13 @@ int screen_render_match(ChemDisplay *display, ChemScreen *screen, bool mouseclic
 // --------------------------
 int screen_render_vm(ChemDisplay *display, ChemScreen *screen, bool mouseclick) {
 	if (display==NULL) return -1;
+	if (screen==NULL) return -2;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();	//	if (vm==NULL) return -10;
 	//-------
 
-	// callback intercept
-	//cli->display.gfx.printg(("(vm)"));
-	//----------------
-	//ChemScreen *screen = cli->display.display_screen;
-	if (screen==NULL) return -2;
-
-
-//	mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *peplist_item;
-//	peplist_item = screen-> peplist_list.gethead();
-//	PRINT("peplist_item:"); DUMP(peplist_item); NL
-
-
-	//void ChemDisplay::draw_vm(Concentration_VM *vm){
-	//Molecule *hit = cli->display.draw_match(&screen->attrib, &cli->core->matchpos);
 	display-> draw_vm(screen, vm);
-	// hit for 'vm' could be different thinga
-	// if (hit != NULL ) {		cli->core->mole = hit;	}
-
-
 
 	return 0;
 }

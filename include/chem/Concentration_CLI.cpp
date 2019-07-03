@@ -136,10 +136,15 @@ void Concentration_CLI::dump() {
 	printf("ChemEngine:\n");
 	chem_engine.dump();
 
+	/*
+	printf("============ VOL's ================..\n");
+	vol_list.dump();
 
-	printf("vms..\n");
+	printf("==================== VM's ==============\n");
 	vm_list.dump();
+	*/
 
+	return;
 	base_cmdlist_dump(); 	//printf("'Base' Commands..\n");	base_cmdlist.dump();
 	dump_cmdlist_dump(); 	//printf("'dump' Commands..\n");	dump_cmdlist.dump();
 	load_cmdlist_dump(); 	//printf("'load' Commands..\n");	load_cmdlist.dump();
@@ -155,18 +160,16 @@ void Concentration_CLI::dump() {
 }
 //---------------------------------
 
-Concentration_CLI::Concentration_CLI(ConcentrationVolume &cvol){ //, Concentration_VM &vm) {
-	//memset(last_line, '\0', MAX_LINELEN);
+Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concentration_VM &vm) {
+
 	args = NULL;
 	callback = NULL;
 	run_callto = NULL;
 	last_result = 0;
-	selected_vm = add_vm();
-
-//	selected_vm = &vm;
-//	if (selected_vm!=NULL)
-//		selected_vm-> concvol = &cvol;
-
+	/*
+	selected_vm = NULL;
+	selected_vol = NULL;
+	*/
 }
 //---------------------------------
 Concentration_CLI::~Concentration_CLI() {}
@@ -220,7 +223,8 @@ bool Concentration_CLI::is_selected(Molecule *mole){
 
 
 //---------------------------------//---------------------------------//---------------------------------
-
+/*********************************************************
+//========================================================
 Concentration_VM *Concentration_CLI::add_vm(void){
 
 	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.add();
@@ -271,6 +275,60 @@ int	Concentration_CLI::list_vms(void){
 	//------
 	return c;
 }
+//========================================================
+//========================================================
+ConcentrationVolume *Concentration_CLI::add_vol(void){
+
+	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.add();
+	if (vol_item==NULL) { return NULL; }
+	if (vol_item-> item==NULL) { vol_list.del(vol_item); return NULL; }
+	// (else)  pep_item-> item  is good
+	//vol_item-> item-> name.set(_title);
+	return vol_item-> item;
+	return NULL;
+}
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::del_vol(ConcentrationVolume *_vol){
+	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.search(_vol);
+	if (vol_item==NULL) return -2;
+	vol_list.del(vol_item);
+	return 0;
+}
+
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::pop_vol(void){
+	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.gettail();
+	if (vol_item==NULL) return -1;
+	if ((vol_item-> item != NULL)&& (vol_item-> item ==selected_vol)) {
+		vol_list.del(vol_item);
+		vol_item = vol_list.gettail();
+		if ((vol_item!=NULL) && (vol_item-> item !=NULL))
+			selected_vol = vol_item-> item;
+		else
+			selected_vol = NULL;
+	} else {
+		vol_list.del(vol_item);
+	}
+	return 0;
+}
+
+//---------------------------------//---------------------------------//---------------------------------
+int	Concentration_CLI::list_vols(void){
+	int c=0;
+	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.gethead();
+	while ((vol_item!=NULL)&&(vol_item-> item!=NULL)) {
+
+		if (vol_item-> item == selected_vol) 	printf("ConcentrationVolume[0x%zX]*\n", (long unsigned int) vol_item-> item);
+		else 							printf("ConcentrationVolume[0x%zX]\n", (long unsigned int) vol_item-> item);
+		//
+		vol_item = vol_item->next;
+		c++;
+	}
+	//------
+	return c;
+}
+*********************************************************/
+//========================================================
 //---------------------------------//---------------------------------//---------------------------------
 int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name){
 	if ((cmd_list==NULL)||(op==NULL)||(name==NULL)) return -1;

@@ -43,7 +43,7 @@ int cli_peplist(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();	//	if (vm==NULL) return -10;
 	//-------
 
 	//if (cli->display.current_screen==NULL) {
@@ -68,7 +68,7 @@ int cli_peplist(ChemDisplay *display, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		peplist = screen-> add_peplist(argv[0]);
 		if (peplist==NULL) {	PRINT("failed to add peplist[%s]..\n", argv[0]);  return -3;  }
-		peplist->set_pep_list(&vm->peptide_stack);
+		if (vm!=NULL) peplist->set_pep_list(&vm->peptide_stack);
 		printf("new peplist[%s] OK..\n", argv[0]);
 		return 0;
 	}
@@ -152,7 +152,7 @@ int cli_peplist(ChemDisplay *display, int argc, char **argv) {
 			printf("del[%s] ok\n", argv[0]);
 		}
 		if (strcmp(argv[2], "core")==0) {
-			peplist->set_pep_list(&vm->peptide_stack);
+			if (vm!=NULL) peplist->set_pep_list(&vm->peptide_stack);
 			printf("del[%s] ok\n", argv[0]);
 		}
 

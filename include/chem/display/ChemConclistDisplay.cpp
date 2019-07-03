@@ -1,14 +1,14 @@
 /*
- * ChemMolelistDisplay.cpp
+ * ChemConclistDisplay.cpp
  *
  *  Created on: Jun 14, 2019
  *      Author: jkrah
  */
 
-#include "ChemMolelistDisplay.h"
+#include "ChemConclistDisplay.h"
 /*
 //-------------------------------------------
-class ChemMolelistDisplay {
+class ChemConclistDisplay {
 	mylist<Molecule>		*mole_list;
 public:
 	MyString				name;
@@ -22,8 +22,8 @@ public:
 	int					height;
 
 	//------------------------
-	ChemMolelistDisplay();
-	virtual ~ChemMolelistDisplay();
+	ChemConclistDisplay();
+	virtual ~ChemConclistDisplay();
 	void	dump(void);
 	//----
 	mylist<Molecule>		*get_mole_list(void) { return mole_list; };
@@ -34,23 +34,23 @@ public:
 };
 //-------------------------------------------
  */
-ChemMolelistDisplay::ChemMolelistDisplay() {
+ChemConclistDisplay::ChemConclistDisplay() {
 	vm = NULL;
-	row = 0;
+	index = 0;
 	width = 3;
 	height = 3;
 	col.set(0,102,0);
 	selcol.set(100,100,0);
 }
 
-ChemMolelistDisplay::~ChemMolelistDisplay() {}
+ChemConclistDisplay::~ChemConclistDisplay() {}
 //-------------------------------------------
-void ChemMolelistDisplay::dump(void) {
-	printf("ChemMolelistDisplay[0x%zX].[%s].vm[0x%zX].row[%d]size[%d,%d]\n",
+void ChemConclistDisplay::dump(void) {
+	printf("ChemConclistDisplay[0x%zX].[%s].vm[0x%zX].index[%d]size[%d,%d]\n",
 			(long unsigned int) this,
 			name.get(),
 			(long unsigned int) vm,
-			row, width, height);
+			index, width, height);
 	printf("Col:[%d][%d][%d] SelCol[%d][%d][%d]:", col.r, col.g, col.b, selcol.r , selcol.g, selcol.b);
 	coords.dump(); NL
 	printf("vm=> \n");
@@ -60,9 +60,9 @@ void ChemMolelistDisplay::dump(void) {
 
 }
 //-------------------------------------------
-mylist<Molecule>::mylist_item<Molecule>  *ChemMolelistDisplay::get(int index){
+mylist<Concentration>::mylist_item<Concentration>  *ChemConclistDisplay::get(int index){
 	if (vm==NULL) return NULL;
-	if (index==0) return vm->molecule_stack.gethead();
-	return vm->molecule_stack.offset(index);
+	if (index==0) return vm->concentration_stack.gethead();
+	return vm->concentration_stack.offset(index);
 }
 //-------------------------------------------

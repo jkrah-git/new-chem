@@ -13,13 +13,17 @@ char  **get_args(mylist<CLI_Command> *menu);
 
 //Concentration_VM 	vm;
 // todo: cli-> vol_list;
-ConcentrationVolume vol;
-Concentration_CLI	cli(vol);
+//ConcentrationVolume vol;
+
+// these two are joined by call backs so have to be globals
+Concentration_CLI	cli;
 ChemDisplay			display(&cli);
+
 int 	run_callto(int argc, char **argv);
 char  **get_possible_args(void);
 // --------------------------
 char 	**build_args(void){
+
 	//------
 	//cli.load_commands();
 	display.load_commands();
@@ -47,7 +51,6 @@ char  **get_possible_args(void){
 	}
 
 //	PRINT("free.possible_args[0x%zX]\n", (long unsigned int)  args);
-
 	// add one for NULL ptr at end of list..
 	int c = cli.base_cmdlist.count()+1;
 	c = c + display.display_cmdlist.count();

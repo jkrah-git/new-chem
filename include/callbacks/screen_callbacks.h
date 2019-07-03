@@ -41,6 +41,9 @@ int cli_peplist(ChemDisplay *display, int argc, char **argv);
 int	cli_load_molelist(ChemDisplay *display, int argc, char **argv);
 int cli_molelist(ChemDisplay *display, int argc, char **argv);
 
+// cli_conclist.cpp
+int	cli_load_conclist(ChemDisplay *display, int argc, char **argv);
+int cli_conclist(ChemDisplay *display, int argc, char **argv);
 
 // cli_menu.cpp
 int	cli_load_menu(ChemDisplay *display, int argc, char **argv);

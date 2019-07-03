@@ -197,9 +197,16 @@ xxx xxx ...
 NB: CLI = (*core, menus, display)
 
 TODO
+---- finish base rendrer
+	- move all disply_list *objs's to 'stack_id / other_id??'
+		- (mouseclick) will require *ptr-> index lookups .. grrr..
+		- needed for crashproof vm changes
+	- finish 'index' to 'row' refactor
+	
 ---- match_funcs (enz) 
   -- (vs) opcode (VM) 
   -- think about transcode/script
+  -- ConcEngine
 -----
 -- test data
 -- bugs: mole_match - fwd testing?? - add match_item

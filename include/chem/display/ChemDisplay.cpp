@@ -126,11 +126,15 @@ void ChemDisplay::load_commands(void){
 	if (cli!=NULL) cli-> load_commands();
 
 	cli_load_screen(this, 0, NULL);
+
 	cli_load_pepdisp(this,0, NULL);
 	cli_load_moledisp(this,0, NULL);
+	cli_load_concdisp(this,0, NULL);
+
 	cli_load_peplist(this,0, NULL);
 	cli_load_molelist(this,0, NULL);
-	cli_load_concdisp(this,0, NULL);
+	cli_load_conclist(this,0, NULL);
+
 //	cli_load_menu(this,0, NULL);
 //	cli_load_button(this,0, NULL);
 }
@@ -484,19 +488,24 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 //-------------------------------
 void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 	if (screen==NULL) return;
-	if (vm==NULL) return;
-
 	char str[128];
-	sprintf(str, "REGS: Pep[0x%zX] Mole[0x%zX] Conc[0x%zX] Vol[0x%zX]",
-			(long unsigned int) vm->pep,
-			(long unsigned int) vm->mole,
-			(long unsigned int) vm->conc,
-			(long unsigned int) vm->concvol);
+	if (vm==NULL) {
+		sprintf(str, "No VM's");
+	} else {
+		sprintf(str, "VM[0x%zX]: REGS: Pep[0x%zX] Mole[0x%zX] Conc[0x%zX] Vol[0x%zX]",
+				(long unsigned int) vm,
+				(long unsigned int) vm->pep,
+				(long unsigned int) vm->mole,
+				(long unsigned int) vm->conc,
+				(long unsigned int) vm->concvol);
+	}
+
 	gfx.printg(str);
 
-	sprintf(str, "STACKS: Pep[%d] Mole[%d] Conc[%d]", vm->peptide_stack.count(), vm->molecule_stack.count(), vm->concentration_stack.count());
-	gfx.printg(str);
-
+	if (vm!=NULL) {
+		sprintf(str, "STACKS: Pep[%d] Mole[%d] Conc[%d]", vm->peptide_stack.count(), vm->molecule_stack.count(), vm->concentration_stack.count());
+		gfx.printg(str);
+	}
 
 	//---------------
 	gfx.flush();
@@ -519,7 +528,7 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 	float min = conc_display-> buf.get_min();
 	float max = conc_display-> buf.get_max();
 
-	PRINT("c=[%d] min=[%.3f] max=[%.3f]\n", c, min, max);
+	//PRINT("c=[%d] min=[%.3f] max=[%.3f]\n", c, min, max);
 	if (c<=1) return;
 
 	float scalex = conc_display->coords.scalex / (c-1);
@@ -539,7 +548,7 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 		posx = (i * scalex) + x - sx;
 		posy = ((v-min) * scaley) + y + sy;
 
-		PRINT("i=[%d] v[%.3f] posx=[%d] posy=[%d]\n", i, v, posx, posy);
+		// PRINT("i=[%d] v[%.3f] posx=[%d] posy=[%d]\n", i, v, posx, posy);
 		if (!first) { gfx.line(old_posx, old_posy, posx, posy);	}
 
 		first = false;
@@ -547,9 +556,11 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 		old_posy = posy;
 	}
 	Concentration *cp = conc_display->get_conc();
+	Molecule *m = NULL;
+	if (cp!=NULL) m = cp->getmole();
 
 	char 	msg[128];
-	sprintf(msg, "Conc[0x%zX]/Mole[0x%zX]", (long unsigned int) conc_display->get_conc());
+	sprintf(msg, "Conc[0x%zX]/Mole[0x%zX]", (long unsigned int) cp, (long unsigned int) m);
 	gfx.text(msg,  x-sx, y-sy);
 	sprintf(msg, "Min: %.3f", min);		gfx.text(msg,  x+sx, y+sy);
 	sprintf(msg, "Max: %.3f", max);		gfx.text(msg,  x+sx, y-sy);
@@ -665,9 +676,107 @@ void ChemDisplay::draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bo
 	//Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
 	// ----
 	// todo: draw_moledisp
-	draw_mole(screen, &moledis->coords, *moledis->mole, mouseclick, &moledis->col );
+	if (moledis->mole!=NULL)
+		draw_mole(screen, &moledis->coords, *moledis->mole, mouseclick, &moledis->col );
 };
 //------------------------------
+/***************************************************************
+template <class T> void	ChemDisplay::draw_list(ChemScreen *screen, ListDisplay<T> *list_display, bool mouseclick){
+
+	if (screen==NULL) return;
+	if (list_display==NULL) return;
+
+	int c = list_display-> index;
+	int x = 0;
+	int y = 0;
+
+	int max_items = list_display-> count();
+	int num_pages = max_items / (list_display-> width * list_display-> height);
+	int current_page = c / ( list_display-> width * list_display-> height );
+
+	ChemDisplayColor txtcol;
+	// Draw CElls -----------------------------------
+	while (true) {
+
+		char 	label[16];
+		// try to get next peptide
+		mylist<Peptide>::mylist_item<Peptide>  *pep_item = list_display-> get(c);
+
+		if ((pep_item!=NULL) && (pep_item->item !=NULL)) {
+
+			//-------------------
+			// test mouseclick
+			Peptide *hit = NULL;
+			if ((mouseclick)&& (list_display-> coords.hit(&gfx, x, y))) {
+				hit = pep_item->item;
+				if (hit!=NULL) { selected_pep = hit; }
+			}
+
+			// sel color
+			if (selected_pep ==pep_item->item)	txtcol = list_display->selcol;
+			else txtcol = list_display->col;
+
+		//	if ((cli!=NULL) && (cli->is_selected(pep_item->item)))
+		//		txtcol = list_display->selcol;
+		//	else txtcol = list_display->col;
+
+			//txtcol.set(col-> r, col-> g, col-> b);
+			sprintf(label, "[0x%X]", pep_item-> item->get());
+			c++;
+			pep_item = pep_item-> next;
+		} else {
+			txtcol.set(list_display->col.r/2, list_display->col.g/2, list_display->col.b/2);
+			//txtcol.set(col-> r/2, col-> g/2, col-> b/2);
+			sprintf(label, "[]");
+		}
+		//------------------------------
+		//col.dump();
+		draw_box(&list_display-> coords, x,y,x,y, label, &list_display->col, &txtcol);
+
+
+		// side cells
+		if ((x==0)||(y==0)) {
+			gfx.color(&list_display->col);
+
+			if (x==0) {
+				ChemDisplayCoords display_coords(&list_display-> coords);
+				display_coords.offsetx -= 2;
+				sprintf(label, "0x%x", (-y*list_display-> width) );
+				draw_box(&display_coords, x-1,y,x-1,y, label);
+			}
+
+			if (y==0) {
+				ChemDisplayCoords display_coords(&list_display-> coords);
+				display_coords.offsety -= 2;
+				sprintf(label, "0x%x", x);
+				draw_box(&display_coords, x,y+1,x,y+1, label);
+			}
+
+			if ((x==0)&&(y==0)) {
+				ChemDisplayCoords display_coords(&list_display-> coords);
+				display_coords.offsetx -= 2;
+				display_coords.offsety -= 2;
+				sprintf(label, "Pg %d/%d", current_page+1, num_pages+1);
+				draw_box(&display_coords, x-1,y+1,x-1,y+1, label);
+			}
+		}
+
+		/// next cell
+		// horizont
+		if (++x >= list_display-> width) {
+			x=0;
+			if (--y <= - list_display-> height)
+				return;
+		} //--------------
+		// ---- end while
+	}
+	//-------------------------------------------------
+
+	return ;
+
+}
+***************************************************************/
+//=======================================================
 void ChemDisplay::draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemPeplistDisplay *peplistDisplay, bool mouseclick) {
 	if (screen==NULL) return;
 	if (peplistDisplay==NULL) return;
@@ -697,6 +806,11 @@ void ChemDisplay::draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemP
 				hit = pep_item->item;
 				if (hit!=NULL) { selected_pep = hit; }
 			}
+
+			Concentration_VM  *vm = cli-> chem_engine.get_selected_vm();
+			Peptide *selected_pep = NULL;
+			if (vm!=NULL) selected_pep = vm->pep;
+
 
 			// sel color
 			if (selected_pep ==pep_item->item)	txtcol = peplistDisplay->selcol;
@@ -761,13 +875,14 @@ void ChemDisplay::draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemP
 	return ;
 
 }
+//=======================================================
 //-------------------------------------------
 void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, ChemMolelistDisplay *molelistDisplay, bool mouseclick) {
 	if (screen==NULL) return;
 	if (molelistDisplay==NULL) return;
 
 	//PRINT("======== \n");
-	int c = molelistDisplay-> index;
+	int start = molelistDisplay-> row * molelistDisplay-> width ;
 	int x = 0;
 	int y = 0;
 	//PRINT("====== peplist ===\n");	DUMP(peplistDisplay)	PRINT("======\n");
@@ -777,10 +892,13 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 
 	int max_items = molelistDisplay-> count();
 	int num_pages = max_items / (molelistDisplay-> width * molelistDisplay-> height);
-	int current_page = c / ( molelistDisplay-> width * molelistDisplay-> height );
+	int current_page = start / ( molelistDisplay-> width * molelistDisplay-> height );
 
-
+	Concentration_VM  *vm = cli-> chem_engine.get_selected_vm();
+	Molecule *selected_mole = NULL;
+	if (vm!=NULL) selected_mole = vm-> mole;
 	// Draw CElls -----------------------------------
+	int c = start;
 	while (true) {
 
 		char 	label[16];
@@ -808,7 +926,7 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 
 			//sprintf(label, "A\nBB", (long unsigned int) mole_item-> item, mole_item-> item->pep_list.count());
 
-			c++;
+			//c++;
 			mole_item = mole_item-> next;
 		} else {
 			//txtcol.set(col-> r/2, col-> g/2, col-> b/2);
@@ -827,7 +945,7 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 			if (x==0) {
 				ChemDisplayCoords display_coords(&molelistDisplay-> coords);
 				display_coords.offsetx -= 2;
-				sprintf(label, "0x%x", (-y*molelistDisplay-> width) );
+				sprintf(label, "0x%x", (-y*molelistDisplay-> width)+start); //+(c %  molelistDisplay-> width) );
 				draw_box(&display_coords, x-1,y,x-1,y, label);
 			}
 
@@ -853,6 +971,7 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 			if (--y <= - molelistDisplay-> height)
 				return;
 		} //--------------
+		c++;
 		// ---- end while
 	}
 	//-------------------------------------------------
@@ -860,6 +979,115 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 	return ;
 
 }
+//-------------------------------------------
+void ChemDisplay::draw_conclist(ChemScreen *screen, Concentration_CLI *cli, ChemConclistDisplay *conclistDisplay, bool mouseclick) {
+	if (screen==NULL) return;
+	if (conclistDisplay==NULL) return;
+
+	//PRINT("======== \n");
+	int c = conclistDisplay-> index;
+	int x = 0;
+	int y = 0;
+	//PRINT("====== peplist ===\n");	DUMP(peplistDisplay)	PRINT("======\n");
+
+	//if (col==NULL)	col = &molelistDisplay->col;
+	ChemDisplayColor txtcol;
+
+	int max_items = conclistDisplay-> count();
+	int num_pages = max_items / (conclistDisplay-> width * conclistDisplay-> height);
+	int current_page = c / ( conclistDisplay-> width * conclistDisplay-> height );
+
+
+	// Draw CElls -----------------------------------
+	while (true) {
+
+		char 	label[64];
+		// try to get next peptide
+		mylist<Concentration>::mylist_item<Concentration>  *conc_item = conclistDisplay-> get(c);
+
+		if ((conc_item!=NULL) && (conc_item->item !=NULL)) {
+
+			/*************
+			//-------------------
+			// test mouseclick
+			Molecule *hit = NULL;
+			if ((mouseclick)&& (conclistDisplay-> coords.hit(&gfx, x, y))) {
+				hit = conc_item->item;
+//				if (hit!=NULL) { selected_conc = hit; }
+			}
+			*************/
+
+			txtcol = conclistDisplay->col;
+			//sprintf(label, "0x%zX\n[%d]", (long unsigned int) conc_item-> item, conc_item-> item->pep_list.count());
+			Molecule *m = conc_item->item->getmole();
+			int n = 0;
+			if (m!=NULL)  n=m->pep_list.count();
+
+			sprintf(label, "[0x%zX][%d]\n(%.3f+%.3f)",  (long unsigned int) m, //conc_item-> item,
+					n, conc_item->item->get(), conc_item->item->getdelta() );
+
+			Concentration_VM  *vm = cli-> chem_engine.get_selected_vm();
+			Molecule *selected_mole = NULL;
+			if (vm!=NULL) selected_mole = vm->mole;
+			if (m==selected_mole)
+				txtcol = conclistDisplay->selcol;
+
+
+			//-----------------
+			c++;
+			conc_item = conc_item-> next;
+		} else {
+
+			//txtcol.set(col-> r/2, col-> g/2, col-> b/2);
+			txtcol.set(conclistDisplay->col.r/2, conclistDisplay->col.g/2, conclistDisplay->col.b/2);
+
+			sprintf(label, "[]");
+		}
+
+		//gfx.color(col-> r, col-> g, col-> b);
+		draw_box(&conclistDisplay-> coords, x,y,x,y, label, &conclistDisplay->col, &txtcol);
+
+		// side cells
+		if ((x==0)||(y==0)) {
+			gfx.color(&conclistDisplay->col);
+
+			if (x==0) {
+				ChemDisplayCoords display_coords(&conclistDisplay-> coords);
+				display_coords.offsetx -= 2;
+				sprintf(label, "0x%x", (-y*conclistDisplay-> width) );
+				draw_box(&display_coords, x-1,y,x-1,y, label);
+			}
+
+			if (y==0) {
+				ChemDisplayCoords display_coords(&conclistDisplay-> coords);
+				display_coords.offsety -= 2;
+				sprintf(label, "0x%x", x);
+				draw_box(&display_coords, x,y+1,x,y+1, label);
+			}
+
+			if ((x==0)&&(y==0)) {
+				ChemDisplayCoords display_coords(&conclistDisplay-> coords);
+				display_coords.offsetx -= 2;
+				display_coords.offsety -= 2;
+				sprintf(label, "Pg %d/%d", current_page+1, num_pages+1);
+				draw_box(&display_coords, x-1,y+1,x-1,y+1, label);
+			}
+		}
+		/// next cell
+		// horizont
+		if (++x >= conclistDisplay-> width) {
+			x=0;
+			if (--y <= - conclistDisplay-> height)
+				return;
+		} //--------------
+		// ---- end while
+	}
+	//-------------------------------------------------
+
+	return ;
+
+}
+//-------------------------------------------
 //-------------------------------------------
 void	ChemDisplay::draw_title_bar(ChemScreen *screen) {
 	if (screen==NULL) return;
@@ -1016,8 +1244,17 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 		}
 	}
 
-
-
+	{
+		// draw conc disp
+		// ------------------
+		mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *current_conc = screen-> conc_list.gethead();
+		while ((current_conc != NULL) && (current_conc-> item != NULL)) {
+		//	PRINT("==== ChemMolelistDisplay = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+			draw_conc_displ(screen, current_conc-> item);
+			//-------
+			current_conc = current_conc->next;
+		}
+	}
 
 
 	{	// draw pep lists
@@ -1031,7 +1268,7 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 		}
 	}
 
-		// draw mole lists
+	{	// draw mole lists
 		// ------------------
 		mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *current_molelist_item = screen-> molelist_list.gethead();
 		while ((current_molelist_item != NULL) && (current_molelist_item-> item != NULL)) {
@@ -1040,27 +1277,23 @@ void ChemDisplay::draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool m
 			//-------
 			current_molelist_item = current_molelist_item->next;
 		}
+	}
 
-
-		// draw mole lists
+	{	// draw conc lists
 		// ------------------
-		mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *current_conc = screen-> conc_list.gethead();
-		while ((current_conc != NULL) && (current_conc-> item != NULL)) {
-		//	PRINT("==== ChemMolelistDisplay = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
-			draw_conc_displ(screen, current_conc-> item);
+		mylist<ChemConclistDisplay>::mylist_item<ChemConclistDisplay> *current_conclist_item = screen-> conclist_list.gethead();
+		while ((current_conclist_item != NULL) && (current_conclist_item-> item != NULL)) {
+		//	PRINT("==== ChemConclistDisplay = >\n");	//	current_item-> item-> dump(); NL	//	PRINT("<====\n");
+			draw_conclist(screen, cli, current_conclist_item-> item, mouseclick);
 			//-------
-			current_conc = current_conc->next;
+			current_conclist_item = current_conclist_item->next;
 		}
+	}
 
-
-
-
-	//	draw_conc_displ(screen);
-
-		// -------------------------------------------
-		//gfx.printg((const char*) "End(screen).");
-		//-------- wait / loop
+		// ------------
 		gfx.flush();
+		// -------------------------------------------
+		//-------- wait / loop
 		if ((screen-> waiting) &&(!mouseclick)) {
 			int r = screen-> wait(cli, this);
 			// allow escape out

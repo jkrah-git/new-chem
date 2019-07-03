@@ -43,8 +43,11 @@ int cli_moledisp(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();
 	//-------
+	//PRINT(" == VM.1 =\n");
+	//DUMP(vm)
 
 	//if (cli->display.current_screen==NULL) {
 	ChemScreen *screen = display-> selected_screen;
@@ -61,6 +64,7 @@ int cli_moledisp(ChemDisplay *display, int argc, char **argv) {
 
 	ChemMoleDisplay		*mole = screen-> find_mole(argv[0]);
 
+
 	// argv(name, add)
 	if ((argc==2) && (strcmp(argv[1], "add")==0)) {
 		//PRINT(" ADD ..\n");
@@ -68,8 +72,11 @@ int cli_moledisp(ChemDisplay *display, int argc, char **argv) {
 		//screen = cli->display.add_screen(argv[0]);
 		mole = screen-> add_mole(argv[0]);
 		if (mole==NULL) {	PRINT("failed to add mole[%s]..\n", argv[0]);  return -3;  }
-		mole->set_mole(&vm->mole);
-		printf("new mole[%s] OK..\n", argv[0]);
+
+		if (vm!=NULL) mole->set_mole(&vm->mole);
+		printf("new mole[%s][0x%zX] OK..\n", argv[0], (long unsigned int) mole->get_mole());
+		printf("new mole[%s]OK..\n", argv[0]);
+
 		return 0;
 	}
 
@@ -152,7 +159,7 @@ int cli_moledisp(ChemDisplay *display, int argc, char **argv) {
 			printf("del[%s] ok\n", argv[0]);
 		}
 		if (strcmp(argv[2], "core")==0) {
-			mole->set_mole(&vm->mole);
+			if (vm!=NULL) mole->set_mole(&vm->mole);
 			printf("del[%s] ok\n", argv[0]);
 		}
 

@@ -14,6 +14,7 @@
 #include "Display_Command.h"
 //class Display_Command;
 #include "gfx/GFX_Base.h"
+//#include "ListDisplay.h"
 
 #define DISPLAY_EVENT_MOUSE1 1
 #define DISPLAY_EVENT_MOUSE2 3
@@ -37,6 +38,7 @@ public:
 	GFX_Base				gfx;
 	mylist<ChemScreen> 		screen_list;
 	ChemScreen				*selected_screen;
+	// user by mouseclick
 	Molecule				*selected_mole;
 	Peptide					*selected_pep;
 	int		(*callback)(ChemDisplay *, int, char**);
@@ -87,8 +89,12 @@ public:
 
 	void	draw_pepdisp(ChemScreen *screen, ChemPepDisplay *pepdis, bool mouseclick);
 	void	draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bool mouseclick);
+
+//	template <class T> void	draw_list(ChemScreen *screen, ListDisplay<T> *list_display, bool mouseclick);
+
 	void	draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemPeplistDisplay *peplist, bool mouseclick);
 	void	draw_molelist(ChemScreen *screen, Concentration_CLI *cli, ChemMolelistDisplay *molelist, bool mouseclick);
+	void	draw_conclist(ChemScreen *screen, Concentration_CLI *cli, ChemConclistDisplay *conclistDisplay, bool mouseclick);
 	//--------------
 	void	draw_title_bar(ChemScreen *screen);
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli){ draw_screen(screen, cli, false); };

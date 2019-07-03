@@ -15,9 +15,11 @@
 //#include "ChemMenu.h"
 #include "ChemPepDisplay.h"
 #include "ChemMoleDisplay.h"
+#include "ChemConcDisplay.h"
+//#include "ListDisplay.h"
 #include "ChemPeplistDisplay.h"
 #include "ChemMolelistDisplay.h"
-#include "ChemConcDisplay.h"
+#include "ChemConclistDisplay.h"
 
 class ChemDisplay;
 #include "../../MyString.h"
@@ -35,9 +37,11 @@ public:
 	mylist<ChemMoleDisplay>	mole_list;
 	mylist<ChemConcDisplay>	conc_list;
 
+	//ListDisplay<ChemMoleDisplay>	new_mole_list;
+
  mylist<ChemPeplistDisplay>		peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
-
+ mylist<ChemConclistDisplay>	conclist_list;
 
 //	mylist<ChemMenu> 		menu_list;
 //	ChemMenu				*current_menu;
@@ -83,6 +87,10 @@ public:
 	ChemMolelistDisplay		*add_molelist(const char *_title);
 	ChemMolelistDisplay		*find_molelist(const char *_title);
 	int						del_molelist(const char *_title);
+
+	ChemConclistDisplay		*add_conclist(const char *_title);
+	ChemConclistDisplay		*find_conclist(const char *_title);
+	int						del_conclist(const char *_title);
 
 
 

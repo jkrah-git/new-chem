@@ -8,7 +8,7 @@
 //---------------------------------//---------------------------------
 int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -25,7 +25,7 @@ int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_match_help(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -39,7 +39,7 @@ int	cli_match_help(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_match_m1(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -55,7 +55,7 @@ int	cli_match_m1(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -71,7 +71,7 @@ int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//cli->core->matchpos.rotation = 5;
 	//cli->core->matchpos.test_item = NULL;
@@ -121,7 +121,7 @@ int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	int r = vm-> matchpos.match_item();
@@ -132,7 +132,7 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int	cli_match_n(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	int r = vm-> matchpos.match_mole();
 	printf("=>[%d]<= [-1=(NOMATCH), 0=(END), 1=(MATCH)]\n", r);
@@ -142,7 +142,7 @@ int	cli_match_n(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int	cli_match_render(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> matchpos.render();
 	return 0;

@@ -33,11 +33,13 @@ public:
 		virtual ~mylist_item(){		item = NULL; prev = NULL; next = NULL; }
 		// --------------------------------------
 		void 		dump(void) {
+			/*
 			printf("mylist_item[0x%zX].item[0x%zX].next[0x%zX].prev[0x%zX] ->",
 					(long unsigned int) this,
 					(long unsigned int) item,
 					(long unsigned int) next,
 					(long unsigned int) prev);
+			*/
 			if (item==NULL) printf("NULL\n");
 			else item-> dump();
 		}
@@ -353,12 +355,12 @@ template <class T> void mylist<T>::dump(void) {
 	char ch;
 	if (autoalloc) ch='A';
 	else ch = 'M';
-
+/*
 	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX].auto[%c]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail, ch);
-
+*/
 	if (head!=NULL) {
 		//printf("\n");
 		mylist_item<T>	*item = head;

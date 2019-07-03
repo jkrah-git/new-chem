@@ -37,11 +37,16 @@ CLI_Command  *search_cmd_list(mylist<CLI_Command> *cmd_list, const char *name);
 //-------------------------------------------
 class Concentration_CLI {
 private:
-	ChemEngine					chem_engine;
+	/*
 	Concentration_VM			*selected_vm;
 	mylist<Concentration_VM>	vm_list;
 
+	ConcentrationVolume			*selected_vol;
+	mylist<ConcentrationVolume>	vol_list;
+*/
+
 public:
+	ChemEngine					chem_engine;
 	int							last_result;
 // TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -71,21 +76,32 @@ public:
 	int		(*callback)(Concentration_CLI*, int, char**);
 
 
-	Concentration_CLI(ConcentrationVolume &cvol); //, Concentration_VM &vm);
+	//Concentration_CLI(ConcentrationVolume &cvol); //, Concentration_VM &vm);
+	Concentration_CLI(); //, Concentration_VM &vm);
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();
 	void 	test();
 
-	//bool	is_selected(Peptide *pep);
-	//bool	is_selected(Molecule *mole);
+	/*
 	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
  	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
  	Concentration_VM	*add_vm(void);
-//Concentration_VM		*find_vm(Molecule *m1, Molecule *m2);
 	int					del_vm(Concentration_VM *_vm);
 	int					list_vms(void);
 	int					pop_vm(void);
+	ConcentrationVolume	*get_selected_vol(void){ return selected_vol; };
+ 	void				select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
+ 	ConcentrationVolume	*add_vol(void);
+ 	int					del_vol(ConcentrationVolume *_vol);
+	int					list_vols(void);
+	int					pop_vol(void);
+
+*/
+
+
+
+
 
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);
 	int		argstr(char *dest, int max, int argc, char **argv);

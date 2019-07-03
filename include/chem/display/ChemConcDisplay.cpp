@@ -82,6 +82,9 @@ void CircBuffer::clear(void){
 		data[i] = 0.0f;
 	next = 0;
 	num_items = 0;
+	min = 0.0f;
+	max = 0.0f;
+
 }
 // first run (num_items < size) && (next == num_items)
 // next runs (num_items = size)

@@ -59,10 +59,10 @@ public:
 
 // -------------------------------
 class ConcentrationVolume {
-
-public:
 	mylist<Molecule> 	mole_list;
 	mylist<Concentration> 	conc_list;
+
+public:
 
 	// ---
 	ConcentrationVolume();
@@ -72,6 +72,10 @@ public:
 	void dumpmoles() { mole_list.dump(); }
 	// ---------
 	Concentration	*molesearch(Molecule	*m);
+
+	mylist<Molecule>::mylist_item<Molecule> *search_mole(Molecule* m){ return mole_list.search(m); };
+	mylist<Concentration>::mylist_item<Concentration> *search_conc(Concentration* m){ return conc_list.search(m); };
+
 	ConcLevelType	get(Molecule	*m);
 	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType

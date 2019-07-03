@@ -28,7 +28,7 @@ public:
 	virtual ~ChemMoleDisplay();
 	//----
 	void				dump(void);
-	Molecule			*get_mole(void) { return *mole; };
+	Molecule			*get_mole(void) { if (mole==NULL) { return NULL; } else { return *mole; } };
 	void				set_mole(Molecule **_mole) { mole = _mole; };
 	//-----------
 };

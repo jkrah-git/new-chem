@@ -389,6 +389,7 @@ int						ChemScreen::del_peplist(const char *_title){
 // -------------------------------
 
 // -------------------------------
+// ============================================================
 ChemMolelistDisplay		*ChemScreen::find_molelist(const char *_title){
 	//if (_title==NULL) return NULL;
 	mylist<ChemMolelistDisplay>::mylist_item<ChemMolelistDisplay> *molelist_item = molelist_list.gethead();
@@ -427,5 +428,45 @@ int						ChemScreen::del_molelist(const char *_title){
 	return 0;
 }
 // -------------------------------
+// ============================================================
+// ============================================================
+ChemConclistDisplay		*ChemScreen::find_conclist(const char *_title){
+	//if (_title==NULL) return NULL;
+	mylist<ChemConclistDisplay>::mylist_item<ChemConclistDisplay> *conclist_item = conclist_list.gethead();
+	while ((conclist_item!=NULL)&&(conclist_item-> item!=NULL)) {
+		if (conclist_item-> item->name == _title) return conclist_item-> item;
+		//----
+		conclist_item = conclist_item->next;
+	}
+	return NULL;
+}
+// -------------------------------
+ChemConclistDisplay		*ChemScreen::add_conclist(const char *_title){
+	if (_title==NULL) return NULL;
 
+	ChemConclistDisplay *result = find_conclist(_title);
+	if (result!=NULL) return NULL;
+	// (else) result = NULL
+
+	mylist<ChemConclistDisplay>::mylist_item<ChemConclistDisplay> *conclist_item = conclist_list.add();
+	if (conclist_item==NULL) { return NULL; }
+	if (conclist_item-> item==NULL) { conclist_list.del(conclist_item); return NULL; }
+
+	// (else)  conclist_item-> item  is good
+	conclist_item-> item-> name.set(_title);
+	return conclist_item-> item;
+}
+// -------------------------------
+int						ChemScreen::del_conclist(const char *_title){
+	ChemConclistDisplay *found_conclist =find_conclist(_title);
+	if (found_conclist==NULL) return -1;
+
+	mylist<ChemConclistDisplay>::mylist_item<ChemConclistDisplay> *conclist_item = conclist_list.search(found_conclist);
+	if (conclist_item==NULL) return -2;
+
+	conclist_list.del(conclist_item);
+	return 0;
+}
+// -------------------------------
+// ============================================================
 // -------------------------------//-------------------------------//-------------------------------

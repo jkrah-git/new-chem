@@ -41,7 +41,7 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();	//	if (vm==NULL) return -10;
 	//-------
 
 	//if (cli->display.current_screen==NULL) {
@@ -91,6 +91,7 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 	if (argc==1) {
 		printf("dump\n");
 		printf("del\n");
+		printf("row\n");
 		printf("attrib\n");
 		printf("src\n");
 		return 0;
@@ -105,11 +106,26 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 		printf("del[%s] ok\n", argv[0]);
 		return 0;
 	}
-
-	if (strcmp(argv[1], "size")==0) {
+	//---------------
+	if (strcmp(argv[1], "row")==0) {
 		int r = -1;
 		if (argc>2) {
+			int a;
+			if (sscanf(argv[2], "%x", &a)<1) {
+				printf("data error\n");
+				return -10;
+			}
+			molelist->row = a;
+			printf("index[0x%x]\n", molelist->row);
+			r = 0;
+		}
 
+	}
+
+	//---------------
+	if (strcmp(argv[1], "size")==0) {
+		int r = -1;
+		if (argc>3) {
 			int px,py;
 			if ((sscanf(argv[2], "%d", &px)<1) ||
 				(sscanf(argv[3], "%d", &py)<1))	{
@@ -124,8 +140,8 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 
 		printf("size[%d,%d]\n", molelist->width, molelist->height);
 		return r;
-
 	}
+	//---------------
 
 
 	//-----------------
