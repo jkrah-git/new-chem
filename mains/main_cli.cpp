@@ -18,15 +18,17 @@ char  **get_args(mylist<CLI_Command> *menu);
 // these two are joined by call backs so have to be globals
 Concentration_CLI	cli;
 ChemDisplay			display(&cli);
+ChemEngine			eng;
 
 int 	run_callto(int argc, char **argv);
 char  **get_possible_args(void);
 // --------------------------
 char 	**build_args(void){
 
+	cli.chem_engine = &eng;
 	//------
 	//cli.load_commands();
-	display.load_commands();
+	//display.load_commands();
 	cli.run_callto = run_callto;
 	return get_possible_args();
 }

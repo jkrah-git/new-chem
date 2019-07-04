@@ -291,10 +291,8 @@ ChemConcDisplay		*ChemScreen::add_conc(const char *_title){
 }
 // -------------------------------
 int				ChemScreen::del_conc(const char *_title){
-	//if (_title==NULL) return -1;
 	ChemConcDisplay *found_conc =find_conc(_title);
 	if (found_conc==NULL) return -1;
-
 	mylist<ChemConcDisplay>::mylist_item<ChemConcDisplay> *conc_item = conc_list.search(found_conc);
 	if (conc_item==NULL) return -2;
 

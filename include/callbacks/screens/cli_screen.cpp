@@ -258,7 +258,7 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 				if (strcmp(argv[2], "null")==0) {
 					screen-> renderCB = NULL;
 					printf("screen[%s].render ->[null]\n", argv[0]);
-				} // ---- end(mole)
+				} // ---- end(null)
 				//-------------
 				if (strcmp(argv[2], "mole")==0) {
 					screen-> renderCB = screen_render_mole;
@@ -274,7 +274,11 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 				if (strcmp(argv[2], "vm")==0) {
 					screen-> renderCB = screen_render_vm;
 					printf("screen[%s].render ->[screen_render_vm]\n", argv[0]);
-				} // ---- end(match)
+				} // ---- end(vm)
+				if (strcmp(argv[2], "enz")==0) {
+					screen-> renderCB = screen_render_enz;
+					printf("screen[%s].render ->[screen_render_enz]\n", argv[0]);
+				} // ---- end(enz)
 				//-------------
 			} // end(argc==3)
 		} // ------------------end(render)

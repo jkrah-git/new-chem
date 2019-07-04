@@ -133,8 +133,16 @@ void Concentration_CLI::dump() {
 //			(long unsigned int) conc,
 //			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
+	//ChemEnzyme *enz = NULL;
+	//if (chem_engine != NULL) enz = chem_engine-> search_enz(selected_enz);
+	if (selected_enz==NULL) { printf("selected_enz[NULL]\n");	}
+	else {
+		printf("selected_enz[0x%zX]", (long unsigned int) selected_enz);
+		selected_enz-> dump();
+	}
+
 	printf("ChemEngine:\n");
-	chem_engine.dump();
+	DUMP(chem_engine)
 
 	/*
 	printf("============ VOL's ================..\n");
@@ -166,9 +174,12 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 	callback = NULL;
 	run_callto = NULL;
 	last_result = 0;
-	/*
 	selected_vm = NULL;
 	selected_vol = NULL;
+	selected_enz = NULL;
+	chem_engine = NULL;
+	load_commands();
+	/*
 	*/
 }
 //---------------------------------
@@ -223,7 +234,6 @@ bool Concentration_CLI::is_selected(Molecule *mole){
 
 
 //---------------------------------//---------------------------------//---------------------------------
-/*********************************************************
 //========================================================
 Concentration_VM *Concentration_CLI::add_vm(void){
 
@@ -239,7 +249,16 @@ Concentration_VM *Concentration_CLI::add_vm(void){
 int	Concentration_CLI::del_vm(Concentration_VM *_vm){
 	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.search(_vm);
 	if (vm_item==NULL) return -2;
-	vm_list.del(vm_item);
+	if (vm_item->item == selected_vm) {
+		vm_list.del(vm_item);
+		//selected_vm = vm_list.gettail();
+		vm_item = vm_list.gettail();
+		if (vm_item!=NULL)
+			selected_vm = vm_item-> item;
+	}
+	else {
+		vm_list.del(vm_item);
+	}
 	return 0;
 }
 
@@ -327,6 +346,7 @@ int	Concentration_CLI::list_vols(void){
 	//------
 	return c;
 }
+/*********************************************************
 *********************************************************/
 //========================================================
 //---------------------------------//---------------------------------//---------------------------------
@@ -371,8 +391,26 @@ int	Concentration_CLI::runline(mylist<CLI_Command> *cmd_list, char *line) {
 	return run(cmd_list, c, argv);
 	//return r;
 }
+/*******************************
 //-----------------------------------
 CLI_Command  *search_cli_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
+	CLI_Command  *cmd = NULL;
+	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = cmd_list-> gethead();
+	while ((next_item!=NULL) && (next_item-> item != NULL)) {
+		int r = strcmp(name, next_item-> item->name);
+		if (r==0) {
+			cmd = next_item-> item;
+			break;
+		}
+		// ---
+		next_item = next_item->next;
+	}
+	return cmd;
+}
+//---------------------------------
+*******************************/
+//-----------------------------------
+CLI_Command *Concentration_CLI::search_cli_cmd_list(mylist<CLI_Command> *cmd_list, const char *name) {
 	CLI_Command  *cmd = NULL;
 	mylist<CLI_Command>::mylist_item<CLI_Command>  *next_item = cmd_list-> gethead();
 	while ((next_item!=NULL) && (next_item-> item != NULL)) {
@@ -462,7 +500,9 @@ void Concentration_CLI::load_commands() {
 	cli_load_base(this, 0, NULL);
 	cli_load_vars(this, 0, NULL);
 	cli_load_match(this, 0, NULL);
+	// new - only in base
 	cli_load_vm(this, 0, NULL);
+	cli_eng_load(this, 0, NULL);
 	//cli_load_gfx(this, 0, NULL);
 
 	/* moved to void ChemDisplay::load_display_commands(void){

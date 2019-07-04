@@ -73,8 +73,8 @@ public:
 	// ---------
 	Concentration	*molesearch(Molecule	*m);
 
-	mylist<Molecule>::mylist_item<Molecule> *search_mole(Molecule* m){ return mole_list.search(m); };
-	mylist<Concentration>::mylist_item<Concentration> *search_conc(Concentration* m){ return conc_list.search(m); };
+	mylist<Molecule>::mylist_item<Molecule> *search_mole(Molecule *m){ return mole_list.search(m); };
+	mylist<Concentration>::mylist_item<Concentration> *search_conc(Concentration *c){ return conc_list.search(c); };
 
 	ConcLevelType	get(Molecule	*m);
 	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);

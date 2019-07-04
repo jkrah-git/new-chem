@@ -33,6 +33,8 @@ int	cli_load_match(Concentration_CLI *cli, int argc, char **argv);
 int	cli_load_vm(Concentration_CLI *cli, int argc, char **argv);
 int	cli_vm(Concentration_CLI *cli, int argc, char **argv);
 
+int	cli_eng_load(Concentration_CLI *cli, int argc, char **argv);
+
 //--------------- //--------------- //---------------
 /*
 // cli_dump.cpp

@@ -1,20 +1,36 @@
 #
 # Welcome to chems..
-#
-# 
+# loading (screens and simplepeps..
+# ------------------------------
 f screens/screens
 f match/simplepeps
-# screens and pep loaded
+# loading (screens and simplepeps..
+# ------------------------------
 
+# setting up match(M1=6, M2=[]
 mole ld 6
 match m1
 mole push
 mole addpep 0x81 0x81 0x83
 match m2
-# match start
-# conc push
-# dump conc
-# screen conc
 
+# enzyme (m[8]/noop)
+mole ld 8
+eng addenz noop
+mole getenz
+dump cli
+
+mole ld 6
+conc push
+conc adj 1 -1
+
+screen vm
+screen vm render match
 mole ld 0
-molelist m1 row 1
+match m1
+mole ld 1
+match m2
+
+
+# (end default)
+

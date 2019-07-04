@@ -1,17 +1,22 @@
+#........... screens/screens .............
+#.... single vm only
 vm push
+#.... screen('mole')
 screen mole add
 screen mole coords scale 100 100
 screen mole render mole
 
+#.... screen('match')
 screen match add
 screen match coords scale 50 50
 screen match render match
 
+#.... screen('vm')
 screen vm add
 screen vm coords scale 30 30
 screen vm coords pos -3 3
 screen vm grid off
-screen vm render match
+screen vm render vm
 
 pepdisp p1 add
 pepdisp p1 coords scale 30 30
@@ -39,8 +44,17 @@ conclist c1 coords pos -1 9
 conclist c1 size 5 1
 conclist c1 src core
 
+#.... screen('enz')
+screen enz add
+screen enz grid off
+screen enz render enz
+screen enz coords scale 30 30
+conclist c1 add
+conclist c1 size 5 1 
+conclist c1 coords scale 100 30
+conclist c1 coords pos -1 9
 
-##### conc screen #####
+#.... screen('conc')
 screen conc add
 screen conc coords scale 30 30
 screen conc coords pos -3 3
@@ -50,8 +64,7 @@ concdisp c1 add
 concdisp c1 coords scale 200 100
 concdisp c1 setup 64
 concdisp c1 src
+
+# add some test data to concdisplay('c1')
 concdisp c1 add 1 2 3 4 5 6 7 8
-# concdisp c1 dump
-# f match/simplepeps
-# screen vm render vm
-# screen vm
+

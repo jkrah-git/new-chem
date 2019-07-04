@@ -69,8 +69,8 @@ Molecule::Molecule() {
 }
 Molecule::~Molecule() {	clear();}
 // -------------------------------
-
-
+// -------------------------------
+// todo = operator
 bool Molecule::operator ==(const Molecule& p){
 #ifdef DEBUG
 	LOG("\npep_list => ");

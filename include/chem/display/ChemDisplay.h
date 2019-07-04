@@ -81,6 +81,7 @@ public:
 	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick);
 	//---
 	void		draw_vm(ChemScreen *screen, Concentration_VM *vm);
+	void		draw_enz(ChemScreen *screen, ChemEnzyme *enz);
 	void		draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_display);
 
 //	void 	draw_menu_border(ChemMenu *menu);
@@ -96,7 +97,8 @@ public:
 	void	draw_molelist(ChemScreen *screen, Concentration_CLI *cli, ChemMolelistDisplay *molelist, bool mouseclick);
 	void	draw_conclist(ChemScreen *screen, Concentration_CLI *cli, ChemConclistDisplay *conclistDisplay, bool mouseclick);
 	//--------------
-	void	draw_title_bar(ChemScreen *screen);
+	void	draw_title_bar(ChemScreen *screen, Concentration_CLI *cli);
+
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli){ draw_screen(screen, cli, false); };
 	void 	draw_screen(ChemScreen *screen, Concentration_CLI *cli, bool mouseclick);
 	//--------------

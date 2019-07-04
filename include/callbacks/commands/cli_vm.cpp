@@ -26,20 +26,20 @@ int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	// argc=0 argv()  (list)
 	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
-		cli-> chem_engine.list_vms();
+		cli-> list_vms();
 		return 0;
 	}
 
 	if (argc==1)  {
-		if (strcmp(argv[0], "dump")==0) {	DUMP(cli-> chem_engine.get_selected_vm()); return 0;		}
-		if (strcmp(argv[0], "clear")==0) {	cli-> chem_engine.select_vm(NULL); return 0;		}
+		if (strcmp(argv[0], "dump")==0) {	DUMP(cli-> get_selected_vm()); return 0;		}
+		if (strcmp(argv[0], "clear")==0) {	cli-> select_vm(NULL); return 0;		}
 		if (strcmp(argv[0], "push")==0) {
-			Concentration_VM *new_vm =cli-> chem_engine.add_vm();
-			cli-> chem_engine.select_vm(new_vm);
+			Concentration_VM *new_vm =cli-> add_vm();
+			cli-> select_vm(new_vm);
 			if (new_vm==NULL) return -1;
 			return 0;
 		}
-		if (strcmp(argv[0], "pop")==0) {	return cli-> chem_engine.pop_vm();		}
+		if (strcmp(argv[0], "pop")==0) {	return cli-> del_vm(cli-> get_selected_vm());		}
 	} // end argc==1
 
 

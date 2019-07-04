@@ -65,6 +65,7 @@ int	screen_wait(ChemDisplay *display, ChemScreen *screen);
 int screen_render_mole(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 int screen_render_match(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 int screen_render_vm(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
+int screen_render_enz(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 
 
 

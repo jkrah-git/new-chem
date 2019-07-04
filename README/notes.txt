@@ -202,15 +202,6 @@ TODO
 		- (mouseclick) will require *ptr-> index lookups .. grrr..
 		- needed for crashproof vm changes
 	- finish 'index' to 'row' refactor
-	
----- match_funcs (enz) 
-  -- (vs) opcode (VM) 
-  -- think about transcode/script
-  -- ConcEngine
------
--- test data
--- bugs: mole_match - fwd testing?? - add match_item
--- Enzymes - (base) inbuilt functions  - 
 
 ConcEngine 
   - enz_func    =(Name, Molecule* (func(vm*, argc , argv))
@@ -221,6 +212,18 @@ ConcEngine
   --------------------------
   - bound (mole/opcode) via CLI 
   
+
+
+	
+---- match_funcs (enz) 
+  -- (vs) opcode (VM) 
+  -- think about transcode/script
+  -- ConcEngine
+-----
+-- test data
+-- bugs: mole_match - fwd testing?? - add match_item
+-- Enzymes - (base) inbuilt functions  - 
+
 
 
 -- port cli cmds???

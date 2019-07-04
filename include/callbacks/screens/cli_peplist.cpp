@@ -43,7 +43,7 @@ int cli_peplist(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();	//	if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();	//	if (vm==NULL) return -10;
 	//-------
 
 	//if (cli->display.current_screen==NULL) {

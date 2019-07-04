@@ -9,7 +9,7 @@ int		cli_quit(Concentration_CLI *cli, int argc, char **argv){	exit(0);	}
 //---------------------------------//---------------------------------
 int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	 PRINT(": argc[%d]", argc);
 	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -49,7 +49,7 @@ int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	 PRINT(": argc[%d]", argc);
 	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -86,7 +86,7 @@ int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//-------
 	// PRINT(": argc[%d]", argc);
@@ -140,7 +140,7 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	PRINT("cli_help : -- PING --\n");
 	//-------
@@ -156,7 +156,7 @@ int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_file(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//PRINT("cli_file : -- FILE --\n");
 	//-------
@@ -201,7 +201,7 @@ int		cli_file(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_help(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	PRINT("cli_dump..\n");	DUMP(cli);	return 0;
 }
@@ -209,7 +209,7 @@ int	cli_help(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_basehelp(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	cli-> base_cmdlist_dump();
 	//PRINT("cli_dump..\n");	DUMP(cli);
@@ -225,7 +225,7 @@ int	cli_basehelp(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 
@@ -236,7 +236,7 @@ int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	cli-> dump_cmdlist_dump();
 	return 0;
@@ -246,7 +246,7 @@ int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	cli-> dump();
 	return 0;
@@ -255,9 +255,9 @@ int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	//cli-> chem_engine.get_selected_vm()-> dump();
+	//cli-> get_selected_vm()-> dump();
 	vm-> dump();
 	return 0;
 }
@@ -265,39 +265,39 @@ int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> dumpstacks();
-	//cli-> chem_engine.get_selected_vm()-> dumpstacks();
+	//cli-> get_selected_vm()-> dumpstacks();
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_dump_moles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> concvol->dumpmoles();
-	//cli-> chem_engine.get_selected_vm()-> concvol->dumpmoles();
+	//cli-> get_selected_vm()-> concvol->dumpmoles();
 	return 0;
 }
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int	cli_dump_regs(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> dumpregs();
-//	cli-> chem_engine.get_selected_vm()-> dumpregs();
+//	cli-> get_selected_vm()-> dumpregs();
 	return 0;
 }
 //---------------------------------//---------------------------------
 int		cli_dump_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
-//	if (cli-> chem_engine.get_selected_vm()-> concvol != NULL) {
-//		cli-> chem_engine.get_selected_vm()-> concvol-> dump();
+//	if (cli-> get_selected_vm()-> concvol != NULL) {
+//		cli-> get_selected_vm()-> concvol-> dump();
 	if (vm-> concvol != NULL) {	vm-> concvol-> dump();	return 0;	}
 	else	return -1;
 }
@@ -305,9 +305,9 @@ int		cli_dump_vol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	//DUMP(cli-> chem_engine.get_selected_vm()-> conc)
+	//DUMP(cli-> get_selected_vm()-> conc)
 	DUMP(vm-> conc)
 	return 0;
 }
@@ -315,9 +315,9 @@ int		cli_dump_conc(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	//DUMP(cli-> chem_engine.get_selected_vm()-> mole)
+	//DUMP(cli-> get_selected_vm()-> mole)
 	DUMP(vm-> mole)
 	return 0;
 }
@@ -325,7 +325,7 @@ int		cli_dump_mole(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_dump_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	DUMP(vm-> pep) NL
 	return 0;
@@ -341,7 +341,7 @@ int		cli_dump_pep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_load(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	//-------
@@ -358,7 +358,7 @@ int	cli_load(Concentration_CLI *cli, int argc, char **argv){
 // Concentration[0x1C6F740]
 int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc!=1) {		PRINT("usage:  conc 0x1234567\n");		return 0;	}
 
@@ -380,7 +380,7 @@ int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 // Molecule[0x17C4670]
 int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	if (argc!=1) {		PRINT("usage:  load mole 0x1234567\n");		return 0;	}
@@ -401,7 +401,7 @@ int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
 // Concentration[0x1C6F740]
 int	cli_load_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	if (argc!=1) {		PRINT("usage:  load pep 0x1234567\n");		return 0;	}
@@ -431,7 +431,7 @@ int	cli_load_pep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_clear(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	//-------
@@ -452,7 +452,7 @@ int	cli_clear(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_clear_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> conc = NULL;
 	return 0;
@@ -461,7 +461,7 @@ int	cli_clear_conc(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> mole = NULL;
 	return 0;
@@ -469,7 +469,7 @@ int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_clear_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> pep = NULL;
 	return 0;
@@ -477,7 +477,7 @@ int	cli_clear_pep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_clear_all(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm-> conc = NULL;
 	vm-> mole = NULL;
@@ -489,7 +489,7 @@ int	cli_clear_all(Concentration_CLI *cli, int argc, char **argv){
 
 int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> chem_engine.get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	int r;
