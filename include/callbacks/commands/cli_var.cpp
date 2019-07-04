@@ -626,6 +626,25 @@ int	cli_mole_getenz(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
+int	cli_mole_export(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	//ChemEnzyme *enz = NULL;
+	if (vm->mole != NULL) {
+		printf("mole addpep");
+		mylist<Peptide>::mylist_item<Peptide>  *pep_item = vm->mole->pep_list.gethead();
+		while ((pep_item!=NULL)&&(pep_item->item !=NULL)) {
+			printf(" 0x%x", pep_item-> item->sig);
+			pep_item = pep_item-> next;
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
 //int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
 //=======================
 //=======================
@@ -1139,12 +1158,12 @@ int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "build"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_build, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "addpep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_addpep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "deltail"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_deltail, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
-
 	sprintf(name, "frompep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_frompep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "topep"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_topep, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "tovar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_tovar, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "fromvar"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_fromvar, (char*) name);	LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "getenz"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_getenz, (char*) name);	LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "export"); 	r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_export, (char*) name);	LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 
 	// 'CONC' (reg) commands
 	cli-> conc_cmdlist.clear();

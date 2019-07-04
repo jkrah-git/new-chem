@@ -35,7 +35,7 @@ int	cli_eng(Concentration_CLI *cli, int argc, char **argv){
 			if (vm==NULL) { printf("Need to select vm\n"); return -11; }
 			if (vm->conc==NULL) { printf("Need to select conc\n"); return -11; }
 			// int	ChemEnzyme::match(Concentration *conc, Concentration_VM *vm){
-			int r =  cli-> selected_enz->match_next(vm);
+			int r =  cli-> selected_enz->match_next(cli-> chem_engine, vm);
 			printf("next = [%d]\n", r);
 			return r;
 		}

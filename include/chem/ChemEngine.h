@@ -37,10 +37,10 @@ public:
 class ChemEnzyme {
 private:
 	Molecule 	mole;
-	ChemFunc	*func;
+	ChemFunc	*chemfunc;
 public:
 	Molecule 	*get_mole(void) { return &mole; };
-	ChemFunc 	*get_func(void) { return func; };
+	ChemFunc 	*get_func(void) { return chemfunc; };
 	//---------
 	ChemEnzyme();
 	virtual ~ChemEnzyme();
@@ -49,7 +49,7 @@ public:
 
 	// match - use existing vm
 	int		match_start(Concentration *conc, Concentration_VM *vm);
-	int		match_next(Concentration_VM *vm);
+	int		match_next(ChemEngine *eng, Concentration_VM *vm);
 };
 //----------------------------
 // ==================================

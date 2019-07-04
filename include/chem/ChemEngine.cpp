@@ -51,19 +51,19 @@ public:
 //----------------------------
 */
 //----------------------------
-ChemEnzyme::ChemEnzyme() {	func=NULL;	}
+ChemEnzyme::ChemEnzyme() {	chemfunc=NULL;	}
 void ChemEnzyme::set(Molecule *_mole, ChemFunc *_func){
 	if (_mole!=NULL) {
 		_mole-> rotateto(0, &mole);
 	}
-	func = _func;
+	chemfunc = _func;
 }
 ChemEnzyme::~ChemEnzyme(){};
 //----------------------------
 void ChemEnzyme::dump(){
 	printf("ChemEnzyme::[0x%zX] mole[0x%zX][%d] func[0x%zX]",	(long unsigned int) this, (long unsigned int) &mole,
-			mole.pep_list.count(), (long unsigned int) func );
-	DUMP(func); NL
+			mole.pep_list.count(), (long unsigned int) chemfunc );
+	DUMP(chemfunc); NL
 
 
 };
@@ -74,11 +74,12 @@ int	ChemEnzyme::match_start(Concentration *conc, Concentration_VM *vm){
 	return vm->matchpos.start();
 };
 //----------------------------
-int	ChemEnzyme::match_next(Concentration_VM *vm){
+int	ChemEnzyme::match_next(ChemEngine *eng, Concentration_VM *vm){
 	if (vm==NULL) return -1;
 	int r = vm->matchpos.match_mole();
 	if (r<=0) return r;
-
+	if (chemfunc!=NULL)
+		r = chemfunc->operation(eng, vm, 0 , NULL);
 
 	//-----
 	return r;
