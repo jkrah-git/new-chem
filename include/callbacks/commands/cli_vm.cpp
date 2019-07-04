@@ -37,6 +37,10 @@ int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
 			Concentration_VM *new_vm =cli-> add_vm();
 			cli-> select_vm(new_vm);
 			if (new_vm==NULL) return -1;
+
+			new_vm->concvol = cli-> add_vol();
+
+
 			return 0;
 		}
 		if (strcmp(argv[0], "pop")==0) {	return cli-> del_vm(cli-> get_selected_vm());		}

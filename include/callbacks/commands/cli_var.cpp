@@ -360,7 +360,7 @@ int	cli_mole_pop(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------------//---------------------------------
-Molecule *cli_mole_fromstack(Concentration_CLI *cli, int argc, char **argv){
+Molecule *cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return NULL;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return NULL;
 	//-------
@@ -370,7 +370,7 @@ Molecule *cli_mole_fromstack(Concentration_CLI *cli, int argc, char **argv){
 	} else {
 
 		if (strcmp(argv[0], "help" ) == 0) {
-			printf("[ m1|m2|rot|enz|+-[0xn]\n");
+			printf("[ null|m1|m2|rot|enz|+-[0xn]\n");
 			return 0;
 		}
 
@@ -403,8 +403,13 @@ Molecule *cli_mole_fromstack(Concentration_CLI *cli, int argc, char **argv){
 int	cli_mole_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if ((argc>0)&&(strcmp(argv[0],"null")==0)) {
+		vm-> mole = NULL;
+		return 0;
+	}
+
 	//-------
-	Molecule	*m = cli_mole_fromstack(cli, argc, argv);
+	Molecule	*m = cli_mole_fromargs(cli, argc, argv);
 	if (m==NULL) return -1;
 
 	vm-> mole = m;

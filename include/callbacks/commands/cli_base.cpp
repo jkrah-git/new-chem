@@ -276,6 +276,8 @@ int		cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv){
 int	cli_dump_moles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
+
 	//-------
 	vm-> concvol->dumpmoles();
 	//cli-> get_selected_vm()-> concvol->dumpmoles();
@@ -294,6 +296,7 @@ int	cli_dump_regs(Concentration_CLI *cli, int argc, char **argv){
 int		cli_dump_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
 	//-------
 
 //	if (cli-> get_selected_vm()-> concvol != NULL) {
@@ -359,7 +362,9 @@ int	cli_load(Concentration_CLI *cli, int argc, char **argv){
 int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
 	//-------
+
 	if (argc!=1) {		PRINT("usage:  conc 0x1234567\n");		return 0;	}
 
 	long unsigned int ptr;
@@ -367,11 +372,11 @@ int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 	printf("load conc [0x%zX] ..\n", ptr);
 
 	//mylist<Concentration>::mylist_item<Concentration> *item = vm-> concvol->conc_list.search( (Concentration*) ptr);
-	mylist<Concentration>::mylist_item<Concentration> *item = vm-> concvol-> search_conc( (Concentration*) ptr);
-	if (item==NULL) return -11;
-	if (item-> item == NULL) return -12;
+	mylist<Concentration>::mylist_item<Concentration> *conc_item = vm-> concvol-> search_conc( (Concentration*) ptr);
+	if (conc_item==NULL) return -11;
+	if (conc_item-> item == NULL) return -12;
 
-	vm-> conc = item-> item;
+	vm-> conc = conc_item-> item;
 
 	return 0;
 }
@@ -381,6 +386,7 @@ int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
 int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
 	//-------
 
 	if (argc!=1) {		PRINT("usage:  load mole 0x1234567\n");		return 0;	}
@@ -390,10 +396,10 @@ int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
 	 printf("load conc [0x%zX] ..\n", ptr);
 
  	//mylist<Molecule>::mylist_item<Molecule> *item = vm-> concvol->mole_list.search( (Molecule*) ptr);
- 	mylist<Molecule>::mylist_item<Molecule> *item = vm-> concvol->search_mole( (Molecule*) ptr);
-	if (item==NULL) return -10;
-	if (item-> item == NULL) return -11;
-	vm-> mole = item-> item;
+ 	mylist<Molecule>::mylist_item<Molecule> *conc_item = vm-> concvol->search_mole( (Molecule*) ptr);
+	if (conc_item==NULL) return -10;
+	if (conc_item-> item == NULL) return -11;
+	vm-> mole = conc_item-> item;
 
 	return 0;
 }

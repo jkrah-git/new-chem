@@ -68,6 +68,21 @@ void ChemEnzyme::dump(){
 
 };
 //----------------------------
+int	ChemEnzyme::match_start(Concentration *conc, Concentration_VM *vm){
+	if ((conc==NULL)||(vm==NULL)) return -1;
+	vm->matchpos.set(conc-> getmole(), &mole);
+	return vm->matchpos.start();
+};
+//----------------------------
+int	ChemEnzyme::match_next(Concentration_VM *vm){
+	if (vm==NULL) return -1;
+	int r = vm->matchpos.match_mole();
+	if (r<=0) return r;
+
+
+	//-----
+	return r;
+}
 
 
 

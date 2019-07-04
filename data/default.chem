@@ -26,11 +26,15 @@ conc adj 1 -1
 
 screen vm
 screen vm render match
-mole ld 0
+mole ld 6
 match m1
-mole ld 1
-match m2
+match enz
 
+mole push
+mole addpep 0x01 0x81 0x01
+eng addenz dump
+mole getenz
+eng start
 
 # (end default)
 

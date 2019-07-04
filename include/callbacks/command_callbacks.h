@@ -21,7 +21,7 @@ int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv);
 // cli_var,cpp
 //---------------
 int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv);
-
+Molecule *cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv);
 //---------------
 //cli_match.cpp
 //---------------

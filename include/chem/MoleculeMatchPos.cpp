@@ -224,18 +224,27 @@ void MoleculeMatchPos::rotatemole() {
 	//printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 	// void		getbounds(PeptidePos *min, PeptidePos *max);
 	//mole->
+
+	// TODO _0 FIX!!
 	// sub size m2 from min
 	// add size m2 to max
 	// dont blat over rot
 	for (int i=0; i< 2; i++) {
 		PepPosVecType len2 = max2.dim[i]-min2.dim[i] ;
-		start_pos.dim[i] = min1.dim[i] - min2.dim[i]; // + len2;
-		end_pos.dim[i] =   max1.dim[i] - max2.dim[i]; // + len2;
+		start_pos.dim[i] = min1.dim[i] - len2;
+		end_pos.dim[i] =   max1.dim[i] + len2; // + len2;
+
+	//	start_pos.dim[i] = min1.dim[i] - min2.dim[i]; // + len2;
+	//	end_pos.dim[i] =   max1.dim[i] - max2.dim[i]; // + len2;
+
+
 		if (start_pos.dim[i] > end_pos.dim[i]) {
 			len2 = end_pos.dim[i];
 			end_pos.dim[i] = start_pos.dim[i];
 			start_pos.dim[i] = len2;
 		}
+
+		//----
 		current_pos.dim[i] = start_pos.dim[i];
 	}
 
@@ -435,6 +444,7 @@ int	MoleculeMatchPos::match_mole(){
 	}
 	if (m==-4) return 0;		//  0=(END)
 	else return -1;				// -1=(NOMATCH)
+	return 0;
 
 }
 //----------------------------------

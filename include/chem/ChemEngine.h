@@ -46,6 +46,10 @@ public:
 	virtual ~ChemEnzyme();
 	void	set(Molecule *_mole, ChemFunc *_func);
 	void	dump(void);
+
+	// match - use existing vm
+	int		match_start(Concentration *conc, Concentration_VM *vm);
+	int		match_next(Concentration_VM *vm);
 };
 //----------------------------
 // ==================================

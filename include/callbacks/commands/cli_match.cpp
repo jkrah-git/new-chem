@@ -45,7 +45,7 @@ int	cli_match_m1(Concentration_CLI *cli, int argc, char **argv){
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
-	if (vm-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
+	//if (vm-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
 	//cli-> core-> matchpos.rotation = 6;
 	vm-> matchpos.setM1(vm-> mole);
 	return 0;
@@ -61,7 +61,7 @@ int	cli_match_m2(Concentration_CLI *cli, int argc, char **argv){
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
-	if (vm-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
+	//if (vm-> mole ==NULL) {	printf("need to select mole..\n");	return -2;	}
 	//cli-> core-> matchpos.rotation = 6;
 	vm-> matchpos.setM2(vm-> mole);
 	return 0;

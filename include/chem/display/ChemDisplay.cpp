@@ -427,6 +427,11 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 	Molecule *mole = NULL;
 
 
+	// void	draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title);
+
+	draw_box(coords, matchpos-> get_start_pos()-> dim[PEPPOS_X],matchpos-> get_start_pos()-> dim[PEPPOS_Y],
+					 matchpos-> get_end_pos()-> dim[PEPPOS_X],matchpos-> get_end_pos()-> dim[PEPPOS_Y], NULL);
+
 	// -------------- M1
 	if (matchpos-> getM1()!=NULL) {
 		gfx.color(&m1_col);
