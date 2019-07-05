@@ -351,11 +351,11 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
+	/*
 
 	char ch;
 	if (autoalloc) ch='A';
 	else ch = 'M';
-/*
 	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX].auto[%c]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,

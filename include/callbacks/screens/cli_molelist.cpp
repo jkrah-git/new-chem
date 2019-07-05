@@ -108,7 +108,7 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 	}
 	//---------------
 	if (strcmp(argv[1], "row")==0) {
-		int r = -1;
+		//int r = -1;
 		if (argc>2) {
 			int a;
 			if (sscanf(argv[2], "%x", &a)<1) {
@@ -117,7 +117,7 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 			}
 			molelist->row = a;
 			printf("index[0x%x]\n", molelist->row);
-			r = 0;
+		//	r = 0;
 		}
 
 	}

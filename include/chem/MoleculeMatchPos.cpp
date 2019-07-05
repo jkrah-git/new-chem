@@ -220,8 +220,8 @@ void MoleculeMatchPos::rotatemole() {
 	mole1-> getbounds(&min1, &max1);
 	rotmole.getbounds(&min2, &max2);
 
-	//printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
-	//printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
+//	printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
+//	printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 	// void		getbounds(PeptidePos *min, PeptidePos *max);
 	//mole->
 
@@ -232,7 +232,7 @@ void MoleculeMatchPos::rotatemole() {
 	for (int i=0; i< 2; i++) {
 		PepPosVecType len2 = max2.dim[i]-min2.dim[i] ;
 		start_pos.dim[i] = min1.dim[i] - len2;
-		end_pos.dim[i] =   max1.dim[i] + len2; // + len2;
+		end_pos.dim[i] =   max1.dim[i]; // + len2; // + len2;
 
 	//	start_pos.dim[i] = min1.dim[i] - min2.dim[i]; // + len2;
 	//	end_pos.dim[i] =   max1.dim[i] - max2.dim[i]; // + len2;
