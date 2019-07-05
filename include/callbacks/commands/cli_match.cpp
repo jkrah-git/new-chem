@@ -118,24 +118,22 @@ int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
 
-	int rot = 0;
-
+/*
 	if (argc>0) {
+		int rot = 0;
 		if ( sscanf(argv[0], "%d", &rot) <0) {
 			printf("bad rot[%s].\n", argv[0]);
 			return -20;
 		}
+		vm-> matchpos.rotation = rot;
 	}
-	/*
-	cli-> core-> matchpos.rotation = rot;
-	//cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = rot;
-
-	cli-> core-> matchpos.rotatemole();
-	cli-> core-> matchpos.dump();
-	*/
-	printf("unsupported command..\n");
-	return rot;
+*/
+	vm-> matchpos.rotatemole();
+	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------

@@ -1,9 +1,10 @@
-#
+# ------------------------------
+# ------------------------------
 # Welcome to chems..
 # loading (screens and simplepeps..
 # ------------------------------
-f screens/screens
-f match/simplepeps
+f screens
+f simplepeps
 # loading (screens and simplepeps..
 # ------------------------------
 
@@ -31,10 +32,41 @@ match m1
 match enz
 
 mole push
-mole addpep 0x01 0x81 0x01
+mole addpep 0x01 0x83 0x02
 eng addenz noop
 mole getenz
 eng start
 
+# MATCH test1
+stack clear pep
+mole topep
+pep ld 0
+  pep pos -2 0
+pep ld 1
+  pep pos -1 0
+pep ld 2
+  pep pos 0 0
+mole push
+mole frompep
+
+# MATCH test1
+stack clear pep
+mole topep
+pep ld 0
+pep pos 2 0
+pep ld 1
+pep pos 1 0
+pep ld 2
+pep pos 0 0
+mole push
+mole frompep
+
+match start
+match m2
+mole ld 6
+match m1
+match next
+clear pep
+# -----------
 # (end default)
 

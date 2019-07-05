@@ -1,33 +1,31 @@
-# basic 1U mole
-clear all
-pep push 0x41 0x41 0x41 0x42 0x67 0x3f
 mole push
-stack comp mole
-stack clear pep
-mole tovar $M1
-clear all
+mole addpep 0x01
+mole addpep 0x02
+mole addpep 0x01
+mole clear
 
-# basic 2U mole
-pep push 0x41 0x41 0x41 0x42 0x67 0x3f
-pep push 0x41 0x41 0x41 0x42 0x67 0x3f
 mole push
-stack comp mole
-stack clear pep
-mole tovar $M2
-clear all
+mole addpep 0x01
+mole addpep 0x82
+mole addpep 0x01
+mole clear
 
-# setup match
-mole fromvar $M1
+mole push
+mole addpep 0x01
+mole addpep 0x03
+mole addpep 0x01
+mole clear
+
+mole push
+mole addpep 0x01
+mole addpep 0x83
+mole addpep 0x01
+mole clear
+
+mole ld 0
 match m1
-mole fromvar $M2
+mole ld 1
 match m2
-clear all
+mole clear
 
-match start
-match
-# -- hint --
-# loop 10 match next
-var set mm ; loopz 100 match next ; match
-# ------
-# use: run mm
-# todo match nextpos
+pep push 0x41 0x41 0x41 0x42 0x67 0x3f

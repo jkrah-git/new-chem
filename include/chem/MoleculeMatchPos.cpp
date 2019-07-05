@@ -213,31 +213,29 @@ int	MoleculeMatchPos::start(){
 //----------------------------------
 void MoleculeMatchPos::rotatemole() {
 	if ((mole1==NULL)||(mole2==NULL)) return;
-	// rotate mole and and calc start/end pos's
-	PeptidePos min1, max1, min2, max2;
 
 	mole2-> rotateto(rotation, &rotmole);
+
+	PeptidePos min1, max1, min2, max2;
 	mole1-> getbounds(&min1, &max1);
 	rotmole.getbounds(&min2, &max2);
 
-//	printf(":: min1, max1 : "); min1.dump(); max1.dump(); NL
-//	printf(":: min2, max2 : "); min2.dump(); max2.dump(); NL
-	// void		getbounds(PeptidePos *min, PeptidePos *max);
-	//mole->
+	//PRINT(":: min1, max1 : "); min1.dump(); max1.dump(); NL
+	//PRINT(":: min2, max2 : "); min2.dump(); max2.dump(); NL
 
-	// TODO _0 FIX!!
-	// sub size m2 from min
-	// add size m2 to max
-	// dont blat over rot
 	for (int i=0; i< 2; i++) {
+
+		// !!!!!!!!!!!!!!!!!!!!!!!
 		PepPosVecType len2 = max2.dim[i]-min2.dim[i] ;
-		start_pos.dim[i] = min1.dim[i] - len2;
-		end_pos.dim[i] =   max1.dim[i]; // + len2; // + len2;
+		// PRINT(":: len2=[%d]\n", len2);
+		//	start_pos.dim[i] = min1.dim[i] - len2;
+		//	end_pos.dim[i] =   max1.dim[i] + len2;
+		start_pos.dim[i] = min1.dim[i] - max2.dim[i];
+		end_pos.dim[i] =   max1.dim[i] - min2.dim[i];
 
-	//	start_pos.dim[i] = min1.dim[i] - min2.dim[i]; // + len2;
-	//	end_pos.dim[i] =   max1.dim[i] - max2.dim[i]; // + len2;
-
-
+		//---------------
+		//PRINT(":: start_pos[%d] end_pos[%d]\n", start_pos.dim[i], end_pos.dim[i]);
+		//---------------
 		if (start_pos.dim[i] > end_pos.dim[i]) {
 			len2 = end_pos.dim[i];
 			end_pos.dim[i] = start_pos.dim[i];
@@ -247,7 +245,6 @@ void MoleculeMatchPos::rotatemole() {
 		//----
 		current_pos.dim[i] = start_pos.dim[i];
 	}
-
 	// reset new head
 	test_item  = rotmole.pep_list.gethead();
 	matched_item = NULL;

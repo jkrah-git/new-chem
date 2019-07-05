@@ -428,9 +428,8 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 
 
 	// void	draw_box(ChemDisplayCoords *screen_coords, int min_xpos, int min_ypos, int max_xpos,int max_ypos, const char *_title);
-
-	draw_box(coords, matchpos-> get_start_pos()-> dim[PEPPOS_X],matchpos-> get_start_pos()-> dim[PEPPOS_Y],
-					 matchpos-> get_end_pos()-> dim[PEPPOS_X],matchpos-> get_end_pos()-> dim[PEPPOS_Y], NULL);
+//	draw_box(coords, matchpos-> get_start_pos()-> dim[PEPPOS_X],matchpos-> get_start_pos()-> dim[PEPPOS_Y],
+//					 matchpos-> get_end_pos()-> dim[PEPPOS_X],matchpos-> get_end_pos()-> dim[PEPPOS_Y], NULL);
 
 	// -------------- M1
 	if (matchpos-> getM1()!=NULL) {
@@ -439,6 +438,13 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 
 		mole = draw_mole(screen, coords, matchpos-> getM1(), mouseclick, &m1_col);
 		if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
+
+
+		// box
+	//	PeptidePos min1, max1;
+	//	matchpos-> getM1()-> getbounds(&min1, &max1);
+	//	draw_box(coords,min1.dim[PEPPOS_X],min1.dim[PEPPOS_Y], max1.dim[PEPPOS_X], max1.dim[PEPPOS_Y], NULL, &m1_col, NULL);
+
 	}
 
 
@@ -454,6 +460,14 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 
 			mole = draw_mole(screen, &M2coords, matchpos-> getM2(), mouseclick, &m1_col);
 			if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
+
+
+			// box
+			PeptidePos min1, max1;
+			matchpos-> getM2()-> getbounds(&min1, &max1);
+			draw_box(&M2coords,min1.dim[PEPPOS_X],min1.dim[PEPPOS_Y], max1.dim[PEPPOS_X], max1.dim[PEPPOS_Y], NULL, &rot_col, NULL);
+
+
 		}
 	} else {
 		// ------------------- ROTMOLE
@@ -461,12 +475,34 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 		gfx.color(&rot_col);
 		gfx.cprintg("rotemole");
 
+		/*
+		// box
+		PeptidePos min1, max1;
+		matchpos-> get_rotmole()-> getbounds(&min1, &max1);
+
+		ChemDisplayCoords M2coords = *coords;
+		M2coords.posx += matchpos->get_start_pos()->dim[PEPPOS_X];
+		M2coords.posy += matchpos->get_start_pos()->dim[PEPPOS_Y];
+		draw_box(&M2coords, min1.dim[PEPPOS_X],min1.dim[PEPPOS_Y], max1.dim[PEPPOS_X], max1.dim[PEPPOS_Y], NULL, &rot_col, NULL);
+
+		M2coords = *coords;
+		M2coords.posx += matchpos->get_end_pos()->dim[PEPPOS_X];
+		M2coords.posy += matchpos->get_end_pos()->dim[PEPPOS_Y];
+		draw_box(&M2coords, min1.dim[PEPPOS_X],min1.dim[PEPPOS_Y], max1.dim[PEPPOS_X], max1.dim[PEPPOS_Y], NULL, &rot_col, NULL);
+		*/
+
+
+
 		ChemDisplayCoords display_coords(screen-> coords);
 		display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
 		display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
 
 		mole = draw_mole(screen, &display_coords, matchpos-> get_rotmole(), mouseclick, &rot_col);
 		if ((mole!=NULL) && (hit==NULL)) { hit = mole; }
+
+
+
+
 	}
 
 	// -------------- test item

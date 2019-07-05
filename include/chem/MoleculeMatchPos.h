@@ -30,7 +30,7 @@ private:
 	// todo: turn to full item?>
 	Molecule	rotmole;
 
-	void		rotatemole();
+//	void		rotatemole();
 
 public:
 	//---------
@@ -58,13 +58,15 @@ public:
 	int		start();
 	//			resets root_item
 	//-----------------------
+	// 'rotatemole()' really should be  private (it was)
+	void		rotatemole();
 	int			nextpos();
 	// returns: -2 (no items) -1=(end), 0=(start), 1=(next_item),2=(nextX),3=(nextY),4=(nextRot)
 	//-----------------------
 	int			match_pep(Peptide *pep1, Peptide *pep2);
 	// returns: -2=(miss) -1=(no_match) 0=(no_active), 1=(match)
 	//-----------------------
-	int			OLDnextmatch_item();
+	//int			OLDnextmatch_item();
 	//	returns: r= -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
 
 	int			match_item();

@@ -1,3 +1,13 @@
+new cli notes..
+
+ = (src) (operation) (params)
+
+ SRC = class [ id [subclass id]  [subclass id] .. ]  
+ OP = callback(SRC*, argc, argv[x]) {  argc,argv[] = PARAMS }
+	eg..  mole 1 pep 2 sig 0x31
+	src = 'mole 1' -> 'pep 2'
+	op = 'sig' = cli_pep_sig(pep*, argv['0x31'])  
+
 BASE
 
 	cli-> base_cmdlist.clear();
