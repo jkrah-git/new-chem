@@ -397,7 +397,7 @@ Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, 
 //-------------------------------
 //int ChemDisplay::keyval_set_col(char *keyname, ChemDisplayColor *col){	if ((keyname==NULL) ||(col==NULL)) return -1;	return -1;}
 //-------------------------------
-Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick){
+Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatch *matchpos,  bool mouseclick){
 	if (screen==NULL) return NULL;
 	if (matchpos==NULL) return NULL;
 	Concentration_VM  *vm = cli-> get_selected_vm();	if (vm==NULL) return NULL;
@@ -525,11 +525,11 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 		gfx.color(&matched_col);
 		gfx.cprintg("matched_item");
 
-		ChemDisplayCoords display_coords(screen-> coords);
-		display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
-		display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
-
-		draw_pep(screen, &display_coords, matchpos-> get_matched_item()-> item, mouseclick, &matched_col);
+	//	ChemDisplayCoords display_coords(screen-> coords);
+	//	display_coords.posx += matchpos-> get_current_pos()-> dim[PEPPOS_X];
+	//	display_coords.posy += matchpos-> get_current_pos()-> dim[PEPPOS_Y];
+	//	draw_pep(screen, &display_coords, matchpos-> get_matched_item()-> item, mouseclick, &matched_col);
+		draw_pep(screen, &screen-> coords, matchpos-> get_matched_item()-> item, mouseclick, &matched_col);
 
 	}
 	//---------------

@@ -214,6 +214,77 @@ ChemEnzyme *ChemEngine::add_enz(Molecule *_mole, ChemFunc *_func){
 
 }
 // ----------------------------
+int	ChemEngine::run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+	if ((vm==NULL)||(vol==NULL)) return -1;
+
+/***********
+ 	Concentration_VM 	*vm = cli-> get_selected_vm();
+	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
+ 	//------------
+	ChemFunc *f =cli-> selected_enz->match_next(vm);
+	int r = -1;
+	if ((f!=NULL) && (f->operation!=NULL)) {
+		r = f->operation(cli->chem_engine, vm, run_time, 0, NULL);
+	}
+
+	 ChemEnzyme *enz
+*********/
+	int n=0;
+	mylist<ChemEnzyme>::mylist_item<ChemEnzyme> *enz_item = enz_list.gethead();
+
+	// for each enz
+	while (enz_item!=NULL) {
+		if (enz_item-> item !=NULL) {
+
+			mylist<Concentration> *conc_list = vol-> get_con_list();
+			mylist<Concentration>::mylist_item<Concentration> *active_conc_item = conc_list->gethead();
+			// for each active conc
+			while (active_conc_item!=NULL) {
+				if (active_conc_item-> item !=NULL) {
+				//	if (vm->mole != NULL) cli->selected_enz = cli-> chem_engine-> search_enz(vm->mole);
+
+					ChemEnzyme *match_enz = search_enz(active_conc_item-> item->getmole());
+					if (match_enz!=NULL) {
+						printf(":: * match_enz=[0x%zX]\n", (long unsigned int) match_enz);
+						//NL DUMP(match_enz) NL
+
+
+						mylist<Concentration>::mylist_item<Concentration> *passive_conc_item = conc_list->gethead();
+						// for each active conc
+						while (passive_conc_item!=NULL) {
+							if (passive_conc_item-> item !=NULL) {
+								if (passive_conc_item!=active_conc_item) {
+									int r =  match_enz-> match_start(passive_conc_item-> item-> getmole(), vm);
+									// for each match
+									while(true) {
+										ChemFunc *f = match_enz-> match_next(vm);
+										if (f==NULL) break;
+										printf(":: * match_enz.match_nextF=[0x%zX]\n", (unsigned long int) f);
+										//DUMP(passive_conc_item-> item-> getmole())
+										//PRINT("matched enz=>conc\n");
+
+										if (f->operation!=NULL) {
+											r = f->operation(this, vm, run_time, 0, NULL);
+										}
+									} // ---- end matches
+
+								} // else skip (passve==active)
+								// ---- next conc
+								passive_conc_item = passive_conc_item->next;
+							} //
+						}	// ---- next conc
+					} // next
+				}
+				// ---- next conc
+				active_conc_item = active_conc_item->next;
+			}	// ---- next conc
+			// ---- next enz
+			enz_item = enz_item->next;
+		} 	// ---- next enz
+	}
+	//----------------
+	return n;
+}
 
 // ----------------------------
 /******************************

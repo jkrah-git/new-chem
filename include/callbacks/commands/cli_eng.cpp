@@ -111,6 +111,36 @@ int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 // --------------------------
+// --------------------------
+// 'list'
+int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI
+	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
+	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
+	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+
+	// ----------------------------
+	float run_time = 1.0;
+	char **next_argv = &argv[0];
+	{
+		float t;
+		int r = sscanf(next_argv[0], "%f", &t);
+		if (r>0) {
+			run_time = t;
+			printf("eng.time = [%f]\n", run_time);
+			next_argv = &argv[1];
+			argc--;
+		}
+	}
+
+	//return cli->chem_engine-> run(cli-> get_selected_vm(), run_time, argc, next_argv);
+	//int	ChemEngine::run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+	return cli-> chem_engine->run_vol(vm, vm->concvol, run_time);
+
+
+
+}
+// --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
@@ -125,6 +155,25 @@ int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
 	int r =  cli-> selected_enz->match_start(vm-> conc->getmole(), vm);
 	return r;
 }
+// --------------------------
+/*
+int	cli_eng_run_vol(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	ChemEngine *eng = cli-> chem_engine;
+	if (eng == NULL) return -2;
+
+	//
+	mylist<ChemEnzyme>::mylist_item<ChemEnzyme>  *enz_item = eng-> enz_list.gethead();
+	while (enz_item!=NULL) {
+		if (enz_item->item != NULL) {
+
+	}
+		// ------------
+		enz_item = enz_item->next;
+	}
+
+}
+*/
 // --------------------------
 int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
@@ -176,9 +225,10 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	PRINT("=========\n");
 	int r;
 	char name[32];
-	sprintf(name, "eng");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_eng, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "dump");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_dump, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "run");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_run, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "eng");		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_eng, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "dump");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_dump, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "run");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_run, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "runvol");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runvol, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enzstart");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enzstart, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;

@@ -43,6 +43,45 @@ int	cli_vol_clear(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
+int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	//-------
+	cli-> vol_list.dump();
+	return 0;
+}
+//---------------------------//---------------------------
+//---------------------------//---------------------------
+int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
+	//-------
+	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume>  *vol_item = NULL;
+	if (argc<1) {
+		vol_item = cli-> vol_list.gettail();
+	} else {
+
+		if (strcmp(argv[0], "help" ) == 0) {
+			printf("+-[0xn]\n");
+			return 0;
+		}
+		int off;
+		if ( sscanf(argv[0], "%x", &off) <0) {
+			printf("bad offset [%s].\n", argv[0]);
+			return -20;
+		}
+		printf("..load [%d]\n", off);
+		vol_item = cli-> vol_list.offset(off);
+	}
+
+	// ----------- save
+	if (vol_item ==NULL) return -10;
+	if (vol_item-> item ==NULL) return -11;
+	cli->selected_vol = vol_item-> item;
+	return 0;
+}
+//---------------------------//---------------------------
+//---------------------------//---------------------------
 int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
@@ -119,6 +158,8 @@ int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "vol");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_vol, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_dump, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_clear, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "list");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_list, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_ld, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "commit");	 	r = cli-> addcmd(&cli-> vol_cmdlist,cli_vol_commit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "addmole");	 r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_addmole, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//--------------

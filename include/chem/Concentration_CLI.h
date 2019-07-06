@@ -39,17 +39,18 @@ class Concentration_CLI {
 private:
 
 
-	mylist<Concentration_VM>	vm_list;
-	mylist<ConcentrationVolume>	vol_list;
-	ConcentrationVolume			*selected_vol;
-	Concentration_VM			*selected_vm;
 
 public:
+	Concentration_VM			*selected_vm;
+	ConcentrationVolume			*selected_vol;
 	ChemEnzyme					*selected_enz;
-
 	ChemEngine					*chem_engine;
 	int							last_result;
-// TODO Superclass / list of lists
+
+	mylist<Concentration_VM>	vm_list;
+	mylist<ConcentrationVolume>	vol_list;
+
+	// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
 	mylist<CLI_Command>			dump_cmdlist;
 	mylist<CLI_Command>			load_cmdlist;

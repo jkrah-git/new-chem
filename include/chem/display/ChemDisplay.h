@@ -78,7 +78,7 @@ public:
 	Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
 
 	//int 		keyval_set_col(char *keyname, ChemDisplayColor *col);
-	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick);
+	Molecule	*draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatch *matchpos,  bool mouseclick);
 	//---
 	void		draw_vm(ChemScreen *screen, Concentration_VM *vm);
 	void		draw_enz(ChemScreen *screen, ChemEnzyme *enz);

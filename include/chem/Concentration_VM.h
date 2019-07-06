@@ -9,7 +9,7 @@
 #define CONCENTRATION_VM_H_
 #include "Peptide.h"
 #include "Concentration.h"
-#include "MoleculeMatchPos.h"
+#include "MoleculeMatch.h"
 #include "CLI_Command.h"
 //-------------
 #undef DEBUG
@@ -25,7 +25,7 @@ public:
 	mylist<Peptide>				peptide_stack;
 	mylist<Molecule>			molecule_stack;
 	mylist<Concentration>		concentration_stack;
-	MoleculeMatchPos			matchpos;
+	MoleculeMatch			matchpos;
 
 	Peptide						*pep;
 	Molecule					*mole;

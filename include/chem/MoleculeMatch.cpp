@@ -5,7 +5,7 @@
  *      Author: jkrah
  */
 
-#include "MoleculeMatchPos.h"
+#include "MoleculeMatch.h"
 #include "Molecule.h"
 
 #undef DEBUG
@@ -13,6 +13,24 @@
 #include "../include/debug.h"
 #include "../include/common.h"
 #include <stdio.h>
+
+/*
+//----------------------------------
+class MoleculeMatchResult {
+public:
+	PeptidePos 						current_pos;
+	PepRot								rotation;	//   4=(end), 5=(start), 6=(modified)
+mylist<Peptide>::mylist_item<Peptide>	*matched_item;
+	//-----------
+MoleculeMatchResult(){ matched_item = NULL; };
+	void	dump(void);
+};
+//----------------------------------
+*/
+void MoleculeMatchResult::dump(void){
+	printf("MoleculeMatchResult[0x%zX]", (long unsigned int) this);
+	printf(":: Rot[%d].", rotation); current_pos.dump();
+}
 
 /*
 class Molecule;
@@ -64,7 +82,7 @@ public:
 };
 //----------------------------------
 */ //----------------------------------//----------------------------------
-MoleculeMatchPos::MoleculeMatchPos() {
+MoleculeMatch::MoleculeMatch() {
 
 	//rotmole = new Molecule;
 	rotation = -1;
@@ -72,13 +90,13 @@ MoleculeMatchPos::MoleculeMatchPos() {
 
 	clear();
 }
-MoleculeMatchPos::~MoleculeMatchPos() {
+MoleculeMatch::~MoleculeMatch() {
 	//if (rotmole != NULL ) {		delete rotmole;	}
 
 }
 //--------------------
-void MoleculeMatchPos::clear(){
-	state = INV;
+void MoleculeMatch::clear(){
+//	state = INV;
 	mole1 = NULL;
 	mole2 = NULL;
 	test_item = NULL;
@@ -91,7 +109,7 @@ void MoleculeMatchPos::clear(){
 	rotmole.clear();
 }
 //--------------------
-void MoleculeMatchPos::render(){
+void MoleculeMatch::render(){
 
 	Molecule 	buf;
 	PeptidePos 	offset;
@@ -184,7 +202,7 @@ void MoleculeMatchPos::render(){
 }
 
 //--------------------
-void MoleculeMatchPos::dump(){
+void MoleculeMatch::dump(){
 	printf("===============================\n");
 	printf("MoleculeMatchPos:: start_pos: "); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos: "); end_pos.dump();  NL
@@ -193,12 +211,13 @@ void MoleculeMatchPos::dump(){
 	printf("MoleculeMatchPos:: last_pos ->: "); current_pos.dump(); NL
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
-
+	printf("== results ==\n");
+	results_list.dump();
 	//render();
 
 }
 //---------------------------------------------------------
-int	MoleculeMatchPos::start(){
+int	MoleculeMatch::start(){
 	if (mole1==NULL) return -1;
 	if (mole2==NULL) return -2;
 
@@ -207,11 +226,12 @@ int	MoleculeMatchPos::start(){
 	current_pos.init();
 	rotation = 4;
 	//rotatemole();
+	results_list.clear();
 	return 0;
 }
 
 //----------------------------------
-void MoleculeMatchPos::rotatemole() {
+void MoleculeMatch::rotatemole() {
 	if ((mole1==NULL)||(mole2==NULL)) return;
 
 	mole2-> rotateto(rotation, &rotmole);
@@ -250,7 +270,7 @@ void MoleculeMatchPos::rotatemole() {
 	matched_item = NULL;
 }
 //----------------------------------//----------------------------------
-int	MoleculeMatchPos::nextpos(){
+int	MoleculeMatch::nextpos(){
 	// nextpos() returns: -2 (no items) -1=(end), 0=(start), 1=(next_item),2=(nextX),3=(nextY),4=(nextRot)
 
 	// start new run ??
@@ -301,7 +321,7 @@ int	MoleculeMatchPos::nextpos(){
 	return 4; // 4=(nextRot)
 }
 //----------------------------------
-int	MoleculeMatchPos::match_pep(Peptide *pep1, Peptide *pep2){
+int	MoleculeMatch::match_pep(Peptide *pep1, Peptide *pep2){
 // returns: -2=(no pep1) -1=(no_match) 0=(no_active), 1=(match)
 	if (pep2==NULL) return -5;
 	// pep1 = M1 = (target)
@@ -325,7 +345,7 @@ int	MoleculeMatchPos::match_pep(Peptide *pep1, Peptide *pep2){
 	return 1;							// 1=(match)
 }
 // -------------------------------
-int	MoleculeMatchPos::match_item(void){
+int	MoleculeMatch::match_item(void){
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
 	// todo: how to signal (next_pep) back to next_mole
 	// ---------------------------------------------------------------------------
@@ -367,7 +387,8 @@ int	MoleculeMatchPos::match_item(void){
 	int match = match_pep(test_pep->item,  test_item-> item);
 	if (match!=1) return -3; 			// -3=(NOMATCH)
 	// -------------------------------------
-	matched_item = test_item;
+	//matched_item = test_item;
+	matched_item = test_pep;
 	return 1; //  1=(MATCH)
 }
 /*************
@@ -413,11 +434,21 @@ int	MoleculeMatchPos::match_item(void){
 	return 1; //  1=(MATCH)
 }
 ****************/
+int MoleculeMatch::save_match(){
+	mylist<MoleculeMatchResult>::mylist_item<MoleculeMatchResult>	*result_item = results_list.add();
+	if (result_item==NULL)  { PRINT("add.item failed\n"); return -1; }
+	if (result_item->item==NULL) { PRINT("add.item.item NULL\n"); return -2; }
+
+	result_item->item-> current_pos = current_pos;
+	result_item->item-> rotation = rotation;
+	//result_item->item-> matched_item = matched_item;
+	return 0;
+}
 //----------------------------------
-int	MoleculeMatchPos::match_mole(){
+int	MoleculeMatch::match_mole(){
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
-	// match_mole() returns -1=(NOMATCH), 0=(END), 1=(MATCH)
+	// match_mole() returns -2=(save_err)  -1=(NOMATCH), 0=(END), 1=(MATCH)
 
 	// until end
 	int m =0;
@@ -429,7 +460,12 @@ int	MoleculeMatchPos::match_mole(){
 			// if 'last_item' then test 'matched_item'
 			if ((m>=0) && (test_item-> next ==NULL)) {
 				// PRINT("==> tail[%d]\n", m);
-				if (matched_item !=NULL) return 1;
+				if (matched_item !=NULL){
+					// Matched Mole !!
+					if (save_match()<0)	{ return -2; } // -2=(save_err)
+					PRINT("saved.. ---------- \n");
+					return 1;	// , 1=(MATCH)
+				}
 			}
 		}
 		// if not end then (re)start next pos

@@ -10,25 +10,28 @@ f simplepeps
 screen vm
 screen vm render match
 
+### M8
 mole push
 mole addpep 0x81 0x81 0x83
 
-# enzyme (m[8]/noop)
-mole ld 8
+# enzyme 
 eng run addenz noop
-mole ld 8
+vol addmole 1
 mole getenz
 
+# base chem
 mole ld 6
 vol addmole 1
+
 vol commit
 conc push
 dump cli
 
 # test enz
-eng enzstart
-eng enznext
-
+# eng enzstart
+# eng enznext
+# ----------------------------------
+eng runvol .1
 
 # -----------
 # (end default)

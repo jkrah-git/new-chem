@@ -66,10 +66,6 @@ public:
 	mylist<ChemFunc>	func_list;
 	mylist<ChemEnzyme>	enz_list;
 
-//	mylist<Concentration_VM>	vm_list;
-//	mylist<ConcentrationVolume>	vol_list;
-//	Concentration_VM			*selected_vm;
-//	ConcentrationVolume			*selected_vol;
 	//---------------------------------
 	ChemEngine();
 	virtual ~ChemEngine();
@@ -83,7 +79,8 @@ public:
 	int					del_enz(Molecule *_mole);
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);
 
-
+	//int					run_enz(ConcentrationVolume *vol);
+	int					run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 /*
 //	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
 // 	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };

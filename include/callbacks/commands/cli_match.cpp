@@ -23,6 +23,16 @@ int	cli_match(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
+int	cli_match_dump(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	vm->matchpos.dump();
+
+	return 0;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
 int	cli_match_help(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;

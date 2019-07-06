@@ -12,13 +12,23 @@
 
 class Molecule;
 //----------------------------------
-enum MatchPos_State { INV, READY, NOMATCH, MATCH };
+class MoleculeMatchResult {
+public:
+	PeptidePos 						current_pos;
+	PepRot								rotation;	//   4=(end), 5=(start), 6=(modified)
+	//-----------
+//MoleculeMatchResult(){ matched_item = NULL; };
+	void	dump(void);
+};
+//----------------------------------
+
 //----
-class MoleculeMatchPos {
+class MoleculeMatch {
 private:
-	MatchPos_State	state;
+	//Match_State	state;
 	Molecule	*mole1;
 	Molecule	*mole2;
+	Molecule	rotmole;
 	mylist<Peptide>::mylist_item<Peptide>	*test_item;
 	mylist<Peptide>::mylist_item<Peptide>	*matched_item;
 	//----------
@@ -26,18 +36,16 @@ private:
 	PeptidePos 	end_pos;
 	PeptidePos 	current_pos;
 	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
-	//bool		active;
-	// todo: turn to full item?>
-	Molecule	rotmole;
+	//-----
+	mylist<MoleculeMatchResult> results_list;
 
-//	void		rotatemole();
 
 public:
 	//---------
-	MoleculeMatchPos();
-	virtual 	~MoleculeMatchPos();
+	MoleculeMatch();
+	virtual 	~MoleculeMatch();
 
- MatchPos_State	get_state(void){ return state; };
+ //Match_State	get_state(void){ return state; };
 	Molecule	*getM1(){ return mole1; }
 	Molecule 	*getM2(){ return mole2; }
 	mylist<Peptide>::mylist_item<Peptide>	*get_test_item(){  return test_item; };
@@ -72,6 +80,7 @@ public:
 	int			match_item();
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
 
+	int			save_match();
 	int			match_mole();
 
 
