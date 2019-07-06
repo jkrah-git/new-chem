@@ -132,7 +132,10 @@ int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
 		vm-> matchpos.rotation = rot;
 	}
 */
-	vm-> matchpos.rotatemole();
+
+	while (vm-> matchpos.nextpos() !=4) { ; }
+
+	//vm-> matchpos.rotatemole();
 	return 0;
 }
 //---------------------------------//---------------------------------
@@ -143,7 +146,7 @@ int	cli_match_next(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 
 	int r = vm-> matchpos.match_item();
-	printf("=>[%d]<= -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH) \n",r);
+	//printf("=>[%d]<= -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH) \n",r);
 	return r;
 
 }
@@ -153,7 +156,7 @@ int	cli_match_n(Concentration_CLI *cli, int argc, char **argv){
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	int r = vm-> matchpos.match_mole();
-	printf("=>[%d]<= [-1=(NOMATCH), 0=(END), 1=(MATCH)]\n", r);
+	//printf("=>[%d]<= [-1=(NOMATCH), 0=(END), 1=(MATCH)]\n", r);
 	return r;
 
 }
@@ -175,7 +178,7 @@ int	cli_match_render(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //=======================//=======================//=======================
 //---------------------------------//---------------------------------
-int	cli_load_match(Concentration_CLI *cli, int argc, char **argv){
+int	load_cli_match(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 
 	int r;

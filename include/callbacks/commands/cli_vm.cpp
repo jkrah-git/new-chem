@@ -7,19 +7,6 @@
 
 #include "../command_callbacks.h"
 // --------------------------
-// --------------------------
-int	cli_load_vm(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	PRINT("=========\n");
-	int r;
-	char name[32];
-	sprintf(name, "vm");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_vm, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
-
-	//cli_screen_test(cli, 0, NULL);
-
-	return 0;
-}
-// --------------------------// --------------------------
 #include <string.h>
 // --------------------------
 int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
@@ -52,3 +39,14 @@ int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
 	return -10;
 }
 // --------------------------// --------------------------// --------------------------
+// --------------------------
+int	load_cli_vm(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	PRINT("=========\n");
+	int r;
+	char name[32];
+	sprintf(name, "vm");	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_vm, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+
+	return 0;
+}
+// --------------------------// --------------------------

@@ -8,6 +8,8 @@
 #ifndef _CHEMENGINE_H_
 #define _CHEMENGINE_H_
 
+typedef unsigned long int  ChemStep;
+
 
 //#include "Molecule.h"
 #include "Concentration_VM.h"
@@ -25,7 +27,7 @@ public:
 	MyString 	name;
 	//MyString 	opcode;
 	//Molecule 	active_mole;
-	int 	(*operation)(ChemEngine*,Concentration_VM*, int, char**);
+	int 	(*operation)(ChemEngine*,Concentration_VM*, ChemTime, int, char**);
 	// ------------------------------
 	ChemFunc();
 	virtual ~ChemFunc();
@@ -48,14 +50,12 @@ public:
 	void	dump(void);
 
 	// match - use existing vm
-	int		match_start(Concentration *conc, Concentration_VM *vm);
-	int		match_next(ChemEngine *eng, Concentration_VM *vm);
+	int match_start(Molecule *mole, Concentration_VM *vm);
+	ChemFunc *match_next(Concentration_VM *vm);
 };
 //----------------------------
 // ==================================
 
-typedef unsigned long int  ChemStep;
-typedef double  ChemTime;
 
 
 // ----------------------------
@@ -75,9 +75,9 @@ public:
 	virtual ~ChemEngine();
 	void	dump(void);
 
-	int					add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM *, int, char**));
+	int					add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM *, ChemTime, int, char**));
 	ChemFunc  			*search_func(const char *name);
-	int					run(Concentration_VM* vm, int argc, char **argv);
+	int					run(Concentration_VM* vm, ChemTime run_time, int argc, char **argv);
 
 	ChemEnzyme			*search_enz(Molecule *_mole);
 	int					del_enz(Molecule *_mole);

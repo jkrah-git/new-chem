@@ -82,25 +82,50 @@ void Concentration::test(){
 /*
 // -------------------------------
 class ConcentrationVolume {
-private:
+	mylist<Molecule> 	mole_list;
+	mylist<Concentration> 	conc_list;
 
 public:
-	Mylist<Concentration> 	conc_list;
 
 	// ---
 	ConcentrationVolume();
 	virtual ~ConcentrationVolume();
-	void dump();
-	void test();
+	// ----
+	void 	dump(void);
+	void	clear(void);
+	void 	dumpmoles(void) { mole_list.dump(); }
+	// ---------
+	Concentration	*molesearch(Molecule	*m);
+
+	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
+	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };
+
+	ConcLevelType	get(Molecule	*m);
+	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
+
+	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
+	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
+	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
+	// ---------
+	ChemTime		get_maxcommit(void);
+	void			commit(void);
+	//----
 };
 // -------------------------------
+
 */
 ConcentrationVolume::ConcentrationVolume(){}
 ConcentrationVolume::~ConcentrationVolume(){}
 //--------------
-void ConcentrationVolume::dump(){
+void ConcentrationVolume::dump(void){
 	printf("ConcentrationVolume[0x%zX].",	(long unsigned int) this);
 	conc_list.dump();
+}
+//--------------
+void ConcentrationVolume::clear(void){
+	mole_list.clear();
+	conc_list.clear();
+
 }
 
 //--------------
@@ -112,7 +137,7 @@ Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
 		//printf("########## ConcentrationVolume::search.item ...\n");
 		//DUMP(item-> item->  getmole())
 		//printf("##########  \n");
-		if (*item-> item-> getmole() == *m)
+		if ((*item-> item-> getmole()) == *m)
 			return item-> item;
 		// -- else
 		item = item-> next;
@@ -137,7 +162,8 @@ ConcLevelType	ConcentrationVolume::get(Molecule	*m){
 ConcLevelType	ConcentrationVolume::take(Molecule	*m, ConcAdjustType adj){
 	Concentration *conc = molesearch(m);
 	if (conc==NULL) return -1.0;
-	return conc->take(adj);
+	ConcLevelType raw = conc->get() * adj;
+	return conc->take(raw);
 
 }
 //--------------
@@ -169,6 +195,36 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	return conc->put(amount);
 }
 //--------------
+double ConcentrationVolume::get_maxcommit(void){
+
+	double max = 1.0;
+	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
+	while (item!=NULL) {
+		if (item-> item!=NULL) {
+			ConcLevelType val = item-> item->get();
+			ConcLevelType delta = item-> item->getdelta();
+			if (delta <= val) {
+				double m = val/delta;
+				if (max>m)
+					max = m;
+			}
+		}
+		// -----------
+		item = item-> next;
+	}
+	return max;
+}
+//--------------
+//--------------
+void ConcentrationVolume::commit(void){
+	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
+	while (item!=NULL) {
+		if (item-> item!=NULL) 	item-> item->commit();
+		item = item-> next;
+	}
+}
+//--------------
+/*************************************************************
 void ConcentrationVolume::test(){
 	printf("======================================\n");
 	printf("ConcentrationVolume.test2: == START ==\n");
@@ -203,13 +259,6 @@ void ConcentrationVolume::test(){
 	printf("======================================\n");
 	printf(" .. M1,M2,M3 built ..\n");
 	printf("======================================\n");
-	/*
-	 * 	Concentration	*search(Molecule	*m);
-		ConcLevelType	get(Molecule	*m);
-		// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-		ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
-		ConcLevelType	put(Molecule	*m, ConcLevelType amount);
-	 */
 	Concentration	*conc;
 	printf("======================================\n");
 	printf("ConcentrationVolume.test2: search conc.M1 = ");	conc = molesearch(&M1);		DUMP(conc); NL
@@ -314,13 +363,7 @@ void ConcentrationVolume::test2(ConcentrationVolume *cvol){
 	printf("======================================\n");
 	printf(" .. M1,M2,M3 built ..\n");
 	printf("======================================\n");
-	/*
-	 * 	Concentration	*search(Molecule	*m);
-		ConcLevelType	get(Molecule	*m);
-		// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-		ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
-		ConcLevelType	put(Molecule	*m, ConcLevelType amount);
-	 */
+
 	Concentration	*conc;
 	printf("======================================\n");
 	printf("ConcentrationVolume.test2: search conc.M1 = ");	conc = molesearch(&M1);		DUMP(conc); NL
@@ -384,7 +427,7 @@ void ConcentrationVolume::test2(ConcentrationVolume *cvol){
 	printf("======================================\n");
 
 }
-
+*************************************************************/
 //--------------
 
 

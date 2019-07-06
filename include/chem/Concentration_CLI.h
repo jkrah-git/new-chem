@@ -58,9 +58,11 @@ public:
 	mylist<CLI_Command>			pep_cmdlist;
 	mylist<CLI_Command>			mole_cmdlist;
 	mylist<CLI_Command>			conc_cmdlist;
+	mylist<CLI_Command>			vol_cmdlist;
 	mylist<CLI_Command>			var_cmdlist;
 	mylist<CLI_Command>			match_cmdlist;
-	//mylist<CLI_Command>			eng_cmdlist;
+	mylist<CLI_Command>			eng_cmdlist;
+	mylist<CLI_Command>			enz_cmdlist;
 
 	KeyValList					var_list;
 	char 						**args;

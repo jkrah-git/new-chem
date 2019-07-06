@@ -497,12 +497,20 @@ int Concentration_CLI::argstr(char *dest, int max, int argc, char **argv){
 //---------------------------------//---------------------------------
 void Concentration_CLI::load_commands() {
 	//cli_load_commands(this, 0, NULL);
+
 	cli_load_base(this, 0, NULL);
-	cli_load_vars(this, 0, NULL);
-	cli_load_match(this, 0, NULL);
-	// new - only in base
-	cli_load_vm(this, 0, NULL);
-	cli_eng_load(this, 0, NULL);
+	load_cli_dump(this, 0, NULL);
+
+	load_cli_pep(this, 0, NULL);
+	load_cli_mole(this, 0, NULL);
+	load_cli_conc(this, 0, NULL);
+	load_cli_vol(this, 0, NULL);
+	load_cli_var(this, 0, NULL);
+	load_cli_match(this, 0, NULL);
+	load_cli_stack(this, 0, NULL);
+	load_cli_vm(this, 0, NULL);
+	load_cli_eng(this, 0, NULL);
+	load_cli_enz(this, 0, NULL);
 	//cli_load_gfx(this, 0, NULL);
 
 	/* moved to void ChemDisplay::load_display_commands(void){

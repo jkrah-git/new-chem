@@ -14,11 +14,13 @@
  */
 // -------------------------------
 #include "Molecule.h"
+
 #include "mylist.h"
 #include "mybuffer.h"
 // -------------
 typedef float ConcLevelType;
 typedef double ConcAdjustType;
+typedef double  ChemTime;
 
 
 // -------------------------------
@@ -68,25 +70,25 @@ public:
 	ConcentrationVolume();
 	virtual ~ConcentrationVolume();
 	// ----
-	void dump();
-	void dumpmoles() { mole_list.dump(); }
+	void 	dump(void);
+	void	clear(void);
+	void 	dumpmoles(void) { mole_list.dump(); }
 	// ---------
 	Concentration	*molesearch(Molecule	*m);
 
-	mylist<Molecule>::mylist_item<Molecule> *search_mole(Molecule *m){ return mole_list.search(m); };
-	mylist<Concentration>::mylist_item<Concentration> *search_conc(Concentration *c){ return conc_list.search(c); };
+	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
+	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };
 
 	ConcLevelType	get(Molecule	*m);
 	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
+
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
 	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
 	// ---------
-
+	ChemTime		get_maxcommit(void);
+	void			commit(void);
 	//----
-	//void test(Concentration *c1, Concentration *c2, Concentration *c3);
-	void test(void);
-	void test2(ConcentrationVolume *cvol);
 };
 // -------------------------------
 

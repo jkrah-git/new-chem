@@ -400,6 +400,7 @@ Molecule *ChemDisplay::draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, 
 Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords, MoleculeMatchPos *matchpos,  bool mouseclick){
 	if (screen==NULL) return NULL;
 	if (matchpos==NULL) return NULL;
+	Concentration_VM  *vm = cli-> get_selected_vm();	if (vm==NULL) return NULL;
 
 	// todo: system-colors - maybe use var_list ??
 	ChemDisplayColor m1_col(0, 100, 0);
@@ -1007,9 +1008,21 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 				if (hit!=NULL) { selected_mole = hit; }
 			}
 
+			txtcol = molelistDisplay->col;
+			if (vm!=NULL) {
+				if ((vm-> conc!=NULL) && (mole_item->item == vm-> conc-> getmole())) {
+					txtcol.set(0,100,100);
+				}
 
-			if (selected_mole ==mole_item->item)	txtcol = molelistDisplay->selcol;
-			else txtcol = molelistDisplay->col;
+
+				if (mole_item->item ==  vm-> mole) {
+					txtcol = molelistDisplay->selcol;
+				}
+
+			}
+
+
+
 
 
 		//	txtcol.set(col-> r, col-> g, col-> b);
@@ -1118,12 +1131,24 @@ void ChemDisplay::draw_conclist(ChemScreen *screen, Concentration_CLI *cli, Chem
 			sprintf(label, "[0x%zX][%d]\n(%.3f+%.3f)",  (long unsigned int) m, //conc_item-> item,
 					n, conc_item->item->get(), conc_item->item->getdelta() );
 
+
+			/*
 			Concentration_VM  *vm = cli-> get_selected_vm();
 			Molecule *selected_mole = NULL;
 			if (vm!=NULL) selected_mole = vm->mole;
-			if (m==selected_mole)
+			if (m==selected_mole) {
 				txtcol = conclistDisplay->selcol;
-
+				txtcol.r = 0;
+			}
+			*/
+			Concentration_VM  *vm = cli-> get_selected_vm();
+			if (vm!=NULL) {
+				if (m==vm->mole) {
+					txtcol.set(0,100,100);
+				}
+				if (conc_item->item ==vm->conc)
+					txtcol = conclistDisplay->selcol;
+			}
 
 			//-----------------
 			c++;

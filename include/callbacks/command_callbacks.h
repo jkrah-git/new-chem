@@ -10,55 +10,36 @@
 
 #include "chem/Concentration_CLI.h"
 //--------------- //--------------- //---------------
-
-//---------------
-// cli_base.cpp
-//---------------
 int	cli_load_base(Concentration_CLI *cli, int argc, char **argv);
-int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_dump(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_pep(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_mole(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_conc(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_var(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_match(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_vm(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_stack(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv);
+int	load_cli_enz(Concentration_CLI *cli, int argc, char **argv);
+
+//int	cli_vm(Concentration_CLI *cli, int argc, char **argv);
+Molecule *_cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv);
+//int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv);
 
 //---------------
-// cli_var,cpp
-//---------------
-int	cli_load_vars(Concentration_CLI *cli, int argc, char **argv);
-Molecule *cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv);
-//---------------
-//cli_match.cpp
-//---------------
-int	cli_load_match(Concentration_CLI *cli, int argc, char **argv);
 
-//---------------
-//cli_vm.cpp
-//---------------
-int	cli_load_vm(Concentration_CLI *cli, int argc, char **argv);
-int	cli_vm(Concentration_CLI *cli, int argc, char **argv);
-
-int	cli_eng_load(Concentration_CLI *cli, int argc, char **argv);
-
-//--------------- //--------------- //---------------
-/*
-// cli_dump.cpp
-int     cli_dump(Concentration_CLI *cli, int argc, char **argv);
-int     cli_dump_help(Concentration_CLI *cli, int argc, char **argv);
-int     cli_dump_cli(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv);
-int     cli_dump_moles(Concentration_CLI *cli, int argc, char **argv);
-int     cli_dump_regs(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_vol(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_conc(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_mole(Concentration_CLI *cli, int argc, char **argv);
-int		cli_dump_pep(Concentration_CLI *cli, int argc, char **argv);
-*/
+// todo
+#define NEED_CLI if (cli==NULL) return -1;
+#define NEED_VM if (cli->core ==NULL) return -1;
 
 
 
-
-
-
-
-
+//--------------- //---------------
 #endif /* COMMAND_CALLBACKS_H_ */
+
+
+
 
 
 

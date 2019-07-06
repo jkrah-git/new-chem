@@ -63,31 +63,24 @@ ChemEnzyme::~ChemEnzyme(){};
 void ChemEnzyme::dump(){
 	printf("ChemEnzyme::[0x%zX] mole[0x%zX][%d] func[0x%zX]",	(long unsigned int) this, (long unsigned int) &mole,
 			mole.pep_list.count(), (long unsigned int) chemfunc );
-	DUMP(chemfunc); NL
+	DUMP(chemfunc);
 
 
 };
 //----------------------------
-int	ChemEnzyme::match_start(Concentration *conc, Concentration_VM *vm){
-	if ((conc==NULL)||(vm==NULL)) return -1;
-	vm->matchpos.set(conc-> getmole(), &mole);
+int	ChemEnzyme::match_start(Molecule *m1, Concentration_VM *vm){
+	if ((m1==NULL)||(vm==NULL)) return -1;
+	// set(M!, M2)
+	vm->matchpos.set(m1, &mole);
 	return vm->matchpos.start();
 };
 //----------------------------
-int	ChemEnzyme::match_next(ChemEngine *eng, Concentration_VM *vm){
-	if (vm==NULL) return -1;
+ChemFunc	*ChemEnzyme::match_next(Concentration_VM *vm){
+	if (vm==NULL) return NULL;
 	int r = vm->matchpos.match_mole();
-	if (r<=0) return r;
-	if (chemfunc!=NULL)
-		r = chemfunc->operation(eng, vm, 0 , NULL);
-
-	//-----
-	return r;
+	if (r<=0) return NULL;
+	return chemfunc;
 }
-
-
-
-
 /*
 // ----------------------------
 class ChemEngine {
@@ -129,7 +122,7 @@ void ChemEngine::dump(void) {
 	*/
 }
 // ----------------------------
-int ChemEngine::add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM*, int, char**)){
+int ChemEngine::add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM*, ChemTime	update_time, int, char**)){
 
 //	mylist<Display_Command>::mylist_item<Display_Command> *cmd = cmd_list-> add();
 	mylist<ChemFunc>::mylist_item<ChemFunc> *func_item = func_list.add();
@@ -156,24 +149,22 @@ ChemFunc* ChemEngine::search_func(const char *name){
 }
 #include <string.h>
 // ----------------------------// ----------------------------
-int ChemEngine::run(Concentration_VM *vm, int argc, char **argv){
+int ChemEngine::run(Concentration_VM* vm, ChemTime run_time, int argc, char **argv){
 	if (vm==NULL) {	printf("ChemEngine: NULL vm\n");	return -100; }
 
 	if ((argc<1) || (strcmp(argv[0], "list")==0)) {
 		printf("ChemEngine: (no args)\n");
 		func_list.dump();
 		enz_list.dump();
-
 		return -100;
 	}
-
 
 	// 	int 	(*operation)(Concentration_VM*, int, char**);
 	ChemFunc *f = search_func(argv[0]);
 	if (f==NULL) {	printf("ChemEngine: (func[%s] not found)\n", argv[0]);	return -110;	}
 	if (f->operation==NULL) { printf("ChemEngine: (func[%s] NULL op)", argv[0]);	return -110;	}
 
-	return f->operation(this, vm, argc-1, &argv[1]);
+	return f->operation(this, vm, run_time, argc-1, &argv[1]);
 
 
 	return 0;

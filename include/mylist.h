@@ -368,7 +368,7 @@ template <class T> void mylist<T>::dump(void) {
 			item-> dump(); 	printf("\n");
 			item = item-> next;
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 };
