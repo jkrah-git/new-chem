@@ -224,6 +224,16 @@ void ConcentrationVolume::commit(void){
 	}
 }
 //--------------
+void ConcentrationVolume::reset(void){
+	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
+	while (item!=NULL) {
+		if (item-> item!=NULL)
+			item-> item->reset();
+		//-----------
+		item = item-> next;
+	}
+}
+//--------------
 /*************************************************************
 void ConcentrationVolume::test(){
 	printf("======================================\n");

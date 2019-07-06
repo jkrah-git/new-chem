@@ -26,11 +26,11 @@ MoleculeMatchResult(){ matched_item = NULL; };
 	void	dump(void);
 };
 //----------------------------------
-*/
 void MoleculeMatchResult::dump(void){
 	printf("MoleculeMatchResult[0x%zX]", (long unsigned int) this);
 	printf(":: Rot[%d].", rotation); current_pos.dump();
 }
+*/
 
 /*
 class Molecule;
@@ -212,7 +212,7 @@ void MoleculeMatch::dump(){
 	printf("MoleculeMatchPos:: test_item: "); DUMP(test_item) NL
 	printf("===============================\n");
 	printf("== results ==\n");
-	results_list.dump();
+//	results_list.dump();
 	//render();
 
 }
@@ -226,7 +226,7 @@ int	MoleculeMatch::start(){
 	current_pos.init();
 	rotation = 4;
 	//rotatemole();
-	results_list.clear();
+//	results_list.clear();
 	return 0;
 }
 
@@ -434,6 +434,7 @@ int	MoleculeMatch::match_item(void){
 	return 1; //  1=(MATCH)
 }
 ****************/
+/*
 int MoleculeMatch::save_match(){
 	mylist<MoleculeMatchResult>::mylist_item<MoleculeMatchResult>	*result_item = results_list.add();
 	if (result_item==NULL)  { PRINT("add.item failed\n"); return -1; }
@@ -444,6 +445,7 @@ int MoleculeMatch::save_match(){
 	//result_item->item-> matched_item = matched_item;
 	return 0;
 }
+*/
 //----------------------------------
 int	MoleculeMatch::match_mole(){
 	if (mole1 ==NULL) return -10;
@@ -462,8 +464,8 @@ int	MoleculeMatch::match_mole(){
 				// PRINT("==> tail[%d]\n", m);
 				if (matched_item !=NULL){
 					// Matched Mole !!
-					if (save_match()<0)	{ return -2; } // -2=(save_err)
-					PRINT("saved.. ---------- \n");
+				//	if (save_match()<0)	{ return -2; } // -2=(save_err)
+				//	PRINT("saved.. ---------- \n");
 					return 1;	// , 1=(MATCH)
 				}
 			}

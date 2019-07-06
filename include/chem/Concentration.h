@@ -47,6 +47,7 @@ public:
 	ConcLevelType	get() { return buf.get(); };
 	void			set(ConcLevelType new_val, ConcLevelType new_delta) { return buf.set(new_val, new_delta); };
 	ConcLevelType	getdelta() { return buf.getdelta(); };
+	void			reset(){ buf.reset(); };
 	void 			dump();
 
 	//--------
@@ -88,6 +89,7 @@ public:
 	// ---------
 	ChemTime		get_maxcommit(void);
 	void			commit(void);
+	void			reset(void);
 	//----
 };
 // -------------------------------

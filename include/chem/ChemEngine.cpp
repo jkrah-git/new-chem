@@ -81,6 +81,48 @@ ChemFunc	*ChemEnzyme::match_next(Concentration_VM *vm){
 	if (r<=0) return NULL;
 	return chemfunc;
 }
+// ----------------------------
+/*
+// ----------------------------
+class ChemReaction {
+public:
+	Molecule	*m1;		// assumed in current col
+	ChemEnzyme	*enz;		// assumed in current
+	PeptidePos 	match_pos;
+	PepRot		match_rotation;
+
+	ChemReaction(){ m1=NULL; enz = NULL; }
+	void		dump(void);
+};
+// ----------------------------
+*/
+// ----------------------------
+void ChemReaction::dump(void){
+	printf("ChemReaction[0x%zX]: m[[0x%zX]].enz[0x%zX].", (long unsigned int) this, (long unsigned int) m1, (long unsigned int) enz);
+	match_pos.dump(); printf(".Rot[%d]",  match_rotation);
+}
+
+// ---------------------
+bool ChemReaction::operator ==(const ChemReaction& r) {
+	//printf("PeptidePos::operator1 ==\n");
+	//if ((dim==NULL) || (p.dim==NULL)) return false;
+
+	if ((m1	== r.m1) &&
+		(enz == r.enz) &&
+		(match_pos == r.match_pos) &&
+		(match_rotation == r.match_rotation))
+		return true;
+	else
+		return false;
+}
+// ---------------------
+/******
+ reaction_item-> mylist<ChemReaction>::mylist_item<ChemReaction>::item->ChemReaction::match_pos == 0l’
+../src/include/chem/PeptidePos.h:37: note: candidates are: bool PeptidePos::operator==(const PeptidePos&)
+
+ *********
+ */
+// ----------------------------
 /*
 // ----------------------------
 class ChemEngine {
@@ -113,6 +155,8 @@ void ChemEngine::dump(void) {
 	func_list.dump();
 	printf("============ enzs ================..\n");
 	enz_list.dump();
+	printf("============ reactions ================..\n");
+	reaction_list.dump();
 	/*
 	printf("============ VOL's ================..\n");
 	vol_list.dump();
@@ -213,61 +257,99 @@ ChemEnzyme *ChemEngine::add_enz(Molecule *_mole, ChemFunc *_func){
 
 
 }
-// ----------------------------
-int	ChemEngine::run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+/*
+ * // ----------------------------
+	class ChemReaction {
+	public:
+		Molecule	*m1;		// assumed in current col
+		ChemEnzyme	*enz;		// assumed in current
+		PeptidePos 	match_pos;
+		PepRot		match_rotation;
+ * ...
+ */
+/*
+int	ChemEngine::save_reaction(Molecule *_m1, ChemEnzyme *_enz, PeptidePos _match_pos, PepRot _match_rotation) {
+	mylist<ChemReaction>::mylist_item<ChemReaction> *reaction_item = reaction_list.add();
+	if (reaction_item==NULL) { printf("save_reaction.add failed\n"); return -10; }
+	if (reaction_item-> item ==NULL) { printf("save_reaction.item NULL\n"); return -10; }
+	reaction_item-> item-> m1 = _m1;
+	reaction_item-> item-> enz = _enz;
+	reaction_item-> item-> match_pos = _match_pos;
+	reaction_item-> item-> match_rotation = match_rotation;
+}
+*/
+
+int	ChemEngine::save_reaction(Molecule *_m1, ChemEnzyme *_enz, PeptidePos *_match_pos, PepRot _match_rotation) {
+	if (_m1==NULL) return -1;
+	if (_enz==NULL) return -2;
+	if (_match_pos==NULL) return -3;
+
+
+	mylist<ChemReaction>::mylist_item<ChemReaction> *reaction_item = reaction_list.add();
+	if (reaction_item==NULL) { printf("save_reaction.add failed\n"); return -10; }
+	if (reaction_item-> item ==NULL) { printf("save_reaction.item NULL\n"); return -10; }
+	reaction_item-> item-> m1 = _m1;
+	reaction_item-> item-> enz = _enz;
+	reaction_item-> item-> match_pos = *_match_pos;
+	reaction_item-> item-> match_rotation = _match_rotation;
+	return 0;
+}
+
+// ----------------------------// ----------------------------// ----------------------------// ----------------------------
+int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
 	if ((vm==NULL)||(vol==NULL)) return -1;
+	mylist<Concentration> *conc_list = vol-> get_con_list();
+	if (conc_list ==NULL) return -2;
 
-/***********
- 	Concentration_VM 	*vm = cli-> get_selected_vm();
-	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
- 	//------------
-	ChemFunc *f =cli-> selected_enz->match_next(vm);
-	int r = -1;
-	if ((f!=NULL) && (f->operation!=NULL)) {
-		r = f->operation(cli->chem_engine, vm, run_time, 0, NULL);
-	}
-
-	 ChemEnzyme *enz
-*********/
+	reaction_list.clear();
 	int n=0;
-	mylist<ChemEnzyme>::mylist_item<ChemEnzyme> *enz_item = enz_list.gethead();
 
-	// for each enz
+	// ==== for each enz
+	mylist<ChemEnzyme>::mylist_item<ChemEnzyme> *enz_item = enz_list.gethead();
 	while (enz_item!=NULL) {
 		if (enz_item-> item !=NULL) {
 
-			mylist<Concentration> *conc_list = vol-> get_con_list();
+			// outer (conc) loop
 			mylist<Concentration>::mylist_item<Concentration> *active_conc_item = conc_list->gethead();
 			// for each active conc
 			while (active_conc_item!=NULL) {
 				if (active_conc_item-> item !=NULL) {
-				//	if (vm->mole != NULL) cli->selected_enz = cli-> chem_engine-> search_enz(vm->mole);
 
 					ChemEnzyme *match_enz = search_enz(active_conc_item-> item->getmole());
 					if (match_enz!=NULL) {
-						printf(":: * match_enz=[0x%zX]\n", (long unsigned int) match_enz);
+						 //printf(":: * match_enz=[0x%zX]\n", (long unsigned int) match_enz);
 						//NL DUMP(match_enz) NL
 
-
+						// inner (conc) loop
 						mylist<Concentration>::mylist_item<Concentration> *passive_conc_item = conc_list->gethead();
 						// for each active conc
 						while (passive_conc_item!=NULL) {
 							if (passive_conc_item-> item !=NULL) {
 								if (passive_conc_item!=active_conc_item) {
+									// start match
 									int r =  match_enz-> match_start(passive_conc_item-> item-> getmole(), vm);
+
+									// -------------------------
+									// todo: need to count each match for scale down !!
+									// SCALE DOWN ???????
+									//-----------------------
 									// for each match
 									while(true) {
+										// match next
 										ChemFunc *f = match_enz-> match_next(vm);
 										if (f==NULL) break;
-										printf(":: * match_enz.match_nextF=[0x%zX]\n", (unsigned long int) f);
-										//DUMP(passive_conc_item-> item-> getmole())
-										//PRINT("matched enz=>conc\n");
+										// printf(":: * match_enz.match_nextF=[0x%zX]\n", (unsigned long int) f);
 
 										if (f->operation!=NULL) {
-											r = f->operation(this, vm, run_time, 0, NULL);
+											//--------------------------------
+											// r = f->operation(this, vm, run_time, 0, NULL);
+											r = save_reaction(	passive_conc_item-> item-> getmole(), match_enz, vm->matchpos.get_current_pos(), vm->matchpos.get_rotation());
+											if (r>=0) n++;
 										}
 									} // ---- end matches
 
+
+									// --------------
 								} // else skip (passve==active)
 								// ---- next conc
 								passive_conc_item = passive_conc_item->next;
@@ -285,8 +367,56 @@ int	ChemEngine::run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime
 	//----------------
 	return n;
 }
-
 // ----------------------------
+// ----------------------------// ----------------------------// ----------------------------// ----------------------------
+int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+	if ((vm==NULL)||(vol==NULL)) return -1;
+	int n = 0;
+	mylist<ChemReaction>::mylist_item<ChemReaction> *reaction_item = reaction_list.gethead();
+	while (reaction_item!=NULL) {
+		if ((reaction_item-> item ==NULL) ||
+			(reaction_item-> item-> m1==NULL) ||
+			(reaction_item-> item-> enz==NULL)) {
+			PRINT("error (NULL Data)\n");
+			continue;
+		}
+
+		ChemFunc *f = reaction_item-> item-> enz->get_func();
+		if (f!=NULL) {
+			n++;
+			int r = f->operation(this, vm, run_time, 0, NULL);
+			printf("run_reaction: m1[0x%zX] m2[0x%zX] func[%s] = [%d]\n",
+					(long unsigned int) reaction_item-> item-> m1,
+					(long unsigned int) reaction_item-> item-> enz->get_mole(),
+					 f->name.get(), r);
+		}
+		// ---------
+		reaction_item = reaction_item->next;
+	} // next reaction
+
+	//----------------
+	return n;
+}
+// ----------------------------
+// ----------------------------// ----------------------------// ----------------------------// ----------------------------
+int	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+	if ((vm==NULL)||(vol==NULL)) return -1;
+	int n = 0;
+	printf("=====\n");
+	n = get_reactions(vm, vol);
+	printf("=====  got [%d] reactions..\n", n);
+	if (n<=0) return 0;
+
+
+	//double ConcentrationVolume::get_maxcommit(void)
+	n = run_reactions(vm, vol, run_time);
+	printf("=====  run_reactions = [%d]\n", n);
+
+	return n;
+}
+// ----------------------------
+
+
 /******************************
 //========================================================
 Concentration_VM *ChemEngine::add_vm(void){

@@ -112,13 +112,23 @@ int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
 }
 // --------------------------
 // --------------------------
-// 'list'
-int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
+// 'runvol'
+int	cli_eng_runmatch(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI
 	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
 	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
 	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
-
+	// ----------------------------
+	return cli-> chem_engine->get_reactions(vm, vm->concvol);
+}
+// --------------------------
+// --------------------------
+// 'match'
+int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI
+	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
+	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
+	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
 	// ----------------------------
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -132,13 +142,29 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-
-	//return cli->chem_engine-> run(cli-> get_selected_vm(), run_time, argc, next_argv);
-	//int	ChemEngine::run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
-	return cli-> chem_engine->run_vol(vm, vm->concvol, run_time);
-
-
-
+	return cli-> chem_engine->run_reactions(vm, vm->concvol, run_time);
+}
+// --------------------------
+// 'runvol'
+int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI
+	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
+	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
+	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+	// ----------------------------
+	float run_time = 1.0;
+	char **next_argv = &argv[0];
+	{
+		float t;
+		int r = sscanf(next_argv[0], "%f", &t);
+		if (r>0) {
+			run_time = t;
+			printf("eng.time = [%f]\n", run_time);
+			next_argv = &argv[1];
+			argc--;
+		}
+	}
+	return cli-> chem_engine->run_volume(vm, vm->concvol, run_time);
 }
 // --------------------------
 // 'enzstart'
@@ -228,6 +254,8 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "eng");		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_eng, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_dump, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "run");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_run, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "runmatch");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runmatch, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "runfunc");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runfunc, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runvol");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runvol, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enzstart");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enzstart, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
