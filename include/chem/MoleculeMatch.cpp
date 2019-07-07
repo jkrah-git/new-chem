@@ -27,9 +27,9 @@ MoleculeMatchResult(){ matched_item = NULL; };
 };
 //----------------------------------
 */
-void MoleculeMatchResult::dump(void){
-	printf("MoleculeMatchResult[0x%zX]", (long unsigned int) this);
-	printf(":: Rot[%d].", rotation); current_pos.dump();
+void MatchPos::dump(void){
+	printf("MatchPos[0x%zX]:", (long unsigned int) this);
+	pos.dump(); printf(".Rot[%d]", rotation);
 }
 
 /*
@@ -434,18 +434,27 @@ int	MoleculeMatch::match_item(void){
 	return 1; //  1=(MATCH)
 }
 ****************/
-
+//----------------------------------
 int MoleculeMatch::save_match(){
-	mylist<MoleculeMatchResult>::mylist_item<MoleculeMatchResult>	*result_item = results_list.add();
+	mylist<MatchPos>::mylist_item<MatchPos>	*result_item = results_list.add();
 	if (result_item==NULL)  { PRINT("add.item failed\n"); return -1; }
 	if (result_item->item==NULL) { PRINT("add.item.item NULL\n"); return -2; }
 
-	result_item->item-> current_pos = current_pos;
+	result_item->item-> pos = current_pos;
 	result_item->item-> rotation = rotation;
 	//result_item->item-> matched_item = matched_item;
 	return 0;
 }
-
+//----------------------------------
+int MoleculeMatch::load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos){
+	mole1 = m1;
+	mole2 = m2;
+	if (matchpos==NULL) return -1;
+	current_pos = matchpos-> pos;
+	rotation = matchpos-> rotation;
+	//result_item->item-> matched_item = matched_item;
+	return 0;
+}
 //----------------------------------
 int	MoleculeMatch::match_mole(){
 	if (mole1 ==NULL) return -10;

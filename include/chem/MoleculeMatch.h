@@ -12,12 +12,11 @@
 
 class Molecule;
 //----------------------------------
-class MoleculeMatchResult {
+class MatchPos {
 public:
-	PeptidePos 						current_pos;
-	PepRot								rotation;	//   4=(end), 5=(start), 6=(modified)
+	PeptidePos 			pos;
+	PepRot				rotation;	//   4=(end), 5=(start), 6=(modified)
 	//-----------
-//MoleculeMatchResult(){ matched_item = NULL; };
 	void	dump(void);
 };
 //----------------------------------
@@ -40,7 +39,7 @@ private:
 
 
 public:
-	mylist<MoleculeMatchResult> results_list;
+	mylist<MatchPos> results_list;
 	//---------
 	MoleculeMatch();
 	virtual 	~MoleculeMatch();
@@ -81,6 +80,7 @@ public:
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
 
 	int			save_match();
+	int			load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos);
 	int			match_mole();
 
 

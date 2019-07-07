@@ -9,7 +9,7 @@
 #define _CHEMENGINE_H_
 
 typedef unsigned long int  ChemStep;
-
+#define CHEM_ENG_REACT_TTL	3
 
 //#include "Molecule.h"
 #include "Concentration_VM.h"
@@ -40,6 +40,7 @@ class ChemEnzyme {
 private:
 	Molecule 	mole;
 	ChemFunc	*chemfunc;
+
 public:
 	Molecule 	*get_mole(void) { return &mole; };
 	ChemFunc 	*get_func(void) { return chemfunc; };
@@ -60,12 +61,15 @@ class ChemReaction {
 public:
 	Molecule	*m1;		// assumed in current col
 	ChemEnzyme	*enz;		// assumed in current
-	PeptidePos 	match_pos;
-	PepRot		match_rotation;
+//	PeptidePos 	match_pos;
+//	PepRot		match_rotation;
 	ChemTime	scale;
+	ChemStep	ttl;
+
+	mylist<MatchPos>	matchpos_list;
 	// todo: ttl  / tick
 
-	ChemReaction(){ m1=NULL; enz = NULL; scale = 1.0; }
+	ChemReaction(){ m1=NULL; enz = NULL; scale = 1.0; ttl = CHEM_ENG_REACT_TTL; }
 	void		dump(void);
 	bool 		operator ==(const ChemReaction& r);
 };
@@ -75,10 +79,10 @@ public:
 class ChemEngine {
 private:
 	ChemStep		step;
-	// todo: mole_list (vol-> external_mole_list)
-
-	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, PeptidePos *_match_pos, PepRot _match_rotation, ChemTime scale);
 	mylist<ChemReaction>	reaction_list;
+	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
+	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime scale);
+	int				update_ttls(void);
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;

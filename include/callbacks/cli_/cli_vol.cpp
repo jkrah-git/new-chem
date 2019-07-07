@@ -113,8 +113,9 @@ int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	return vm-> concvol-> clean_conc();
-	//return 0;
+	int n = vm-> concvol-> clean_conc();
+	//n += cli->chem_engine->clean_volume_moles(vm-> concvol);
+	return n;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------

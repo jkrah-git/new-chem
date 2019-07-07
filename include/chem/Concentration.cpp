@@ -127,7 +127,22 @@ void ConcentrationVolume::clear(void){
 	conc_list.clear();
 
 }
+//--------------
+mylist<Molecule>::mylist_item<Molecule>	*ConcentrationVolume::molesearch_list(Molecule	*m){
+	//printf("########## ########## ConcentrationVolume::search.m. ..\n");	DUMP(m)
 
+	mylist<Molecule>::mylist_item<Molecule> *item = mole_list.gethead();
+	while (item!=NULL) {
+		//printf("########## ConcentrationVolume::search.item ...\n");
+		//DUMP(item-> item->  getmole())
+		//printf("##########  \n");
+		if ((item-> item == m) || (*(item-> item) == *m))
+			return item;
+		// -- else
+		item = item-> next;
+	}
+	return NULL;
+}
 //--------------
 Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
 	//printf("########## ########## ConcentrationVolume::search.m. ..\n");	DUMP(m)
@@ -137,7 +152,7 @@ Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
 		//printf("########## ConcentrationVolume::search.item ...\n");
 		//DUMP(item-> item->  getmole())
 		//printf("##########  \n");
-		if ((*item-> item-> getmole()) == *m)
+		if ((item-> item-> getmole() == m) || (*(item-> item-> getmole()) == *m))
 			return item-> item;
 		// -- else
 		item = item-> next;
@@ -178,12 +193,14 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	if (conc==NULL) {
 
 		// copy new_mole to mole_list
-		mylist<Molecule>::mylist_item<Molecule> *new_mole = mole_list.add();
-		if ((new_mole ==NULL) || (new_mole-> item ==NULL)) { return -1.0; }
-		m-> rotateto(0, new_mole-> item);
+		mylist<Molecule>::mylist_item<Molecule>	*new_mole = molesearch_list(m); // search_molelist(m);
+		if (new_mole==NULL) {
+			new_mole =  mole_list.add();
+			if ((new_mole ==NULL) || (new_mole-> item ==NULL)) { return -1.0; }
+			m-> rotateto(0, new_mole-> item);
+		}
 
-		mylist<Concentration>::mylist_item<Concentration> *new_conc;
-		new_conc = conc_list.add();
+		mylist<Concentration>::mylist_item<Concentration> *new_conc = conc_list.add();
 		if ((new_conc==NULL)||(new_conc-> item==NULL)) { return -2.0; }
 
 		conc = new_conc-> item;
@@ -225,7 +242,7 @@ int	ConcentrationVolume::del_conc(mylist<Concentration>::mylist_item<Concentrati
 	if (m==NULL) return -3;
 	conc_list.del(conc_item);
 
-	// todo: can't clean mole list as still used by enzymes/reactions cache
+	// todo: can't clean mole list as still used by upstream enzymes/reactions cache
 	/*
 	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list.search(m);
 	if (mole_item==NULL) return -4;
