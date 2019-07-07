@@ -1,4 +1,15 @@
 
+NEXT TODO
+---- finish base rendrer
+	- move all disply_list *objs's to 'stack_id / other_id??'
+		- (mouseclick) will require *ptr-> index lookups .. grrr..
+		- needed for crashproof vm changes
+!!	- or: reload_vm()
+	- refresh_graphs
+	- vol.external_mole_list??
+	- Reactions.Cache - ttl / lookup / expiry
+
+
 
 Notes
 Chem Conc Engine
@@ -196,19 +207,10 @@ xxx xxx ...
 
 NB: CLI = (*core, menus, display)
 
-TODO
----- finish base rendrer
-	- move all disply_list *objs's to 'stack_id / other_id??'
-		- (mouseclick) will require *ptr-> index lookups .. grrr..
-		- needed for crashproof vm changes
-!!	- or: reload_vm()
-	- refresh_graphs
-
 ConcEngine 
   - enz_func    =(Name, Molecule* (func(vm*, argc , argv))
   - opcode_func =(Opcode*, (func(vm*, argc , argv))
   - help files (help/*.txt)
-  - match_list for each act/pass pairs.. use to scale down
   
   --------------------------
   - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
@@ -221,11 +223,6 @@ ConcEngine
   -- think about transcode/script
   -- ConcEngine
 -----
--- test data
--- bugs: mole_match - fwd testing?? - add match_item
--- Enzymes - (base) inbuilt functions  - 
-
-
 
 -- port cli cmds???
 	- start VM commands .. callbacks ?

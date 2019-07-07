@@ -64,6 +64,7 @@ public:
 class ConcentrationVolume {
 	mylist<Molecule> 	mole_list;
 	mylist<Concentration> 	conc_list;
+	int				del_conc(mylist<Concentration>::mylist_item<Concentration> *conc_item);
 
 public:
 
@@ -76,7 +77,9 @@ public:
 	void 	dumpmoles(void) { mole_list.dump(); }
 	// ---------
 	Concentration	*molesearch(Molecule	*m);
-	mylist<Concentration> *get_con_list(void){ return &conc_list; };
+	mylist<Concentration> 	*get_con_list(void){ return &conc_list; };
+	mylist<Molecule> 		*get_mole_list(void){ return &mole_list; };
+
 	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
 	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };
 
@@ -88,8 +91,10 @@ public:
 	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
 	// ---------
 	ChemTime		get_maxcommit(void);
+//	int				del_conc(Molecule *m){
 	void			commit(void);
 	void			reset(void);
+	int				clean_conc(void);
 	//----
 };
 // -------------------------------

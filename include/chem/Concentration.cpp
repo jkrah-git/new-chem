@@ -123,7 +123,7 @@ void ConcentrationVolume::dump(void){
 }
 //--------------
 void ConcentrationVolume::clear(void){
-	mole_list.clear();
+//	mole_list.clear();
 	conc_list.clear();
 
 }
@@ -201,26 +201,48 @@ double ConcentrationVolume::get_maxcommit(void){
 	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
 	while (item!=NULL) {
 		if (item-> item!=NULL) {
-			ConcLevelType val = item-> item->get();
 			ConcLevelType delta = item-> item->getdelta();
-			if (delta <= val) {
-				double m = val/delta;
-				if (max>m)
-					max = m;
-			}
-		}
+			if (delta<0) {
+				ConcLevelType val = item-> item->get();
+				if (delta <= val) {
+					double m = -((double) val/delta);
+					if (max>m)
+						max = m;
+				} // endif (delta <= val)
+			} // endif (delta<0)
+		} // endif  (item-> item!=NULL)
 		// -----------
 		item = item-> next;
 	}
 	return max;
 }
 //--------------
+int	ConcentrationVolume::del_conc(mylist<Concentration>::mylist_item<Concentration> *conc_item){
+
+	if (conc_item==NULL) return -1;
+	if (conc_item-> item ==NULL) return -2;
+	Molecule *m = conc_item-> item->getmole();
+	if (m==NULL) return -3;
+	conc_list.del(conc_item);
+
+	// todo: can't clean mole list as still used by enzymes/reactions cache
+	/*
+	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list.search(m);
+	if (mole_item==NULL) return -4;
+	mole_list.del(mole_item);
+	*/
+	return 0;
+}
+
 //--------------
 void ConcentrationVolume::commit(void){
-	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
-	while (item!=NULL) {
-		if (item-> item!=NULL) 	item-> item->commit();
-		item = item-> next;
+	mylist<Concentration>::mylist_item<Concentration> *conc_item = conc_list.gethead();
+	while (conc_item!=NULL) {
+		if (conc_item-> item!=NULL) {
+			conc_item-> item->commit();
+		}
+		// ----
+		conc_item = conc_item-> next;
 	}
 }
 //--------------
@@ -232,6 +254,29 @@ void ConcentrationVolume::reset(void){
 		//-----------
 		item = item-> next;
 	}
+}
+//--------------
+//--------------
+int ConcentrationVolume::clean_conc(void){
+	int n =0 ;
+	mylist<Concentration>::mylist_item<Concentration> *conc_item = conc_list.gethead();
+	while (conc_item!=NULL) {
+		if (conc_item-> item!=NULL) {
+			// deletete (zero) conc's
+			if (conc_item-> item->get() <=0) {
+				mylist<Concentration>::mylist_item<Concentration> *prev_item = conc_item->prev;
+				int r = del_conc(conc_item);
+				PRINT("del conc = [%d]\n", r);
+				conc_item = prev_item;
+				n++;
+			}
+		}
+		//-----------
+		conc_item = conc_item-> next;
+	}
+
+
+	return n;
 }
 //--------------
 /*************************************************************

@@ -62,8 +62,10 @@ public:
 	ChemEnzyme	*enz;		// assumed in current
 	PeptidePos 	match_pos;
 	PepRot		match_rotation;
+	ChemTime	scale;
+	// todo: ttl  / tick
 
-	ChemReaction(){ m1=NULL; enz = NULL; }
+	ChemReaction(){ m1=NULL; enz = NULL; scale = 1.0; }
 	void		dump(void);
 	bool 		operator ==(const ChemReaction& r);
 };
@@ -73,7 +75,9 @@ public:
 class ChemEngine {
 private:
 	ChemStep		step;
-	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, PeptidePos *_match_pos, PepRot _match_rotation);
+	// todo: mole_list (vol-> external_mole_list)
+
+	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, PeptidePos *_match_pos, PepRot _match_rotation, ChemTime scale);
 	mylist<ChemReaction>	reaction_list;
 public:
 	mylist<ChemFunc>		func_list;
@@ -88,6 +92,7 @@ public:
 	ChemFunc  			*search_func(const char *name);
 	int					run(Concentration_VM* vm, ChemTime run_time, int argc, char **argv);
 
+	ChemReaction 		*search_reactions(Molecule *_mole);
 	ChemEnzyme			*search_enz(Molecule *_mole);
 	int					del_enz(Molecule *_mole);
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);
@@ -96,7 +101,10 @@ public:
 	//int					run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
 	int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
-	int					run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	int					clean_volume_moles(ConcentrationVolume *vol);
+
+
 	/*
 //	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
 // 	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };

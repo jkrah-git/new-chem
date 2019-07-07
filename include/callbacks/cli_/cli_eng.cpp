@@ -164,8 +164,10 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli-> chem_engine->run_volume(vm, vm->concvol, run_time);
+	ChemTime actual_time = cli-> chem_engine->run_volume(vm, vm->concvol, run_time);
+	return (actual_time*100);
 }
+// --------------------------
 // --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){

@@ -28,9 +28,9 @@ int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc
 	Concentration	*conc = vol-> molesearch(m1);
 	if (conc==NULL) { printf("M1 not in vol..\n"); return -20; }
 
-	//ConcAdjustType take = 0.1;
-	ConcLevelType	f = vol-> take(m1, run_time);
-	PRINT("take[%f]=[%f]\n", run_time, f);
+	ConcAdjustType take = 0.1 * run_time;
+	ConcLevelType	f = vol-> take(m1, take);
+	PRINT("take[%f]=[%f]\n", take, f);
 
 
 	return 1;
