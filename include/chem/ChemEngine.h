@@ -106,8 +106,8 @@ public:
 	int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
 	int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
-	int					clean_volume_moles(ConcentrationVolume *vol);
-
+	//int					clean_volume_moles(ConcentrationVolume *vol);
+	int					clean_volume(ConcentrationVolume *vol);
 
 	/*
 //	Concentration_VM	*get_selected_vm(void){ return selected_vm; };

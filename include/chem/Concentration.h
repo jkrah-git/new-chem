@@ -62,6 +62,7 @@ public:
 
 // -------------------------------
 class ConcentrationVolume {
+	// to do..  bugs with shareing upstrem
 	mylist<Molecule> 	mole_list;
 	mylist<Concentration> 	conc_list;
 	int				del_conc(mylist<Concentration>::mylist_item<Concentration> *conc_item);

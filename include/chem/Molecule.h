@@ -29,6 +29,7 @@ public:
 	// ----
 	Molecule();
 	virtual ~Molecule();
+	void	print_short(int num_pep);
 	int rotateto(PepRot rotation, Molecule *dest);
 	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
 	int drawto(PeptidePos *pos, PepSig *value);

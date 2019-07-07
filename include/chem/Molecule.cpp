@@ -69,6 +69,31 @@ Molecule::Molecule() {
 }
 Molecule::~Molecule() {	clear();}
 // -------------------------------
+
+void Molecule::print_short(int num_pep){
+	// [0x12] = 6bytes per pep
+	printf("Molecule[0x%zX]", (long unsigned int) this);
+
+	if (num_pep>0) {
+		mylist<Peptide>::mylist_item<Peptide> *pep_item = pep_list.gethead();
+		for (int i=0; i<num_pep; i++) {
+			//int buf_pos = i*6;
+			if ((pep_item == NULL)|| (pep_item-> item == NULL)) {
+				printf("[NULL]");
+			} else {
+				printf("[0x%.2x]", pep_item->item-> get());
+			}
+		} //next i
+		printf("[..]");
+	}
+
+	if (num_pep>=0) {
+		printf("/[%d]", pep_list.count());
+	}
+	NL
+
+}
+
 // -------------------------------
 // todo = operator
 bool Molecule::operator ==(const Molecule& p){

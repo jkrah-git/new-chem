@@ -174,7 +174,8 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 	callback = NULL;
 	run_callto = NULL;
 	last_result = 0;
-	selected_vm = NULL;
+	// todo: vm/vol ??
+	selected_vm = NULL; //add_vm();
 	selected_vol = NULL;
 	selected_enz = NULL;
 	chem_engine = NULL;
@@ -186,6 +187,7 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 Concentration_CLI::~Concentration_CLI() {}
 
 //---------------------------------
+/*****************************
 void Concentration_CLI::test() {
 	PRINT(" .. START .. \n");
 	PRINT("==============\n");
@@ -220,6 +222,8 @@ void Concentration_CLI::test() {
 	PRINT("==============\n");
 	PRINT(" .. END ..\n");
 }
+**************************/
+
 //---------------------------------
 /*
 bool Concentration_CLI::is_selected(Peptide *pep){

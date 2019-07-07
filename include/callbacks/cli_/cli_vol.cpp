@@ -41,6 +41,26 @@ int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 	vm->concvol->dumpmoles();
 	return 0;
 }
+//---------------------------//---------------------------//---------------------------//---------------------------
+int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
+	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//-------
+	//vm->concvol->dumpmoles();
+
+	mylist<Molecule> 		*mole_list = vm->concvol-> get_mole_list();
+	int n = 0;
+	mylist<Molecule>::mylist_item<Molecule>  *mole_item = mole_list->gethead();
+	while (mole_item!=NULL) {
+		//printf("Molecule[0x%zX].len(%d)")
+		if (mole_item->item !=NULL)
+			mole_item->item->print_short(5);
+		n++;
+		//---------------
+		mole_item = mole_item->next;
+	}
+	return n;
+}
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_clear(Concentration_CLI *cli, int argc, char **argv){
@@ -184,6 +204,7 @@ int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "vol");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_vol, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_dump, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dumpmoles");	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_dumpmoles, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "listmoles");	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_listmoles, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_clear, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "list");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_list, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_ld, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);

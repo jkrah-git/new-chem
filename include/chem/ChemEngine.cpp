@@ -376,10 +376,9 @@ int	ChemEngine::update_ttls(void){
 			//if (reaction_item-> item-> m1 == vm->matchpos.getM1())	vm->matchpos.setM1(NULL);
 			//if (reaction_item-> item-> enz == vm->matchpos.getM2())	vm->matchpos.setM2(NULL);
 
-
 			reaction_item-> item-> matchpos_list.clear();
 			reaction_item = reaction_list.del(reaction_item);
-			PRINT("==  reaction_item ==\n");  DUMP(reaction_item) NL
+			// PRINT("==  reaction_item ==\n");  DUMP(reaction_item) NL
 			//reaction_item = prev;
 
 			reaction_list.dump();
@@ -593,7 +592,7 @@ ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, 
 	printf(".. run_reactions.time[%f]= [%d]\n", run_time, n);
 
 	//ChemTime		get_maxcommit(void);
-	ChemTime		max_time = vol->get_maxcommit() * run_time;
+	ChemTime		max_time = vol-> get_maxcommit() * run_time;
 	printf("max_time = [%f]\n", max_time);
 	if (max_time <run_time) {
 		printf(".. rewind/rerun new maxtime..\n");
@@ -607,10 +606,15 @@ ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, 
 	vol->commit();	printf(".. volcommit\n");
 	//reaction_list.clear();
 	//vm->matchpos.results_list.clear();
-	n = vol->clean_conc(); printf(".. vol->clean_conc = [%d]\n", n);
+	n = vol->clean_conc(); printf(".. vol-> clean_conc = [%d]\n", n);
 	//n = clean_volume_moles(vol); printf(".. clean_volume_moles(vol) = [%d]\n", n);
 	return run_time;
 }
+// ----------------------------
+int	ChemEngine::clean_volume(ConcentrationVolume *vol) {
+	if (vol==NULL) return -1;
+}
+/*
 // ----------------------------
 int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 	if (vol==NULL) return -1;
@@ -636,7 +640,7 @@ int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 
 	return n;
 }
-
+*/
 /******************************
 //========================================================
 Concentration_VM *ChemEngine::add_vm(void){
