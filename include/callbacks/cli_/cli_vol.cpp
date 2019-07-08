@@ -28,6 +28,7 @@ int	cli_vol(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_dump(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//ConcentrationVolume *vol = vm->concvol; if (vol==NULL) return -11;
 	//-------
 	DUMP(vm->concvol);
 	return 0;
@@ -37,27 +38,34 @@ int	cli_vol_dump(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	ConcentrationVolume *vol = vm->concvol; 			if (vol==NULL) return -11;
 	//-------
-	vm->concvol->dumpmoles();
+	vol-> dumpmoles();
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------//---------------------------
-int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
+int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	ConcentrationVolume *vol = vm->concvol; 			if (vol==NULL) return -11;
 	//-------
-	//vm->concvol->dumpmoles();
 
-	mylist<Molecule> 		*mole_list = vm->concvol-> get_mole_list();
+	mylist<Concentration> 		*conc_list = vol-> get_conc_list();
 	int n = 0;
-	mylist<Molecule>::mylist_item<Molecule>  *mole_item = mole_list->gethead();
-	while (mole_item!=NULL) {
+	mylist<Concentration>::mylist_item<Concentration>  *conc_item = conc_list->gethead();
+	while (conc_item!=NULL) {
 		//printf("Molecule[0x%zX].len(%d)")
-		if (mole_item->item !=NULL)
-			mole_item->item->print_short(5);
-		n++;
+		if (conc_item->item !=NULL) {
+			Molecule *m = conc_item->item-> getmole();
+			printf("Conc[0x%zX].Mole[0x%zX]", (long unsigned int) conc_item-> item,  (long unsigned int)  m);
+			if (m!=NULL) {
+				m->print_short(5);
+			}
+			printf(" = Level[%.3f].Delta[%.3f]\n", conc_item->item->get(), conc_item->item->getdelta());
+			n++;
+		}
 		//---------------
-		mole_item = mole_item->next;
+		conc_item = conc_item->next;
 	}
 	return n;
 }
@@ -72,11 +80,23 @@ int	cli_vol_clear(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
-int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
+int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
+	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	cli-> vol_list.dump();
-	return 0;
+
+	mylist<Molecule> 		*mole_list = vm->concvol-> get_mole_list();
+	int n = 0;
+	mylist<Molecule>::mylist_item<Molecule>  *mole_item = mole_list->gethead();
+	while (mole_item!=NULL) {
+		//printf("Molecule[0x%zX].len(%d)")
+		if (mole_item->item !=NULL)
+			mole_item->item->print_short(5); NL
+		n++;
+		//---------------
+		mole_item = mole_item->next;
+	}
+	return n;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------

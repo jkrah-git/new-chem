@@ -77,9 +77,14 @@ public:
 	void	clear(void);
 	void 	dumpmoles(void) { mole_list.dump(); }
 	// ---------
+	// 	molesearch(); compares *m==*m
+	// 	_molesearch(); just compares m==m
 	Concentration	*molesearch(Molecule	*m);
+	Concentration	*_molesearch(Molecule	*m);
+
+
 	mylist<Molecule>::mylist_item<Molecule> 	*molesearch_list(Molecule	*m);
-	mylist<Concentration> 	*get_con_list(void){ return &conc_list; };
+	mylist<Concentration> 	*get_conc_list(void){ return &conc_list; };
 	mylist<Molecule> 		*get_mole_list(void){ return &mole_list; };
 	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
 	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };

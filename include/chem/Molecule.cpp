@@ -79,18 +79,19 @@ void Molecule::print_short(int num_pep){
 		for (int i=0; i<num_pep; i++) {
 			//int buf_pos = i*6;
 			if ((pep_item == NULL)|| (pep_item-> item == NULL)) {
-				printf("[NULL]");
+				printf("[    ]");
 			} else {
 				printf("[0x%.2x]", pep_item->item-> get());
+				pep_item = pep_item->next;
 			}
 		} //next i
 		printf("[..]");
 	}
 
 	if (num_pep>=0) {
-		printf("/[%d]", pep_list.count());
+		printf("/[0x%.2x]", pep_list.count());
 	}
-	NL
+	//NL
 
 }
 

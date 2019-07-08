@@ -25,8 +25,6 @@ private:
 
 public:
 	MyString 	name;
-	//MyString 	opcode;
-	//Molecule 	active_mole;
 	int 	(*operation)(ChemEngine*,Concentration_VM*, ChemTime, int, char**);
 	// ------------------------------
 	ChemFunc();
@@ -61,8 +59,6 @@ class ChemReaction {
 public:
 	Molecule	*m1;		// assumed in current col
 	ChemEnzyme	*enz;		// assumed in current
-//	PeptidePos 	match_pos;
-//	PepRot		match_rotation;
 	ChemTime	scale;
 	ChemStep	ttl;
 
@@ -78,11 +74,12 @@ public:
 // ----------------------------
 class ChemEngine {
 private:
-	ChemStep		step;
-	mylist<ChemReaction>	reaction_list;
 	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
 	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime scale);
 	int				update_ttls(void);
+	//-----------------------------------
+	ChemStep		step;
+	mylist<ChemReaction>	reaction_list;
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
@@ -106,8 +103,8 @@ public:
 	int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
 	int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
-	//int					clean_volume_moles(ConcentrationVolume *vol);
-	int					clean_volume(ConcentrationVolume *vol);
+	int					clean_volume_moles(ConcentrationVolume *vol);
+	//int					clean_volume(ConcentrationVolume *vol);
 
 	/*
 //	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
@@ -127,7 +124,7 @@ public:
 	// --------------
 	void				load_funcs(void);
 	// for each func.. scan each conc..
-	int					update(ChemTime	update_time, mylist<Concentration>::mylist_item<Concentration> *conc_item);
+	//int					update(ChemTime	update_time, mylist<Concentration>::mylist_item<Concentration> *conc_item);
 
 
 

@@ -144,17 +144,22 @@ mylist<Molecule>::mylist_item<Molecule>	*ConcentrationVolume::molesearch_list(Mo
 	return NULL;
 }
 //--------------
-Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
-	//printf("########## ########## ConcentrationVolume::search.m. ..\n");	DUMP(m)
-
+Concentration	*ConcentrationVolume::_molesearch(Molecule	*m){
 	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
 	while (item!=NULL) {
-		//printf("########## ConcentrationVolume::search.item ...\n");
-		//DUMP(item-> item->  getmole())
-		//printf("##########  \n");
+		if (item-> item-> getmole() == m)
+			return item-> item;
+		item = item-> next;
+	}
+	return NULL;
+}
+//--------------
+//--------------
+Concentration	*ConcentrationVolume::molesearch(Molecule	*m){
+	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
+	while (item!=NULL) {
 		if ((item-> item-> getmole() == m) || (*(item-> item-> getmole()) == *m))
 			return item-> item;
-		// -- else
 		item = item-> next;
 	}
 	return NULL;
@@ -238,12 +243,11 @@ int	ConcentrationVolume::del_conc(mylist<Concentration>::mylist_item<Concentrati
 
 	if (conc_item==NULL) return -1;
 	if (conc_item-> item ==NULL) return -2;
-	Molecule *m = conc_item-> item->getmole();
-	if (m==NULL) return -3;
 	conc_list.del(conc_item);
 
 	// todo: can't clean mole list as still used by upstream enzymes/reactions cache
 	/*
+	Molecule *m = conc_item-> item->getmole(); 	if (m==NULL) return -3;
 	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list.search(m);
 	if (mole_item==NULL) return -4;
 	mole_list.del(mole_item);
@@ -280,12 +284,17 @@ int ConcentrationVolume::clean_conc(void){
 	while (conc_item!=NULL) {
 		if (conc_item-> item!=NULL) {
 			// deletete (zero) conc's
-			if (conc_item-> item->get() <=0) {
-				mylist<Concentration>::mylist_item<Concentration> *prev_item = conc_item->prev;
-				int r = del_conc(conc_item);
-				PRINT("del conc = [%d]\n", r);
-				conc_item = prev_item;
+
+			// PRINT("========\n");
+			// PRINT("[0x%zX] [%.3f][%.3f]\n", conc_item-> item, conc_item-> item->get(), conc_item-> item->getdelta());
+			if ((conc_item-> item->get() <=0)&& (conc_item-> item->getdelta() <=0)) {
+				mylist<Concentration>::mylist_item<Concentration> *next_item = conc_item-> next;
+				conc_item = conc_list.del(conc_item);
 				n++;
+				if (conc_item==NULL) {
+					conc_item = next_item;
+					continue;
+				}
 			}
 		}
 		//-----------
