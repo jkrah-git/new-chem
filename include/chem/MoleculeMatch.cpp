@@ -151,7 +151,8 @@ void MoleculeMatch::render(){
 	mylist<Peptide>::mylist_item<Peptide> *new_item = m.pep_list.add();
 	if ((new_item!=NULL) &&(new_item-> item!=NULL)) {
 		new_item-> item->setpos(current_pos.dim[PEPPOS_X], current_pos.dim[PEPPOS_Y], 0);
-		new_item-> item->set(ch);
+		//new_item-> item->set(ch);
+		new_item-> item-> sig = ch;
 		m.drawto(&buf, NULL, NULL, NULL);
 	}
 
@@ -168,7 +169,8 @@ void MoleculeMatch::render(){
 			if ((new_item!=NULL) &&(new_item-> item!=NULL)) {
 				//new_item-> item->pos = testpos;
 				new_item-> item-> setpos(test_pos[PEPPOS_X],test_pos[PEPPOS_Y], 0);
-				new_item-> item-> set(ch);
+			//	new_item-> item-> set(ch);
+				new_item-> item-> sig = ch;
 				m.drawto(&buf, NULL, NULL, NULL);
 			}
 		}

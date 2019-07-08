@@ -7,6 +7,19 @@
 //---------------------------------//---------------------------------
 int		cli_quit(Concentration_CLI *cli, int argc, char **argv){	exit(0);	}
 //---------------------------------//---------------------------------
+#include <unistd.h>
+//---------------------------------//---------------------------------
+int		cli_wait(Concentration_CLI *cli, int argc, char **argv){
+	if (argc<1) { printf("usage: wait [msec]..\n");	 return -1;	 }
+	int v;
+	if ( sscanf(argv[0], "%d", &v) <0) {
+		printf("bad count [%s].\n", argv[0]);
+		return -20;
+	}
+	int r = usleep(v*1000);
+	return r;
+}
+//---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
@@ -511,6 +524,7 @@ int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	cli-> base_cmdlist.clear();
 	LOG("\n");
 	sprintf(name, "quit"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "wait"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_wait, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "q"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_quit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 
 	sprintf(name, "?"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_basehelp, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);

@@ -96,7 +96,6 @@ void Molecule::print_short(int num_pep){
 }
 
 // -------------------------------
-// todo = operator
 bool Molecule::operator ==(const Molecule& p){
 #ifdef DEBUG
 	LOG("\npep_list => ");
@@ -536,8 +535,8 @@ int	Molecule::drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *val
 			PepSig sig;
 			if (value==NULL) { 		sig	= item-> item->get(); }
 			else { sig = *value; }
-			new_item-> item->set(sig);
-
+		//	new_item-> item->set(sig);
+			new_item-> item-> sig = sig;
 			PepPosVecType	*item_pos = new_item-> item->getpos();
 			if (item_pos!=NULL) {
 

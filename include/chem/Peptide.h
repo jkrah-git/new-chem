@@ -37,10 +37,12 @@ public:
 
 	//--------------------------------
 	// TODO 99: if really going public then rm these setter/getters
-	void  		set(PepSig newsig) { sig = newsig; };
+//	void  		set(PepSig newsig) { sig = newsig; };
 	void  		setrot(PepRot newrot) { rot = newrot; };
 	PepSig 		get(){	return sig;	};
 	PepRot		getrot(void){	return rot;	}
+
+
 	void		setpos(PepPosVecType posx, PepPosVecType posy);
 	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
 	PepPosVecType	*getpos(void); //{ return pos.pos; };

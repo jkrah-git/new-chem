@@ -188,26 +188,6 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 	return res*100;
 }
 //---------------------------//---------------------------
-/*
-//---------------------------//---------------------------
-int	cli_vol_addconc(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	if (vm->concvol==NULL) { printf("vol is NULL\n"); return -11; }
-	if (vm->conc==NULL) { printf("need to select conc first\n"); return -20; }
-	PRINT("=== TODO ===\n");
-
-	//mylist<Concentration>::mylist_item<Concentration> *search_conc(Concentration *c){ return conc_list.search(c); };
-	//mylist<Concentration>::mylist_item<Concentration> *conc_item = vm->concvol-> search_conc(Concentration *c){ return conc_list.search(c); };
-	// ConcLevelType	put(Molecule	*m, ConcLevelType amount);
-	ConcLevelType v = 10.0;
-	ConcLevelType	f = vm->concvol-> put(vm->conc->getmole(), v);
-	PRINT("vol.addconc[%f]=[%f]\n", v, f);
-
-	return 0;
-}
-*/
 //---------------------------//---------------------------
 
 //---------------------------------//---------------------------------

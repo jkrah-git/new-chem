@@ -141,8 +141,9 @@ void Peptide::rotateto(PepRot rotation, Peptide *dest){
 	}
 }
 //-----------------------
-void Peptide::addpep(PepSig sig, Peptide *tail) {
-	set(sig);
+void Peptide::addpep(PepSig _sig, Peptide *tail) {
+	//set(sig);
+	sig = _sig;
 	addpep(tail);
 }
 //-----------------------

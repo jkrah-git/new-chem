@@ -9,18 +9,17 @@ f moles/moles2
 f screens
 # -----------------------------
 screen vm
+screen vm render match
+
 mole ld 4
 eng run addenz noop
 vol addmole 1
 
 mole ld 0
 vol addmole 1
-mole ld 1
-vol addmole 1
-mole ld 2
-vol addmole 1
-mole ld 3
-vol addmole 1
-mole clear
-# vol commit 
+vol commit 
 eng runvol .1
+
+conc push
+conc adj -10
+conc tovol

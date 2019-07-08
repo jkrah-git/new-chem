@@ -1,18 +1,54 @@
 
 NEXT TODO
----- finish base rendrer
+---- finish base rendering
 	- move all disply_list *objs's to 'stack_id / other_id??'
 		- (mouseclick) will require *ptr-> index lookups .. grrr..
 		- needed for crashproof vm changes
 !!	- or: reload_vm()
 	- refresh_graphs
 	- vol.external_mole_list??
-- Reactions.Cache - ttl / lookup / expiry
-	- list<MoleculeMatchResult? 
 
+--- Engine/Vol/Vm
+	- Engine owns (dedicated?) vol .. (shared molelist/enz)
+	- VM Push inherits parent volume	
 
+===================================================================
+--------- try to describe ----
+1. Intro..
+Ideas have been driven by 
+ - Genetics
+ - BioChem
+ - Neuroscience
+ 
+2. The Model Objects
+2.1 Peptide
+ - like an element - cant be divided
+ - rules based joining to form 'structure' (see. Molecule)
+ - rules based positional information (2D/3D/n'D )
+ - rules based (active/passive) matching (see. Enzyme)
+ - trying to keep it so the rules can be changed 
 
-Notes
+2.2 Molecule
+ - Natural form has predefined structure (joining rules)
+ - also possible to build 'unatural' structures (testing)
+ - Active/Passive peptide sites - positional matching (see. Enzyme)
+
+2.3 Enzymes
+ - Passive/Active Molecues are matched (and cached) 
+ - Active Molecule - triggers (callback) function
+
+2.4 Concentration
+ - Due to (massive) parallel nature of problem - using front/back buffer with commit
+ - Concentration => Molecule (val, adjust)
+
+2.4 Concentration Volume
+ - Lots of Concentrations that can directly interact (enzymes) - (fast interaction)
+ - multi-volume context and interaction - extra-cellular-space? - (slow interaction)
+ - nested volumes ??
+ - eventual special (sense/action) volumes for interaction with world
+
+===================================================================
+Old Notes
 Chem Conc Engine
 
 * Main Clock / FB

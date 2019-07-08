@@ -29,7 +29,7 @@ Molecule *_cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv);
 
 //---------------
 
-// todo
+// 99_todo
 #define NEED_CLI 	if (cli==NULL) 			{ printf("NULL cli\n"); return -1; }
 #define NEED_VM  	if (cli->core ==NULL) 	{ printf("NULL cli-> core\n"); return -2; }
 #define NEED_VOL 	if (cli->core-> concvol==NULL) { printf("NULL vol\n"); return -3; }

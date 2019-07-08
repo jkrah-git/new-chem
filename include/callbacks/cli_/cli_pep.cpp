@@ -67,7 +67,7 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 				return -20;
 			}
 			PepSig sig = hex;
-			new_item-> item-> set(sig);
+			new_item-> item-> sig = sig;
 		}
 	}
 	return 0;
@@ -147,7 +147,7 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 	}
 	PepSig sig = hex;
 	if (vm-> pep !=NULL) {
-		vm-> pep-> set(sig);
+		vm-> pep-> sig = sig;
 	}
 
 	return 0;
