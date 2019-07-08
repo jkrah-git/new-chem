@@ -141,8 +141,15 @@ void Concentration_CLI::dump() {
 		selected_enz-> dump();
 	}
 
-	printf("ChemEngine:\n");
-	DUMP(chem_engine)
+	//printf("World:\n");	DUMP(world)
+	//world.dump();
+
+	local_vm.dump();
+	local_vol.dump();
+
+	printf("=========== World ==========\n");
+	DUMP(world);
+
 
 	/*
 	printf("============ VOL's ================..\n");
@@ -174,11 +181,17 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 	callback = NULL;
 	run_callto = NULL;
 	last_result = 0;
-	// todo: vm/vol ??
-	selected_vm = NULL; //add_vm();
-	selected_vol = NULL;
 	selected_enz = NULL;
-	chem_engine = NULL;
+//	chem_engine = NULL;
+//	selected_vol = NULL;
+	world = NULL;
+	//		// todo: vm/vol ??
+
+	//local_vol.set_molelist(&world->mole_list);
+	local_vm.concvol = &local_vol;
+	selected_vm = &local_vm;
+
+
 	load_commands();
 	/*
 	*/
@@ -238,6 +251,7 @@ bool Concentration_CLI::is_selected(Molecule *mole){
 
 
 //---------------------------------//---------------------------------//---------------------------------
+/**********************************
 //========================================================
 Concentration_VM *Concentration_CLI::add_vm(void){
 
@@ -298,7 +312,10 @@ int	Concentration_CLI::list_vms(void){
 	//------
 	return c;
 }
+**********************************/
+
 //========================================================
+/*
 //========================================================
 ConcentrationVolume *Concentration_CLI::add_vol(void){
 
@@ -350,6 +367,7 @@ int	Concentration_CLI::list_vols(void){
 	//------
 	return c;
 }
+*/
 /*********************************************************
 *********************************************************/
 //========================================================

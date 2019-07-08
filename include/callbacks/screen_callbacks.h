@@ -9,7 +9,7 @@
 #define SCREEN_CALLBACKS_H_
 
 //---------------------------------------------------------------------
-#include "chem/display/ChemDisplay.h"
+#include "chem/display.old/ChemDisplay.h"
 
 // cli includes
 // cli_attribs.cpp

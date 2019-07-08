@@ -16,16 +16,13 @@
 //#define DEBUG
 #include "../include/debug.h"
 
-// TODO 99: main -- add "match-map" to VM
-// 1. created from mole / cached??
-// 2. match and call code
 //-------------------------------------
 class Concentration_VM {
 public:
 	mylist<Peptide>				peptide_stack;
 	mylist<Molecule>			molecule_stack;
 	mylist<Concentration>		concentration_stack;
-	MoleculeMatch			matchpos;
+	MoleculeMatch				matchpos;
 
 	Peptide						*pep;
 	Molecule					*mole;

@@ -7,7 +7,7 @@
 
 //===============================================================
 //#include "chem/Concentration_CLI.h"
-#include "chem/display/ChemDisplay.h"
+#include "chem/display.old/ChemDisplay.h"
 //===============================================================
 char  **get_args(mylist<CLI_Command> *menu);
 
@@ -18,17 +18,21 @@ char  **get_args(mylist<CLI_Command> *menu);
 // these two are joined by call backs so have to be globals
 Concentration_CLI	cli;
 ChemDisplay			display(&cli);
-ChemEngine			eng;
+//ChemEngine			eng;
+World					world;
 
 int 	run_callto(int argc, char **argv);
 char  **get_possible_args(void);
 // --------------------------
 char 	**build_args(void){
 
-	cli.chem_engine = &eng;
+//	cli.chem_engine = &eng;
 	//------
 	//cli.load_commands();
 	//display.load_commands();
+	cli.world = &world;
+	cli.local_vol.set_molelist(&world.mole_list);
+
 	cli.run_callto = run_callto;
 	return get_possible_args();
 }

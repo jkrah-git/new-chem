@@ -30,7 +30,7 @@ int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){
 }
 ///---------------------------------//---------------------------------
 int		cli_dump_world(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI	cli-> world.dump();		return 0;
+	NEED_CLI	DUMP(cli-> world)		return 0;
 }
 //---------------------------------//---------------------------------
 int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){

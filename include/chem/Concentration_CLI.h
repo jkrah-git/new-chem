@@ -42,15 +42,19 @@ private:
 
 
 public:
-	Concentration_VM			*selected_vm;
-	ConcentrationVolume			*selected_vol;
 	ChemEnzyme					*selected_enz;
-	ChemEngine					*chem_engine;
 	int							last_result;
+	// todo - pointer
+	World						*world;
 
-	mylist<Concentration_VM>	vm_list;
-	mylist<ConcentrationVolume>	vol_list;
-	World		world;
+//	ChemEngine					*chem_engine;
+	ConcentrationVolume			local_vol;
+	Concentration_VM			local_vm;
+	Concentration_VM			*selected_vm;
+
+	Concentration_VM			*get_selected_vm(void){ return selected_vm; };
+
+
 
 	// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -92,19 +96,29 @@ public:
 	void 	test();
 
 
-	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
- 	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
+	// Todo - try to migrate to engine.vm
+	//=======================================
+	//ConcentrationVolume			*selected_vol;
+	//mylist<ConcentrationVolume>	vol_list;
+ 	//void						select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
+	//----
+	//mylist<Concentration_VM>	vm_list;
+ /*
  	Concentration_VM	*add_vm(void);
 	int					del_vm(Concentration_VM *_vm);
 	int					list_vms(void);
 	int					pop_vm(void);
-	ConcentrationVolume	*get_selected_vol(void){ return selected_vol; };
- 	void				select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
+	*/
+	//=======================================
+
+//	ConcentrationVolume	*get_selected_vol(void){ return selected_vol; };
+// 	void				select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
+	/*
  	ConcentrationVolume	*add_vol(void);
  	int					del_vol(ConcentrationVolume *_vol);
 	int					list_vols(void);
 	int					pop_vol(void);
-
+	 */
 
 
 //	Concentration_VM			*get_selected_vm(void){ return selected_vm; };

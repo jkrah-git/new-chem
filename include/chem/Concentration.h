@@ -63,7 +63,7 @@ public:
 // -------------------------------
 class ConcentrationVolume {
 	// to do..  bugs with shareing upstrem
-	mylist<Molecule> 	mole_list;
+	mylist<Molecule> 	*mole_list;
 	mylist<Concentration> 	conc_list;
 	int				del_conc(mylist<Concentration>::mylist_item<Concentration> *conc_item);
 
@@ -75,7 +75,7 @@ public:
 	// ----
 	void 	dump(void);
 	void	clear(void);
-	void 	dumpmoles(void) { mole_list.dump(); }
+	void 	dumpmoles(void) { DUMP(mole_list) }
 	// ---------
 	// 	molesearch(); compares *m==*m
 	// 	_molesearch(); just compares m==m
@@ -85,8 +85,9 @@ public:
 
 	mylist<Molecule>::mylist_item<Molecule> 	*molesearch_list(Molecule	*m);
 	mylist<Concentration> 	*get_conc_list(void){ return &conc_list; };
-	mylist<Molecule> 		*get_mole_list(void){ return &mole_list; };
-	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
+	void			 		set_molelist(mylist<Molecule> *_mole_list){ mole_list = _mole_list; };
+	mylist<Molecule> 		*get_mole_list(void){ return mole_list; };
+	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list-> search(m); };
 	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };
 
 	ConcLevelType	get(Molecule	*m);

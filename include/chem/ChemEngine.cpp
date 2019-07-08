@@ -419,9 +419,11 @@ int	ChemEngine::update_ttls(void){
 	return n;
 } */
 // ----------------------------
-int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
-	if ((vm==NULL)||(vol==NULL)) return -1;
-	mylist<Concentration> *conc_list = vol-> get_conc_list();
+//int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
+//if ((vm==NULL)||(vol==NULL)) return -1;
+int	ChemEngine::get_reactions(Concentration_VM *vm){
+	if ((vm==NULL)||(vm-> concvol==NULL)) return -1;
+	mylist<Concentration> *conc_list = vm-> concvol-> get_conc_list();
 	if (conc_list ==NULL) return -2;
 
 	//reaction_list.clear();
@@ -533,8 +535,9 @@ int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
 }
 // ----------------------------
 // ----------------------------// ----------------------------// ----------------------------// ----------------------------
-int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
-	if ((vm==NULL)||(vol==NULL)) return -1;
+//int ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+int	ChemEngine::run_reactions(Concentration_VM *vm, ChemTime run_time){
+	if ((vm==NULL)||(vm-> concvol==NULL)) return -1;
 	int n = 0;
 	mylist<ChemReaction>::mylist_item<ChemReaction> *reaction_item = reaction_list.gethead();
 	while (reaction_item!=NULL) {
@@ -600,28 +603,28 @@ int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, Ch
 }
 // ----------------------------
 // ----------------------------// ----------------------------// ----------------------------// ----------------------------
-ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
-	if ((vm==NULL)||(vol==NULL)) return -1;
+ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ChemTime run_time){
+	if ((vm==NULL)||(vm-> concvol==NULL)) return -1;
 	int n = 0;
 
 	printf("|--------   RUN VOLUME [%.3f]    --------| \n", run_time);
 	printf(".. update ttls\n");
 	update_ttls();
 	printf(".. updating reactions\n");
-	n = get_reactions(vm, vol);
+	n = get_reactions(vm);
 	printf(".. got [%d] new reactions..\n", n);
 	//if (n<=0) return 0;
 
 	//double ConcentrationVolume::get_maxcommit(void)
-	vol-> reset(); printf(".. vol-> reset\n");
+	vm-> concvol-> reset(); printf(".. vol-> reset\n");
 	printf(".. running reactions [%.3f]\n", run_time);
 	printf("---------------------------------------\n");
-	n = run_reactions(vm, vol, run_time);
+	n = run_reactions(vm, run_time);
 	printf("---------------------------------------\n");
 	printf(".. run_reactions.time[%f]= [%d]\n", run_time, n);
 
 	//ChemTime		get_maxcommit(void);
-	ChemTime		max_time = vol-> get_maxcommit() * run_time;
+	ChemTime		max_time = vm-> concvol-> get_maxcommit() * run_time;
 	printf(".. run_time[%f], max_time = [%f]\n", run_time, max_time);
 	//if (max_time <run_time) {
 	if (run_time <= max_time){
@@ -629,17 +632,17 @@ ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, 
 	} else
 	{
 		printf(".. [run_time > max_time] .. rewind/rerun maxtime..\n");
-		vol->reset(); printf(".. vol reset\n");
+		vm-> concvol->reset(); printf(".. vol reset\n");
 		printf("---------------------------------------\n");
-		n = run_reactions(vm, vol, max_time);
+		n = run_reactions(vm, max_time);
 		printf("---------------------------------------\n");
 		printf(".. rewind/rerun_reactions.time[%f] = [%d]\n", max_time, n);
 	}
 
 	printf(".. vol-> commit\n");
-	vol-> commit();
-	n = vol->clean_conc(); printf(".. vol-> clean_conc = [%d]\n", n);
-	n = clean_volume_moles(vol); printf(".. clean_volume_moles(vol) = [%d]\n", n);
+	vm-> concvol-> commit();
+	n = vm-> concvol->clean_conc(); printf(".. vol-> clean_conc = [%d]\n", n);
+	n = clean_volume_moles(vm-> concvol); printf(".. clean_volume_moles(vol) = [%d]\n", n);
 	return run_time;
 }
 // ----------------------------

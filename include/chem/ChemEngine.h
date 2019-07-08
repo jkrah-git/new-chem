@@ -81,7 +81,7 @@ private:
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
-
+	Concentration_VM 		vm;
 	//---------------------------------
 	ChemEngine();
 	virtual ~ChemEngine();
@@ -98,10 +98,13 @@ public:
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);
 
 	// main
-	// ------------------------------
-	int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
-	int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
-	ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	// ------------------------------ todo: rm vol.. (use vm-> vol)
+	//int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
+	//int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	//ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	int					get_reactions(Concentration_VM *vm);
+	int					run_reactions(Concentration_VM *vm, ChemTime run_time);
+	ChemTime			run_volume(Concentration_VM *vm, ChemTime run_time);
 	int					clean_volume_moles(ConcentrationVolume *vol);
 	// ------------------------------
 	// --------------

@@ -8,6 +8,23 @@ NEXT TODO
 	- refresh_graphs
 	- vol.external_mole_list??
 
+--- NEW rendering
+	-- World - ambient/cell 
+		-- Volume
+  		-- eng/enz
+     		--  match  <--- step 1. remove vm (move to eng) - then link to external mole_list
+     					-- add local vm to CLI / each screen gets(*vm)
+     					-- cli has local vm/vol but also externals
+	--- Engine = (func/enz)+reactions(cache) - but it needs solid mole_list..
+			- vm fully extracted / top
+			- move engine to world
+	-- VM/VOL,Match mess...	
+	-- conc/vol - external (global) molecache 
+	
+	----------------------------------------------------------
+	-- Thought: accept limited lifespan of program (mem) - for never expire molecache
+	-- ie.. global_molecache
+
 --- Engine/Vol/Vm?? - vm.match contains M1 = parent mole
 	- Engine owns (dedicated?) vol .. (shared molelist/enz)
 	- VM Push inherits parent volume

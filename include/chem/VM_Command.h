@@ -28,7 +28,6 @@ public:
 	void test();
 };
 //-----------------------------------
-// TODO 99: think about porting / overlap CLI commands / VM commands
 //-----------------------------------
 class VM_Command_Set {
 public:

@@ -11,6 +11,7 @@
 #include "mybuffer.h"
 #include "Concentration.h"
 #include "CellPos.h"
+#include "ChemEngine.h"
 // -----------------------------------------------
 typedef double  CellStatusType;
 
@@ -57,6 +58,8 @@ public:
 // -----------------------------------------------
 class World {
 public:
+	ChemEngine				chem_engine;
+	mylist<Molecule>		mole_list;
 	mylist<AmbientCell>		cell_list;
 	//-------------
 	World();

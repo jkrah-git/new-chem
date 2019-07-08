@@ -114,7 +114,10 @@ public:
 // -------------------------------
 
 */
-ConcentrationVolume::ConcentrationVolume(){}
+ConcentrationVolume::ConcentrationVolume(){
+	mole_list = NULL;
+
+}
 ConcentrationVolume::~ConcentrationVolume(){}
 //--------------
 void ConcentrationVolume::dump(void){
@@ -130,8 +133,8 @@ void ConcentrationVolume::clear(void){
 //--------------
 mylist<Molecule>::mylist_item<Molecule>	*ConcentrationVolume::molesearch_list(Molecule	*m){
 	//printf("########## ########## ConcentrationVolume::search.m. ..\n");	DUMP(m)
-
-	mylist<Molecule>::mylist_item<Molecule> *item = mole_list.gethead();
+	if (mole_list==NULL) { return NULL; }
+	mylist<Molecule>::mylist_item<Molecule> *item = mole_list-> gethead();
 	while (item!=NULL) {
 		//printf("########## ConcentrationVolume::search.item ...\n");
 		//DUMP(item-> item->  getmole())
@@ -190,6 +193,7 @@ ConcLevelType	ConcentrationVolume::take(Molecule	*m, ConcAdjustType adj){
 //#define DEBUG
 ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	if (m==NULL) return -1.0;
+	if (mole_list==NULL) { return -2.0; }
 
 	Concentration *conc = molesearch(m);
 	//PRINT("search mole[0x%zX] = conc[0x%zX]\n", m, conc);
@@ -200,7 +204,7 @@ ConcLevelType	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 		// copy new_mole to mole_list
 		mylist<Molecule>::mylist_item<Molecule>	*new_mole = molesearch_list(m); // search_molelist(m);
 		if (new_mole==NULL) {
-			new_mole =  mole_list.add();
+			new_mole =  mole_list-> add();
 			if ((new_mole ==NULL) || (new_mole-> item ==NULL)) { return -1.0; }
 			m-> rotateto(0, new_mole-> item);
 		}

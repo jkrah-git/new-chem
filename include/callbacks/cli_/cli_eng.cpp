@@ -61,24 +61,24 @@ int	cli_eng(Concentration_CLI *cli, int argc, char **argv){
 			// int	ChemEnzyme::match(Concentration *conc, Concentration_VM *vm){
 
 
-			//int r =  cli-> selected_enz->match_next(cli-> chem_engine, vm);
+			//int r =  cli-> selected_enz->match_next(cli->world.chem_engine, vm);
 			// r = chemfunc->operation(eng, vm, 0 , NULL);
 			ChemFunc *f =cli-> selected_enz->match_next(vm);
 			int r = -1;
 			if ((f!=NULL) && (f->operation!=NULL))
-					r = f->operation(cli->chem_engine, vm, run_time, 0, NULL);
+					r = f->operation(cli->world.chem_engine, vm, run_time, 0, NULL);
 			//printf("next(t=%.f) = [%d]\n", run_time, r);
 			return r;
 		}
 	}
 	// else
-	return cli->chem_engine-> run(cli-> get_selected_vm(), run_time, argc, next_argv);
+	return cli->world.chem_engine. run(cli-> get_selected_vm(), run_time, argc, next_argv);
 }
 *****************/
 // --------------------------
 // 'run'
 int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
+	NEED_CLI NEED_WORLD
 	//  time
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -92,43 +92,40 @@ int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli->chem_engine-> run(cli-> get_selected_vm(), run_time, argc, next_argv);
+//	return cli->world.chem_engine. run(cli-> get_selected_vm(), run_time, argc, next_argv);
+	return cli->world-> chem_engine. run(cli-> get_selected_vm(), run_time, argc, next_argv);
+
 
 }
 // --------------------------
 // 'dump'
 int	cli_eng_dump(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
-	DUMP(cli-> chem_engine)
+	NEED_CLI NEED_WORLD
+	cli->world-> chem_engine.dump();
 	return 0;
 }
 // --------------------------
 // --------------------------
 // 'list'
 int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
-	DUMP(cli-> chem_engine)
+	NEED_CLI NEED_WORLD
+//	DUMP(cli->world.chem_engine)
+	cli->world-> chem_engine.dump();
 	return 0;
 }
 // --------------------------
 // --------------------------
 // 'runvol'
 int	cli_eng_runmatch(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
-	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
-	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
-	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+	NEED_CLI NEED_WORLD NEED_VM
 	// ----------------------------
-	return cli-> chem_engine->get_reactions(vm, vm->concvol);
+	return cli->world-> chem_engine.get_reactions(vm);
 }
 // --------------------------
 // --------------------------
 // 'match'
 int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
-	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
-	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
-	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+	NEED_CLI NEED_WORLD NEED_VM
 	// ----------------------------
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -142,14 +139,14 @@ int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli->chem_engine-> run_reactions(vm, vm->concvol, run_time);
+	return cli->world-> chem_engine. run_reactions(vm, run_time);
 }
 // --------------------------// --------------------------
 // int	ChemEngine::update_ttls(void){
 // --------------------------
 // 'tick'
 int	cli_eng_tick(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_ENG
+	NEED_CLI NEED_WORLD
 
 	if (argc>0) {
 		int t;
@@ -157,26 +154,26 @@ int	cli_eng_tick(Concentration_CLI *cli, int argc, char **argv){
 		if ((r<0)||(t<1)) { printf("Bad Data\n"); return -20; }
 		printf("ttl's[%d]..\n", t);
 		for (int i=1; i<t; i++) {
-			cli-> chem_engine->update_ttls();
+			cli->world-> chem_engine.update_ttls();
 		}
 	}
 
-	return cli-> chem_engine->update_ttls();
+	return cli->world-> chem_engine.update_ttls();
 }
 // --------------------------
 // int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
 // --------------------------
 // 'get'
 int	cli_eng_get(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_ENG NEED_VM NEED_VOL
-	return cli->chem_engine-> get_reactions(vm, vm-> concvol);
+	NEED_CLI NEED_WORLD NEED_VM
+	return cli->world-> chem_engine. get_reactions(vm);
 }
 // --------------------------
 // int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
 // --------------------------
 // 'run'
 int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_ENG NEED_VM NEED_VOL
+	NEED_CLI NEED_WORLD NEED_VM
 
 	if (argc<1) {
 		printf("usage: eng react <run_time>\n");
@@ -191,32 +188,24 @@ int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
 		printf("run_time = [%f]\n", run_time);
 
 	}
-	return cli->chem_engine-> run_reactions(vm, vm-> concvol, run_time);
+	return cli->world-> chem_engine. run_reactions(vm, run_time);
 }
 // --------------------------
 // ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
 // --------------------------
 // 'runvol'
 int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_ENG NEED_VOL
-//	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
-//	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
-//	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
-	if (argc<1) {
-		printf("usage: eng runvol <run_time>\n");
-		return -1;
-	}
+	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
 	// ----------------------------
 	float run_time = 1.0;
-	{
+	if (argc>0)	{
 		float t;
 		int r = sscanf(argv[0], "%f", &t);
 		if (r<1) { printf ("Bad Data\n"); return -20; }
 		run_time = t;
 		printf("run_time = [%f]\n", run_time);
-
 	}
-	ChemTime actual_time = cli-> chem_engine->run_volume(vm, vm->concvol, run_time);
+	ChemTime actual_time = cli->world-> chem_engine.run_volume(vm, run_time);
 	return (actual_time*100);
 }
 // --------------------------
@@ -224,15 +213,13 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'runvol'
 int	cli_eng_cleanmoles(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_ENG NEED_VOL
-	return cli->chem_engine-> clean_volume_moles(vm-> concvol);
+	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
+	return cli->world-> chem_engine. clean_volume_moles(vm-> concvol);
 }
 // --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	if (cli-> chem_engine == NULL) return -2;
-
+	NEED_CLI NEED_ENG
 	Concentration_VM 	*vm = cli-> get_selected_vm();
 	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
 
@@ -246,7 +233,7 @@ int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
 /*
 int	cli_eng_run_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	ChemEngine *eng = cli-> chem_engine;
+	ChemEngine *eng = cli->world.chem_engine;
 	if (eng == NULL) return -2;
 
 	//
@@ -263,9 +250,8 @@ int	cli_eng_run_vol(Concentration_CLI *cli, int argc, char **argv){
 */
 // --------------------------
 int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	if (cli-> chem_engine == NULL) return -2;
-	Concentration_VM 	*vm = cli-> get_selected_vm();
+	NEED_CLI NEED_VM NEED_WORLD
+	//Concentration_VM 	*vm = cli-> get_selected_vm();
 	if (cli-> selected_enz==NULL) { printf("Need to select enz\n"); return -10; }
 	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
 	//------------------
@@ -286,7 +272,7 @@ int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 	ChemFunc *f =cli-> selected_enz->match_next(vm);
 	int r = -1;
 	if ((f!=NULL) && (f->operation!=NULL)) {
-		r = f->operation(cli->chem_engine, vm, run_time, 0, NULL);
+		r = f->operation(&cli->world-> chem_engine, vm, run_time, 0, NULL);
 	}
 
 	return r;
@@ -297,10 +283,10 @@ int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 	if (argc>1) {
 		int s = sscanf(argv[1], "%f", &_time);
 		if (s<0)  { printf("DataError\n"); return -20; }
-		r= cli->chem_engine-> run(cli-> get_selected_vm(), _time, argc-1, &argv[1]);
+		r= cli->world.chem_engine. run(cli-> get_selected_vm(), _time, argc-1, &argv[1]);
 
 	} else {
-		r= cli->chem_engine-> run(cli-> get_selected_vm(), _time, argc, argv);
+		r= cli->world.chem_engine. run(cli-> get_selected_vm(), _time, argc, argv);
 	}
 	//printf("run(t=%.f) = [%d]\n", _time, r);
 	return r;

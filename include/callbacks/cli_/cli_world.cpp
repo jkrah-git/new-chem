@@ -14,12 +14,12 @@ int	cli_world(Concentration_CLI *cli, int argc, char **argv){
 }
 //--------------//---------------------------
 int	cli_world_dump(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI	cli-> world.dump();	return 0;
+	NEED_CLI	DUMP(cli-> world);	return 0;
 }
 //---------------------------//---------------------------
 //--------------//---------------------------
 int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
+	NEED_CLI NEED_WORLD
 	if (argc<2) { printf("usage: world add <x> <y>\n"); return -1; }
 	int x,y;
 	if ((sscanf(argv[0], "%x", &x)<1)||
@@ -31,8 +31,8 @@ int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
 	//printf("pos=[0x%x, 0x%x]\n", x, y);
 	//p.dump();
 	//AmbientCell *World::add_cell(CellPos *_pos){
-	AmbientCell *amb = 	cli->world.add_cell(&p);
-	if (amb==NULL) { printf("world.add_cell[%d,%d] failed..\n", x, y); return -30; }
+	AmbientCell *amb = 	cli->world-> add_cell(&p);
+	if (amb==NULL) { printf("world-> add_cell[%d,%d] failed..\n", x, y); return -30; }
 	amb->dump();
 	return 0;
 

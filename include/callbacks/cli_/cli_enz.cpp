@@ -51,22 +51,19 @@ int	cli_enz_clear(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 int	cli_enz_list(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
+	NEED_CLI NEED_WORLD
 	//-------
-	eng->enz_list.dump();
+	cli->world-> chem_engine.enz_list.dump();
 	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_enz_ld(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
+	NEED_CLI NEED_WORLD
 	//-------
 	mylist<ChemEnzyme>::mylist_item<ChemEnzyme>  *enz_item = NULL;
 	if (argc<1) {
-		enz_item = eng->enz_list.gettail();
+		enz_item = cli->world-> chem_engine.enz_list.gettail();
 	} else {
 
 		if (strcmp(argv[0], "help" ) == 0) {
@@ -79,7 +76,7 @@ int	cli_enz_ld(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		printf("..load [%d]\n", off);
-		enz_item = eng->enz_list.offset(off);
+		enz_item = cli->world->chem_engine.enz_list.offset(off);
 	}
 
 	// ----------- save

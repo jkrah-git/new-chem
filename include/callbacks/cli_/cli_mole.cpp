@@ -351,11 +351,10 @@ int	cli_mole_fromvar(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_mole_getenz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//ChemEnzyme *enz = NULL;
-	if (vm->mole != NULL) cli->selected_enz = cli-> chem_engine-> search_enz(vm->mole);
+	NEED_CLI NEED_WORLD NEED_VM
+
+	if (vm->mole != NULL)
+		cli-> selected_enz = cli-> world-> chem_engine.search_enz(vm-> mole);
 
 	return 0;
 }

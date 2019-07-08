@@ -12,7 +12,7 @@
 //---------------------------//---------------------------
 int	cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//PRINT(": argc[%d]", argc);
 	//for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -99,8 +99,11 @@ int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 	return n;
 }
 //---------------------------//---------------------------
+
 //---------------------------//---------------------------
 int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
+
+	/****************
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
@@ -127,6 +130,8 @@ int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (vol_item ==NULL) return -10;
 	if (vol_item-> item ==NULL) return -11;
 	cli->selected_vol = vol_item-> item;
+	****************/
+
 	return 0;
 }
 //---------------------------//---------------------------

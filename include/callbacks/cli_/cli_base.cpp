@@ -23,7 +23,7 @@ int		cli_wait(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -51,7 +51,7 @@ int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
 	int count;
@@ -75,7 +75,7 @@ int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopnz(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
 	int count;
@@ -99,7 +99,7 @@ int		cli_loopnz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_looplz(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
 	int count;
@@ -124,7 +124,7 @@ int		cli_looplz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopnlz(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
 	int count;
@@ -148,7 +148,7 @@ int		cli_loopnlz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopeq(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<3) { printf("usage: loopeq COUNT eqVAL commands..\n");	 return -1;	 }
 	int count, val;
@@ -176,7 +176,7 @@ int		cli_loopeq(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_loopneq(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	if (argc<3) { printf("usage: loopneq COUNT eqVAL commands..\n");	 return -1;	 }
 	int count, val;
@@ -206,7 +206,7 @@ int		cli_loopneq(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//-------
 	// PRINT(": argc[%d]", argc);
@@ -260,7 +260,7 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	PRINT("cli_help : -- PING --\n");
 	//-------

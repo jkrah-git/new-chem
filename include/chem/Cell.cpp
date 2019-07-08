@@ -56,8 +56,8 @@ void Cell::dump(void) {
 // -----------------------------------------------
 class AmbientCell {
 public:
-	Cell					*cell;
 	ConcentrationVolume		*vol;
+	Cell					*cell;
 	CellPos					pos;
 	CellStatusType			temperature;
 	//-------------
@@ -68,17 +68,17 @@ public:
 // -----------------------------------------------
 */
 AmbientCell::AmbientCell(){
-	cell = NULL;
 	vol = NULL;
+	cell = NULL;
 	temperature = 0;
 }
 AmbientCell::~AmbientCell(){};
 // -----------------------------------------------
 void AmbientCell::dump(void){
-	printf("AmbientCell[0x%zX]." , (long unsigned int) this);
+	printf("AmbientCell[0x%zX]:" , (long unsigned int) this);
 	pos.dump();
-	printf(" Temperature[%.3f] Cell[0x%zX] Vol[0x%zX]", temperature,
-			(long unsigned int) cell, (long unsigned int) vol);
+	printf(" Temperature[%.3f] Vol[0x%zX] Cell[0x%zX]", temperature,
+			(long unsigned int) vol, (long unsigned int) cell);
 	if (cell!=NULL) cell-> dump();
 }
 // -----------------------------------------------
@@ -86,24 +86,30 @@ void AmbientCell::dump(void){
 // -----------------------------------------------
 class World {
 public:
+	ChemEngine				chem_engine;
+	mylist<Molecule>		mole_list;
 	mylist<AmbientCell>		cell_list;
 	//-------------
 	World();
 	~World();
 	void dump(void);
 
-	mylist<AmbientCell>::mylist_item<AmbientCell> *get_cell(CellPos *_pos);
-	AmbientCell							*add_cell(CellPos *_pos);
+	AmbientCell 		*get_cell(CellPos *_pos);
+	AmbientCell			*add_cell(CellPos *_pos);
 };
 // -----------------------------------------------
 */
 // -----------------------------------------------
-World::World(){};
+World::World(){
+
+};
 World::~World(){};
 // -----------------------------------------------
 void World::dump(void){
 	printf("World[0x%zX]\n", (long unsigned int) this);
-	cell_list.dump();
+	printf("==== cells ====\n");	cell_list.dump();
+	printf("==== moles ====\n");	mole_list.dump();
+	printf("==== chem_engine ====\n");	chem_engine.dump();
 
 };
 // -----------------------------------------------

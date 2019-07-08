@@ -11,7 +11,7 @@
 // --------------------------
 int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// argc=0 argv()  (list)
+/*************
 	if ((argc<1) ||(strcmp(argv[0], "list")==0)) {
 		cli-> list_vms();
 		return 0;
@@ -34,9 +34,11 @@ int	cli_vm(Concentration_CLI *cli, int argc, char **argv){
 	} // end argc==1
 
 
-
+*****************/
 
 	return -10;
+
+
 }
 // --------------------------// --------------------------// --------------------------
 // --------------------------
