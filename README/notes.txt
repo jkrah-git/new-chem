@@ -8,9 +8,11 @@ NEXT TODO
 	- refresh_graphs
 	- vol.external_mole_list??
 
---- Engine/Vol/Vm
+--- Engine/Vol/Vm?? - vm.match contains M1 = parent mole
 	- Engine owns (dedicated?) vol .. (shared molelist/enz)
-	- VM Push inherits parent volume	
+	- VM Push inherits parent volume
+	- Reaction - concentration - min(m1,m2)	
+-- World!!
 
 ===================================================================
 --------- try to describe ----

@@ -14,6 +14,7 @@
 #include "ChemEngine.h"
 #include "KeyValPair.h"
 //#include "display/ChemDisplay.h"
+#include "Cell.h"
 
 #undef DEBUG
 //#define DEBUG
@@ -49,6 +50,7 @@ public:
 
 	mylist<Concentration_VM>	vm_list;
 	mylist<ConcentrationVolume>	vol_list;
+	World		world;
 
 	// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -64,6 +66,7 @@ public:
 	mylist<CLI_Command>			match_cmdlist;
 	mylist<CLI_Command>			eng_cmdlist;
 	mylist<CLI_Command>			enz_cmdlist;
+	mylist<CLI_Command>			world_cmdlist;
 
 	KeyValList					var_list;
 	char 						**args;

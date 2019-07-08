@@ -8,6 +8,7 @@
 #ifndef MYBUFFER_H_
 #define MYBUFFER_H_
 typedef double BufCommitType;
+#include <stdio.h>
 
 //---------------------------------------------
 template <class T> class MyBuffer {

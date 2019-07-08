@@ -37,16 +37,10 @@ public:
 	mylist<ChemMoleDisplay>	mole_list;
 	mylist<ChemConcDisplay>	conc_list;
 
-	//ListDisplay<ChemMoleDisplay>	new_mole_list;
-
  mylist<ChemPeplistDisplay>		peplist_list;
  mylist<ChemMolelistDisplay>	molelist_list;
  mylist<ChemConclistDisplay>	conclist_list;
 
-//	mylist<ChemMenu> 		menu_list;
-//	ChemMenu				*current_menu;
-
-	//PeptidePos				curs_pos;
 	ChemDisplayColor 		title_col;
 
 	bool					waiting;
@@ -58,15 +52,11 @@ public:
 	ChemScreen();
 	virtual ~ChemScreen();
 	void	dump(void);
-	// menu inherits ' *gfx struct (scale, offset etc)
-//	ChemMenu				*add_menu(const char *_title, ChemDisplay *display);
-//	ChemMenu				*find_menu(const char *_title);
 
-//	ChemMenuButton			*test_menus(ChemDisplay *display);
 	int						wait(Concentration_CLI *cli, ChemDisplay *display) { return wait(cli, display, false); };
 	int						wait(Concentration_CLI *cli, ChemDisplay *display, bool _dump);
-	//mylist<ChemPeplistDisplay>::mylist_item<ChemPeplistDisplay> *get_peplost_head(void){ return peplist_list.gethead(); };
 
+	// -------------------------------
 	ChemPepDisplay			*add_pep(const char *_title);
 	ChemPepDisplay			*find_pep(const char *_title);
 	int						del_pep(const char *_title);
@@ -91,8 +81,6 @@ public:
 	ChemConclistDisplay		*add_conclist(const char *_title);
 	ChemConclistDisplay		*find_conclist(const char *_title);
 	int						del_conclist(const char *_title);
-
-
 
 };
 //-----------------------------------------

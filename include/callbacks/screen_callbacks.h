@@ -8,7 +8,7 @@
 #ifndef SCREEN_CALLBACKS_H_
 #define SCREEN_CALLBACKS_H_
 
-//#include "chem/Concentration_CLI.h"
+//---------------------------------------------------------------------
 #include "chem/display/ChemDisplay.h"
 
 // cli includes
@@ -56,12 +56,8 @@ int cli_button_ping(ChemDisplay *display, int argc, char **argv);
 
 //----------------------
 // screeen_wait.cpp
-//int	screen_wait(ChemDisplay *display, ChemScreen *screen, ChemDisplay *display);
 int	screen_wait(ChemDisplay *display, ChemScreen *screen);
 // screen_render.cpp
-//int screen_render_mole(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
-//int screen_render_match(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
-//int screen_render_vm(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 int screen_render_mole(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 int screen_render_match(ChemDisplay *display, ChemScreen *screen, bool mouseclick);
 int screen_render_vm(ChemDisplay *display, ChemScreen *screen, bool mouseclick);

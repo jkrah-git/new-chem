@@ -142,32 +142,91 @@ int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli-> chem_engine->run_reactions(vm, vm->concvol, run_time);
+	return cli->chem_engine-> run_reactions(vm, vm->concvol, run_time);
 }
+// --------------------------// --------------------------
+// int	ChemEngine::update_ttls(void){
+// --------------------------
+// 'tick'
+int	cli_eng_tick(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_ENG
+
+	if (argc>0) {
+		int t;
+		int r = sscanf(argv[0], "%d", &t);
+		if ((r<0)||(t<1)) { printf("Bad Data\n"); return -20; }
+		printf("ttl's[%d]..\n", t);
+		for (int i=1; i<t; i++) {
+			cli-> chem_engine->update_ttls();
+		}
+	}
+
+	return cli-> chem_engine->update_ttls();
+}
+// --------------------------
+// int	ChemEngine::get_reactions(Concentration_VM *vm, ConcentrationVolume *vol){
+// --------------------------
+// 'get'
+int	cli_eng_get(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_ENG NEED_VM NEED_VOL
+	return cli->chem_engine-> get_reactions(vm, vm-> concvol);
+}
+// --------------------------
+// int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
+// --------------------------
+// 'run'
+int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_ENG NEED_VM NEED_VOL
+
+	if (argc<1) {
+		printf("usage: eng react <run_time>\n");
+		return -1;
+	}
+	float run_time = 1.0;
+	{
+		float t;
+		int r = sscanf(argv[0], "%f", &t);
+		if (r<1) { printf ("Bad Data\n"); return -20; }
+		run_time = t;
+		printf("run_time = [%f]\n", run_time);
+
+	}
+	return cli->chem_engine-> run_reactions(vm, vm-> concvol, run_time);
+}
+// --------------------------
+// ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
 // --------------------------
 // 'runvol'
 int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI
-	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
-	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
-	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+	NEED_CLI NEED_VM NEED_ENG NEED_VOL
+//	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -11; }
+//	if (cli-> chem_engine == NULL) { printf("NULL eng\n"); return -12; }
+//	if (vm->concvol==NULL) { printf("NULL vol\n"); return -13; }
+	if (argc<1) {
+		printf("usage: eng runvol <run_time>\n");
+		return -1;
+	}
 	// ----------------------------
 	float run_time = 1.0;
-	char **next_argv = &argv[0];
 	{
 		float t;
-		int r = sscanf(next_argv[0], "%f", &t);
-		if (r>0) {
-			run_time = t;
-			printf("eng.time = [%f]\n", run_time);
-			next_argv = &argv[1];
-			argc--;
-		}
+		int r = sscanf(argv[0], "%f", &t);
+		if (r<1) { printf ("Bad Data\n"); return -20; }
+		run_time = t;
+		printf("run_time = [%f]\n", run_time);
+
 	}
 	ChemTime actual_time = cli-> chem_engine->run_volume(vm, vm->concvol, run_time);
 	return (actual_time*100);
 }
 // --------------------------
+// int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
+// --------------------------
+// 'runvol'
+int	cli_eng_cleanmoles(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM NEED_ENG NEED_VOL
+	return cli->chem_engine-> clean_volume_moles(vm-> concvol);
+}
 // --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
@@ -258,7 +317,11 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "run");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_run, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runmatch");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runmatch, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runfunc");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runfunc, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "tick");	r = cli-> addcmd(&cli-> eng_cmdlist, 		cli_eng_tick, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "get");	r = cli-> addcmd(&cli-> eng_cmdlist, 		cli_eng_get, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "react");	r = cli-> addcmd(&cli-> eng_cmdlist, 		cli_eng_react, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runvol");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runvol, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "cleanmoles");	r = cli-> addcmd(&cli-> eng_cmdlist,  cli_eng_cleanmoles, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enzstart");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enzstart, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;

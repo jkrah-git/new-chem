@@ -28,35 +28,21 @@ int		cli_dump_help(Concentration_CLI *cli, int argc, char **argv){
 	cli-> dump_cmdlist_dump();
 	return 0;
 }
+///---------------------------------//---------------------------------
+int		cli_dump_world(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI	cli-> world.dump();		return 0;
+}
 //---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	cli-> dump();
-	return 0;
+	NEED_CLI	cli-> dump();	return 0;
 }
 //---------------------------------//---------------------------------
-//---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//cli-> get_selected_vm()-> dump();
-	vm-> dump();
-	return 0;
+	NEED_CLI NEED_VM	vm-> dump();	return 0;
 }
-//---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	vm-> dumpstacks();
-	//cli-> get_selected_vm()-> dumpstacks();
-	return 0;
+	NEED_CLI NEED_VM	vm-> dumpstacks();	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
@@ -138,6 +124,7 @@ int	load_cli_dump(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "help"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_help, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "cli"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_cli, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "world"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_world, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "core"); 		r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_core, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "stacks"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_dump_stacks, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);
 	//sprintf(name, "stack"); 	r = cli-> addcmd(&cli-> dump_cmdlist, 	cli_stack_dump, (char*) name);		LOG("dump_cmdlist[%s] = [%d]\n", name, r);

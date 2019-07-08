@@ -515,6 +515,8 @@ void Concentration_CLI::load_commands() {
 	load_cli_vm(this, 0, NULL);
 	load_cli_eng(this, 0, NULL);
 	load_cli_enz(this, 0, NULL);
+	load_cli_world(this, 0, NULL);
+
 	//cli_load_gfx(this, 0, NULL);
 
 	/* moved to void ChemDisplay::load_display_commands(void){

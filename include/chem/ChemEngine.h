@@ -20,6 +20,7 @@ class ChemEngine;
 // ==================================
 // - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
 // ----------------------------
+// ----------------------------
 class ChemFunc{
 private:
 
@@ -32,7 +33,6 @@ public:
 	void	dump(void);
 
 };
-//----------------------------
 //----------------------------
 class ChemEnzyme {
 private:
@@ -53,8 +53,6 @@ public:
 	ChemFunc *match_next(Concentration_VM *vm);
 };
 //----------------------------
-// ==================================
-// ----------------------------
 class ChemReaction {
 public:
 	Molecule	*m1;		// assumed in current col
@@ -70,13 +68,13 @@ public:
 	bool 		operator ==(const ChemReaction& r);
 };
 // ----------------------------
-
+// ----------------------------// ----------------------------
+// ----------------------------// ----------------------------
 // ----------------------------
 class ChemEngine {
 private:
 	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
 	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime scale);
-	int				update_ttls(void);
 	//-----------------------------------
 	ChemStep		step;
 	mylist<ChemReaction>	reaction_list;
@@ -88,6 +86,7 @@ public:
 	ChemEngine();
 	virtual ~ChemEngine();
 	void	dump(void);
+	int				update_ttls(void);
 
 	int					add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM *, ChemTime, int, char**));
 	ChemFunc  			*search_func(const char *name);
@@ -98,29 +97,13 @@ public:
 	int					del_enz(Molecule *_mole);
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);
 
-	//int					run_enz(ConcentrationVolume *vol);
-	//int					run_vol(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
+	// main
+	// ------------------------------
 	int					get_reactions(Concentration_VM *vm, ConcentrationVolume *vol);
 	int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	int					clean_volume_moles(ConcentrationVolume *vol);
-	//int					clean_volume(ConcentrationVolume *vol);
-
-	/*
-//	Concentration_VM	*get_selected_vm(void){ return selected_vm; };
-// 	void				select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
- 	Concentration_VM	*add_vm(void);
-	int					del_vm(Concentration_VM *_vm);
-	int					list_vms(Concentration_VM *_selected_vm);
-//	int					pop_vm(Concentration_VM *_vm);
-
-//	ConcentrationVolume	*get_selected_vol(void){ return selected_vol; };
-// 	void				select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
- 	ConcentrationVolume	*add_vol(void);
- 	int					del_vol(ConcentrationVolume *_vol);
-	int					list_vols(ConcentrationVolume *_vol);
-//	int					pop_vol(void);
-*/
+	// ------------------------------
 	// --------------
 	void				load_funcs(void);
 	// for each func.. scan each conc..
