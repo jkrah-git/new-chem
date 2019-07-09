@@ -49,6 +49,7 @@ void Concentration::dump(){
 	DUMP(mole);
 }
 // -------------------------------
+// -------------------------------
 
 // NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 ConcLevelType	Concentration::take(ConcAdjustType adj){
@@ -118,11 +119,41 @@ ConcentrationVolume::ConcentrationVolume(){
 	mole_list = NULL;
 
 }
+
 ConcentrationVolume::~ConcentrationVolume(){}
 //--------------
 void ConcentrationVolume::dump(void){
 	printf("ConcentrationVolume[0x%zX].",	(long unsigned int) this);
 	conc_list.dump();
+}
+//--------------
+//--------------
+void ConcentrationVolume::list(void){
+	printf("ConcentrationVolume[0x%zX]\n",	(long unsigned int) this);
+	//conc_list.dump();
+	//mylist<Concentration> 		*conc_list = vol-> get_conc_list();
+
+	int n = 0;
+	mylist<Concentration>::mylist_item<Concentration>  *conc_item = conc_list.gethead();
+	while (conc_item!=NULL) {
+		//printf("Molecule[0x%zX].len(%d)")
+		if (conc_item->item !=NULL) {
+			Molecule *m = conc_item->item-> getmole();
+			printf("Conc[0x%zX].", (long unsigned int) conc_item-> item); //,  (long unsigned int)  m);
+			if (m==NULL) {
+				printf("<null mole>");
+			} else {
+				m->print_short(5);
+			}
+			printf(" = Level[%.3f].Delta[%.3f]\n", conc_item->item->get(), conc_item->item->getdelta());
+			n++;
+		}
+		//---------------
+		conc_item = conc_item->next;
+	}
+
+
+
 }
 //--------------
 void ConcentrationVolume::clear(void){

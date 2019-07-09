@@ -27,10 +27,7 @@ public:
 	Peptide						*pep;
 	Molecule					*mole;
 	Concentration				*conc;
-	ConcentrationVolume 		*concvol;
-
-
-
+	ConcentrationVolume 		*vol;
 	//-----------
 	Concentration_VM();
 	virtual ~Concentration_VM();

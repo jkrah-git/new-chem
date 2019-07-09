@@ -43,18 +43,15 @@ private:
 
 public:
 	ChemEnzyme					*selected_enz;
+	AmbientCell					*selected_ambcell;
+
 	int							last_result;
 	// todo - pointer
 	World						*world;
-
-//	ChemEngine					*chem_engine;
-	ConcentrationVolume			local_vol;
 	Concentration_VM			local_vm;
 	Concentration_VM			*selected_vm;
 
 	Concentration_VM			*get_selected_vm(void){ return selected_vm; };
-
-
 
 	// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -98,6 +95,8 @@ public:
 
 	// Todo - try to migrate to engine.vm
 	//=======================================
+	//	ChemEngine					*chem_engine;
+	//	ConcentrationVolume			local_vol;
 	//ConcentrationVolume			*selected_vol;
 	//mylist<ConcentrationVolume>	vol_list;
  	//void						select_vm(Concentration_VM *_vm){ selected_vm = _vm; };

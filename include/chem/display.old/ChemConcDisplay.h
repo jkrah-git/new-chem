@@ -44,6 +44,8 @@ public:
 class ChemConcDisplay {
 private:
 	Concentration		*conc;
+	//ConcentrationVolume		*vol;
+	//Molecule				*mole;
 public:
 	CircBuffer				buf;
 	MyString				name;

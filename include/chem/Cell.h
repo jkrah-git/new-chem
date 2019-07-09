@@ -44,30 +44,40 @@ public:
 // -----------------------------------------------
 class AmbientCell {
 public:
-	Cell					*cell;
-	ConcentrationVolume		*vol;
 	CellPos					pos;
-	CellStatusType			temperature;
+MyBuffer<CellStatusType> 	temperature;
+	ConcentrationVolume		*ambvol;
+	Cell					*cell;
+	//CellStatusType			temperature;
+
+
 	//-------------
 	AmbientCell();
 	~AmbientCell();
 	void dump(void);
+	CellPosVecType			get_x(void){ return pos.dim[CELLPOS_X]; };
+	CellPosVecType			get_y(void){ return pos.dim[CELLPOS_Y]; };
+	ConcentrationVolume		*get_ambvol(void){ return ambvol;	};
+	Cell					*get_cell(void){ return cell; };
+	// -------------------------
 };
 // -----------------------------------------------
 
 // -----------------------------------------------
 class World {
 public:
-	ChemEngine				chem_engine;
 	mylist<Molecule>		mole_list;
-	mylist<AmbientCell>		cell_list;
+	ChemEngine				chem_engine;
+	mylist<AmbientCell>		ambcell_list;
 	//-------------
 	World();
 	~World();
 	void dump(void);
 
-	AmbientCell 		*get_cell(CellPos *_pos);
-	AmbientCell			*add_cell(CellPos *_pos);
+	AmbientCell 		*get_ambcell(CellPos *_pos);
+	AmbientCell			*add_ambcell(CellPos *_pos);
+
+
 };
 // -----------------------------------------------
 

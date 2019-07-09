@@ -205,7 +205,12 @@ void MoleculeMatch::render(){
 
 //--------------------
 void MoleculeMatch::dump(){
-	printf("===============================\n");
+	//printf("===============================\n");
+	printf("MoleculeMatch[0x%zX] M1[0x%zX], M2[0x%zX]  RotM[0x%zX]\n",
+			(long unsigned int) this,
+			(long unsigned int) mole1,
+			(long unsigned int) mole2,
+			(long unsigned int) &rotmole);
 	printf("MoleculeMatchPos:: start_pos: "); start_pos.dump(); NL
 	printf("MoleculeMatchPos:: end_pos: "); end_pos.dump();  NL
 //	printf("MoleculeMatchPos:: last_rot: %d\n", current_pos.dim[PEPPOS_ROT]);
@@ -449,12 +454,15 @@ int MoleculeMatch::save_match(){
 }
 //----------------------------------
 int MoleculeMatch::load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos){
+	//clear();
 	mole1 = m1;
 	mole2 = m2;
 	if (matchpos==NULL) return -1;
 	current_pos = matchpos-> pos;
 	rotation = matchpos-> rotation;
-	//result_item->item-> matched_item = matched_item;
+
+	// note that this is an expensive operation
+	// rotatemole();
 	return 0;
 }
 //----------------------------------

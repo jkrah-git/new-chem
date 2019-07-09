@@ -76,17 +76,21 @@ private:
 	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
 	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime scale);
 	//-----------------------------------
-	ChemStep		step;
-	mylist<ChemReaction>	reaction_list;
+	ChemStep				tick;
+	ChemStep				max_tick;
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
-	Concentration_VM 		vm;
+	mylist<ChemReaction>	reaction_list;
+	//Concentration_VM 		vm;
 	//---------------------------------
 	ChemEngine();
 	virtual ~ChemEngine();
-	void	dump(void);
-	int				update_ttls(void);
+	void				dump(void);
+	ChemStep			get_tick(void){ return tick; }
+	ChemStep			get_maxtick(void){ return max_tick; }
+	void				set_maxtick(ChemStep _max_tick){ max_tick = _max_tick; }
+	int					next_tick(void);
 
 	int					add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM *, ChemTime, int, char**));
 	ChemFunc  			*search_func(const char *name);
@@ -104,7 +108,10 @@ public:
 	//ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	int					get_reactions(Concentration_VM *vm);
 	int					run_reactions(Concentration_VM *vm, ChemTime run_time);
-	ChemTime			run_volume(Concentration_VM *vm, ChemTime run_time);
+//	ChemTime			run_volume(Concentration_VM *vm, ChemTime run_time);
+
+
+	ChemTime			run_volume(ConcentrationVolume *vol, ChemTime run_time);
 	int					clean_volume_moles(ConcentrationVolume *vol);
 	// ------------------------------
 	// --------------

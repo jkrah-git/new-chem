@@ -1,5 +1,9 @@
 
 NEXT TODO
+-- world (eng, (master)molelist, (master)ambcell_list(pos, *ambvol, *cell, temp))
+   - cell(status(enery,health,temperature), VOL)
+
+-- save-state / save-history to file
 ---- finish base rendering
 	- move all disply_list *objs's to 'stack_id / other_id??'
 		- (mouseclick) will require *ptr-> index lookups .. grrr..
@@ -14,7 +18,7 @@ NEXT TODO
   		-- eng/enz
      		--  match  <--- step 1. remove vm (move to eng) - then link to external mole_list
      					-- add local vm to CLI / each screen gets(*vm)
-     					-- cli has local vm/vol but also externals
+     					-- ??cli has local vm/vol but also externals??
 	--- Engine = (func/enz)+reactions(cache) - but it needs solid mole_list..
 			- vm fully extracted / top
 			- move engine to world

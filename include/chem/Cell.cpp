@@ -56,7 +56,7 @@ void Cell::dump(void) {
 // -----------------------------------------------
 class AmbientCell {
 public:
-	ConcentrationVolume		*vol;
+	ConcentrationVolume		*ambvol;
 	Cell					*cell;
 	CellPos					pos;
 	CellStatusType			temperature;
@@ -68,17 +68,25 @@ public:
 // -----------------------------------------------
 */
 AmbientCell::AmbientCell(){
-	vol = NULL;
+	pos.init();
+	//temperature = 0;
+	ambvol = NULL;
 	cell = NULL;
-	temperature = 0;
+
 }
-AmbientCell::~AmbientCell(){};
+AmbientCell::~AmbientCell(){
+	if (ambvol!=NULL)
+		delete ambvol; //free(ambvol);
+
+	if (cell!=NULL)
+		delete cell; //free(cell);
+};
 // -----------------------------------------------
 void AmbientCell::dump(void){
 	printf("AmbientCell[0x%zX]:" , (long unsigned int) this);
 	pos.dump();
-	printf(" Temperature[%.3f] Vol[0x%zX] Cell[0x%zX]", temperature,
-			(long unsigned int) vol, (long unsigned int) cell);
+	printf(" Temperature[%.3f/%.3f] Vol[0x%zX] Cell[0x%zX]", temperature.get(), temperature.getdelta(),
+			(long unsigned int) ambvol, (long unsigned int) cell);
 	if (cell!=NULL) cell-> dump();
 }
 // -----------------------------------------------
@@ -107,16 +115,16 @@ World::~World(){};
 // -----------------------------------------------
 void World::dump(void){
 	printf("World[0x%zX]\n", (long unsigned int) this);
-	printf("==== cells ====\n");	cell_list.dump();
+	printf("==== cells ====\n");	ambcell_list.dump();
 	printf("==== moles ====\n");	mole_list.dump();
 	printf("==== chem_engine ====\n");	chem_engine.dump();
 
 };
 // -----------------------------------------------
-AmbientCell *World::get_cell(CellPos *_pos){
+AmbientCell *World::get_ambcell(CellPos *_pos){
 	if (_pos==NULL) return NULL;
 
-	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell_item = cell_list.gethead();
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell_item = ambcell_list.gethead();
 	while (cell_item!=NULL){
 		if (cell_item-> item!=NULL) {
 			if ( cell_item-> item-> pos == (*_pos))
@@ -130,13 +138,13 @@ AmbientCell *World::get_cell(CellPos *_pos){
 	return NULL;
 };
 // -----------------------------------------------
-AmbientCell *World::add_cell(CellPos *_pos){
+AmbientCell *World::add_ambcell(CellPos *_pos){
 	if (_pos==NULL) return NULL;
-	AmbientCell *cell = get_cell(_pos);
+	AmbientCell *cell = get_ambcell(_pos);
 	// cell exists
 	if (cell!=NULL) return NULL;
 
-	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell_item = cell_list.add();
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell_item = ambcell_list.add();
 	if (cell_item == NULL) { printf("cell_list.add failed\n"); return NULL; }
 	if (cell_item-> item == NULL) { printf("cell_list.add->item failed\n"); return NULL; }
 	cell_item-> item-> pos = (*_pos);

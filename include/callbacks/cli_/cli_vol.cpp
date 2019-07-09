@@ -28,9 +28,9 @@ int	cli_vol(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_dump(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//ConcentrationVolume *vol = vm->concvol; if (vol==NULL) return -11;
+	//ConcentrationVolume *vol = vm->vol; if (vol==NULL) return -11;
 	//-------
-	DUMP(vm->concvol);
+	DUMP(vm->vol);
 	return 0;
 }
 //---------------------------//---------------------------
@@ -38,7 +38,7 @@ int	cli_vol_dump(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ConcentrationVolume *vol = vm->concvol; 			if (vol==NULL) return -11;
+	ConcentrationVolume *vol = vm->vol; 			if (vol==NULL) return -11;
 	//-------
 	vol-> dumpmoles();
 	return 0;
@@ -47,9 +47,12 @@ int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ConcentrationVolume *vol = vm->concvol; 			if (vol==NULL) return -11;
+	ConcentrationVolume *vol = vm->vol; 			if (vol==NULL) return -11;
 	//-------
 
+	vol->list();
+	return 0;
+	//=================
 	mylist<Concentration> 		*conc_list = vol-> get_conc_list();
 	int n = 0;
 	mylist<Concentration>::mylist_item<Concentration>  *conc_item = conc_list->gethead();
@@ -75,7 +78,7 @@ int	cli_vol_clear(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm->concvol-> clear();
+	vm->vol-> clear();
 	return 0;
 }
 //---------------------------//---------------------------
@@ -85,7 +88,7 @@ int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
-	mylist<Molecule> 		*mole_list = vm->concvol-> get_mole_list();
+	mylist<Molecule> 		*mole_list = vm->vol-> get_mole_list();
 	int n = 0;
 	mylist<Molecule>::mylist_item<Molecule>  *mole_item = mole_list->gethead();
 	while (mole_item!=NULL) {
@@ -139,9 +142,9 @@ int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm->concvol==NULL) { printf("vol is NULL\n"); return -11; }
+	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
-	vm->concvol->commit();
+	vm->vol->commit();
 	return 0;
 }
 //---------------------------//---------------------------
@@ -149,7 +152,7 @@ int	cli_vol_reset(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm->concvol-> reset();
+	vm->vol-> reset();
 	return 0;
 }
 //---------------------------//---------------------------
@@ -158,8 +161,8 @@ int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	int n = vm-> concvol-> clean_conc();
-	//n += cli->chem_engine->clean_volume_moles(vm-> concvol);
+	int n = vm-> vol-> clean_conc();
+	//n += cli->chem_engine->clean_volume_moles(vm-> vol);
 	return n;
 }
 //---------------------------//---------------------------
@@ -167,7 +170,7 @@ int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
 int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm->concvol==NULL) { printf("vol is NULL\n"); return -11; }
+	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
 	if (vm->mole==NULL) { printf("need to select mole first\n"); return -20; }
 
@@ -184,9 +187,9 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 
 	float res;
 	if (f <0)
-		res  = vm-> concvol->take(vm->mole, f);
+		res  = vm-> vol->take(vm->mole, f);
 	else
-		res  = vm-> concvol->put(vm->mole, f);
+		res  = vm-> vol->put(vm->mole, f);
 
 	//PRINT("res=[%f]\n", res);
 

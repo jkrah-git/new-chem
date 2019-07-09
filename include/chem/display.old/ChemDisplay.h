@@ -29,6 +29,15 @@
 #define DISPLAY_EVENT_ESC 	27
 
 
+// template <class U> class mylist_item {
+template <class T>
+class NamedList {
+
+	//		mylist_item<U>		*prev;
+			mylist<T>		list;
+			T				*selected_item;
+};
+
 //====================================
 //class ChemDisplay;
 // ----------------

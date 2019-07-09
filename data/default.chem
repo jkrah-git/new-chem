@@ -3,13 +3,14 @@
 # Welcome to chems..
 # loading (screens and simplepeps..
 # ------------------------------
-#.... single vm only
-vm push
+world add 0 0
+world addvol
+world selvol
 f moles/moles2
 f screens
 # -----------------------------
 screen vm
-# screen vm render match
+screen vm render match
 
 mole ld 4
 eng run addenz noop
@@ -17,12 +18,20 @@ vol addmole 1
 
 mole ld 0
 vol addmole 1
-vol commit 
-# eng runvol .1
+mole ld 1
+vol addmole 1
+mole ld 2
+vol addmole 1
+mole ld 3
+vol addmole 1
+mole ld 4
+vol addmole 1
 
-conc push
-conc adj -10
-conc tovol
-
-world add 1 -2
-world dump
+# ---  run engine
+eng runvol .1
+# expire cache
+eng tick 99
+# eng ldr 3
+# or 
+# eng get
+# and watch match

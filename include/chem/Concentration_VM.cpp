@@ -35,7 +35,7 @@ Concentration_VM::Concentration_VM() {
 	pep = NULL;
 	mole = NULL;
 	conc = NULL;
-	concvol = NULL;
+	vol = NULL;
 
 }
 Concentration_VM::~Concentration_VM() { }
@@ -46,7 +46,7 @@ void Concentration_VM::dumpregs(){
 			(long unsigned int) pep,
 			(long unsigned int) mole,
 			(long unsigned int) conc,
-			(long unsigned int) concvol	);
+			(long unsigned int) vol	);
 
 }
 //-------------------------------------

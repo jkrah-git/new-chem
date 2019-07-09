@@ -450,8 +450,9 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 
 
 	// ------------------- M2/ROTMOLE
-	if (matchpos-> get_test_item()==NULL) {
-		ChemDisplayCoords M2coords = *coords;
+	//if (matchpos-> get_test_item()==NULL) {
+	if (matchpos-> get_rotation() >3) {
+				ChemDisplayCoords M2coords = *coords;
 
 		M2coords.posx -= 3;
 		// -------------- M2
@@ -554,7 +555,7 @@ void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 				(long unsigned int) vm->pep,
 				(long unsigned int) vm->mole,
 				(long unsigned int) vm->conc,
-				(long unsigned int) vm->concvol);
+				(long unsigned int) vm->vol);
 	}
 
 	gfx.printg(str);
@@ -1232,15 +1233,16 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen, Concentration_CLI *cli) {
 	sprintf(msg, "Screen[%s]",	screen-> name.get());
 	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
 
+	/*
 	// -- attribs ----------
 	sprintf(msg, "Pos[%d,%d] Scale[%d,%d] Offs[%d,%d]",
 			screen-> coords.posx,	screen-> coords.posy,
 			screen-> coords.scalex,	screen-> coords.scaley,
 			screen-> coords.offsetx, screen-> coords.offsety);
 	gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
-
+	 */
 	// --- Selected Pep/Mole -----
-	px += (FONT_WIDTH * 3);
+	//px += (FONT_WIDTH * 3);
 	sprintf(msg, "SelectedPep[0x%zX] SelectedMole[0x%zX]",
 				(long unsigned int) selected_pep,
 				(long unsigned int) selected_mole);
@@ -1250,6 +1252,29 @@ void	ChemDisplay::draw_title_bar(ChemScreen *screen, Concentration_CLI *cli) {
 		px += (FONT_WIDTH * 3);
 		sprintf(msg, "SelectedEnz[0x%zX]", 	(long unsigned int) cli-> selected_enz );
 		gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
+
+		//char a[128];
+		sprintf(msg, "SelectedAmb: (Null)");
+		if (cli-> selected_ambcell !=NULL) {
+			sprintf(msg, "SelectedAmb: pos(%d,%d) t('%.1f) ambvol[0x%zX] cell[0x%zX]",
+					cli-> selected_ambcell->get_x(), cli-> selected_ambcell->get_y(), cli-> selected_ambcell->temperature.get(),
+					(unsigned long int) cli-> selected_ambcell->get_ambvol(),
+					(unsigned long int) cli-> selected_ambcell->get_cell() );
+
+
+					/******************************************
+					cli-> selected_ambcell->pos.dim[CELLPOS_X],
+					cli-> selected_ambcell->pos.dim[CELLPOS_Y],
+					cli-> selected_ambcell->temperature,
+					(unsigned long int) cli-> selected_ambcell->ambvol,
+					(unsigned long int) cli-> selected_ambcell->cell );
+					**************************************/
+		}
+
+		//sprintf(msg, "SelectedAmb[0x%zX]", 	(long unsigned int) cli-> selected_ambcell );
+		//sprintf(msg, "SelectedAmb%s", a);
+		gfx.text(msg, px, py);	px += (FONT_WIDTH * (strlen(msg)+1));
+
 
 	}
 

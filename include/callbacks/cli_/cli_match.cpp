@@ -181,6 +181,15 @@ int	cli_match_render(Concentration_CLI *cli, int argc, char **argv){
 
 }
 //---------------------------------//---------------------------------
+//---------------------------------//---------------------------------//---------------------------------//---------------------------------
+int	cli_match_clear(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM
+	//-------
+	vm-> matchpos.clear();
+	return 0;
+
+}
+//---------------------------------//---------------------------------//---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 
@@ -206,6 +215,7 @@ int	load_cli_match(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "next"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_next, (char*) name);		LOG("match_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "n"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_n, (char*) name);			LOG("match_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "rot"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_rot, (char*) name);			LOG("match_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clear"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_clear, (char*) name);			LOG("match_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "render"); 	r = cli-> addcmd(&cli-> match_cmdlist, 	cli_match_render, (char*) name);			LOG("match_cmdlist[%s] = [%d]\n", name, r);
 
 	return 0;

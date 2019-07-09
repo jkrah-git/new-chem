@@ -31,7 +31,7 @@ char 	**build_args(void){
 	//cli.load_commands();
 	//display.load_commands();
 	cli.world = &world;
-	cli.local_vol.set_molelist(&world.mole_list);
+//	cli.local_vol.set_molelist(&world.mole_list);
 
 	cli.run_callto = run_callto;
 	return get_possible_args();

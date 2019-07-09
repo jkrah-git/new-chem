@@ -27,9 +27,9 @@ int	cli_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (strcmp(argv[0], "clear")==0) { vm->conc = NULL; return 0;  }
 	if (strcmp(argv[0], "search")==0) {
 		if (vm->mole ==NULL) { printf("NULL mole\n"); return -20; }
-		if (vm->concvol ==NULL) { printf("NULL vol\n"); return -21; }
+		if (vm->vol ==NULL) { printf("NULL vol\n"); return -21; }
 
-		Concentration *c = vm->concvol->molesearch(vm->mole);
+		Concentration *c = vm->vol->molesearch(vm->mole);
 
 		if (c ==NULL) {
 			printf("no conc found\n");
@@ -215,7 +215,7 @@ int	cli_conc_tovol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	if (vm-> concvol ==NULL) return -2;
+	if (vm-> vol ==NULL) return -2;
 	if (vm-> conc == NULL) {
 		printf("Need to select conc!\n");
 		return -3;
@@ -234,15 +234,15 @@ int	cli_conc_tovol(Concentration_CLI *cli, int argc, char **argv){
 	ConcLevelType delta = vm-> conc-> getdelta();
 	// if val!=0 then put/take - else just set delta
 	if (val > 0) {
-		vm-> concvol->put(m, val);
+		vm-> vol->put(m, val);
 		printf("add[%f]=[%f]\n", val, r);
 	}
 	if (val < 0) {
-		vm-> concvol->take(m, -val);
+		vm-> vol->take(m, -val);
 		printf("take[%f]=[%f]\n", -val, r);
 	}
 	if (val == 0) {
-		vm-> concvol->set(m, val, delta);
+		vm-> vol->set(m, val, delta);
 		printf("set[%f][%f]=[%f]\n", val, delta, r);
 	}
 
@@ -254,14 +254,14 @@ int	cli_conc_fromvol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	if (vm-> concvol ==NULL) return -2;
+	if (vm-> vol ==NULL) return -2;
 	if (vm-> mole == NULL) {
 		printf("Need to select mole first!\n");
 		return -3;
 	}
 
 	////Concentration	*molesearch(Molecule	*m);
-	vm-> conc = vm-> concvol->molesearch(vm-> mole);
+	vm-> conc = vm-> vol->molesearch(vm-> mole);
 	/*
 
 	ConcLevelType r = 0;
@@ -274,7 +274,7 @@ int	cli_conc_fromvol(Concentration_CLI *cli, int argc, char **argv){
 
 	ConcLevelType val = cli-> core-> conc-> get();
 	ConcLevelType delta = cli-> core-> conc-> getdelta();
-	cli-> core-> concvol->set(m, val,delta);
+	cli-> core-> vol->set(m, val,delta);
 	printf("set[%f][%f]=[%f]\n", val,delta, r);
 	*/
 	return 0;
@@ -285,7 +285,7 @@ int	cli_conc_tovar(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	if (vm-> concvol ==NULL) return -2;
+	if (vm-> vol ==NULL) return -2;
 	if (vm-> conc == NULL) {
 		printf("Need to select conc first!\n");
 		return -3;
@@ -333,7 +333,7 @@ int	cli_conc_fromvar(Concentration_CLI *cli, int argc, char **argv){
 	printf("load conc [0x%zX] ..\n", ptr);
 
  	mylist<Concentration>::mylist_item<Concentration> *item;
- 	//item = cli->core-> concvol->mole_list.search( (Molecule*) ptr);
+ 	//item = cli->core-> vol->mole_list.search( (Molecule*) ptr);
  	item = vm->concentration_stack.search( (Concentration*) ptr);
  	if (item==NULL) return -10;
 	if (item-> item == NULL) return -11;

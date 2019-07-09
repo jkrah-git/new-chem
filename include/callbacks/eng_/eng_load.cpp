@@ -11,7 +11,7 @@
 // ---------------------------------------------------
 // simple noop
 int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
-	PRINT("== NOOP ==\n");
+	PRINT("== start[NOOP] ==\n");
 	PRINT(": time[%f], argc[%d]", run_time, argc);
 	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	printf("\n");
@@ -19,7 +19,7 @@ int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
 
-	ConcentrationVolume *vol = vm->concvol;
+	ConcentrationVolume *vol = vm->vol;
 	if (vol==NULL) { printf("vol is NULL\n"); return -11; }
 
 	Molecule *m1 = vm-> matchpos.getM1();
@@ -32,6 +32,10 @@ int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc
 	ConcLevelType	f = vol-> take(m1, take);
 	PRINT("take[%f]=[%f]\n", take, f);
 
+	printf("=========== match (start) ============\n");
+	vm-> matchpos.dump();
+	printf("=========== match (end) ============\n");
+	PRINT("== END[NOOP] ==\n");
 
 	return 1;
 }

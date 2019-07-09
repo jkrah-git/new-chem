@@ -127,9 +127,9 @@ char  **Concentration_CLI::get_possible_args(mylist<CLI_Command> *menu){
 //---------------------------------
 void Concentration_CLI::dump() {
 
-//	printf("Concentration_CLI[0x%zX]:: concvol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
+//	printf("Concentration_CLI[0x%zX]:: vol[0x%zX],conc[0x%zX],mole[0x%zX]\n",
 //			(long unsigned int) this,
-//			(long unsigned int) concvol,
+//			(long unsigned int) vol,
 //			(long unsigned int) conc,
 //			(long unsigned int) mole );
 	printf("Concentration_CLI[0x%zX]\n", (long unsigned int) this);
@@ -145,7 +145,7 @@ void Concentration_CLI::dump() {
 	//world.dump();
 
 	local_vm.dump();
-	local_vol.dump();
+	//local_vol.dump();
 
 	printf("=========== World ==========\n");
 	DUMP(world);
@@ -182,13 +182,15 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 	run_callto = NULL;
 	last_result = 0;
 	selected_enz = NULL;
+	selected_ambcell = NULL;
+
 //	chem_engine = NULL;
 //	selected_vol = NULL;
 	world = NULL;
 	//		// todo: vm/vol ??
 
 	//local_vol.set_molelist(&world->mole_list);
-	local_vm.concvol = &local_vol;
+	local_vm.vol = NULL; //&local_vol;
 	selected_vm = &local_vm;
 
 

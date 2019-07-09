@@ -76,6 +76,8 @@ public:
 	void 	dump(void);
 	void	clear(void);
 	void 	dumpmoles(void) { DUMP(mole_list) }
+	void	list();
+
 	// ---------
 	// 	molesearch(); compares *m==*m
 	// 	_molesearch(); just compares m==m
