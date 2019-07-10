@@ -452,7 +452,12 @@ int	ChemEngine::get_reactions(Concentration_VM *vm){
 // ----------------------------// ----------------------------// ----------------------------// ----------------------------
 //int ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
 int	ChemEngine::run_reactions(Cell *cell, Concentration_VM *vm, ChemTime run_time){
-	if ((vm==NULL)||(vm-> vol==NULL)) return -1;
+	if (vm==NULL) return -1;
+	return run_reactions(cell, vm->vol, run_time);
+}
+int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+	//if ((vm==NULL)||(vm-> vol==NULL)) return -1;
+	if (vol==NULL) return -1;
 	int n = 0;
 	mylist<ChemReaction>::mylist_item<ChemReaction> *reaction_item = reaction_list.gethead();
 	while (reaction_item!=NULL) {
@@ -467,7 +472,7 @@ int	ChemEngine::run_reactions(Cell *cell, Concentration_VM *vm, ChemTime run_tim
 				continue;
 			}
 			*************/
-			ConcentrationVolume *vol = vm->vol;
+//			ConcentrationVolume *vol = vm->vol;
 			ChemTime real_time = run_time * reaction_item-> item-> scale;
 			ChemFunc *f = reaction_item-> item-> enz->get_func();
 			if (f!=NULL) {

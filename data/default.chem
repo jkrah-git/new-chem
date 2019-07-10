@@ -18,23 +18,12 @@ screen vm render match
 mole ld 4
 eng run addenz noop
 vol addmole 1
-
-mole ld 0
-vol addmole 1
-mole ld 1
-vol addmole 1
-mole ld 2
-vol addmole 1
-mole ld 3
-vol addmole 1
-mole ld 4
-vol addmole 1
-
+# -----------------
+f reload
 # ---  run engine
-#eng runvol .1
-# expire cache
-#eng tick 99
-# eng ldr 3
-# or 
-# eng get
-# and watch match
+f concdisp
+# loop 300 eng runvol .2
+
+
+
+

@@ -113,9 +113,9 @@ public:
 	int					run_reactions(Cell *cell, Concentration_VM *vm, ChemTime run_time);
 //	ChemTime			run_volume(Concentration_VM *vm, ChemTime run_time);
 
-
+	int				 	run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
 	int					run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
-	int					clean_volume_moles(ConcentrationVolume *vol);
+	int				  	clean_volume_moles(ConcentrationVolume *vol);
 	// ------------------------------
 	// --------------
 	void				load_funcs(void);

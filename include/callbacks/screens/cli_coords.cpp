@@ -15,6 +15,8 @@ int cli_redraw(ChemDisplay *display, int argc, char **argv) {
 	//PRINT("======\n");
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
+
+
 	//------
 	display-> draw_screen(display-> selected_screen, cli);
 	return 0;

@@ -50,6 +50,13 @@ int 	eng_dump(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_tim
 	return 1;
 }
 // ---------------------------------------------------
+int 	eng_ldconc(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
+	if ((eng==NULL)||(vm==NULL)) return -1;
+	if ((vm-> mole==NULL)||(vm-> vol==NULL)) return -2;
+	vm-> conc = vm->vol-> molesearch(vm-> mole);
+	return 0;
+}
+// ---------------------------------------------------
 int 	eng_addenz(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
@@ -77,7 +84,10 @@ void	eng_load_funcs(ChemEngine *eng){
 	char name[32];
 	sprintf(name, "noop");			eng-> add_func(name, 	eng_noop);
 	sprintf(name, "dump");			eng-> add_func(name, 	eng_dump);
-	sprintf(name, "addenz");			eng-> add_func(name, 	eng_addenz);
+	sprintf(name, "addenz");		eng-> add_func(name, 	eng_addenz);
+	sprintf(name, "ldconc");		eng-> add_func(name, 	eng_ldconc);
+
+	//todo: 'ldconc= f(*m,*v)
 
 
 }
