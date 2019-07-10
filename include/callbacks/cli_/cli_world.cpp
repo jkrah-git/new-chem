@@ -50,13 +50,25 @@ int	cli_world_ld(Concentration_CLI *cli, int argc, char **argv){
 		item = cli->world->ambcell_list.gettail();
 	} else {
 		int s;
-
-		if (strcmp(argv[0], "null" ) == 0) {
-			cli->selected_ambcell = NULL; return 0;
-		}
-		if (sscanf(argv[0], "%x", &s) <0) { printf("Bad Data\n"); return -20; }
-		// else
-		item = cli->world->ambcell_list.offset(s);
+		//-------------------
+		if (argc==1) {
+			if (strcmp(argv[0], "null" ) == 0) { cli->selected_ambcell = NULL; return 0; }
+			if (sscanf(argv[0], "%x", &s) <0) { printf("Bad Data\n"); return -20; }
+			// else
+			item = cli->world->ambcell_list.offset(s);
+		}  // end argc==1
+		//-------------------
+		if (argc==2) {
+			CellPos pos;
+			if ((sscanf(argv[0], "%x", &pos.dim[CELLPOS_X]) <0)||
+				(sscanf(argv[1], "%x", &pos.dim[CELLPOS_Y]) <0))	{ printf("Bad Data\n"); return -20; }
+			// AmbientCell *World::get_ambcell(CellPos *_pos){
+			//pos.dump();
+			AmbientCell *ambcell = cli->world->get_ambcell(&pos);
+			if (ambcell==NULL) return -10;
+			else { cli->selected_ambcell = ambcell; return 0; }
+		}// end argc==2
+		//-------------------
 	}
 
 	if (item==NULL) return -10;

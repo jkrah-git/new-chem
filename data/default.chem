@@ -3,9 +3,12 @@
 # Welcome to chems..
 # loading (screens and simplepeps..
 # ------------------------------
+world add -2 0
 world add 0 0
-world addvol
-world selvol
+world add 2 0
+cell add
+cell selvol
+
 f moles/moles2
 f screens
 # -----------------------------
@@ -28,9 +31,9 @@ mole ld 4
 vol addmole 1
 
 # ---  run engine
-eng runvol .1
+#eng runvol .1
 # expire cache
-eng tick 99
+#eng tick 99
 # eng ldr 3
 # or 
 # eng get

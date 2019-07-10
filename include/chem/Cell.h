@@ -31,10 +31,9 @@ public:
 
 // -----------------------------------------------
 class Cell {
+public:
 	CellStatus 				status;
 	ConcentrationVolume		vol;
-
-public:
 	// -----------------
 	Cell();
 	virtual ~Cell();

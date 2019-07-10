@@ -68,6 +68,7 @@ public:
 	mylist<CLI_Command>			eng_cmdlist;
 	mylist<CLI_Command>			enz_cmdlist;
 	mylist<CLI_Command>			world_cmdlist;
+	mylist<CLI_Command>			cell_cmdlist;
 
 	KeyValList					var_list;
 	char 						**args;

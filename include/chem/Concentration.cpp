@@ -65,7 +65,14 @@ ConcLevelType	Concentration::put(ConcLevelType amount){
 	return result;
 }
 
+
 // -------------------------------
+void	Concentration::commit(BufCommitType max_commit){
+	//buf.commit();
+	buf.commit(max_commit);
+}
+
+//------------------------------
 void Concentration::test(){
 	printf("Concentration.test: == START ==\n");
 	printf("Concentration.test: PRE: ");	dump();
@@ -291,11 +298,13 @@ int	ConcentrationVolume::del_conc(mylist<Concentration>::mylist_item<Concentrati
 }
 
 //--------------
-void ConcentrationVolume::commit(void){
+//void			commit(ConcAdjustType *max_commit);
+
+void ConcentrationVolume::commit(BufCommitType max_commit) {
 	mylist<Concentration>::mylist_item<Concentration> *conc_item = conc_list.gethead();
 	while (conc_item!=NULL) {
 		if (conc_item-> item!=NULL) {
-			conc_item-> item->commit();
+			conc_item-> item->commit(max_commit);
 		}
 		// ----
 		conc_item = conc_item-> next;
@@ -313,7 +322,7 @@ void ConcentrationVolume::reset(void){
 }
 //--------------
 //--------------
-int ConcentrationVolume::clean_conc(void){
+int ConcentrationVolume::clean_conc(ConcLevelType clean_level){
 	int n =0 ;
 	mylist<Concentration>::mylist_item<Concentration> *conc_item = conc_list.gethead();
 	while (conc_item!=NULL) {
@@ -322,7 +331,7 @@ int ConcentrationVolume::clean_conc(void){
 
 			// PRINT("========\n");
 			// PRINT("[0x%zX] [%.3f][%.3f]\n", conc_item-> item, conc_item-> item->get(), conc_item-> item->getdelta());
-			if ((conc_item-> item->get() <=0)&& (conc_item-> item->getdelta() <=0)) {
+			if ((conc_item-> item->get() <=clean_level)&& (conc_item-> item->getdelta() <=0)) {
 				mylist<Concentration>::mylist_item<Concentration> *next_item = conc_item-> next;
 				conc_item = conc_list.del(conc_item);
 				n++;

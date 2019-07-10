@@ -10,8 +10,8 @@
 
 // ---------------------------------------------------
 // simple noop
-int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
-	PRINT("== start[NOOP] ==\n");
+int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
+	PRINT("########## START[NOOP] ##########\n");
 	PRINT(": time[%f], argc[%d]", run_time, argc);
 	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	printf("\n");
@@ -32,17 +32,17 @@ int 	eng_noop(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc
 	ConcLevelType	f = vol-> take(m1, take);
 	PRINT("take[%f]=[%f]\n", take, f);
 
-	printf("=========== match (start) ============\n");
-	vm-> matchpos.dump();
-	printf("=========== match (end) ============\n");
-	PRINT("== END[NOOP] ==\n");
+//	printf("=========== match (start) ============\n");
+//	vm-> matchpos.dump();
+//	printf("=========== match (end) ============\n");
+	PRINT("########## END[NOOP] ##########\n");
 
 	return 1;
 }
 
 // ---------------------------------------------------
 // dump
-int 	eng_dump(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
+int 	eng_dump(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 	PRINT("== ENG ==\n");
 	DUMP(eng)
 	PRINT("== VM ==\n");
@@ -50,7 +50,7 @@ int 	eng_dump(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc
 	return 1;
 }
 // ---------------------------------------------------
-int 	eng_addenz(ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
+int 	eng_addenz(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
 	Molecule *m = vm->mole;

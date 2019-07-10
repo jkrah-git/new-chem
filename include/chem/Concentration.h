@@ -54,7 +54,9 @@ public:
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(ConcAdjustType adj);
 	ConcLevelType	put(ConcLevelType amount);
-	void			commit(void) { return buf.commit(); };
+	//void			commit(void) { return buf.commit(); };
+	void			commit(void){ commit(1.0); };
+	void			commit(BufCommitType max_commit);
 
 	void test();
 };
@@ -101,9 +103,10 @@ public:
 	// ---------
 	ChemTime		get_maxcommit(void);
 //	int				del_conc(Molecule *m){
-	void			commit(void);
+	void			commit(void){ commit(1.0); }
+	void			commit(BufCommitType max_commit);
 	void			reset(void);
-	int				clean_conc(void);
+	int				clean_conc(ConcLevelType clean_level);
 	//----
 };
 // -------------------------------

@@ -78,7 +78,7 @@ int	cli_eng(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'run'
 int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD
+	NEED_CLI NEED_WORLD //NEED_CELL
 	//  time
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -93,7 +93,8 @@ int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
 		}
 	}
 //	return cli->world.chem_engine. run(cli-> get_selected_vm(), run_time, argc, next_argv);
-	return cli->world-> chem_engine. run(cli-> get_selected_vm(), run_time, argc, next_argv);
+	return cli->world-> chem_engine. run(
+			cli->selected_ambcell-> cell, cli-> get_selected_vm(), run_time, argc, next_argv);
 
 
 }
@@ -139,7 +140,7 @@ int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli->world-> chem_engine. run_reactions(vm, run_time);
+	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, vm, run_time);
 }
 // --------------------------// --------------------------
 // int	ChemEngine::eng_tick(void){
@@ -204,7 +205,7 @@ int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
 		printf("run_time = [%f]\n", run_time);
 
 	}
-	return cli->world-> chem_engine. run_reactions(vm, run_time);
+	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, vm, run_time);
 }
 // --------------------------
 // ChemTime	ChemEngine::run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
@@ -222,8 +223,9 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 		printf("run_time = [%f]\n", run_time);
 	}
 	//ChemTime actual_time = cli->world-> chem_engine.run_volume(vm, run_time);
-	ChemTime actual_time = cli->world-> chem_engine.run_volume(vm->vol, run_time);
-	return (actual_time*100);
+	int r  = cli->world-> chem_engine.run_volume(
+			cli->selected_ambcell-> cell, vm->vol, run_time);
+	return r;
 }
 // --------------------------
 // int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
@@ -289,7 +291,8 @@ int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 	ChemFunc *f =cli-> selected_enz->match_next(vm);
 	int r = -1;
 	if ((f!=NULL) && (f->operation!=NULL)) {
-		r = f->operation(&cli->world-> chem_engine, vm, run_time, 0, NULL);
+		r = f->operation(
+				cli->selected_ambcell-> cell, &cli->world-> chem_engine, vm, run_time, 0, NULL);
 	}
 
 	return r;

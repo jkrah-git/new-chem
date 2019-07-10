@@ -10,12 +10,15 @@
 
 typedef unsigned long int  ChemStep;
 #define CHEM_ENG_REACT_TTL	3
+#define CHEM_ENG_CLEAN_LEV	0.01
+
 
 //#include "Molecule.h"
 #include "Concentration_VM.h"
+//#include "Cell.h"
 #include "../MyString.h"
 //#include "mylist.h"
-
+class Cell;
 class ChemEngine;
 // ==================================
 // - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
@@ -26,7 +29,7 @@ private:
 
 public:
 	MyString 	name;
-	int 	(*operation)(ChemEngine*,Concentration_VM*, ChemTime, int, char**);
+	int 	(*operation)(Cell*, ChemEngine*,Concentration_VM*, ChemTime, int, char**);
 	// ------------------------------
 	ChemFunc();
 	virtual ~ChemFunc();
@@ -82,7 +85,7 @@ public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
 	mylist<ChemReaction>	reaction_list;
-	//Concentration_VM 		vm;
+	ConcLevelType 			clean_level;
 	//---------------------------------
 	ChemEngine();
 	virtual ~ChemEngine();
@@ -92,9 +95,9 @@ public:
 	void				set_maxtick(ChemStep _max_tick){ max_tick = _max_tick; }
 	int					next_tick(void);
 
-	int					add_func(char *name, int 	(*op)(ChemEngine*, Concentration_VM *, ChemTime, int, char**));
+	int					add_func(char *name, int 	(*op)(Cell*, ChemEngine*, Concentration_VM *, ChemTime, int, char**));
 	ChemFunc  			*search_func(const char *name);
-	int					run(Concentration_VM* vm, ChemTime run_time, int argc, char **argv);
+	int					run(Cell *cell, Concentration_VM* vm, ChemTime run_time, int argc, char **argv);
 
 	ChemReaction 		*search_reactions(Molecule *_mole);
 	ChemEnzyme			*search_enz(Molecule *_mole);
@@ -107,11 +110,11 @@ public:
 	//int					run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	//ChemTime			run_volume(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time);
 	int					get_reactions(Concentration_VM *vm);
-	int					run_reactions(Concentration_VM *vm, ChemTime run_time);
+	int					run_reactions(Cell *cell, Concentration_VM *vm, ChemTime run_time);
 //	ChemTime			run_volume(Concentration_VM *vm, ChemTime run_time);
 
 
-	ChemTime			run_volume(ConcentrationVolume *vol, ChemTime run_time);
+	int					run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
 	int					clean_volume_moles(ConcentrationVolume *vol);
 	// ------------------------------
 	// --------------

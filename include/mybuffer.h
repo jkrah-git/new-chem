@@ -24,6 +24,11 @@ public:
 	virtual ~MyBuffer(){	}
 	// -----------
 	void	set(T new_value, T new_delta){ value = new_value; delta = new_delta; }
+	void	setval(T new_value){ value = new_value;  }
+	void	setdelta(T new_delta){ delta = new_delta; }
+	void	scaledelta(T delta_scale){ delta *= delta_scale; }
+
+
 	void	reset(void){ delta = 0; }
 	T 		get(void) { return value; }
 	T 		getdelta(void) { return delta; }

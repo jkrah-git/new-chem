@@ -85,9 +85,10 @@ AmbientCell::~AmbientCell(){
 void AmbientCell::dump(void){
 	printf("AmbientCell[0x%zX]:" , (long unsigned int) this);
 	pos.dump();
-	printf(" Temperature[%.3f/%.3f] Vol[0x%zX] Cell[0x%zX]", temperature.get(), temperature.getdelta(),
+	printf(" Temperature[%.3f/%.3f] Vol[0x%zX] Cell[0x%zX] ", temperature.get(), temperature.getdelta(),
 			(long unsigned int) ambvol, (long unsigned int) cell);
-	if (cell!=NULL) cell-> dump();
+
+	if (cell!=NULL) { NL cell-> dump(); }
 }
 // -----------------------------------------------
 /*
