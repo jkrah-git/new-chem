@@ -60,13 +60,14 @@ class ChemReaction {
 public:
 	Molecule	*m1;		// assumed in current col
 	ChemEnzyme	*enz;		// assumed in current
-	ChemTime	scale;
+	// enz_scale = current(live)
+	ChemTime	enz_scale;
 	ChemStep	ttl;
 
 	mylist<MatchPos>	matchpos_list;
 	// todo: ttl  / tick
 
-	ChemReaction(){ m1=NULL; enz = NULL; scale = 1.0; ttl = CHEM_ENG_REACT_TTL; }
+	ChemReaction(){ m1=NULL; enz = NULL; enz_scale = 1.0; ttl = CHEM_ENG_REACT_TTL; }
 	void		dump(void);
 	bool 		operator ==(const ChemReaction& r);
 };
@@ -77,7 +78,11 @@ public:
 class ChemEngine {
 private:
 	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
-	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime scale);
+	int				count_enzyme_reactions(ChemEnzyme *_enz);
+	//int				scale_reactions(ChemEnzyme *_enz, int enz_hits);
+	int				scale_reactions(ChemEnzyme *_enz, int enz_hits);
+//	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime conc_scale);
+	ChemReaction	*save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list);
 	//-----------------------------------
 	ChemStep				tick;
 	ChemStep				max_tick;

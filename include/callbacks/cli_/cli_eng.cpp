@@ -155,6 +155,7 @@ int	cli_eng_tick(Concentration_CLI *cli, int argc, char **argv){
 		//printf("ttl's[%d]..\n", t);
 		for (int i=0; i<t; i++) {
 			cli->world-> chem_engine.next_tick();
+			//cli-> display-> draw_screen(cli-> display-> selected_screen, cli);
 		}
 	}
 

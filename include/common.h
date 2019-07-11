@@ -7,6 +7,7 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 // -------------------------------// -------------------------------
+#define PTR long unsigned int
 
 void sprintb(char *str, char val, char zero);
 void sprintb(char *str, char val);

@@ -144,6 +144,8 @@ int cli_concdisp(ChemDisplay *display, int argc, char **argv) {
 			//concdisp->set_conc(vm-> conc);
 			concdisp->set_conc(vm->mole, vm-> vol);
 			concdisp->buf.clear();
+			if (cli->world!=NULL)
+				concdisp->set_lasttick(cli->world->chem_engine.get_tick());
 		}
 		//else printf("warn: vm = NULL\n");
 		//printf("src updated..[0x%zX]\n", (long unsigned int) vm);

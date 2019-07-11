@@ -102,11 +102,9 @@ int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 	return n;
 }
 //---------------------------//---------------------------
-
+/****************
 //---------------------------//---------------------------
 int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
-
-	/****************
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
@@ -133,10 +131,10 @@ int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (vol_item ==NULL) return -10;
 	if (vol_item-> item ==NULL) return -11;
 	cli->selected_vol = vol_item-> item;
-	****************/
 
 	return 0;
 }
+****************/
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
@@ -144,7 +142,13 @@ int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
-	vm->vol->commit();
+	float f = 1.0;
+
+	if (argc>0) {
+		if (sscanf(argv[0], "%f", &f)<1) { printf("Bad Data\n"); return -20; }
+	}
+
+	vm->vol->commit(f);
 	return 0;
 }
 //---------------------------//---------------------------
@@ -186,7 +190,6 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 
 	if (argc==1) {
 		if (sscanf(argv[0], "%f" , &f) <1) {	printf("err: cant read amount[%s]..\n", argv[0]);	return -2;	}
-		//printf("adj=[%f]\n", f);
 	}
 
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
@@ -194,14 +197,18 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 	// ConcLevelType	put(Molecule	*m, ConcLevelType amount);
 
 	float res;
-	if (f <0)
-		res  = vm-> vol->take(vm->mole, f);
-	else
+	if (f <0) {
+		res  = vm-> vol->take(vm->mole, -f);
+		printf("take[%.3f] = [%.3f]\n", f, res);
+	}
+	else {
 		res  = vm-> vol->put(vm->mole, f);
+		printf("put[%.3f] = [%.3f]\n", f, res);
+	}
 
 	//PRINT("res=[%f]\n", res);
 
-	return res*100;
+	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
@@ -223,7 +230,7 @@ int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "listmoles");	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_listmoles, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_clear, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "list");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_list, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_ld, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_ld, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "commit");	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_commit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "reset");	 	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_reset, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clean");	 	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_clean, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);

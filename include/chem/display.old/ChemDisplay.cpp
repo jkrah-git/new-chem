@@ -624,7 +624,7 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 	//float val = conc_display-> buf.get(int index, float *_data);
 
 
-	//PRINT("c=[%d] min=[%.3f] max=[%.3f]\n", c, min, max);
+	//printf("c[%s] =[%d] min=[%.3f] max=[%.3f]\n", conc_display->name.get(),  c, min, max);
 	if (c>1) {
 
 		float scalex = conc_display->coords.scalex / (c-1.0);
@@ -637,12 +637,13 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 		int posx =0;
 		int posy =0;
 		bool first = true;
-		gfx.color(0,255,0)
-				;
+		gfx.color(0,255,0);
+		gfx.color(&conc_display->col);
+
 		for (int i=0; i<c; i++) {
 			float v;
 			int r = conc_display->buf.get(i, &v);
-			//if (r<0) break;
+			if (r<0) break;
 
 			posx = (i * scalex) + x - sx;
 			posy = ((v-min) * scaley) + y + sy;

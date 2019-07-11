@@ -103,7 +103,7 @@ public:
 	// ---------
 	ChemTime		get_maxcommit(void);
 //	int				del_conc(Molecule *m){
-	void			commit(void){ commit(1.0); }
+//	void			commit(void){ commit(1.0); }
 	void			commit(BufCommitType max_commit);
 	void			reset(void);
 	int				clean_conc(ConcLevelType clean_level);

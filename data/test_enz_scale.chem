@@ -12,16 +12,36 @@ cell selvol
 f moles/moles2
 f screens
 # -----------------------------
+screen vm
+screen vm render match
+
 mole ld 4
 eng run addenz noop
 vol addmole 1
 # -----------------
 f reload
+# ---  run engine
 f concdisp
+# loop 300 eng runvol .2
 
 # sticky cache
 eng maxtick 20
 eng get
-eng tick 1
 eng dump
-# loop 255 eng runvol .2
+eng tick 1
+
+mole ld 0
+vol addmole -10
+vol commit
+vol clean
+eng get
+enj dump
+eng tick 1
+
+mole ld 1
+vol addmole -10
+vol commit
+vol clean
+eng get
+eng dump
+eng tick 1
