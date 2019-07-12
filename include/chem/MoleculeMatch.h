@@ -80,7 +80,7 @@ public:
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
 
 	int			save_match();
-	int			load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos);
+	int			load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos, bool rotM2);
 	int			match_mole();
 
 

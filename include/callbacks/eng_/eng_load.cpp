@@ -11,10 +11,10 @@
 // ---------------------------------------------------
 // simple noop
 int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
-	PRINT("########## START[NOOP] ##########\n");
-	PRINT(": time[%f], argc[%d]", run_time, argc);
-	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	printf("\n");
+//	PRINT("########## START[NOOP] ##########\n");
+//	PRINT(": time[%f], argc[%d]", run_time, argc);
+//	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
+//	printf("\n");
 
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
@@ -30,12 +30,12 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 
 	ConcAdjustType take = 0.1 * run_time;
 	ConcLevelType	f = vol-> take(m1, take);
-	PRINT("take[%f]=[%f]\n", take, f);
+//	PRINT("take[%f]=[%f]\n", take, f);
 
 //	printf("=========== match (start) ============\n");
 //	vm-> matchpos.dump();
 //	printf("=========== match (end) ============\n");
-	PRINT("########## END[NOOP] ##########\n");
+//	PRINT("########## END[NOOP] ##########\n");
 
 	return 1;
 }

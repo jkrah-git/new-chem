@@ -20,6 +20,7 @@ int	cli_load_screen(ChemDisplay *display, int argc, char **argv){
 
 	return 0;
 }// --------------------------// --------------------------// --------------------------
+/************
 int	cli_screen_test(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
@@ -35,19 +36,6 @@ int	cli_screen_test(ChemDisplay *display, int argc, char **argv) {
 		ChemScreen *screen = display-> add_screen("screen1");
 		if (screen==NULL)  {	PRINT("screen_list.add returned NULL\n"); 	return -3;	}
 
-		/**************************
-		ChemMenu *menu = screen-> add_menu("menu1", display);
-		if (menu==NULL)  {	PRINT("menu_list.add returned NULL\n"); 	return -3;	}
-		if (menu !=NULL) {
-			menu-> stepx = 1;
-			menu-> stepy = 0;
-			menu-> add_button("A");
-			menu-> add_button("B");
-			menu-> add_button("C");
-			menu->layout_buttons();
-			//PRINT("======> final menu ====>\n");		menu-> dump();		PRINT("<======> final menu ===\n");
-		}
-		*******************/
 		//screen->callback = cli_gfx_screens_cb1;
 		//screen->waiting = false;
 		display-> selected_screen = screen;
@@ -73,19 +61,6 @@ int	cli_screen_test(ChemDisplay *display, int argc, char **argv) {
 		ChemScreen *screen = display-> add_screen("screen2");
 		if (screen==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
 
-		/*******************
-		ChemMenu *menu = screen-> add_menu("menu2", display);
-		if (menu==NULL)  {	PRINT("screen_list.add returned NULL"); 	return -3;	}
-		if (menu !=NULL) {
-			menu-> stepx = 0;
-			menu-> stepy = 1;
-			menu-> add_button("D");
-			menu-> add_button("E");
-			menu-> add_button("F");
-			menu->layout_buttons();
-			//PRINT("======> final menu ====>\n");		menu-> dump();		PRINT("<======> final menu ===\n");
-		}
-		*******************/
 		//screen->callback = cli_gfx_screens_cb2;
 		//screen->waiting = true;
 		display-> selected_screen = screen;
@@ -110,7 +85,7 @@ int	cli_screen_test(ChemDisplay *display, int argc, char **argv) {
 	//-------------
 	return 0;
 }
-
+************/
 // --------------------------
 int		list_screens(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
@@ -166,11 +141,8 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 			//PRINT("LIST...\n");
 			display-> gfx.close();
 			cli-> callback = NULL;
+			display-> selected_screen = NULL;
 			return 0;
-		}
-		//---------------- _test
-		if (strcmp(argv[0], "_test")==0) {
-			return cli_screen_test(display, 0, NULL);
 		}
 		if (screen==NULL) {	printf("screen[%s] not found.\n", argv[1]);		return -1;	}
 	} // -- end (argc==1) (known commands)
@@ -218,20 +190,6 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 			if (r==0) 	printf("del screen[%s] OK..\n", argv[0]);
 			else		printf("del screen[%s] Returned[%d]..\n", argv[0], r);
 			return r;
-			/*
-			if (display-> screen_list ==NULL) { printf("Err: NULL screen.menu_list\n");		return -25;			}
-			mylist<ChemScreen>::mylist_item<ChemScreen> *screen_item = display-> screen_list-> search(screen);
-			if (screen_item==NULL)  			{ printf("list item not found\n"); return -15;	}
-
-			// if current screen
-			if (display-> current_screen == screen) {
-				display-> current_screen = NULL;
-				display-> gfx.close();
-			};
-			display-> screen_list-> del(screen_item);
-			printf("del screen[%s] OK..\n", argv[0]);
-			screen =  NULL;
-			*/
 		}
 		// ------------------end(del)
 		// argv(name, render, [func])
@@ -239,15 +197,12 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 		if (strcmp(argv[1], "render")==0) {
 			//PRINT(" render : argc[%d][%s]\n", argc, argv[argc-1]);
 			if (argc<3) {
-				/*
-				screen-> renderCB = NULL;
-				printf("screen[%s].callback removed..\n", argv[0]);
-				*/
 				printf("# possible values:\n");
 				printf("null\n");
 				printf("mole\n");
 				printf("match\n");
 				printf("vm\n");
+				printf("enz\n");
 				printf("screen[%s].render is:", argv[0]);
 				if (screen-> renderCB==NULL) { printf("unset\n"); }
 				else 						{ printf("SET\n"); }
@@ -317,40 +272,7 @@ int cli_screen(ChemDisplay *display, int argc, char **argv) {
 		return 0;
 		} // ------------------end(grid)
 
-		/*
-		//---------------
-		// argv(name, scale, x | x y)
-		//----------------
-		if (strcmp(argv[1], "scale")==0) {
-			ChemDisplayAttrib *screen_attrib = &screen->attrib;
-			//PRINT(" scale : argc[%d][%s]\n", argc, argv[argc-1]);
-			if (argc<3) {
-				//printf("[%d][%d]\n", display-> attrib.scalex, display-> attrib.scaley);
-				printf("[%d][%d]\n", screen_attrib-> scalex, screen_attrib-> scaley);
-			}
 
-			if (argc==3) {
-				int sx, r;
-				r = sscanf(argv[2], "%d", &sx);
-				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
-				screen_attrib-> scalex = sx;
-				screen_attrib-> scaley = sx;
-				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sx);
-			} // end(argc==3)
-
-			if (argc==4) {
-				int sx, sy, r;
-				r = sscanf(argv[2], "%d", &sx);
-				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
-				r = sscanf(argv[3], "%d", &sy);
-				if (r<0) {	printf("read (int) failed\n"); return -11; 	}
-
-				screen_attrib-> scalex = sx;
-				screen_attrib-> scaley = sy;
-				printf("screen[%s].scale ->[%d][%d]\n", argv[0], sx, sy);
-			} // end(argc==3)
-		} // ------------------end(scale)
-		*/
 
 		//---------------
 	} // -------------------------------------------- end (argc>1) ---

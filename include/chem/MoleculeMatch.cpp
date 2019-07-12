@@ -453,16 +453,16 @@ int MoleculeMatch::save_match(){
 	return 0;
 }
 //----------------------------------
-int MoleculeMatch::load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos){
+int MoleculeMatch::load_match(Molecule *m1, Molecule *m2, MatchPos *matchpos, bool rotM2){
 	//clear();
 	mole1 = m1;
 	mole2 = m2;
 	if (matchpos==NULL) return -1;
-	current_pos = matchpos-> pos;
 	rotation = matchpos-> rotation;
-
 	// note that this is an expensive operation
-	// rotatemole();
+	if (rotM2)
+		rotatemole();
+	current_pos = matchpos-> pos;
 	return 0;
 }
 //----------------------------------

@@ -11,35 +11,31 @@
 //===============================================================
 char  **get_args(mylist<CLI_Command> *menu);
 
-//Concentration_VM 	vm;
-// todo: cli-> vol_list;
-//ConcentrationVolume vol;
 
 // these two are joined by call backs so have to be globals
 Concentration_CLI	cli;
 ChemDisplay			display(&cli);
-//ChemEngine			eng;
-World					world;
+World				world;
 
 int 	run_callto(int argc, char **argv);
 char  **get_possible_args(void);
 // --------------------------
 char 	**build_args(void){
 
-//	cli.chem_engine = &eng;
-	//------
-	//cli.load_commands();
-	//display.load_commands();
 	cli.world = &world;
-//	cli.local_vol.set_molelist(&world.mole_list);
-
 	cli.run_callto = run_callto;
+
+//	int r = world.chem_engine.logger.start((const char*)  "./chem.fifo", 1024);
+//	PRINT("Logger start = [%d]\n", r);
+//	sprintf(world.chem_engine.logger.get_buf(), "Logger started..\n");
+//	world.chem_engine.logger.flush();
+
+
 	return get_possible_args();
 }
 #include <unistd.h>
 //-----------------------------------
 int 	run(int argc, char **argv){
-	//usleep(1000);
 	return cli.run(&cli.base_cmdlist, argc, argv);
 }
 //-----------------------------------

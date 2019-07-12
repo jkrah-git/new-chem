@@ -116,7 +116,7 @@ void Peptide::rotate(PepRot rotation){
 void Peptide::rotateto(PepRot rotation, Peptide *dest){
 	if (dest != NULL) {
 		dest->sig = sig;
-		dest->rot = rotation;
+		dest->rot =  (rot + rotation) % 4;
 		// set pos
 		if (rotation==0) {
 			dest-> pos = pos;
