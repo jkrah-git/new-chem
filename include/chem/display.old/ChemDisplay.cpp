@@ -1155,7 +1155,7 @@ void ChemDisplay::draw_conclist(ChemScreen *screen, Concentration_CLI *cli, Chem
 			int n = 0;
 			if (m!=NULL)  n=m->pep_list.count();
 
-			sprintf(label, "[0x%zX][%d]\n(%.3f+%.3f)",  (long unsigned int) m, //conc_item-> item,
+			sprintf(label, "[0x%zX][%d]\n(%.3f/%.3f)",  (long unsigned int) m, //conc_item-> item,
 					n, conc_item->item->get(), conc_item->item->getdelta() );
 
 

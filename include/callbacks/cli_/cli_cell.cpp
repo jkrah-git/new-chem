@@ -102,6 +102,26 @@ int	cli_cell_applyconc(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------
+//--------------//---------------------------
+// 	void Cell::commit(void){ energy.commit(); health.commit(); temperature.commit();  };
+
+int	cli_cell_commit(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM NEED_AMB NEED_CELL
+
+	if (argc==0) {
+		cli->selected_ambcell-> cell->status.commit();
+		printf("cell commit..\n");
+		return 0;
+		//CellStatusType eff = cli->selected_ambcell-> cell->status.efficiency();
+	}
+	int n = 0;
+
+
+
+	return n;
+
+}
+//---------------------------//---------------------------//---------------------------------//---------------------------------
 int	load_cli_cell(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	//-------
@@ -118,6 +138,7 @@ int	load_cli_cell(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "unselvol");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_unselvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "temp");	 	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_temp, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "applyconc");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_applyconc, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "commit");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_commit, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//--------------
 	return 0;
 }

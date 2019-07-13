@@ -56,8 +56,8 @@ void Cell::dump(void) {
 	printf("Cell[0x%zX]:", (unsigned long int) this);
 	status.dump(); NL
 }
-#undef PRINT
-#define PRINT if (false) printf
+//#undef PRINT
+//#define PRINT if (false) printf
 // -----------------------------------------------
 int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
 	if ((targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
@@ -65,26 +65,26 @@ int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc
 
 	//--------------------------------
 	ConcLevelType delta = conc->getdelta();
-	PRINT("===============\n");
-	PRINT("run_time = [%.3f]\n", run_time);
-	PRINT("delta = [%.3f]\n", delta);
+		PRINT("===============\n");
+		PRINT("run_time = [%.3f]\n", run_time);
+		PRINT("delta = [%.3f]\n", delta);
 	if (delta==0) return 0;
 	//mole-> dump();
 
 	// +affinity = attractive add(build)=+E / - affinity -= repulsive
+	CellStatusType current_energy = targ_status->energy.get();
+	if (current_energy <= 0) { return -10; }
+
 	CellStatusType cell_eff = targ_status-> efficiency();
 	CellStatusType mole_affinity = mole->affinity();
-	PRINT("cell_eff = [%f]\n", cell_eff);
-	PRINT("mole_affinity = [%f]\n", mole_affinity);
-
-	CellStatusType	current_energy = targ_status->energy.get();
-	PRINT("current_energy  = [%f]\n", current_energy);
-	if (current_energy <= 0) { return -10; }
+		PRINT("cell_eff = [%f]\n", cell_eff);
+		PRINT("mole_affinity = [%f]\n", mole_affinity);
+		PRINT("current_energy  = [%f]\n", current_energy);
 
 	CellStatusType total_energy = mole_affinity * run_time;
 	ConcLevelType total_ammount = delta * run_time * cell_eff;
-	PRINT("total_energy  = [%f]\n", total_energy);
-	PRINT("total_ammount = [%f]\n", total_ammount);
+		PRINT("total_energy  = [%f]\n", total_energy);
+		PRINT("total_ammount = [%f]\n", total_ammount);
 
 	// if total_energy <0 - takeE
 	if (total_energy < -current_energy) {
@@ -97,15 +97,15 @@ int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc
 	if (delta>0) {
 		targ_status->energy.add(total_energy);
 		ConcLevelType res = targ_vol->put(mole, total_ammount);
+		PRINT(" targ_vol-> put(%f)= [%f]\n", total_ammount, res);
 		if (res<0) {  PRINT(" targ_vol->put failed\n"); return -50; 	}
 		return 0;
 	}
-	// else
+	// else (delta<0)
 	targ_status->energy.remove(total_energy);
 	ConcLevelType res = targ_vol->take(mole, -total_ammount);
 	PRINT(" targ_vol-> take(%f)= [%f]\n", -total_ammount, res);
-
-	if (res<0) {  PRINT(" targ_vol->put failed\n"); return -50; 	}
+	if (res<0) {  PRINT(" targ_vol->take failed\n"); return -50; 	}
 
 	return 0;
 

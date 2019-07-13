@@ -2,15 +2,20 @@
 screen vm
 eng ldr 0
 # thse should all be moved to vm commands
-mole ld m1
+mole ld 0
 conc fromvol
 conc push
-# -------
-conc adj 0 1.1
+# ------- +1
+conc adj 0 1
 cell applyconc
 vol list
 cell dump
-# -------
+# ------- -1
+conc adj 0 -1
+cell applyconc
+vol list
+cell dump
+# ------- -1 again
 conc adj 0 -1
 cell applyconc
 vol list
