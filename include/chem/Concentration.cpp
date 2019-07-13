@@ -322,16 +322,15 @@ void ConcentrationVolume::reset(void){
 }
 //--------------
 //--------------
-int ConcentrationVolume::clean_conc(ConcLevelType clean_level){
+int ConcentrationVolume::clip_conc(ConcLevelType min_level, ConcLevelType max_level){
 	int n =0 ;
 	mylist<Concentration>::mylist_item<Concentration> *conc_item = conc_list.gethead();
 	while (conc_item!=NULL) {
 		if (conc_item-> item!=NULL) {
-			// deletete (zero) conc's
+			ConcLevelType v = conc_item-> item->get();
 
-			// PRINT("========\n");
-			// PRINT("[0x%zX] [%.3f][%.3f]\n", conc_item-> item, conc_item-> item->get(), conc_item-> item->getdelta());
-			if ((conc_item-> item->get() <=clean_level)&& (conc_item-> item->getdelta() <=0)) {
+			// -- clean any less than < min_level --
+			if (v <min_level) {
 				mylist<Concentration>::mylist_item<Concentration> *next_item = conc_item-> next;
 				conc_item = conc_list.del(conc_item);
 				n++;
@@ -340,12 +339,14 @@ int ConcentrationVolume::clean_conc(ConcLevelType clean_level){
 					continue;
 				}
 			}
+			// -- clamp any greater than > max_level --
+			if (v > max_level) {
+				conc_item-> item->setval(max_level);
+			}
 		}
 		//-----------
 		conc_item = conc_item-> next;
 	}
-
-
 	return n;
 }
 //--------------

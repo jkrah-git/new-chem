@@ -147,6 +147,71 @@ void Peptide::addpep(PepSig _sig, Peptide *tail) {
 	addpep(tail);
 }
 //-----------------------
+PepAffinity Peptide::get_affinity(PepSig _sig) {
+	/*
+	 * 		---------------
+			(Qq) CHARGE BITS
+			---------------
+			0b[---- -qQ-]
+			---------------
+			Q = charged / pep charge
+			q = polarity (0=-) (1=+) /
+			  = creates overall region charge
+
+			---------------------
+			(F) CHARGE AFFINITY (-1,0,1) F =
+			---------------------
+			[---- -qQ-]
+			[---- -qQ-]
+			---------------------
+			   if (Q1=0 or Q2=0) - (F=0),  ie neutral(0,x)
+			elseif (q1 != q2)	- (F=+1), ie opposites (+/-) (attract)
+			elseif (q1 == q2)	- (F=-1), ie same(-/-)     	(repel)
+	 * 		---------------
+	 */
+
+	PepAffinity aff = 0.0;
+
+	if ((sig & PEPMASK_CHARGED) && (_sig & PEPMASK_CHARGED)) {
+		int			polarity = 0;
+		if ((sig & PEPMASK_POLARITY)==(_sig & PEPMASK_POLARITY))
+			polarity = -1;
+		else
+			polarity = +1;
+		aff = polarity * abs(sig-_sig);
+	}
+
+	return aff;
+}
+//-----------------------
+PepRot Peptide::get_rot(PepSig tail_sig) {
+
+
+	PepRot _rot;
+	// calc rot
+	// 		if (R1,R2,Q1,Q2=1)
+	if (((sig & tail_sig & PEPMASK_ROT) ==0)  ||
+		((sig & tail_sig & PEPMASK_CHARGED) ==0) ) {
+		_rot = 0;
+	}
+	else {
+		if ((sig & PEPMASK_POLARITY) == (tail_sig & PEPMASK_POLARITY)) {
+			// same / repel
+			_rot = 2;
+		} else  { // q1 != q2
+			if ((sig & PEPMASK_POLARITY)==0) {
+				_rot = 1;
+				}
+			else {
+				_rot = 3;
+			}
+		}
+	}
+	return _rot;
+}
+
+
+
 void Peptide::addpep(Peptide *tail) {
 	if (tail == this) return;
 
@@ -154,18 +219,8 @@ void Peptide::addpep(Peptide *tail) {
 	// simple add to head ??
 	if (tail==NULL) {	setpos(0,0);	}
 	else {  // else add to tail
-			/*
-			 *  1=new , 2=tail
-			 * 	if (R1=0)||(R2=0) rot=0
-				if (Q1=0)||(Q2=0) rot=0
-					else (R1,R2,Q1,Q2=1)
-				if (F=+1) / opposites / attract
-				if Q1 then ROT=1
-				if Q2 then ROT=3
-				if (F=-1) / same / repel then ROT=2
-			 *
-			 */
 
+		/*
 			// calc rot
 			// 		if (R1,R2,Q1,Q2=1)
 			if (((sig & tail-> sig & PEPMASK_ROT) ==0)  ||
@@ -185,7 +240,8 @@ void Peptide::addpep(Peptide *tail) {
 					}
 				}
 			}
-
+		*/
+			rot = get_rot(tail-> sig);
 			rot += tail-> rot;
 			rot %= 4;
 			pos.dim[PEPPOS_X] += tail-> pos.dim[PEPPOS_X];
@@ -212,116 +268,7 @@ void Peptide::addpep(Peptide *tail) {
 }
 
 
-// ---------------------
-//PepRot		Peptide::getrot(void){	return dim[PEPPOS_ROT];	}
-// ---------------------
-PepRot		Peptide::OLDgetrot(PepSig parentSig){
 
-	/*
-	 * stock result: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-	 */
-	int res[] = { 0,0,0,0 };
-	int div = 1;
-	int mask = 3;
-
-	// invert sig1 - does not change % but better @small numbers..
-	PepSig parentSigi = ~parentSig;
-
-	for (int i=0; i<4; i++) {
-
-		int v1 = ((sig & mask)/div);
-		int v2 = ((parentSigi & mask)/div);
-
-		// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[17.88], tallyR[3]=%[21.63],
-		res[i] = ((v1 + v2));
-
-		//tallyR[0]=%[39.62], tallyR[1]=%[24.15], tallyR[2]=%[16.40], tallyR[3]=%[19.83],
-		//res[i] = (((sig1 & parentSig) & mask)/div);
-
-		/*
-		printf("%d:", res[i]);		printf("------------------[ %d ]-------------------\n", i);
-		printf("%d:", res[i]);		printb(sig1); printf("=sig1[0x%02x], ", sig1);
-		printf("%d:", res[i]);		printb(parentSig); printf("=parentSig[0x%02x]\n", parentSig);
-		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x], ", mask);
-		printf("%d:", res[i]);		printb(mask); printf("=mask[0x%02x]\n", mask);
-		//printf("%d:", res[i]);		printf("------------------------------------------\n");
-		printf("\n");
-		printf("%d:", res[i]);		printb(v1);   printf("   v1[0x%02x], ", v1);
-		printf("%d:", res[i]);		printb(v2);   printf("   v2[0x%02x]\n", v2);
-		printf("%d:", res[i]);		printf("------------------------------------------\n");
-		*/
-
-		//-------------------
-		// count bits ?? - nice concept - but bad disto
-		// before: tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-		//  after: tallyR[0]=%[39.80], tallyR[1]=%[26.66], tallyR[2]=%[19.12], tallyR[3]=%[14.42],
-		/*
-		switch(v1) {
-			case 2: v1 = 1; break;
-			case 3:	v1 = 2; break;
-		}
-		switch(v2) {
-			case 2: v2 = 1; break;
-			case 3:	v2 = 2; break;
-		}
-		 */ 	//---------------------------------------------------
-
-		//----
-		div = div * 4;
-		mask = mask *4;
-	}
-
-	// find max
-	int rot = 0;
-	for (int i=1; i<4; i++)
-		if (res[i] > res[rot])
-			rot = i;
-
-	// final tally.. now remap (swap 2 and 3)
-	// tallyR[0]=%[33.78], tallyR[1]=%[26.71], tallyR[2]=%[21.63], tallyR[3]=%[17.88],
-	switch(rot) {
-		case 2: rot = 3; break;
-		case 3:	rot = 2; break;
-	}
-
-
-	return (char) rot;
-}
-// -------------------------------
-/*
-bool Peptide::match(PepSig MatchSig){
-
-  // ?? 0bX..... = 2x127 sets  (OR)
-  // Match = 0bXXsseett.... = 4x64 sets
-  // active elements ... 0bXXsstttt  .. match 0bYYsseett
-  //	- ss = match.strength = 0-3
-  	// - eett = match. energy/temp deltas = (0-3) = { 0,1,2 ,-1 }
-
-	// 128+64  =192    = 1100 0000 = 0xC0
-	// 256 - 192 = 63  = 0011 1111 = 0x3F
-	PepSig m1,m2;
-	// test top 2 bits (inverse)
-	m1 = sig &  0xc0;
-	m2 = (~MatchSig) &  0xc0;
-	//m2 &= 0xc0;
-#ifdef DEBUG
-	char bin0[32], bin1[32];
-	sprintb(bin0, m1);
-	sprintb(bin1, m2); printf("Peptide::match1 [%s]->[%s]\n", bin0, bin1);
-#endif
-	if (m1 != m2) return false;
-
-	// test bottom 6 bits
-	m1 = sig &  0x3f;
-	m2 = MatchSig &  0x3f ;
-#ifdef DEBUG
-	sprintb(bin0, m1); 	sprintb(bin1, m2); printf("Peptide::match2 [%s]->[%s]\n", bin0, bin1);
-#endif
-	if (m1 != m2) return false;
-
-	return true;
-}
-*/
 // ---------------------// ---------------------
 Peptide &Peptide::operator =(const Peptide& p) {
 	sig = p.sig;

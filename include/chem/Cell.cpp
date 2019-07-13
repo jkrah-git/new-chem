@@ -52,6 +52,57 @@ void Cell::dump(void) {
 	status.dump(); NL
 }
 // -----------------------------------------------
+int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
+	if ((targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
+	Molecule *mole = conc->getmole(); if (mole==NULL) { PRINT("ERR: Conc has no mole\n"); return -2; }
+
+	int n = 0;
+	//--------------------------------
+	ConcLevelType delta = conc->getdelta();
+	PRINT("===============\n");
+	PRINT("delta = [%.3f]\n", delta);
+	if (delta==0) return 0;
+	//mole-> dump();
+
+	CellStatusType mole_affinity = mole->affinity();
+
+/*	{
+		Peptide *tail = NULL;
+		mylist<Peptide>::mylist_item<Peptide> *current_item = mole->pep_list.gethead();
+		while (current_item !=NULL) {
+			if (current_item-> item != NULL) {
+				// todo: ?? do base pep reserves (ie single pep moles in  volume) ??
+				if (tail != NULL) {
+					PepAffinity aff = tail-> get_affinity(current_item-> item->sig);
+					PRINT("Affinity [0x%x]->[0x%x] = [%f]\n", tail->sig, current_item-> item->sig, aff);
+					sum_affinity += aff;
+				} // else tail==NULL (first item)
+				tail = current_item-> item;
+			} //endif item->item != NULL
+			//--
+			current_item = current_item-> next;
+		} // next pep
+	}
+*/
+
+	// +affinity = attractive / - affinity -= repulsive
+	PRINT("sum_affinity = [%f]\n", mole_affinity);
+
+
+	return n;
+
+
+
+
+
+
+
+
+}
+
+
+
+
 /*
 // -----------------------------------------------
 class AmbientCell {

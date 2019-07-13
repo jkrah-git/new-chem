@@ -167,13 +167,18 @@ int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
 //	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
-	ConcLevelType clean_level = cli->world->chem_engine.clean_level;
+	ConcLevelType conc_min = cli->world->chem_engine.conc_min;
+	ConcLevelType conc_max = cli->world->chem_engine.conc_max;
+
 	if (argc>0) {
-		if (sscanf(argv[0], "%f", &clean_level)<1) { printf("Bad Data\n"); return -20; }
+		if (sscanf(argv[0], "%f", &conc_min)<1) { printf("Bad Data\n"); return -20; }
+		if (argc>1) {
+			if (sscanf(argv[1], "%f", &conc_max)<1) { printf("Bad Data\n"); return -20; }
+		}
 	}
 
-	int n = vm-> vol-> clean_conc(clean_level);
-	printf("clean[%.3f] = [%d]\n", clean_level, n);
+	int n = vm-> vol-> clip_conc(conc_min, conc_max);
+	printf("clean.min[%.3f].max[%3f] = [%d]\n", conc_min, conc_max, n);
 	//n += cli->chem_engine->clean_volume_moles(vm-> vol);
 	return n;
 }

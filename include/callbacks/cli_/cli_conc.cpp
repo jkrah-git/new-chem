@@ -55,16 +55,24 @@ int	cli_conc_clear(Concentration_CLI *cli, int argc, char **argv){
 int	cli_conc_push(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm-> mole == NULL) { printf("need to select mole first\n"); return -11; }
+	if ((vm->conc == NULL) && (vm-> mole == NULL)) {
+		printf("need to select conc or mole first\n"); return -11;
+	}
 	//-------
 
-	mylist<Concentration>::mylist_item<Concentration>  *new_conc_item = NULL;
-
-
-	new_conc_item = vm->concentration_stack.add();
+	mylist<Concentration>::mylist_item<Concentration>  *new_conc_item = vm->concentration_stack.add();
 	if (new_conc_item ==NULL) return -20;
 	if (new_conc_item-> item ==NULL) return -21;
-	new_conc_item-> item->setmole(vm-> mole);
+
+	if (vm-> conc!=NULL){
+		//new_conc_item-> item->setmole(vm-> conc->getmole());
+
+		*new_conc_item-> item = *vm->conc;
+
+	} else  {
+		new_conc_item-> item->setmole(vm-> mole);
+	}
+
 	vm->conc =new_conc_item-> item;
 	return 0;
 }

@@ -46,6 +46,27 @@ int	cli_mole_dump(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
+int	cli_mole_rand(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//if (vm-> mole==NULL) { printf("You need to select mole first\n"); return -20; }
+
+	int count = 10;
+	int tries = 10;
+	int min = 1;
+	int max = 255;
+
+	if ((argc>0) && (sscanf(argv[0], "%d", &count)<0)) { printf("bad data\n"); return -20; }
+	if ((argc>1) && (sscanf(argv[1], "%d", &tries)<0)) { printf("bad data\n"); return -21; }
+	if ((argc>2) && (sscanf(argv[2], "%d", &min)<0)) { printf("bad data\n"); return -22; }
+	if ((argc>3) && (sscanf(argv[3], "%d", &max)<0)) { printf("bad data\n"); return -23; }
+	int r = vm-> mole->rand(count, tries, min, max);
+	printf("rand: count[%d] tries[%d] min[%d] max[%d] = [%d]\n", count, tries, min, max, r);
+	//-------
+	return r;
+}
+//---------------------------------//---------------------------------
+//---------------------------------//---------------------------------
 int	cli_mole_push(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
@@ -396,6 +417,7 @@ int	load_cli_mole(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "mole");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_mole, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clear"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_clear, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_dump, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "rand"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_rand, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "push"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_push, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_pop, (char*) name);		LOG("mole_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> mole_cmdlist, 	cli_mole_ld, (char*) name);			LOG("mole_cmdlist[%s] = [%d]\n", name, r);

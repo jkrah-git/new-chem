@@ -76,6 +76,32 @@ int	cli_cell_unselvol(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------
+//--------------//---------------------------
+int	cli_cell_applyconc(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM NEED_CELL
+
+	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
+	if (argc<1) {
+		item = vm-> concentration_stack.gettail();
+	} else {
+		int off;
+		if ( sscanf(argv[0], "%d", &off) <0) {
+			printf("bad offset [%s].\n", argv[0]);
+			return -20;
+		}
+		//printf("..load [%d]\n", off);
+		item = vm-> concentration_stack.offset(off);
+	}
+
+	// ----------- save
+	if (item ==NULL) return -10;
+	if (item-> item ==NULL) return -11;
+
+	//item-> item->dump();
+	return cli->selected_ambcell-> cell-> apply_concentration(vm->vol, item-> item, &cli->selected_ambcell-> cell->status, 1.0);
+	return 0;
+}
+//---------------------------//---------------------------//---------------------------------//---------------------------------
 int	load_cli_cell(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	//-------
@@ -91,6 +117,7 @@ int	load_cli_cell(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "selvol");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_selvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "unselvol");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_unselvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "temp");	 	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_temp, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "applyconc");	r = cli-> addcmd(&cli-> cell_cmdlist, 	cli_cell_applyconc, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//--------------
 	return 0;
 }

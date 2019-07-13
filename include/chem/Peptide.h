@@ -19,6 +19,8 @@ typedef unsigned int PepRot;
 typedef unsigned char PepSig;
 typedef unsigned char PepMatch;
 
+typedef double PepAffinity;
+
 
 // needed for rand
 #include <stdlib.h>
@@ -54,6 +56,11 @@ public:
 	void		rotateto(PepRot rotation, Peptide *dest);
 	void		addpep(PepSig sig, Peptide *tail);
 	void		addpep(Peptide *tail);
+	// +affinity = attractive / - affinity -= repulsive
+	PepAffinity get_affinity(PepSig _sig);
+	PepRot 		get_rot(PepSig tail_sig);
+
+
 
 	void 		randsig(void) { randsig(0,255); };
 	void		randsig(PepSig min, PepSig max) { sig  = (PepSig) (rand() % (max-min) + min); }
@@ -61,7 +68,7 @@ public:
 	Peptide& 	operator =(const Peptide& p);
 	bool 		operator ==(const Peptide& p);
 	PepRot		getrot(Peptide parent);
-	PepRot		OLDgetrot(PepSig parentSig);
+	//PepRot		OLDgetrot(PepSig parentSig);
 	bool		match(PepSig MatchSig);
 
 	// ---

@@ -59,7 +59,7 @@ public:
 	void		setM2(Molecule *_mole){ mole2 = _mole; }
 	void		set(Molecule *_mole1, Molecule *_mole2){ mole1 = _mole1; mole2 = _mole2; }
 	void		clear();
-	void		render();
+	//void		render();
 	void		dump();
 	//---------
 	int		start();

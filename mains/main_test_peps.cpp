@@ -7,7 +7,7 @@
 #include <iostream>
 #include "debug.h"
 /*
-#include "chem/Peptide.h"
+include "chem/Peptide.h"
 #include "chem/Molecule.h"
 #include "chem/Concentration.h"
 #include "chem/CLI_Command.h"
@@ -15,13 +15,30 @@
 */
 #include "common.h"
 #include "MyString.h"
+
+void test(int _a, int _b) {
+	Peptide a(_a);
+	char sa[9], sb[9];
+	sprintb(sa, _a, '0');
+	sprintb(sb, _b, '0');
+	//printf("a = [%s]\nb = [%s]\n", sa, sb);
+
+	PepAffinity aff = a.get_affinity(_b);
+
+	PepRot  rot = a.get_rot(_b);
+	printf("[%d]->[%d],[%s]->[%s]= rot[%d] aff[%f]\n", _a, _b, sa, sb, rot, aff);
+
+}
+
 int main(int argc, char **argv){
-	printf("Hellow world\n");
+//	printf("Hellow world\n");
 
-	MyString msg;
-	msg.set("This \nis a test");
+	for (int i=0; i<256; i++) {
+		for (int u=0; u<256; u++) {
+			test(i, u);
+		}
+	}
 
-	msg.dump(); NL
 	return 0;
 
 }

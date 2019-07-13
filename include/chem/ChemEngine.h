@@ -16,7 +16,9 @@ class ChemEngine;
 //===============================================
 typedef unsigned long int  ChemStep;
 #define CHEM_ENG_REACT_TTL	3
-#define CHEM_ENG_CLEAN_LEV	0.01
+#define CHEM_ENG_MIN_CONC	0.01
+#define CHEM_ENG_MAX_CONC	100.00
+
 // ==================================
 // - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
 // ----------------------------
@@ -53,7 +55,7 @@ public:
 	ChemFunc *match_next(Concentration_VM *vm);
 };
 //----------------------------
-class ChemReaction {
+class ChemEnzReactionHit {
 public:
 	Molecule	*m1;		// assumed in current col
 	ChemEnzyme	*enz;		// assumed in current
@@ -62,11 +64,10 @@ public:
 	ChemStep	ttl;
 
 	mylist<MatchPos>	matchpos_list;
-	// todo: ttl  / tick
 
-	ChemReaction(){ m1=NULL; enz = NULL; conc_scale = 1.0; ttl = CHEM_ENG_REACT_TTL; }
+	ChemEnzReactionHit(){ m1=NULL; enz = NULL; conc_scale = 0.0; ttl = 0; }
 	void		dump(void);
-	bool 		operator ==(const ChemReaction& r);
+	bool 		operator ==(const ChemEnzReactionHit& r);
 };
 // ----------------------------
 // ----------------------------// ----------------------------
@@ -74,20 +75,21 @@ public:
 // ----------------------------
 class ChemEngine {
 private:
-	ChemReaction 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
-	int				count_enzyme_reactions(ChemEnzyme *_enz);
-	//int				scale_reactions(ChemEnzyme *_enz, int enz_hits);
-	int				scale_reactions(ChemEnzyme *_enz, int enz_hits);
-//	int				save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list, ChemTime conc_scale);
-	ChemReaction	*save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list);
+	ChemEnzReactionHit 	*search_reaction(Molecule *_m1, ChemEnzyme *_enz);
+	int					count_enzyme_reactions(ChemEnzyme *_enz);
+	int					scale_reactions(ChemEnzyme *_enz, int enz_hits);
+	ChemEnzReactionHit	*save_reaction(Molecule *_m1, ChemEnzyme *_enz, mylist<MatchPos> *pos_list);
 	//-----------------------------------
 	ChemStep				tick;
 	ChemStep				max_tick;
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
-	mylist<ChemReaction>	reaction_list;
-	ConcLevelType 			clean_level;
+	mylist<ChemEnzReactionHit>	reaction_list;
+	ConcLevelType 			conc_min;
+	ConcLevelType 			conc_max;
+
+
 //	LogPipe					logger;
 	//---------------------------------
 	ChemEngine();
@@ -102,7 +104,7 @@ public:
 	ChemFunc  			*search_func(const char *name);
 	int					run(Cell *cell, Concentration_VM* vm, ChemTime run_time, int argc, char **argv);
 
-	ChemReaction 		*search_reactions(Molecule *_mole);
+	ChemEnzReactionHit 		*search_reactions(Molecule *_mole);
 	ChemEnzyme			*search_enz(Molecule *_mole);
 	int					del_enz(Molecule *_mole);
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);

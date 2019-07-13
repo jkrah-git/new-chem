@@ -38,6 +38,10 @@ public:
 	Cell();
 	virtual ~Cell();
 	void dump();
+	// -----------------
+	// try to apply conc.deltas to cell.vol
+	int		apply_concentration(ConcentrationVolume *_vol, Concentration *_conc, CellStatus *_status,  ChemTime run_time);
+
 
 };
 // -----------------------------------------------

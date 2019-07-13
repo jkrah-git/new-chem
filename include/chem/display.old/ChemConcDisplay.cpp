@@ -205,12 +205,18 @@ int	ChemConcDisplay::update(ChemStep t){
 	// concdisp->buf.add(f);
 	if (last_tick==t) return 0;
 	last_tick = t;
-
+/*
 	if ((vol==NULL) ||(mole==NULL)) return -1;
 	Concentration *c = vol->molesearch(mole);
 	if (c==NULL) return -2;
 	float f = c->get();
-	//printf("ChemConcDisplay[%s].Mole[0x%zX] Vol[0x%zX] : updated(%.3f)..\n", name.get(),	(long unsigned int) mole,(long unsigned int) vol, f);
+	*/
+	if ((vol==NULL) ||(mole==NULL)) return -1;
+	float f = 0.0;
+	Concentration *c = vol->molesearch(mole);
+	if (c!=NULL) f = c->get();
+
+
 	buf.add(f);
 	return 0;
 }

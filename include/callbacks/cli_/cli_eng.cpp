@@ -260,7 +260,7 @@ int	cli_eng_ldr(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_ENG
 
 
-	mylist<ChemReaction>::mylist_item<ChemReaction>  *reaction_item = NULL;
+	mylist<ChemEnzReactionHit>::mylist_item<ChemEnzReactionHit>  *reaction_item = NULL;
 
 	if ((argc <1) || (strcmp(argv[0], "help" ) == 0)) {
 		printf("usage: ldr +-[0xn]\n");

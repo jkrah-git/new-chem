@@ -100,36 +100,14 @@ int	cli_match_enz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_match_start(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//cli->core->matchpos.rotation = 5;
-	//cli->core->matchpos.test_item = NULL;
-
-	if (argc<1) {
-		return vm->matchpos.start();
-	}
-
-
-	/*
-	int rot;
-	if ( sscanf(argv[0], "%d", &rot) <0) {
-		printf("bad rot[%s].\n", argv[0]);
-		return -20;
-	}
-	cli-> core-> matchpos.rotation = rot;
-	//cli-> core-> matchpos.current_pos.dim[PEPPOS_ROT] = rot;
-	cli-> core-> matchpos.rotatemole();
-	*/
-
-	return 0;
-
+	NEED_CLI NEED_VM		return vm->matchpos.start();
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_match_rot(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	NEED_CLI NEED_VM
+//	if (cli==NULL) return -1;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 /*
@@ -175,7 +153,8 @@ int	cli_match_render(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm-> matchpos.render();
+	printf("unsupported.. (old legacy crap)\n");
+	//vm-> matchpos.render();
 	return 0;
 
 

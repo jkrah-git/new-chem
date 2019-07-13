@@ -44,8 +44,10 @@ public:
 	~Concentration(){	mole = NULL; };
 	Molecule		*getmole(){	return mole;	}
 	void			setmole(Molecule	*m){ mole = m; }
-	ConcLevelType	get() { return buf.get(); };
 	void			set(ConcLevelType new_val, ConcLevelType new_delta) { return buf.set(new_val, new_delta); };
+	void			setval(ConcLevelType new_val) { return buf.setval(new_val); };
+	void			setdelta( ConcLevelType new_delta) { return buf.setdelta(new_delta); };
+	ConcLevelType	get() { return buf.get(); };
 	ConcLevelType	getdelta() { return buf.getdelta(); };
 	void			reset(){ buf.reset(); };
 	void 			dump();
@@ -106,7 +108,9 @@ public:
 //	void			commit(void){ commit(1.0); }
 	void			commit(BufCommitType max_commit);
 	void			reset(void);
-	int				clean_conc(ConcLevelType clean_level);
+
+	// clip-min, clamp-max
+	int				clip_conc(ConcLevelType min_level, ConcLevelType max_level);
 	//----
 };
 // -------------------------------

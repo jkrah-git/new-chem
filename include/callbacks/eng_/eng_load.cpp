@@ -30,6 +30,7 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 
 	ConcAdjustType take = 0.1 * run_time;
 	ConcLevelType	f = vol-> take(m1, take);
+	f = 0;
 //	PRINT("take[%f]=[%f]\n", take, f);
 
 //	printf("=========== match (start) ============\n");

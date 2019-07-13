@@ -29,36 +29,19 @@ public:
 	// ----
 	Molecule();
 	virtual ~Molecule();
-	void	print_short(int num_pep);
-	int rotateto(PepRot rotation, Molecule *dest);
-	int drawto(Molecule *m, PepRot *rotation, PeptidePos *pos, PepSig *value);
-	int drawto(PeptidePos *pos, PepSig *value);
-
-	bool operator ==(const Molecule& p);
-
-	// -- build
+	void		print_short(int num_pep);
+	int 		rotateto(PepRot rotation, Molecule *dest);
+	bool 		operator ==(const Molecule& p);
 	int			addpep(PepSig sig);
-	//int			addpep2(PepSig sig);
-
-	//------------
 	void		getbounds(PeptidePos *min, PeptidePos *max);
 	void		clear(void)		{	pep_list.clear();	};
-	void		dump(void) { dump(false); }
-	void		dump(bool dorender);
-
+	void		dump(void);
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(Peptide *new_pep);
 	mylist<Peptide>::mylist_item<Peptide>  *testpos(PeptidePos *_pos);
-
-	// TODO: move to helper
 	int			rand(int count) { return rand(count, 1, 0, 255); };
 	int			rand(int count, int tries, PepSig min, PepSig max);
-	void		test(void);
-	void		test2(void);
-	void		testrot(void);
-	void		testmatch(void);
-	void		print(void);
-	void		render(void);
-	void		render(int x, int y);
+	int			affinity(void);
+
 };
 // -------------------------------
 
