@@ -81,24 +81,23 @@ int	cli_cell_applyconc(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_VM NEED_AMB NEED_CELL
 
 	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
+
+	float t = 1.0;
 	if (argc<1) {
 		item = vm-> concentration_stack.gettail();
+		if (item ==NULL) {	printf("conc stack is empty\n");	return -30; }
 	} else {
 		int off;
-		if ( sscanf(argv[0], "%d", &off) <0) {
-			printf("bad offset [%s].\n", argv[0]);
-			return -20;
-		}
-		//printf("..load [%d]\n", off);
-		item = vm-> concentration_stack.offset(off);
+		if (sscanf(argv[0], "%d", &off) <0) {	printf("bad offset [%s].\n", argv[0]);	return -20; }
+		item = vm-> concentration_stack.offset(off);	if (item ==NULL) {	printf("conc load[%d] failed\n", off);	return -31; }
+		if ((argc>1) && (sscanf(argv[1], "%f", &t) <0)) { printf("bad time [%s].\n", argv[1]); return -20; }
 	}
 
-	// ----------- save
-	if (item ==NULL) return -10;
-	if (item-> item ==NULL) return -11;
 
+	if (item-> item ==NULL) {	printf("null item->item\n");	return -31; }
+	printf("run_time = [%.3f]\n", t);
 	//item-> item->dump();
-	return cli->selected_ambcell-> cell-> apply_concentration(vm->vol, item-> item, &cli->selected_ambcell-> cell->status, 1.0);
+	return cli->selected_ambcell-> cell-> apply_concentration(vm->vol, item-> item, &cli->selected_ambcell-> cell->status, t);
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------

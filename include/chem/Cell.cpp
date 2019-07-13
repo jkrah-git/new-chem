@@ -81,8 +81,8 @@ int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc
 		PRINT("mole_affinity = [%f]\n", mole_affinity);
 		PRINT("current_energy  = [%f]\n", current_energy);
 
-	CellStatusType total_energy = mole_affinity * run_time;
-	ConcLevelType total_ammount = delta * run_time * cell_eff;
+	CellStatusType total_energy = mole_affinity * delta * run_time;
+	ConcLevelType total_ammount = cell_eff * delta * run_time;
 		PRINT("total_energy  = [%f]\n", total_energy);
 		PRINT("total_ammount = [%f]\n", total_ammount);
 
