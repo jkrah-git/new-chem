@@ -5,5 +5,13 @@ eng ldr 0
 mole ld m1
 conc fromvol
 conc push
-conc adj 0 10
+# -------
+conc adj 0 1.1
 cell applyconc
+vol list
+cell dump
+# -------
+conc adj 0 -1
+cell applyconc
+vol list
+cell dump

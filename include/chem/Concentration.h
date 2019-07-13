@@ -55,6 +55,8 @@ public:
 	//--------
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 	ConcLevelType	take(ConcAdjustType adj);
+
+
 	ConcLevelType	put(ConcLevelType amount);
 	//void			commit(void) { return buf.commit(); };
 	void			commit(void){ commit(1.0); };

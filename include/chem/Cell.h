@@ -26,6 +26,7 @@ public:
 	~CellStatus();
 	void 	dump(void);
 	void 	commit(void){ energy.commit(); health.commit(); temperature.commit();  };
+	CellStatusType	efficiency(void){ return  (health.get() / (1+(temperature.get()*temperature.get()))); };
 };
 // -----------------------------------------------
 

@@ -50,7 +50,7 @@ void Concentration::dump(){
 }
 // -------------------------------
 // -------------------------------
-
+// todo: major fix up.. why not just buf.take .. but not allow more that
 // NOTE..  take % (ConcAdjustType) but we put ConcLevelType
 ConcLevelType	Concentration::take(ConcAdjustType adj){
 	ConcLevelType	result = ( buf.get() * adj );
@@ -223,9 +223,10 @@ ConcLevelType	ConcentrationVolume::get(Molecule	*m){
 ConcLevelType	ConcentrationVolume::take(Molecule	*m, ConcAdjustType adj){
 	Concentration *conc = molesearch(m);
 	if (conc==NULL) return -1.0;
-	ConcLevelType raw = conc->get() * adj;
-	return conc->take(raw);
 
+	return conc->take(adj);
+//	ConcLevelType raw = conc->get() * adj;
+//	return conc->take(raw);
 }
 //--------------
 //#define DEBUG

@@ -78,7 +78,7 @@ int	cli_cell_unselvol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 //--------------//---------------------------
 int	cli_cell_applyconc(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_CELL
+	NEED_CLI NEED_VM NEED_AMB NEED_CELL
 
 	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
 	if (argc<1) {

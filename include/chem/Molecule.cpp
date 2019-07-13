@@ -335,9 +335,9 @@ int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 	return c;
 }
 // -------------------------------
-int	Molecule::affinity(void){
+PepAffinity	Molecule::affinity(void){
 
-	int sum_affinity = 0;
+	PepAffinity sum_affinity = 0;
 	{
 		Peptide *tail = NULL;
 		mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();

@@ -4,6 +4,7 @@
  *  Created on: Jul 4, 2019
  *      Author: jkrah
  */
+#include "chem/Cell.h"
 #include "callbacks/enzyme_callbacks.h"
 #include "chem/Concentration_VM.h"
 // int 	(*operation)(Concentration_VM*, int, char**);
@@ -16,29 +17,41 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 //	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 //	printf("\n");
 
+
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
 
 	ConcentrationVolume *vol = vm->vol;
 	if (vol==NULL) { printf("vol is NULL\n"); return -11; }
 
+	if (cell==NULL)  { printf("cell is NULL\n"); return -12; }
+
 	Molecule *m1 = vm-> matchpos.getM1();
 	if (m1==NULL)  { printf("m1 is NULL\n"); return -12; }
 
-	Concentration	*conc = vol-> molesearch(m1);
-	if (conc==NULL) { printf("M1 not in vol..\n"); return -20; }
+	Concentration	*M1conc = vol-> molesearch(m1);
+	if (M1conc==NULL) { printf("M1 not in vol..\n"); return -20; }
 
+	/*
 	ConcAdjustType take = 0.1 * run_time;
 	ConcLevelType	f = vol-> take(m1, take);
 	f = 0;
 //	PRINT("take[%f]=[%f]\n", take, f);
+	*/
+
+
+	Concentration c;
+	c.setmole(m1);
+	c.set(-1, -0.1);
+//int		apply_concentration(ConcentrationVolume *_vol, Concentration *_conc, CellStatus *_status,  ChemTime run_time);
+	int r = cell-> apply_concentration(&cell-> vol, &c, &cell-> status,  run_time);
 
 //	printf("=========== match (start) ============\n");
 //	vm-> matchpos.dump();
 //	printf("=========== match (end) ============\n");
 //	PRINT("########## END[NOOP] ##########\n");
 
-	return 1;
+	return r;
 }
 
 // ---------------------------------------------------

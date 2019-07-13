@@ -178,9 +178,9 @@ PepAffinity Peptide::get_affinity(PepSig _sig) {
 			polarity = -1;
 		else
 			polarity = +1;
-		aff = polarity * abs(sig-_sig);
+		aff = (polarity * abs(sig-_sig))/255.0;
 	}
-
+	//PRINT("aff = [%f]\n", aff);
 	return aff;
 }
 //-----------------------

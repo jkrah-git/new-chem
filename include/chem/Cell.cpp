@@ -22,12 +22,17 @@ public:
 };
 // -----------------------------------------------
 */
-CellStatus::CellStatus(){};
+CellStatus::CellStatus(){
+	energy.setval(100.0);
+	health.setval(1.0);
+	temperature.setval(0);
+
+};
 CellStatus::~CellStatus(){};
 // -----------------------------------------------
 void CellStatus::dump(void){
-	printf("CellStatus[0x%zX]: Energy[%.3f/%.3f] Health[%.3f/%.3f] temperature[%.3f/%.3f", (long unsigned int) this,
-			energy.get(), energy.getdelta(), health.get(), health.getdelta(), temperature.get(), temperature.getdelta());
+	printf("CellStatus[0x%zX]: Energy[%.3f/%.3f] Health[%.3f/%.3f] temperature[%.3f/%.3f] = efficency[%.3f]", (long unsigned int) this,
+			energy.get(), energy.getdelta(), health.get(), health.getdelta(), temperature.get(), temperature.getdelta(), efficiency());
 }
 // -----------------------------------------------
 /*
@@ -51,51 +56,62 @@ void Cell::dump(void) {
 	printf("Cell[0x%zX]:", (unsigned long int) this);
 	status.dump(); NL
 }
+#undef PRINT
+#define PRINT if (false) printf
 // -----------------------------------------------
 int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
 	if ((targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
 	Molecule *mole = conc->getmole(); if (mole==NULL) { PRINT("ERR: Conc has no mole\n"); return -2; }
 
-	int n = 0;
 	//--------------------------------
 	ConcLevelType delta = conc->getdelta();
 	PRINT("===============\n");
+	PRINT("run_time = [%.3f]\n", run_time);
 	PRINT("delta = [%.3f]\n", delta);
 	if (delta==0) return 0;
 	//mole-> dump();
 
+	// +affinity = attractive add(build)=+E / - affinity -= repulsive
+	CellStatusType cell_eff = targ_status-> efficiency();
 	CellStatusType mole_affinity = mole->affinity();
+	PRINT("cell_eff = [%f]\n", cell_eff);
+	PRINT("mole_affinity = [%f]\n", mole_affinity);
 
-/*	{
-		Peptide *tail = NULL;
-		mylist<Peptide>::mylist_item<Peptide> *current_item = mole->pep_list.gethead();
-		while (current_item !=NULL) {
-			if (current_item-> item != NULL) {
-				// todo: ?? do base pep reserves (ie single pep moles in  volume) ??
-				if (tail != NULL) {
-					PepAffinity aff = tail-> get_affinity(current_item-> item->sig);
-					PRINT("Affinity [0x%x]->[0x%x] = [%f]\n", tail->sig, current_item-> item->sig, aff);
-					sum_affinity += aff;
-				} // else tail==NULL (first item)
-				tail = current_item-> item;
-			} //endif item->item != NULL
-			//--
-			current_item = current_item-> next;
-		} // next pep
+	CellStatusType	current_energy = targ_status->energy.get();
+	PRINT("current_energy  = [%f]\n", current_energy);
+	if (current_energy <= 0) { return -10; }
+
+	CellStatusType total_energy = mole_affinity * run_time;
+	ConcLevelType total_ammount = delta * run_time * cell_eff;
+	PRINT("total_energy  = [%f]\n", total_energy);
+	PRINT("total_ammount = [%f]\n", total_ammount);
+
+	// if total_energy <0 - takeE
+	if (total_energy < -current_energy) {
+		total_ammount *= (current_energy/-total_energy);
+		total_energy = -current_energy;
+		PRINT("scaling total_ammount = [%f]\n", total_ammount);
 	}
-*/
 
-	// +affinity = attractive / - affinity -= repulsive
-	PRINT("sum_affinity = [%f]\n", mole_affinity);
+	// add / put - E=E+total_energy (+affinity = attractive add(build)=+Exo)
+	if (delta>0) {
+		targ_status->energy.add(total_energy);
+		ConcLevelType res = targ_vol->put(mole, total_ammount);
+		if (res<0) {  PRINT(" targ_vol->put failed\n"); return -50; 	}
+		return 0;
+	}
+	// else
+	targ_status->energy.remove(total_energy);
+	ConcLevelType res = targ_vol->take(mole, -total_ammount);
+	PRINT(" targ_vol-> take(%f)= [%f]\n", -total_ammount, res);
+
+	if (res<0) {  PRINT(" targ_vol->put failed\n"); return -50; 	}
+
+	return 0;
 
 
-	return n;
 
-
-
-
-
-
+	//return -99;
 
 
 }
