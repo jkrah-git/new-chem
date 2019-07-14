@@ -82,11 +82,12 @@ public:
 	mylist<MatchPos>				matchpos_list;
 	mylist<ChemEnzReactionHitList>	hit_list;
 
-	ChemTime	scale;
-
-
-	ChemEnzReactionHit(){ m1=NULL; enz = NULL; scale = 0.0; ttl = 0; }
+	// ChemTime	scale;
+	ChemEnzReactionHit(); //{ m1=NULL; enz = NULL; scale = 0.0; ttl = 0; }
 	void		dump(void);
+	ChemEnzReactionHitList *search_vol(ConcentrationVolume *vol);
+	ChemEnzReactionHitList *add_vol(ConcentrationVolume *vol);
+
 	bool 		operator ==(const ChemEnzReactionHit& r);
 };
 // ----------------------------
@@ -95,10 +96,13 @@ public:
 // ----------------------------
 class ChemEngine {
 private:
-	ChemEnzReactionHit 	*search_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz);
-	ChemEnzReactionHit	*save_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
-	int					count_enzyme_reactions(ChemEnzyme *match_enz);
-	int					scale_enzyme_reactions(ChemEnzyme *match_enz);
+	// search  reactions(M1,enz) / reset ttl
+	ChemEnzReactionHit 		*search_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz);
+	ChemEnzReactionHit		*save_enzyme_reaction(ConcentrationVolume *vol, Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
+
+	int					count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
+	int					scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
+	int					clear_all_hits(void);
 	//-----------------------------------
 	ChemStep				tick;
 	ChemStep				max_tick;
