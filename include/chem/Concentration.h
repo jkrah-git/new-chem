@@ -26,7 +26,6 @@ typedef double  ChemTime;
 // -------------------------------
 class Concentration {
 private:
-	MyBuffer<ConcLevelType> 	buf;
 	Molecule				*mole;
 	// ---
 
@@ -39,6 +38,7 @@ private:
 
 public:
 	// ---
+	MyBuffer<ConcLevelType> 	buf;
 	Concentration(){	mole = NULL;	}
 	Concentration(Molecule	*m){	mole = m;	}
 	~Concentration(){	mole = NULL; };
@@ -54,10 +54,9 @@ public:
 
 	//--------
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-	ConcLevelType	take(ConcAdjustType adj);
-
-
-	ConcLevelType	put(ConcLevelType amount);
+	//ConcLevelType	OLDtake(ConcAdjustType adj);
+	//ConcLevelType	put(ConcLevelType amount);
+	//ConcLevelType	take(ConcLevelType amount);
 	//void			commit(void) { return buf.commit(); };
 	void			commit(void){ commit(1.0); };
 	void			commit(BufCommitType max_commit);
@@ -102,10 +101,13 @@ public:
 	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
 
 	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
-	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
+//	ConcLevelType	OLD_vol_take(Molecule	*m, ConcAdjustType adj);
+//	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
+	void			put(Molecule	*m, ConcLevelType amount);
+	void			take(Molecule	*m, ConcLevelType amount);
+
 	// ---------
-	ChemTime		get_maxcommit(void);
+	ChemTime		get_maxcommit(ConcLevelType min_level, ConcLevelType max_level);
 //	int				del_conc(Molecule *m){
 //	void			commit(void){ commit(1.0); }
 	void			commit(BufCommitType max_commit);

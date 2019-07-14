@@ -138,23 +138,36 @@ int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
+	NEED_CLI NEED_VM NEED_VOL
+//	if (cli==NULL) return -1;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
 	float f = 1.0;
 
-	if (argc>0) {
-		if (sscanf(argv[0], "%f", &f)<1) { printf("Bad Data\n"); return -20; }
+	if ((argc>0) && (strcmp(argv[0], "max")==0)){
+		f = vm-> vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max);
+	} else {
+		if ((argc>0) && (sscanf(argv[0], "%f", &f)<1)) { printf("Bad Data\n"); return -20; }
 	}
 
+	printf("vol.commit[%f]\n", f);
 	vm->vol->commit(f);
 	return 0;
 }
 //---------------------------//---------------------------
+int	cli_vol_maxcommit(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
+	// BufCommitType getmax(T floor, T ceiling) {
+	printf("vol.max_commit = [%f]\n",
+			vm-> vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max) );
+	return 0;
+}
+//---------------------------//---------------------------
 int	cli_vol_reset(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	NEED_CLI NEED_VM NEED_VOL
+//	if (cli==NULL) return -1;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	vm->vol-> reset();
 	return 0;
@@ -162,32 +175,34 @@ int	cli_vol_reset(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD
+	NEED_CLI NEED_VM NEED_VOL
 //	if (cli==NULL) return -1;
 //	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
-	ConcLevelType conc_min = cli->world->chem_engine.conc_min;
+	ConcLevelType conc_clip = cli->world->chem_engine.conc_clip;
+	//ConcLevelType conc_min = cli->world->chem_engine.conc_min;
 	ConcLevelType conc_max = cli->world->chem_engine.conc_max;
 
 	if (argc>0) {
-		if (sscanf(argv[0], "%f", &conc_min)<1) { printf("Bad Data\n"); return -20; }
+		if (sscanf(argv[0], "%f", &conc_clip)<1) { printf("Bad Data\n"); return -20; }
 		if (argc>1) {
 			if (sscanf(argv[1], "%f", &conc_max)<1) { printf("Bad Data\n"); return -20; }
 		}
 	}
 
-	int n = vm-> vol-> clip_conc(conc_min, conc_max);
-	printf("clean.min[%.3f].max[%3f] = [%d]\n", conc_min, conc_max, n);
+	int n = vm-> vol-> clip_conc(conc_clip, conc_max);
+	printf("clean(clip[%f], max[%f]) = [%d]\n", conc_clip, conc_max, n);
 	//n += cli->chem_engine->clean_volume_moles(vm-> vol);
 	return n;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
+	NEED_CLI NEED_VM NEED_VOL
+//	if (cli==NULL) return -1;
+//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
 	if (vm->mole==NULL) { printf("need to select mole first\n"); return -20; }
 
@@ -203,11 +218,13 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 
 	float res;
 	if (f <0) {
-		res  = vm-> vol->take(vm->mole, -f);
+		res  = 0;
+		vm-> vol->take(vm->mole, -f);
 		printf("take[%.3f] = [%.3f]\n", f, res);
 	}
 	else {
-		res  = vm-> vol->put(vm->mole, f);
+		res  = 0;
+		vm-> vol->put(vm->mole, f);
 		printf("put[%.3f] = [%.3f]\n", f, res);
 	}
 
@@ -237,6 +254,7 @@ int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "list");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_list, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_ld, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "commit");	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_commit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "maxcommit");	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_maxcommit, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "reset");	 	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_reset, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clean");	 	r = cli-> addcmd(&cli-> vol_cmdlist,	cli_vol_clean, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "addmole");	r = cli-> addcmd(&cli-> vol_cmdlist, 	cli_vol_addmole, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);

@@ -1,0 +1,9 @@
+============ logger ================..
+# loop 254 eng runvol .005 100
+# f testcell
+[0]># eng runvol 0.00001 1000000
+run_time = [0.000010]
+repeat = [1000000]
+chem_engine.run_volume[1000000] took ..
+16.000 (sec) Real Time and 14540 (msec) CPU Time
+[1000000]># 

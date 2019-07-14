@@ -1,9 +1,12 @@
 
 NEXT TODO
 --- list of buffers to find max commit.. eg.conc, temp, energy, 
+    - cell_run, cell_maxcommit, call_commit
+--- txt[] every 'x' samples
 -- world (eng, (master)molelist, (master)ambcell_list(pos, *ambvol, *cell, temp))
    - cell(status(enery,health,temperature), VOL)
-
+-- CLI - colourd text
+	- benchmarks
 -- save-state / save-history to file
 ---- finish base rendering
 	- move all disply_list *objs's to 'stack_id / other_id??'

@@ -29,7 +29,7 @@ public:
 	CellStatusType	efficiency(void){ return  (health.get() / (1+(temperature.get()*temperature.get()))); };
 };
 // -----------------------------------------------
-
+class AmbientCell;
 // -----------------------------------------------
 class Cell {
 public:
@@ -39,10 +39,20 @@ public:
 	Cell();
 	virtual ~Cell();
 	void dump();
-	// -----------------
-	// try to apply conc.deltas to cell.vol
-	int		apply_concentration(ConcentrationVolume *_vol, Concentration *_conc, CellStatus *_status,  ChemTime run_time);
 
+	// BufCommitType	get_maxcommit(ChemEngine *eng, ConcentrationVolume *targ_vol);
+
+	// ----------------- apply_concentration
+	// try to apply 'conc-> delta' to cell.vol
+	// NB: will overwrite 'conc)-> val' (with current conc->val)
+	int		apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time);
+	// -------------------------
+//	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
+//	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+//	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+	int	get_reactions(ChemEngine *eng, AmbientCell *ambcell);
+	int	run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
+	int	run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
 
 };
 // -----------------------------------------------
@@ -63,15 +73,16 @@ MyBuffer<CellStatusType> 	temperature;
 	CellPosVecType			get_y(void){ return pos.dim[CELLPOS_Y]; };
 	ConcentrationVolume		*get_ambvol(void){ return ambvol;	};
 	Cell					*get_cell(void){ return cell; };
-	// -------------------------
+
+
 };
 // -----------------------------------------------
 
 // -----------------------------------------------
 class World {
 public:
-	mylist<Molecule>		mole_list;
 	ChemEngine				chem_engine;
+	mylist<Molecule>		mole_list;
 	mylist<AmbientCell>		ambcell_list;
 	//-------------
 	World();
@@ -80,6 +91,8 @@ public:
 
 	AmbientCell 		*get_ambcell(CellPos *_pos);
 	AmbientCell			*add_ambcell(CellPos *_pos);
+	// todo
+	AmbientCell			*del_ambcell(CellPos *_pos);
 
 
 };

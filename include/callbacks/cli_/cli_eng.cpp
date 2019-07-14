@@ -167,16 +167,16 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 		int r = sscanf(argv[0], "%f", &t);
 		if (r<1) { printf ("Bad Data\n"); return -20; }
 		run_time = t;
-		printf("run_time = [%f]\n", run_time);
 		if (argc>1)	{
 			int t;
 			int r = sscanf(argv[1], "%d", &t);
 			if (r<1) { printf ("Bad Data\n"); return -20; }
 			repeat = t;
-			printf("repeat = [%d]\n", repeat);
 		}
 	}
 	int n=0;
+	printf("run_time = [%f]\n", run_time);
+	printf("repeat = [%d]\n", repeat);
 	//-------
 	clock_t 	start_ticks = clock();
 	time_t 		start_time;
@@ -187,7 +187,7 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 		int r = cli->world-> chem_engine.run_volume( cli->selected_ambcell-> cell, vm->vol, run_time);
 		if (r>=0)
 			n++;
-		printf("chem_engine.run_volume[%d] = [%d]\n", i, r);
+		//printf("chem_engine.run_volume[%d] = [%d]\n", i, r);
 	}
 	//-------
 	clock_t end_ticks = clock();
@@ -293,8 +293,36 @@ int	cli_eng_ldr(Concentration_CLI *cli, int argc, char **argv){
 	return r;
 }
 // --------------------------
+// 'ldr - load reaction'
+int	cli_eng_clip(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_WORLD NEED_ENG
+	float conc_clip = cli->world->chem_engine.conc_clip;
+	float conc_min = cli->world->chem_engine.conc_min;
+	float conc_max = cli->world->chem_engine.conc_max;
+
+	if ((argc>0) && (sscanf(argv[0], "%f", &conc_clip)<0)) { printf("Bad Data\n"); return -30; }
+	if ((argc>1) && (sscanf(argv[1], "%f", &conc_min)<0)) { printf("Bad Data\n"); return -31; }
+	if ((argc>2) && (sscanf(argv[2], "%f", &conc_max)<0)) { printf("Bad Data\n"); return -32; }
+
+	if (argc>0) {
+		if (conc_max <=conc_min) { printf("max must be > min\n"); return -35; }
+		if (conc_clip <= conc_min) { printf("clip must be > min\n"); return -36; }
+
+		cli->world->chem_engine.conc_clip = conc_clip;
+		cli->world->chem_engine.conc_min = conc_min;
+		cli->world->chem_engine.conc_max = conc_max;
+	}
+
+	printf("conc_clip=[%f] conc_min=[%f] conc_max=[%f]\n",
+			cli->world->chem_engine.conc_clip,
+			cli->world->chem_engine.conc_min,
+			cli->world->chem_engine.conc_max);
+	return 0;
+}
+// --------------------------
 
 // --------------------------
+// -------------------------- // --------------------------
 int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	PRINT("=========\n");
@@ -314,6 +342,7 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "enzstart");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enzstart, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ldr");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_ldr, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clip");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_clip, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 

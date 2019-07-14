@@ -160,7 +160,7 @@ int	cli_conc_mole(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
-int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
+int	cli_conc_set(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
 	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
@@ -181,8 +181,12 @@ int	cli_conc_adj(Concentration_CLI *cli, int argc, char **argv){
 		}
 		printf("adj=[%f]\n", adj);
 
-		if (adj <0) {	vm-> conc-> take(adj);	}
+/*
+		if (adj <0) {	vm-> conc-> OLDtake(adj);	}
 		if (adj >0) {	vm-> conc-> put(adj);	}
+*/
+		if (adj >0) {	vm-> conc->buf.add(adj);	}
+		if (adj <0) {	vm-> conc->buf.remove(adj);	}
 
 		return 0;
 	}
@@ -371,7 +375,7 @@ int	load_cli_conc(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "pop"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_pop, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ld"); 		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_ld, (char*) name);			LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "mole");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_mole, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "adj");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_adj, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "set");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_set, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "commit");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_commit, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "tovol");		r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_tovol, (char*) name);		LOG("conc_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "fromvol");	r = cli-> addcmd(&cli-> conc_cmdlist, 	cli_conc_fromvol, (char*) name);	LOG("conc_cmdlist[%s] = [%d]\n", name, r);

@@ -38,14 +38,23 @@ void CellStatus::dump(void){
 /*
 // -----------------------------------------------
 class Cell {
+public:
 	CellStatus 				status;
 	ConcentrationVolume		vol;
-
-public:
 	// -----------------
 	Cell();
 	virtual ~Cell();
 	void dump();
+	// -----------------
+	// try to apply conc.deltas to cell.vol
+	int		apply_concentration(ConcentrationVolume *_vol, Concentration *_conc, CellStatus *_status,  ChemTime run_time);
+//	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
+//	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+//	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+	int	get_reactions(ChemEngine *eng, ConcentrationVolume *vol);
+	int	run_reactions(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
+	int	run_cell(ChemEngine *eng, ChemTime run_time);
+
 };
 // -----------------------------------------------
 */
@@ -56,15 +65,23 @@ void Cell::dump(void) {
 	printf("Cell[0x%zX]:", (unsigned long int) this);
 	status.dump(); NL
 }
-//#undef PRINT
-//#define PRINT if (false) printf
+#undef PRINT
+#define PRINT if (false) printf
 // -----------------------------------------------
-int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
-	if ((targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
+
+
+// -----------------------------------------------
+int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
+	if ((eng==NULL) || (targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
 	Molecule *mole = conc->getmole(); if (mole==NULL) { PRINT("ERR: Conc has no mole\n"); return -2; }
 
 	//--------------------------------
-	ConcLevelType delta = conc->getdelta();
+	//ConcLevelType val = conc->getval();
+	//ConcLevelType delta = conc->getdelta();
+	ConcLevelType delta = conc->buf.getdelta();
+	conc->buf.setval(targ_vol->get(mole));
+	//ConcLevelType new_val = val + delta;
+
 		PRINT("===============\n");
 		PRINT("run_time = [%.3f]\n", run_time);
 		PRINT("delta = [%.3f]\n", delta);
@@ -86,26 +103,41 @@ int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc
 		PRINT("total_energy  = [%f]\n", total_energy);
 		PRINT("total_ammount = [%f]\n", total_ammount);
 
+	// ========================
+	// BufCommitType getmax(T floor, T ceiling) {
+	BufCommitType conc_max_commit = conc->buf.getmax(eng->conc_min, eng->conc_max);
+		PRINT("conc_max_commit  = [%f]\n", conc_max_commit);
+	if (conc_max_commit<=0) return -3;
+	if (conc_max_commit<=1) {
+		total_ammount *= conc_max_commit;
+		total_energy *= conc_max_commit;
+		PRINT("scaling total_ammount (for conc_max_commit)= [%f]\n", total_ammount);
+		PRINT("scaling total_energy (for conc_max_commit)= [%f]\n", total_energy);
+	}
+
 	// if total_energy <0 - takeE
 	if (total_energy < -current_energy) {
 		total_ammount *= (current_energy/-total_energy);
 		total_energy = -current_energy;
-		PRINT("scaling total_ammount = [%f]\n", total_ammount);
+		PRINT("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
 	}
 
-	// add / put - E=E+total_energy (+affinity = attractive add(build)=+Exo)
+
+
+	// if total_energy <0 - takeE
+	if (total_energy < -current_energy) {
+		total_ammount *= (current_energy/-total_energy);
+		total_energy = -current_energy;
+		PRINT("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
+	}
+
 	if (delta>0) {
 		targ_status->energy.add(total_energy);
-		ConcLevelType res = targ_vol->put(mole, total_ammount);
-		PRINT(" targ_vol-> put(%f)= [%f]\n", total_ammount, res);
-		if (res<0) {  PRINT(" targ_vol->put failed\n"); return -50; 	}
+		targ_vol->put(mole, total_ammount);
 		return 0;
 	}
-	// else (delta<0)
-	targ_status->energy.remove(total_energy);
-	ConcLevelType res = targ_vol->take(mole, -total_ammount);
-	PRINT(" targ_vol-> take(%f)= [%f]\n", -total_ammount, res);
-	if (res<0) {  PRINT(" targ_vol->take failed\n"); return -50; 	}
+	targ_status->energy.remove(-total_energy);
+	targ_vol->take(mole, -total_ammount);
 
 	return 0;
 
@@ -115,8 +147,51 @@ int	Cell::apply_concentration(ConcentrationVolume *targ_vol, Concentration *conc
 
 
 }
+// -----------------------------------------------
+// -----------------------------------------------
+// -----------------------------------------------
+//	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
+// -----------------------------------------------
+int	Cell::get_reactions(ChemEngine *eng, AmbientCell *ambcell){
+	if (eng==NULL) return -1;
+	//if (cell==NULL) return -2;
 
+	int r = eng-> get_reactions(&vol);
+	PRINT(":: get (internal) reactions = [%d]\n", r);
 
+	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
+		r = eng-> get_reactions(ambcell-> ambvol);
+		PRINT(":: get (external) reactions = [%d]\n", r);
+	}
+
+	// -------------
+	return r;
+}
+//	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+// -----------------------------------------------
+int	Cell::run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){
+	if (eng==NULL) return -1;
+	//if (cell==NULL) return -2;
+
+	int r = eng-> run_reactions(this, &vol, run_time);
+	PRINT(":: run (internal) reactions = [%d]\n", r);
+
+	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
+		r = eng-> run_reactions(this, ambcell-> ambvol, run_time);
+		PRINT(":: run (external) reactions = [%d]\n", r);
+	}
+	// -------------
+	return r;
+}
+//	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
+// -----------------------------------------------
+int	Cell::run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){
+	if (eng==NULL) return -1;
+	//if (cell==NULL) return -2;
+
+	return -49;
+}
+// -----------------------------------------------
 
 
 /*
@@ -157,7 +232,8 @@ void AmbientCell::dump(void){
 
 	if (cell!=NULL) { NL cell-> dump(); }
 }
-// -----------------------------------------------
+
+
 /*
 // -----------------------------------------------
 class World {

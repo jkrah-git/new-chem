@@ -26,7 +26,7 @@ private:
 	float	max;
 	// get payload-offset from linea index ([0]=oldest [max]=newest)
 	int		circ_index(int index);
-
+//todo: txt[] - index tags - every 'x' samples
 public:
 	CircBuffer();
 	virtual ~CircBuffer();

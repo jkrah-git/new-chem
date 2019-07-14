@@ -26,7 +26,7 @@ public:
 	void	set(T new_value, T new_delta){ value = new_value; delta = new_delta; }
 	void	setval(T new_value){ value = new_value;  }
 	void	setdelta(T new_delta){ delta = new_delta; }
-	void	scaledelta(T delta_scale){ delta *= delta_scale; }
+	//void	scaledelta(T delta_scale){ delta *= delta_scale; }
 
 
 	void	reset(void){ delta = 0; }
@@ -45,10 +45,34 @@ public:
 		// eg v=1 d=2 = 1/2
 	}
 
+	BufCommitType getmax(T floor, T ceiling) {
+	//	PRINT("val[%f], delta[%f], floor[%f], ceiling[%f]\n", value, delta, floor, ceiling);
+
+		if (delta!=0) {
+			T newval = delta+value;
+			// eg v=3, d=2, C=4 (want 1/2):
+			// Mx = (C-v)/d = 1/2
+			if (newval > ceiling)
+				return ((ceiling-value)/delta);
+
+			// eg v=3,d=-4,f=1 (want 1/2)
+			//Mx =  (F-v)/d = -2/-4
+			if (newval < floor)
+				return ((floor-value)/delta);
+		}
+		return 1.0;
+	}
+
+
+
+
+
+
+
 	void 	commit(BufCommitType max) {	T change = delta * max;		value += change; delta -= change; }
 
 
-
+/*
 	void test(void) {
 
 		printf("MyBuffer.test: == START ==\n");
@@ -66,6 +90,7 @@ public:
 		printf("MyBuffer.test: == END ==\n");
 
 	}
+*/
 
 };
 

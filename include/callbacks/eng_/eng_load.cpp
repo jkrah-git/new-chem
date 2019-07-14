@@ -13,24 +13,24 @@
 // simple noop
 int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 //	PRINT("########## START[NOOP] ##########\n");
-//	PRINT(": time[%f], argc[%d]", run_time, argc);
+//	PRINT(": time[%f], argc[%d]\n", run_time, argc);
 //	for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 //	printf("\n");
 
 
-	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
-	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
+	if (eng==NULL) { PRINT("eng is NULL\n"); return -10; }
+	if (vm==NULL) { PRINT("vm is NULL\n"); return -11; }
 
 	ConcentrationVolume *vol = vm->vol;
-	if (vol==NULL) { printf("vol is NULL\n"); return -11; }
+	if (vol==NULL) { PRINT("vol is NULL\n"); return -12; }
 
-	if (cell==NULL)  { printf("cell is NULL\n"); return -12; }
+	if (cell==NULL)  { PRINT("cell is NULL\n"); return -12; }
 
 	Molecule *m1 = vm-> matchpos.getM1();
-	if (m1==NULL)  { printf("m1 is NULL\n"); return -12; }
+	if (m1==NULL)  { PRINT("m1 is NULL\n"); return -12; }
 
 	Concentration	*M1conc = vol-> molesearch(m1);
-	if (M1conc==NULL) { printf("M1 not in vol..\n"); return -20; }
+	if (M1conc==NULL) { PRINT("M1 not in vol..\n"); return -20; }
 
 	/*
 	ConcAdjustType take = 0.1 * run_time;
@@ -43,8 +43,9 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 	Concentration c;
 	c.setmole(m1);
 	c.set(-1, -0.1);
-//int		apply_concentration(ConcentrationVolume *_vol, Concentration *_conc, CellStatus *_status,  ChemTime run_time);
-	int r = cell-> apply_concentration(&cell-> vol, &c, &cell-> status,  run_time);
+	int r = cell-> apply_concentration(eng, &cell-> vol, &c, &cell-> status,  run_time);
+	if (r<0) { PRINT("cell-> apply_concentration returned[%d]\n", r); return -20; }
+	cell->status.temperature.remove(0.001);
 
 //	printf("=========== match (start) ============\n");
 //	vm-> matchpos.dump();

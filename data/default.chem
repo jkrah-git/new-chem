@@ -3,6 +3,7 @@
 # Welcome to chems..
 # loading (screens and simplepeps..
 # ------------------------------
+eng clip 0.001 0.0001 1000
 screen off
 world add -2 0
 world add 0 0
@@ -22,9 +23,26 @@ f concdisp
 
 # sticky cache
 eng maxtick 20
-eng get
-eng tick 1
+# eng get
+# eng tick 1
+# eng dump
+# loop 254 eng runvol .005 100
+# f testcell
+vol clear
+mole ld 0
+vol addmole 1
+mole ld 4
+vol addmole 10
+vol commit
+##################### pre run ####################
+vol list
 eng dump
-# loop 255 eng runvol .1 100
-#f testcell
+cell dump
+##################### pre run ####################
+cell get
+cell run
+##################### post run ####################
+vol list
+eng dump
+cell dump
 

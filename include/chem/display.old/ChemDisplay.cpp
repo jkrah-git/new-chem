@@ -673,10 +673,10 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 	//sprintf(msg, "Mole[0x%zX] Vol[0x%zX]", (long unsigned int) cp, (long unsigned int) conc_display->get_mole(), (long unsigned int) conc_display->get_vol());
 
 	if (min!=max) {
-		sprintf(msg, "Min: %.3f", min);		gfx.text(msg,  x+sx+1, y+sy+1);
-		sprintf(msg, "Max: %.3f", max);		gfx.text(msg,  x+sx+1, y-sy-1);
+		sprintf(msg, "Min: %f", min);		gfx.text(msg,  x+sx+1, y+sy+1);
+		sprintf(msg, "Max: %f", max);		gfx.text(msg,  x+sx+1, y-sy-1);
 	}
-	sprintf(msg, "(%.3f)", conc_display->buf.last());		gfx.text(msg,  x+sx+1, y);
+	sprintf(msg, "(%f)", conc_display->buf.last());		gfx.text(msg,  x+sx+1, y);
 
 
 
