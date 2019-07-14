@@ -15,7 +15,21 @@ int	cli_world(Concentration_CLI *cli, int argc, char **argv){
 //--------------//---------------------------
 int	cli_world_dump(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
+	//printf("------  ambcell_list ----\n");
+	//cli->world->ambcell_list.dump();
+	cli->world->dump();
+	return 0;
+}
+//---------------------------//---------------------------
+//--------------//---------------------------
+int	cli_world_list(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_WORLD
 	cli->world->ambcell_list.dump();
+	if (cli->selected_ambcell==NULL) {
+		printf("selected_ambcell is NULL\n");
+	} else {
+		printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL
+	}
 	return 0;
 }
 //---------------------------//---------------------------
@@ -38,6 +52,11 @@ int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
 	//amb->dump(); NL;
 
 	cli->selected_ambcell = amb;
+	if (cli->selected_ambcell==NULL) {
+		printf("selected_ambcell is NULL\n");
+	} else {
+		printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL
+	}
 	return 0;
 }
 //---------------------------//---------------------------
@@ -45,37 +64,49 @@ int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
 int	cli_world_ld(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
 
+	AmbientCell *ambcell = NULL;
 	mylist<AmbientCell>::mylist_item<AmbientCell>  *item = NULL;
 	if (argc<1) {
 		item = cli->world->ambcell_list.gettail();
-	} else {
-		int s;
-		//-------------------
-		if (argc==1) {
-			if (strcmp(argv[0], "null" ) == 0) { cli->selected_ambcell = NULL; return 0; }
-			if (sscanf(argv[0], "%x", &s) <0) { printf("Bad Data\n"); return -20; }
-			// else
-			item = cli->world->ambcell_list.offset(s);
-		}  // end argc==1
-		//-------------------
-		if (argc==2) {
-			CellPos pos;
-			if ((sscanf(argv[0], "%x", &pos.dim[CELLPOS_X]) <0)||
-				(sscanf(argv[1], "%x", &pos.dim[CELLPOS_Y]) <0))	{ printf("Bad Data\n"); return -20; }
-			// AmbientCell *World::get_ambcell(CellPos *_pos){
-			//pos.dump();
-			AmbientCell *ambcell = cli->world->get_ambcell(&pos);
-			if (ambcell==NULL) return -10;
-			else { cli->selected_ambcell = ambcell; return 0; }
-		}// end argc==2
-		//-------------------
 	}
+	int s;
+	//-------------------
+	if (argc==1) {
+		if (strcmp(argv[0], "null" ) == 0) {
+			cli->selected_ambcell = NULL;
+		} else {
+			if (sscanf(argv[0], "%x", &s) <0) { printf("Bad Data\n"); return -20; }
+			item = cli->world->ambcell_list.offset(s);
+		}
+	}  // end argc==1
+	//-------------------
+	if (argc==2) {
+		CellPos pos;
+		if ((sscanf(argv[0], "%x", &pos.dim[CELLPOS_X]) <0)||
+			(sscanf(argv[1], "%x", &pos.dim[CELLPOS_Y]) <0))	{ printf("Bad Data\n"); return -20; }
+		ambcell = cli->world->get_ambcell(&pos);
+	}// end argc==2
+	//-------------------
+	if (item !=NULL) {
+		ambcell = item->item;
+	}
+	if (ambcell!=NULL) {
+		cli->selected_ambcell = ambcell;
+	}
+	printf("selected :");
+	if (ambcell==NULL) { printf("<NULL>\n"); }
+	else {	ambcell->pos.dump(); NL	}
 
+
+	return 0;
+}
+/*******************
 	if (item==NULL) return -10;
 	if (item->item ==NULL) return -11;
 	cli->selected_ambcell = item->item;
 	return 0;
 }
+*******************/
 //---------------------------//---------------------------
 //--------------//---------------------------
 int	cli_world_temp(Concentration_CLI *cli, int argc, char **argv){
@@ -134,11 +165,12 @@ int	load_cli_world(Concentration_CLI *cli, int argc, char **argv){
 	cli-> world_cmdlist.clear();
 	sprintf(name, "world");	 	r = cli-> addcmd(&cli-> base_cmdlist, 	cli_world, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_dump, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "list");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_list, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "add");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_add, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "ld");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_ld, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "addvol");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_addvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "selvol");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_selvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "unselvol");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_unselvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "ld");		r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_ld, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "addvol");	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_addvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "selvol");	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_selvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "unselvol");	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_unselvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "temp");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_temp, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//--------------
 	return 0;

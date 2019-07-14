@@ -1,6 +1,21 @@
 ######## cell2.chem ########
-world ld 1
+world ld 0 0
 cell add
 cell selvol
 vol list
 ###
+mole ld 1
+vol addmole 1
+mole ld
+vol addmole 2
+vol commit
+#########
+vol list
+#########
+#########
+#########
+cell dumpvol
+#########
+cell get
+# eng dumpvol
+# cell run

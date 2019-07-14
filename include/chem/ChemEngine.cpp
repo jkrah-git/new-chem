@@ -84,16 +84,44 @@ ChemFunc	*ChemEnzyme::match_next(Concentration_VM *vm){
 }
 // ----------------------------
 /*
+//----------------------------//----------------------------
+class ChemEnzReactionHitList {
+public:
+	ConcentrationVolume		*vol;
+	ChemTime				scale;
+	//-------------------------
+	ChemEnzReactionHitList();
+	virtual ~ChemEnzReactionHitList();
+	void	dump(void);
+};
+//----------------------------
+
+*/
+//----------------------------
+ChemEnzReactionHitList::ChemEnzReactionHitList(){
+	vol = NULL;
+	scale = 0;
+}
+//-------------------------
+ChemEnzReactionHitList::~ChemEnzReactionHitList(){};
+//-------------------------
+void ChemEnzReactionHitList::dump(void){
+	printf("ChemEnzReactionHitList[0x%zX].vol[0x%zX].scale[%f]", (PTR) this, (PTR) vol, scale);
+}
+
+//----------------------------
+/*
 //----------------------------
 class ChemEnzReactionHit {
 public:
 	Molecule	*m1;		// assumed in current col
 	ChemEnzyme	*enz;		// assumed in current
-	// enz_scale = current(live)
-	ChemTime	scale;
-	ChemStep	ttl;
-
 	mylist<MatchPos>	matchpos_list;
+	mylist<ChemEnzReactionHitList>	hit_list;
+
+	ChemTime	scale;
+	ChemStep	ttl; // TODO BUG: ttl is used to signal active hits.. but not vol aware
+
 
 	ChemEnzReactionHit(){ m1=NULL; enz = NULL; scale = 0.0; ttl = 0; }
 	void		dump(void);
@@ -106,6 +134,8 @@ void ChemEnzReactionHit::dump(void){
 	printf("ChemEnzReactionHit[0x%zX]:ttl[%ld]  m1[0x%zX].enz[0x%zX].scale[%f]\n",
 			(long unsigned int) this, ttl, (long unsigned int) m1, (long unsigned int) enz, scale);
 	matchpos_list.dump();
+
+	hit_list.dump();
 }
 // ----------------------------
 /*
@@ -520,21 +550,22 @@ int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run
 					if (match_item-> item !=NULL) {
 
 						Concentration_VM *vm = new Concentration_VM;
+
 						vm->vol =vol;
 						//printf("load: :"); match_item-> item-> dump(); NL
 						// NB: for now we DONT (generage rot_mole)
-						vm->matchpos.load_match( reaction_item-> item-> m1,
+						int r = vm->matchpos.load_match( reaction_item-> item-> m1,
 												 reaction_item-> item-> enz-> get_mole(),
 												 match_item->item , false);
+						PRINT("vm->matchpos.load_match = [%d]\n", r);
 
+						r = f->operation(cell, this, vm, real_time, 0, NULL);
 
-						int r = f->operation(cell, this, vm, real_time, 0, NULL);
-						/*
-						printf("run_reaction: m1[0x%zX] m2[0x%zX] func[%s] = [%d]\n",
+						PRINT("run_reaction: m1[0x%zX] m2[0x%zX] func[%s] = [%d]\n",
 								(long unsigned int) reaction_item-> item-> m1,
 								(long unsigned int) reaction_item-> item-> enz->get_mole(),
 								 f->name.get(), r);
-						*/
+
 						n++;
 
 						delete vm;

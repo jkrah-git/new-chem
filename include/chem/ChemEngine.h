@@ -58,15 +58,32 @@ public:
 	ChemFunc *match_next(Concentration_VM *vm);
 };
 //----------------------------
+//----------------------------
+
+//----------------------------//----------------------------
+//----------------------------//----------------------------
+class ChemEnzReactionHitList {
+public:
+	ConcentrationVolume		*vol;
+	ChemTime				scale;
+	//-------------------------
+	ChemEnzReactionHitList();
+	virtual ~ChemEnzReactionHitList();
+	void	dump(void);
+};
+//----------------------------
+//----------------------------//----------------------------
+//----------------------------
 class ChemEnzReactionHit {
 public:
-	Molecule	*m1;		// assumed in current col
-	ChemEnzyme	*enz;		// assumed in current
-	// enz_scale = current(live)
-	ChemTime	scale;
-	ChemStep	ttl;
+	Molecule				*m1;		// assumed in current col
+	ChemEnzyme				*enz;		// assumed in current
+	ChemStep				ttl; 		// TODO BUG: ttl is used to signal active hits.. but not vol aware
+	mylist<MatchPos>				matchpos_list;
+	mylist<ChemEnzReactionHitList>	hit_list;
 
-	mylist<MatchPos>	matchpos_list;
+	ChemTime	scale;
+
 
 	ChemEnzReactionHit(){ m1=NULL; enz = NULL; scale = 0.0; ttl = 0; }
 	void		dump(void);
@@ -113,10 +130,6 @@ public:
 	int					del_enz(Molecule *_mole);
 	ChemEnzyme			*add_enz(Molecule *_mole, ChemFunc *_func);
 
-	// main
-//	int					get_reactions(Concentration_VM *vm);
-//	int					run_reactions(Cell *cell, Concentration_VM *vm, ChemTime run_time);
-
 	int					get_reactions(ConcentrationVolume *vol);
 	int				 	run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
 	int				  	clean_volume_moles(ConcentrationVolume *vol);
@@ -125,8 +138,6 @@ public:
 	// ------------------------------
 	// --------------
 	void				load_funcs(void);
-	// for each func.. scan each conc..
-	//int					update(ChemTime	update_time, mylist<Concentration>::mylist_item<Concentration> *conc_item);
 
 
 

@@ -16,9 +16,9 @@ int	cli_cell(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_dump(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB
 	//printf("(AmbientCell[0x%zX])->" , (long unsigned int) cli->selected_ambcell);
-	cli->selected_ambcell->dump();
-	NEED_CELL
-	//cli->selected_ambcell-> cell->dump();
+	cli->selected_ambcell->dump(); NL
+//	if (cli->selected_ambcell-> cell!=NULL)
+//		cli->selected_ambcell-> cell->dump();
 	return 0;
 }
 //---------------------------//---------------------------
@@ -26,9 +26,9 @@ int	cli_cell_dump(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_dumpvol(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB
 	//printf("(AmbientCell[0x%zX])->" , (long unsigned int) cli->selected_ambcell);
-	cli->selected_ambcell->dump();
-	NEED_CELL
-	cli->selected_ambcell-> cell->vol.list();
+	cli->selected_ambcell->dump(); NL
+	if (cli->selected_ambcell-> cell!=NULL)
+		cli->selected_ambcell-> cell->vol.list();
 	return 0;
 }
 //---------------------------//---------------------------

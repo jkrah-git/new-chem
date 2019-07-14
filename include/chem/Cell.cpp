@@ -60,9 +60,10 @@ public:
 */
 Cell::Cell() {}
 Cell::~Cell() {}
+#include "common.h"
 // -----------------------------------------------
 void Cell::dump(void) {
-	printf("Cell[0x%zX]:", (unsigned long int) this);
+	printf("Cell[0x%zX] Vol[0x%zX]:", (unsigned long int) this, (PTR) &vol);
 	status.dump(); NL
 }
 #undef PRINT
@@ -149,6 +150,8 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 }
 // -----------------------------------------------
 // -----------------------------------------------
+#undef PRINT
+#define PRINT printf("::%s.", __PRETTY_FUNCTION__); printf
 // -----------------------------------------------
 //	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 // -----------------------------------------------

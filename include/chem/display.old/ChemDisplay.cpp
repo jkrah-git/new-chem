@@ -546,7 +546,7 @@ Molecule *ChemDisplay::draw_match(ChemScreen *screen, ChemDisplayCoords *coords,
 //-------------------------------
 void ChemDisplay::draw_vm(ChemScreen *screen, Concentration_VM *vm){
 	if (screen==NULL) return;
-	char str[128];
+	char str[256];
 	if (vm==NULL) {
 		sprintf(str, "No VM's");
 	} else {
