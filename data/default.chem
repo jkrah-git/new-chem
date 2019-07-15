@@ -5,44 +5,27 @@
 # ------------------------------
 eng clip 0.001 0.0001 1000
 screen off
-world add -2 0
 world add 0 0
-world add 2 0
 cell add
-cell selvol
+world add 1 0
+cell add
 
 f moles/moles2
 f screens
+f concdisp
+screen vm
 # -----------------------------
 mole ld 4
+# ----
 eng run addenz noop
-vol addmole 1
 # -----------------
-f reload
-f concdisp
-
-# sticky cache
-eng maxtick 20
-# eng get
-# eng tick 1
-# eng dump
-# loop 254 eng runvol .005 100
-# f testcell
-vol clear
+world ld 0
+cell selvol
+mole ld 4
+vol addmole 1
 mole ld 0
 vol addmole 1
-mole ld 4
-vol addmole 10
 vol commit
-##################### pre run ####################
-vol list
-eng dump
-cell dump
-##################### pre run ####################
-cell get
-cell run
-##################### post run ####################
-vol list
-eng dump
-cell dump
-
+vol dump
+# -----------------
+f multivol

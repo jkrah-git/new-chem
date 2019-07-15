@@ -102,7 +102,6 @@ private:
 
 	int					count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
 	int					scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
-	int					clear_all_hits(void);
 	//-----------------------------------
 	ChemStep				tick;
 	ChemStep				max_tick;
@@ -137,6 +136,7 @@ public:
 	int					get_reactions(ConcentrationVolume *vol);
 	int				 	run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
 	int				  	clean_volume_moles(ConcentrationVolume *vol);
+	int					clear_all_hits(void);
 	// -----
 	int					run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time);
 	// ------------------------------

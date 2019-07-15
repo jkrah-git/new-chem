@@ -28,7 +28,7 @@ int	load_cli_cell(Concentration_CLI *cli, int argc, char **argv);
 //int	cli_vm(Concentration_CLI *cli, int argc, char **argv);
 Molecule *_cli_mole_fromargs(Concentration_CLI *cli, int argc, char **argv);
 //int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv);
-
+int _cli_world_print_selection(Concentration_CLI *cli, int argc, char **argv);
 
 //---------------------------------------------------------------------
 // ================================================================================================================

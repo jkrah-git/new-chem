@@ -35,6 +35,7 @@ class Cell {
 public:
 	CellStatus 				status;
 	ConcentrationVolume		vol;
+	AmbientCell				*ambcell;
 	// -----------------
 	Cell();
 	virtual ~Cell();
@@ -50,9 +51,15 @@ public:
 //	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 //	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
 //	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
-	int	get_reactions(ChemEngine *eng, AmbientCell *ambcell);
-	int	run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
-	int	run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
+	//int	get_reactions(ChemEngine *eng, AmbientCell *ambcell);
+	//int	run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
+	//int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
+	//int	run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){ return run_cell(eng, &vol, ambcell, run_time); };
+	int	get_reactions(ChemEngine *eng);
+	int	run_reactions(ChemEngine *eng, ChemTime run_time);
+	int	run_cell(ChemEngine *eng, ChemTime run_time){ return run_cell(eng, &vol, run_time); };
+	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
+
 
 };
 // -----------------------------------------------
@@ -93,6 +100,11 @@ public:
 	AmbientCell			*add_ambcell(CellPos *_pos);
 	// todo
 	AmbientCell			*del_ambcell(CellPos *_pos);
+
+	// TODO:
+	int	get_reactions(ChemEngine *eng);
+	int	run_reactions(ChemEngine *eng, ChemTime run_time);
+	int	run_world(ChemEngine *eng, ChemTime run_time);
 
 
 };

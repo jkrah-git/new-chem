@@ -139,8 +139,8 @@ ConcentrationVolume::ConcentrationVolume(){
 ConcentrationVolume::~ConcentrationVolume(){}
 //--------------
 void ConcentrationVolume::dump(void){
-	printf("ConcentrationVolume[0x%zX].",	(long unsigned int) this);
-	conc_list.dump();
+	printf("ConcentrationVolume[0x%zX].mole_list[0x%zX].count[%d]\n",	(long unsigned int) this, (long unsigned int) mole_list, conc_list.count());
+	//conc_list.dump();
 }
 //--------------
 //--------------

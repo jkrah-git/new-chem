@@ -1,0 +1,18 @@
+# -------- multivol.chem
+# -----------------
+world ld 1
+cell selvol
+#
+mole ld 4
+vol addmole 1
+mole ld 1
+vol addmole 1
+#
+vol commit
+# vol dump
+# ----------------- # -----------------
+world ld 0
+cell run 1
+world ld 1
+cell run 1
+world list vol

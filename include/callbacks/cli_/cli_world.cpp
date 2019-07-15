@@ -2,14 +2,20 @@
 #include "../command_callbacks.h"
 //---------------------------------
 #include <string.h>
+#include "common.h"
 //---------------------------
 //---------------------------//---------------------------
 int	cli_world(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI
 	//-------
-	if (argc>0)	return 	cli-> run(&cli-> world_cmdlist, argc,  &argv[0]);
+	if (argc>0)	{
+		int r = cli-> run(&cli-> world_cmdlist, argc,  &argv[0]);
+		_cli_world_print_selection(cli, argc, argv);
+		return r;
+	}
 	// else
 	cli-> world_cmdlist.dump();
+	_cli_world_print_selection(cli, argc, argv);
 	return 0;
 }
 //--------------//---------------------------
@@ -21,15 +27,70 @@ int	cli_world_dump(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 //---------------------------//---------------------------
+int _cli_world_print_selection(Concentration_CLI *cli, int argc, char **argv) {
+	if (cli==NULL) return -1;
+	printf(".............\n");
+	printf("[selected_ambcell][0x%zX] = ", (PTR) cli-> selected_ambcell);
+	if (cli->selected_ambcell==NULL){ printf("<NULL>\n");	}
+	else 							{ cli->selected_ambcell->pos.dump(); NL	}
+
+	printf("[vm.vol] = ");
+	if (cli->selected_vm==NULL) { printf("<NULL vm>\n");	}
+	else {
+		if (cli-> selected_vm-> vol==NULL)  { printf("<NULL>\n");	}
+		else {
+			if (cli-> selected_vm-> vol == cli->selected_ambcell->ambvol) {
+				printf("AmbientCell[0x%zX].vol\n", (PTR) cli-> selected_ambcell);	}
+			if ((cli->selected_ambcell-> cell!=NULL) && (cli-> selected_vm-> vol == &cli->selected_ambcell->cell-> vol)) {
+				printf("selected_ambcell.cell[0x%zX].vol\n", (PTR) cli->selected_ambcell->cell);
+			}
+		}
+	}
+	return 0;
+}
 //--------------//---------------------------
 int	cli_world_list(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
-	cli->world->ambcell_list.dump();
-	if (cli->selected_ambcell==NULL) {
-		printf("selected_ambcell is NULL\n");
-	} else {
-		printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL
+	if ((argc<1) || (strcmp(argv[0], "ambcell")==0)){ cli->world->ambcell_list.dump(); }
+
+	int r = 0;
+	//----------------------------
+	if ((argc==1)&&(strcmp(argv[0], "vol")==0)){
+
+		mylist<AmbientCell>::mylist_item<AmbientCell> *amb_item = cli->world->ambcell_list.gethead();
+		while(amb_item!=NULL) {
+			if (amb_item->item!=NULL) {
+				printf("=============== Pos[%d, %d] ===============\n",
+						amb_item->item ->pos.dim[CELLPOS_X],amb_item->item ->pos.dim[CELLPOS_Y]);
+
+				amb_item->item -> dump(); printf("------------- Vol's\n");
+				if (amb_item->item-> ambvol != NULL) {
+					r = amb_item->item-> ambvol->get_conc_list()->  count();
+					printf("... ambcell.ambvol(%d conc's) :", r);
+					amb_item->item-> ambvol-> list();
+				}
+
+				if (amb_item->item->cell!=NULL)	{
+					r = amb_item->item->cell->vol.get_conc_list()-> count();
+					printf("... cell.vol (%d conc's) :", r);
+					amb_item->item->cell->vol.list();
+				}
+
+			} // end item->item
+			//------------
+			amb_item = amb_item-> next;
+		} // end while
+		printf("===========================================\n");
 	}
+	//----------------------------
+	//----------------------------
+	if ((argc==1)&&(strcmp(argv[0], "heap")==0)){ cli->world->mole_list.dump(); return cli->world->mole_list.count(); }
+
+	//--------------------
+//	_cli_world_print_selection(cli);
+//	if (cli->selected_ambcell==NULL){ printf("selected_ambcell is NULL\n");	}
+//	else 							{ printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL	}
+
 	return 0;
 }
 //---------------------------//---------------------------
@@ -52,11 +113,9 @@ int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
 	//amb->dump(); NL;
 
 	cli->selected_ambcell = amb;
-	if (cli->selected_ambcell==NULL) {
-		printf("selected_ambcell is NULL\n");
-	} else {
-		printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL
-	}
+	//-----------
+	//if (cli->selected_ambcell==NULL) {	printf("selected_ambcell is NULL\n");	}
+	//else {	printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL }
 	return 0;
 }
 //---------------------------//---------------------------
@@ -154,6 +213,16 @@ int	cli_world_unselvol(Concentration_CLI *cli, int argc, char **argv){
 	cli-> local_vm.vol = NULL; // &cli-> local_vol;
 	return 0;
 }
+//--------------//---------------------------
+// TODO:
+/*
+ * 	int	get_reactions(ChemEngine *eng);
+	int	run_reactions(ChemEngine *eng, ChemTime run_time);
+	int	run_cell(ChemEngine *eng, ChemTime run_time){ return run_cell(eng, &vol, run_time); };
+	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
+ */
+
+//--------------//---------------------------
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 int	load_cli_world(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;

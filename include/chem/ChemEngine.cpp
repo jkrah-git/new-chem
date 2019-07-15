@@ -619,6 +619,7 @@ int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 											printf("reaction.add_vol(vol) failed (already exists)\n");
 											return -40;
 										}
+
 									} else {
 										//----------------------------------------------
 						//				printf("cache: MISS\n");
@@ -663,6 +664,7 @@ int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 										continue;
 									} // conc_scale
 									reaction_hit-> scale = (passive_conc_item-> item->get() * active_conc_item->item->get());
+									n++;
 							//		printf("cache: conc_scale[%.3f] = ( M1 [%.3f] x M2[%.3f] )\n", reaction->scale, passive_conc_item-> item->get(), active_conc_item->item->get());
 									// --------------
 								} // else skip (passve==active)
@@ -697,6 +699,9 @@ int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 		//----------------
 		return n;
 }
+//#define RVPRINT printf
+#define RVPRINT if (false) printf
+
 
 // ----------------------------
 int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
@@ -725,11 +730,11 @@ int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run
 							int r = vm->matchpos.load_match( reaction_item-> item-> m1,
 													 reaction_item-> item-> enz-> get_mole(),
 													 match_item->item , false);
-							PRINT("vm->matchpos.load_match = [%d]\n", r);
+							RVPRINT("vm->matchpos.load_match = [%d]\n", r);
 
 							r = f->operation(cell, this, vm, real_time, 0, NULL);
 
-							PRINT("run_reaction: m1[0x%zX] m2[0x%zX] func[%s] = [%d]\n",
+							RVPRINT("run_reaction: m1[0x%zX] m2[0x%zX] func[%s] = [%d]\n",
 									(long unsigned int) reaction_item-> item-> m1,
 									(long unsigned int) reaction_item-> item-> enz->get_mole(),
 									 f->name.get(), r);
@@ -752,14 +757,10 @@ int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run
 	return n;
 }
 // ----------------------------
-#define RVPRINT printf
-//#define RVPRINT if (false) printf
-
 // ----------------------------// ----------------------------// ----------------------------// ----------------------------
 int		ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
 //	Concentration_VM vm;
 //	vm.vol = vol;
-
 	int r;
 	int n = 0;
 
@@ -798,6 +799,8 @@ int		ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_t
 int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 	if (vol==NULL) return -1;
 	int n = 0;
+	return -49;
+	// todo: multi vol support
 	// clean out unsed conc's
 	mylist<Molecule> *mole_list = vol->get_mole_list();
 

@@ -54,8 +54,10 @@ int	cli_eng_dump(Concentration_CLI *cli, int argc, char **argv){
 int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
 //	DUMP(cli->world.chem_engine)
-	cli->world-> chem_engine.dump();
-	return 0;
+	int r = cli->world-> chem_engine.reaction_list.count();
+	printf("Found [%d] reactions..\n", r);
+	cli->world-> chem_engine.reaction_list.dump();
+	return r;
 }
 // --------------------------
 // --------------------------
@@ -127,7 +129,10 @@ int	cli_eng_maxtick(Concentration_CLI *cli, int argc, char **argv){
 // 'get'
 int	cli_eng_get(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_VM NEED_VOL
-	return cli->world-> chem_engine. get_reactions(vm-> vol);
+	int r =  cli->world-> chem_engine. get_reactions(vm-> vol);
+	printf("chem_engine. get_reactions(vol) = [%d]\n", r);
+	return r;
+
 }
 // --------------------------
 // int	ChemEngine::run_reactions(Concentration_VM *vm, ConcentrationVolume *vol, ChemTime run_time){
@@ -320,6 +325,15 @@ int	cli_eng_clip(Concentration_CLI *cli, int argc, char **argv){
 	return 0;
 }
 // --------------------------
+// 'ldr - load reaction'
+int	cli_eng_clear(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_WORLD NEED_ENG
+
+	int r = cli->world->chem_engine. clear_all_hits();
+	printf(" clear_all_hits() = [%d]\n", r);
+	return r;
+}
+// --------------------------
 
 // --------------------------
 // -------------------------- // --------------------------
@@ -330,6 +344,7 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	char name[32];
 	sprintf(name, "eng");		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_eng, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "dump");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_dump, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "list");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_list, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "run");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_run, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runmatch");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runmatch, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runfunc");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runfunc, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
@@ -343,6 +358,7 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ldr");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_ldr, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "clip");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_clip, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "clear");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_clear, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	return 0;
 }
 

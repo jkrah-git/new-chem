@@ -41,6 +41,8 @@ class Cell {
 public:
 	CellStatus 				status;
 	ConcentrationVolume		vol;
+	AmbientCell				*ambcell;
+	// -----------------
 	// -----------------
 	Cell();
 	virtual ~Cell();
@@ -58,12 +60,12 @@ public:
 };
 // -----------------------------------------------
 */
-Cell::Cell() {}
+Cell::Cell() { ambcell  = NULL;}
 Cell::~Cell() {}
 #include "common.h"
 // -----------------------------------------------
 void Cell::dump(void) {
-	printf("Cell[0x%zX] Vol[0x%zX]:", (unsigned long int) this, (PTR) &vol);
+	printf("Cell[0x%zX] Amb[0x%zX] Vol[0x%zX](%d):", (PTR) this, (PTR) ambcell, (PTR) &vol, vol.get_conc_list()->count());
 	status.dump(); NL
 }
 #undef PRINT
@@ -155,7 +157,7 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 // -----------------------------------------------
 //	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 // -----------------------------------------------
-int	Cell::get_reactions(ChemEngine *eng, AmbientCell *ambcell){
+int	Cell::get_reactions(ChemEngine *eng){ //, AmbientCell *ambcell){
 	if (eng==NULL) return -1;
 	//if (cell==NULL) return -2;
 
@@ -166,13 +168,13 @@ int	Cell::get_reactions(ChemEngine *eng, AmbientCell *ambcell){
 		r = eng-> get_reactions(ambcell-> ambvol);
 		PRINT(":: get (external) reactions = [%d]\n", r);
 	}
-
 	// -------------
 	return r;
 }
 //	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
 // -----------------------------------------------
-int	Cell::run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){
+// int	Cell::run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){
+int	Cell::run_reactions(ChemEngine *eng, ChemTime run_time){
 	if (eng==NULL) return -1;
 	//if (cell==NULL) return -2;
 
@@ -187,12 +189,47 @@ int	Cell::run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time
 	return r;
 }
 //	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
-// -----------------------------------------------
-int	Cell::run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){
-	if (eng==NULL) return -1;
-	//if (cell==NULL) return -2;
+// ----------------------------------------------- 	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
 
-	return -49;
+//int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time){
+int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time){
+	if (eng==NULL) return -1;
+	if (vol==NULL) return -2;
+//===============================================
+	int r;
+	int n = 0;
+
+	PRINT("|--------   RUN Cell [%.3f]    --------| \n", run_time);
+	PRINT(".. update ttls\n");
+	eng-> next_tick();
+	PRINT(".. updating reactions\n");
+	r = eng-> get_reactions(vol);
+	PRINT(".. got [%d] new reactions..\n", r);
+	PRINT(".. running reactions [%.3f]\n", run_time);
+	PRINT("---------------------------------------\n");
+	n = eng-> run_reactions(this, vol, run_time);
+	PRINT("---------------------------------------\n");
+	PRINT(".. run_reactions.time[%f]= [%d]\n", run_time, n);
+
+	ChemTime	max_commit = vol-> get_maxcommit(eng-> conc_min, eng-> conc_max) ;
+	PRINT(".. max_commit[%f]\n", max_commit);
+	if (max_commit>1.0) {
+		PRINT(".. scaling max_commit back to 1.0\n");
+		max_commit = 1.0;
+	}
+
+	vol-> commit(max_commit);
+	r = vol->clip_conc(eng-> conc_clip, eng-> conc_max);
+
+	PRINT(".. vol-> clean_conc = [%d]\n", r);
+	r = eng-> clean_volume_moles(vol);
+	PRINT(".. clean_volume_moles(vol) = [%d]\n", r);
+	r = eng-> clear_all_hits();
+	PRINT(".. clear_all_hits = [%d]\n", r);
+
+
+//==============================================
+	return 0;
 }
 // -----------------------------------------------
 

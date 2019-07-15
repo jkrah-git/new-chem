@@ -43,6 +43,8 @@ int	cli_cell_add(Concentration_CLI *cli, int argc, char **argv){
 	if (cli->selected_ambcell->cell==NULL) {
 		printf("amb-cell Failed to add cell\n"); return -10;
 	}
+	cli->selected_ambcell->cell-> ambcell = cli->selected_ambcell;
+
 	// ** Important ** (set upstream molelist)
 	cli->selected_ambcell->cell->vol.set_molelist(&cli->world->mole_list);
 	return 0;
@@ -130,6 +132,7 @@ int	cli_cell_commit(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_VM NEED_AMB NEED_CELL
 	if (argc==0) {
 		cli->selected_ambcell-> cell->status.commit();
+		//cli->selected_ambcell-> cell->vol.commit();
 		printf("cell commit..\n");
 		return 0;
 		//CellStatusType eff = cli->selected_ambcell-> cell->status.efficiency();
@@ -142,7 +145,7 @@ int	cli_cell_commit(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_get(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_VM NEED_WORLD NEED_AMB NEED_CELL
 	if (argc==0) {
-		int r = cli->selected_ambcell-> cell->get_reactions(&cli->world->chem_engine, cli->selected_ambcell);
+		int r = cli->selected_ambcell-> cell-> get_reactions(&cli->world->chem_engine);
 		printf(" cell->get_reactions = [%d]\n", r);
 		return r;
 	}
@@ -155,7 +158,13 @@ int	cli_cell_run(Concentration_CLI *cli, int argc, char **argv){
 	float t = 1.0f;
 
 	if ((argc>0) && (sscanf(argv[0], "%f", &t)<1)) { printf("Bad Data\n"); return -20; }
-	int r = cli->selected_ambcell-> cell->run_reactions(&cli->world->chem_engine, cli->selected_ambcell, t);
+
+	//int r = cli->selected_ambcell-> cell->run_reactions(&cli->world->chem_engine, cli->selected_ambcell, t);
+//	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
+
+
+	int r = cli->selected_ambcell-> cell->run_cell(&cli->world->chem_engine, t);
+
 	printf(" cell->run_reactions[%f] = [%d]\n", t, r);
 
 	return r;

@@ -541,6 +541,7 @@ int	cli_load_base(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, ";"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_multi, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "file"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "f"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_file, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "w"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	_cli_world_print_selection, (char*) name);			LOG("base_cmdlist[%s] = [%d]\n", name, r);
 
 	sprintf(name, "s"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_stacks, (char*) name);		LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "r"); 		r = cli-> addcmd(&cli-> base_cmdlist, 	cli_dump_regs, (char*) name);		LOG("base_cmdlist[%s] = [%d]\n", name, r);
