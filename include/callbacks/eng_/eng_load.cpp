@@ -10,6 +10,7 @@
 // int 	(*operation)(Concentration_VM*, int, char**);
 
 // ---------------------------------------------------
+#include "common.h"
 // simple noop
 int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 //	PRINT("########## START[NOOP] ##########\n");
@@ -43,8 +44,11 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 	Concentration c;
 	c.setmole(m1);
 	c.set(-1, -0.1);
-	int r = cell-> apply_concentration(eng, &cell-> vol, &c, &cell-> status,  run_time);
-	if (r<0) { PRINT("cell-> apply_concentration returned[%d]\n", r); return -20; }
+//	int r = cell-> apply_concentration(eng, &cell-> vol, &c, &cell-> status,  run_time);
+
+	int r = cell-> apply_concentration(eng, vol, &c, &cell-> status,  run_time);
+
+	if (r<0) { PRINT("cell-> apply_concentration returned[%d] m1=[0x%zX]\n", r, (PTR) m1); return -20; }
 	cell->status.temperature.remove(0.001);
 
 //	printf("=========== match (start) ============\n");

@@ -46,7 +46,7 @@ public:
 	}
 
 	BufCommitType getmax(T floor, T ceiling) {
-		PRINT("val[%f], delta[%f], floor[%f], ceiling[%f]\n", value, delta, floor, ceiling);
+		// PRINT("val[%f], delta[%f], floor[%f], ceiling[%f]\n", value, delta, floor, ceiling);
 
 		if (delta!=0) {
 			T newval = delta+value;

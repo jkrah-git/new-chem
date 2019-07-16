@@ -165,11 +165,11 @@ int	Cell::get_reactions(ChemEngine *eng){ //, AmbientCell *ambcell){
 	//if (cell==NULL) return -2;
 	int n = 0;
 	int r = eng-> get_reactions(&vol);
-	PRINT(":: get (internal) reactions = [%d]\n", r);
+	if (r<0) { PRINT(" get (internal) reactions = [%d]\n", r); }
 	n += r;
 	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
 		r = eng-> get_reactions(ambcell-> ambvol);
-		PRINT(":: get (external) reactions = [%d]\n", r);
+		if (r<0) {  PRINT(" get (external) reactions = [%d]\n", r); }
 		n += r;
 	}
 	// -------------
@@ -183,11 +183,11 @@ int	Cell::run_reactions(ChemEngine *eng, ChemTime run_time){
 	//if (cell==NULL) return -2;
 	int n = 0;
 	int r = eng-> run_reactions(this, &vol, run_time);
-	PRINT(":: run (internal) reactions = [%d]\n", r);
+	if (r<0) { PRINT(":: run (internal) reactions = [%d]\n", r); }
 	n += r;
 	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
 		r = eng-> run_reactions(this, ambcell-> ambvol, run_time);
-		PRINT(":: run (external) reactions = [%d]\n", r);
+		if (r<0) { PRINT(":: run (external) reactions = [%d]\n", r); }
 		n += r;
 	}
 	// -------------
@@ -220,20 +220,15 @@ int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time)
 	int r;
 	int n = 0;
 
-	PRINT("|--------   RUN Cell [%.3f]    --------| \n", run_time);
-	PRINT(".. update ttls\n");
 	eng-> next_tick();
-	PRINT(".. updating reactions\n");
 	r = eng-> get_reactions(vol);
-	PRINT(".. got [%d] new reactions..\n", r);
-	PRINT(".. running reactions [%.3f]\n", run_time);
-	PRINT("---------------------------------------\n");
+	if (r<0) { PRINT(".. got [%d] new reactions..\n", r); }
+
 	n = eng-> run_reactions(this, vol, run_time);
-	PRINT("---------------------------------------\n");
-	PRINT(".. run_reactions.time[%f]= [%d]\n", run_time, n);
+	if (n<0) { PRINT(".. run_reactions.time[%f]= [%d]\n", run_time, n); }
 
 	ChemTime	max_commit = vol-> get_maxcommit(eng-> conc_min, eng-> conc_max) ;
-	PRINT(".. max_commit[%f]\n", max_commit);
+	if (max_commit<=0) { PRINT(".. max_commit[%f]\n", max_commit); }
 	if (max_commit>1.0) {
 		PRINT(".. scaling max_commit back to 1.0\n");
 		max_commit = 1.0;
@@ -241,21 +236,17 @@ int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time)
 
 	vol-> commit(max_commit);
 	r = vol->clip_conc(eng-> conc_clip, eng-> conc_max);
-
-	PRINT(".. vol-> clean_conc = [%d]\n", r);
+	if (r<0) { PRINT(".. vol-> clean_conc = [%d]\n", r); }
 	r = eng-> clean_volume_moles(vol);
-	PRINT(".. clean_volume_moles(vol) = [%d]\n", r);
+	if (r<0) { PRINT(".. clean_volume_moles(vol) = [%d]\n", r); }
 	r = eng-> clear_all_hits();
-	PRINT(".. clear_all_hits = [%d]\n", r);
+	if (r<0) { PRINT(".. clear_all_hits = [%d]\n", r); }
 
 
 //==============================================
 	return 0;
 }
 // -----------------------------------------------
-
-
-
 /*
 // -----------------------------------------------
 class AmbientCell {
@@ -374,7 +365,7 @@ int	World::get_reactions(ChemEngine *eng){
 	while (ambcell_item!=NULL){
 		if ((ambcell_item->item !=NULL) && (ambcell_item->item-> cell !=NULL)){
 			int r = ambcell_item->item-> cell->get_reactions(eng);
-			PRINT("Cell[x%zX].get_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r);
+			if (r<0) { PRINT("Cell[x%zX].get_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r); }
 			if (r>=0) n += r;
 
 		} // end cell
@@ -395,7 +386,7 @@ int	World::run_reactions(ChemEngine *eng, ChemTime run_time){
 
 			int r = ambcell_item->item-> cell->run_reactions(eng, run_time);
 
-			PRINT("Cell[x%zX].run_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r);
+			if (r<-0) { PRINT("Cell[x%zX].run_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r); }
 			if (r>=0) n += r;
 
 		} // end cell
@@ -428,7 +419,7 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 		// ---
 		ambcell_item = ambcell_item->next;
 	}
-	PRINT(".. max_commit[%f]\n", max_commit);
+	if (max_commit<=0) { PRINT(".. max_commit[%f]\n", max_commit); }
 	if (max_commit>1.0) {
 		PRINT(".. scaling max_commit back to 1.0\n");
 		max_commit = 1.0;
@@ -464,7 +455,7 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 	// clear eng hits
 	// ---------------------------------
 	int t = eng-> clear_all_hits();
-	PRINT(".. clear_all_hits = [%d]\n", t);
+	if (t<0) PRINT(".. clear_all_hits = [%d]\n", t);
 
 
 
