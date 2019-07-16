@@ -46,11 +46,11 @@ public:
 	AmbientCell					*selected_ambcell;
 
 	int							last_result;
-	// todo - pointer
 	World						*world;
+
+	// TODO consolidate to 'local_vm'
 	Concentration_VM			local_vm;
 	Concentration_VM			*selected_vm;
-
 	Concentration_VM			*get_selected_vm(void){ return selected_vm; };
 
 	// TODO Superclass / list of lists
@@ -92,41 +92,6 @@ public:
 	void	load_commands();
 	void 	dump();
 	void 	test();
-
-
-	// Todo - try to migrate to engine.vm
-	//=======================================
-	//	ChemEngine					*chem_engine;
-	//	ConcentrationVolume			local_vol;
-	//ConcentrationVolume			*selected_vol;
-	//mylist<ConcentrationVolume>	vol_list;
- 	//void						select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
-	//----
-	//mylist<Concentration_VM>	vm_list;
- /*
- 	Concentration_VM	*add_vm(void);
-	int					del_vm(Concentration_VM *_vm);
-	int					list_vms(void);
-	int					pop_vm(void);
-	*/
-	//=======================================
-
-//	ConcentrationVolume	*get_selected_vol(void){ return selected_vol; };
-// 	void				select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
-	/*
- 	ConcentrationVolume	*add_vol(void);
- 	int					del_vol(ConcentrationVolume *_vol);
-	int					list_vols(void);
-	int					pop_vol(void);
-	 */
-
-
-//	Concentration_VM			*get_selected_vm(void){ return selected_vm; };
-// 	void						select_vm(Concentration_VM *_vm){ selected_vm = _vm; };
-//	ConcentrationVolume			*get_selected_vol(void){ return selected_vol; };
-// 	void						select_vol(ConcentrationVolume *_vol){ selected_vol = _vol; };
-
-
 
 
 	int		addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentration_CLI*, int, char**), char *name);

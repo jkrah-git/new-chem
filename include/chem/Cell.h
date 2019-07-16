@@ -45,19 +45,12 @@ public:
 
 	// ----------------- apply_concentration
 	// try to apply 'conc-> delta' to cell.vol
-	// NB: will overwrite 'conc)-> val' (with current conc->val)
+	// NB: will overwrite 'conc)-> val' (with current vol.conc->val)
 	int		apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time);
 	// -------------------------
-//	int	ChemEngine::get_reactions(ConcentrationVolume *vol){
-//	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
-//	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
-	//int	get_reactions(ChemEngine *eng, AmbientCell *ambcell);
-	//int	run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
-	//int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
-	//int	run_cell(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time){ return run_cell(eng, &vol, ambcell, run_time); };
 	int	get_reactions(ChemEngine *eng);
 	int	run_reactions(ChemEngine *eng, ChemTime run_time);
-	int	run_cell(ChemEngine *eng, ChemTime run_time){ return run_cell(eng, &vol, run_time); };
+	int	run_cell(ChemEngine *eng, ChemTime run_time); //{ return run_cell(eng, &vol, run_time); };
 	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
 
 
@@ -98,14 +91,27 @@ public:
 
 	AmbientCell 		*get_ambcell(CellPos *_pos);
 	AmbientCell			*add_ambcell(CellPos *_pos);
-	// todo
-	AmbientCell			*del_ambcell(CellPos *_pos);
+	// todo: del_ambcell
+	//AmbientCell			*del_ambcell(CellPos *_pos);
 
-	// TODO:
+	// TODO: _world reactions
+	int	get_reactions(void){ return get_reactions(&chem_engine); };
+	int	run_reactions(ChemTime run_time){ return run_reactions(&chem_engine, run_time); };
+	int	finish_reactions(void){ return finish_reactions(&chem_engine); };
+	int	run_world(ChemTime run_time){ return run_world(&chem_engine, run_time); };
+
+
+
+
 	int	get_reactions(ChemEngine *eng);
 	int	run_reactions(ChemEngine *eng, ChemTime run_time);
+	int	finish_reactions(ChemEngine *eng);
 	int	run_world(ChemEngine *eng, ChemTime run_time);
 
+
+
+
+	ChemTime get_cell_maxcommit(Cell *cell);
 
 };
 // -----------------------------------------------

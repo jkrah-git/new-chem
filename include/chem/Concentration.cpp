@@ -224,7 +224,7 @@ void	ConcentrationVolume::set(Molecule	*m, ConcLevelType new_val, ConcLevelType 
 //--------------
 ConcLevelType	ConcentrationVolume::get(Molecule	*m){
 	Concentration *conc = molesearch(m);
-	if (conc==NULL) return -1.0;
+	if (conc==NULL) return 0.0;
 	return conc->get();
 }
 //--------------

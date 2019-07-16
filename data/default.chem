@@ -6,8 +6,7 @@
 eng clip 0.001 0.0001 1000
 screen off
 world add 0 0
-cell add
-world add 1 0
+world addvol
 cell add
 
 f moles/moles2
@@ -20,12 +19,20 @@ mole ld 4
 eng run addenz noop
 # -----------------
 world ld 0
+#
+world selvol
+f reload
+
 cell selvol
 mole ld 4
 vol addmole 1
 mole ld 0
 vol addmole 1
 vol commit
-vol dump
+#f multivol
 # -----------------
-f multivol
+world list vol
+# -----------------
+world selvol
+eng runvol .1
+world list vol

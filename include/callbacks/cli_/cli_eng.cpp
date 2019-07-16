@@ -189,7 +189,7 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 
 	//-------
 	for (int i=0; i<repeat; i++) {
-		int r = cli->world-> chem_engine.run_volume( cli->selected_ambcell-> cell, vm->vol, run_time);
+		int r = cli->world-> chem_engine.run_volume(cli->selected_ambcell-> cell, vm->vol, run_time);
 		if (r>=0)
 			n++;
 		//printf("chem_engine.run_volume[%d] = [%d]\n", i, r);

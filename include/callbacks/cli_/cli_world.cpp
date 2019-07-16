@@ -215,13 +215,34 @@ int	cli_world_unselvol(Concentration_CLI *cli, int argc, char **argv){
 }
 //--------------//---------------------------
 // TODO:
-/*
- * 	int	get_reactions(ChemEngine *eng);
-	int	run_reactions(ChemEngine *eng, ChemTime run_time);
-	int	run_cell(ChemEngine *eng, ChemTime run_time){ return run_cell(eng, &vol, run_time); };
-	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
- */
 
+// 	int	get_reactions(ChemEngine *eng);
+//--------------//---------------------------
+int	cli_world_get(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_WORLD
+	int r = cli->world->get_reactions();
+	printf("world get = [%d[\n", r);
+	return r;
+}
+//--------------//---------------------------
+//	int	run_reactions(ChemEngine *eng, ChemTime run_time);
+//--------------//---------------------------
+//	int	run_cell(ChemEngine *eng, ChemTime run_time){ return run_cell(eng, &vol, run_time); };
+//--------------//---------------------------
+//	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time);
+//--------------//---------------------------
+
+//int	World::run_world(ChemEngine *eng, ChemTime run_time){
+//--------------//---------------------------
+int	cli_world_tick(Concentration_CLI *cli, int argc, char **argv){
+	NEED_CLI NEED_WORLD
+	float f = 1.0;
+	if ((argc>0) && ( sscanf(argv[0], "%f" , &f) <0)) { printf("bad data..\n"); return -30; }
+
+	int r = cli->world->run_world(f);
+	printf("world tick = [%d]\n", r);
+	return r;
+}
 //--------------//---------------------------
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 int	load_cli_world(Concentration_CLI *cli, int argc, char **argv){
@@ -241,6 +262,8 @@ int	load_cli_world(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "selvol");	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_selvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "unselvol");	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_unselvol, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "temp");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_temp, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "get");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_get, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	sprintf(name, "tick");	 	r = cli-> addcmd(&cli-> world_cmdlist, 	cli_world_tick, (char*) name);	LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	//--------------
 	return 0;
 }

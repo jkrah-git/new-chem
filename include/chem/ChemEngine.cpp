@@ -786,10 +786,9 @@ int		ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_t
 
 	vol-> commit(max_commit);
 	r = vol->clip_conc(conc_clip, conc_max);
-
 	RVPRINT(".. vol-> clean_conc = [%d]\n", r);
-	r = clean_volume_moles(vol);
-	RVPRINT(".. clean_volume_moles(vol) = [%d]\n", r);
+	//r = clean_volume_moles(vol);
+	//RVPRINT(".. clean_volume_moles(vol) = [%d]\n", r);
 	r = clear_all_hits();
 	RVPRINT(".. clear_all_hits = [%d]\n", r);
 

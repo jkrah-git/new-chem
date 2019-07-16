@@ -91,6 +91,7 @@ int	cli_cell_selvol(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB NEED_CELL
 
 	cli-> local_vm.vol = &cli->selected_ambcell->cell-> vol;
+	_cli_world_print_selection(cli, argc, argv);
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------

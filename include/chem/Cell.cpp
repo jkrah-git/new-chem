@@ -68,10 +68,9 @@ void Cell::dump(void) {
 	printf("Cell[0x%zX] Amb[0x%zX] Vol[0x%zX](%d):", (PTR) this, (PTR) ambcell, (PTR) &vol, vol.get_conc_list()->count());
 	status.dump(); NL
 }
+
 #undef PRINT
 #define PRINT if (false) printf
-// -----------------------------------------------
-
 
 // -----------------------------------------------
 int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
@@ -82,6 +81,7 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 	//ConcLevelType val = conc->getval();
 	//ConcLevelType delta = conc->getdelta();
 	ConcLevelType delta = conc->buf.getdelta();
+
 	conc->buf.setval(targ_vol->get(mole));
 	//ConcLevelType new_val = val + delta;
 
@@ -110,6 +110,8 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 	// BufCommitType getmax(T floor, T ceiling) {
 	BufCommitType conc_max_commit = conc->buf.getmax(eng->conc_min, eng->conc_max);
 		PRINT("conc_max_commit  = [%f]\n", conc_max_commit);
+
+
 	if (conc_max_commit<=0) return -3;
 	if (conc_max_commit<=1) {
 		total_ammount *= conc_max_commit;
@@ -152,6 +154,7 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 }
 // -----------------------------------------------
 // -----------------------------------------------
+// -----------------------------------------------
 #undef PRINT
 #define PRINT printf("::%s.", __PRETTY_FUNCTION__); printf
 // -----------------------------------------------
@@ -160,16 +163,17 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 int	Cell::get_reactions(ChemEngine *eng){ //, AmbientCell *ambcell){
 	if (eng==NULL) return -1;
 	//if (cell==NULL) return -2;
-
+	int n = 0;
 	int r = eng-> get_reactions(&vol);
 	PRINT(":: get (internal) reactions = [%d]\n", r);
-
+	n += r;
 	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
 		r = eng-> get_reactions(ambcell-> ambvol);
 		PRINT(":: get (external) reactions = [%d]\n", r);
+		n += r;
 	}
 	// -------------
-	return r;
+	return n;
 }
 //	int	ChemEngine::run_reactions(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
 // -----------------------------------------------
@@ -177,21 +181,38 @@ int	Cell::get_reactions(ChemEngine *eng){ //, AmbientCell *ambcell){
 int	Cell::run_reactions(ChemEngine *eng, ChemTime run_time){
 	if (eng==NULL) return -1;
 	//if (cell==NULL) return -2;
-
+	int n = 0;
 	int r = eng-> run_reactions(this, &vol, run_time);
 	PRINT(":: run (internal) reactions = [%d]\n", r);
-
+	n += r;
 	if ((ambcell!=NULL) && (ambcell-> ambvol!=NULL)) {
 		r = eng-> run_reactions(this, ambcell-> ambvol, run_time);
 		PRINT(":: run (external) reactions = [%d]\n", r);
+		n += r;
 	}
 	// -------------
-	return r;
+	return n;
 }
-//	int	ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_time){
-// ----------------------------------------------- 	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
+// -----------------------------------------------
 
-//int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time){
+int	Cell::run_cell(ChemEngine *eng, ChemTime run_time){
+	if (eng==NULL) return -1;
+	int r,s,n;
+	n = 0;
+	s = 0;
+	//	r =  run_cell(eng, &vol, run_time);
+	r = eng-> run_reactions(this, &vol, run_time);
+	if (r<0) { PRINT("run_reactions cell.vol =[%d]\n", r); }
+	else { n += r; }
+	if ((ambcell!=NULL) && (ambcell->ambvol !=NULL)){
+		s = eng-> run_reactions(this, ambcell-> ambvol, run_time);
+		if (s<0) { PRINT("run_reactions amb.vol =[%d]\n", r); }
+		else { n += r; }
+	}
+	return n;
+}
+// -----------------------------------------------
+
 int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time){
 	if (eng==NULL) return -1;
 	if (vol==NULL) return -2;
@@ -234,6 +255,7 @@ int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time)
 // -----------------------------------------------
 
 
+
 /*
 // -----------------------------------------------
 class AmbientCell {
@@ -267,8 +289,17 @@ AmbientCell::~AmbientCell(){
 void AmbientCell::dump(void){
 	printf("AmbientCell[0x%zX]:" , (long unsigned int) this);
 	pos.dump();
-	printf(" Temperature[%.3f/%.3f] Vol[0x%zX] Cell[0x%zX] ", temperature.get(), temperature.getdelta(),
-			(long unsigned int) ambvol, (long unsigned int) cell);
+	char vol_txt[64];
+	sprintf(vol_txt, "()");
+	if (ambvol!=NULL) {	sprintf(vol_txt, "(%d conc's)", ambvol->get_conc_list()->count());	}
+
+	char cell_txt[64];
+	sprintf(cell_txt, "()");
+	if (cell!=NULL) {	sprintf(cell_txt, "(%d conc's)", cell->vol.get_conc_list()->count());	}
+
+
+	printf(" Temperature[%.3f/%.3f] Vol[0x%zX]%s Cell[0x%zX]%s ", temperature.get(), temperature.getdelta(),
+			(long unsigned int) ambvol, vol_txt, (long unsigned int) cell, cell_txt);
 
 	if (cell!=NULL) { NL cell-> dump(); }
 }
@@ -335,10 +366,151 @@ AmbientCell *World::add_ambcell(CellPos *_pos){
 	return cell_item-> item;
 }
 // -----------------------------------------------
+int	World::get_reactions(ChemEngine *eng){
+	if (eng==NULL)	eng = &chem_engine;
+	int n = 0;
+
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *ambcell_item = ambcell_list.gethead();
+	while (ambcell_item!=NULL){
+		if ((ambcell_item->item !=NULL) && (ambcell_item->item-> cell !=NULL)){
+			int r = ambcell_item->item-> cell->get_reactions(eng);
+			PRINT("Cell[x%zX].get_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r);
+			if (r>=0) n += r;
+
+		} // end cell
+		// ---
+		ambcell_item = ambcell_item->next;
+	}
+
+	return n;
+}
+// -----------------------------------------------
+int	World::run_reactions(ChemEngine *eng, ChemTime run_time){
+	if (eng==NULL)	eng = &chem_engine;
+	int n = 0;
+
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *ambcell_item = ambcell_list.gethead();
+	while (ambcell_item!=NULL){
+		if ((ambcell_item->item !=NULL) && (ambcell_item->item-> cell !=NULL)){
+
+			int r = ambcell_item->item-> cell->run_reactions(eng, run_time);
+
+			PRINT("Cell[x%zX].run_reactions()= [%d]\n", (PTR) ambcell_item->item-> cell, r);
+			if (r>=0) n += r;
+
+		} // end cell
+		// ---
+		ambcell_item = ambcell_item->next;
+	}
+	return n;
+}
+// -----------------------------------------------
+#include "common.h"
+// -----------------------------------------------
+int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
+	if (eng==NULL)	eng = &chem_engine;
+	int n = 0;
+
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *ambcell_item;
+
+	ChemTime		max_commit = 1.0;
+	// ---------------------------------
+	// -- getmax
+	// ---------------------------------
+	ambcell_item = ambcell_list.gethead();
+	while (ambcell_item!=NULL){
+		if ((ambcell_item->item !=NULL) && (ambcell_item->item-> cell !=NULL)){
+			//-------------------------------------------
+			ChemTime		m = get_cell_maxcommit(ambcell_item->item-> cell);
+			if (m<max_commit) max_commit = m;
+			//-------------------------------------------
+		} // end cell
+		// ---
+		ambcell_item = ambcell_item->next;
+	}
+	PRINT(".. max_commit[%f]\n", max_commit);
+	if (max_commit>1.0) {
+		PRINT(".. scaling max_commit back to 1.0\n");
+		max_commit = 1.0;
+	}
+	// ---------------------------------
+	// commit and clip
+	// ---------------------------------
+	ambcell_item = ambcell_list.gethead();
+	while (ambcell_item!=NULL){
+		if ((ambcell_item->item !=NULL) && (ambcell_item->item-> cell !=NULL)){
+			//-------------------------------------------
+			ambcell_item->item-> cell->vol.commit(max_commit);
+			// r = vol->clip_conc(conc_clip, conc_max);
+			int r = ambcell_item->item-> cell->vol.clip_conc(chem_engine.conc_clip, chem_engine.conc_max);
+			if (r<0){ PRINT("cell[0x%zX].clip_conc = [%d]\n", (PTR) ambcell_item->item-> cell, r); }
+			else { n+= r; }
+
+			if ((ambcell_item->item-> cell-> ambcell != NULL)&&(ambcell_item->item-> cell-> ambcell->ambvol!=NULL)) {
+				ambcell_item->item-> cell-> ambcell-> ambvol-> commit(max_commit);
+				int s = ambcell_item->item-> cell-> ambcell->ambvol-> clip_conc(chem_engine.conc_clip, chem_engine.conc_max);
+				if (s<0){ PRINT("cell[0x%zX].ambvol.clip_conc = [%d]\n", (PTR) ambcell_item->item-> cell, r); }
+				else { n+= s; }
+			}
+
+			//-------------------------------------------
+		} // end cell
+		// ---
+		ambcell_item = ambcell_item->next;
+	}
+	// ---------------------------------
+
+	// ---------------------------------
+	// clear eng hits
+	// ---------------------------------
+	int t = eng-> clear_all_hits();
+	PRINT(".. clear_all_hits = [%d]\n", t);
+
+
+
+	return n;
+}
+// -----------------------------------------------
+int	World::run_world(ChemEngine *eng, ChemTime run_time){
+	if (eng==NULL)	eng = &chem_engine;
+
+	PRINT("|--------   RUN WORLD [%.3f]    --------| \n", run_time);
+	PRINT(".. (tick)\n");
+	eng-> next_tick();
+
+	int r = get_reactions(eng);
+	PRINT(".. get_reactions = [%d]\n", r);
+
+	int s = run_reactions(eng, run_time);
+	PRINT(".. run_reactions = [%d]\n", s);
+
+	int t = finish_reactions(eng);
+	PRINT(".. finish_reactions = [%d]\n", t);
+
+
+	if ((r<0)||(s<0)) return -10;
+	return 0;
+}
+// -----------------------------------------------
 /*
 	mylist<AmbientCell>::mylist_item<AmbientCell> *get_cell(CellPos *_pos);
 	AmbientCell							*add_cell(CellPos *_pos);
 };
 // -----------------------------------------------
 */
+ChemTime World::get_cell_maxcommit(Cell *cell){
+	if (cell==NULL) return 1.0;
+
+	ChemTime max = 1.0;
+	// ChemTime ConcentrationVolume::get_maxcommit(ConcLevelType min_level, ConcLevelType max_level){
+	BufCommitType m;
+	m =  cell->vol.get_maxcommit(chem_engine.conc_min, chem_engine.conc_max);
+	if (m<max) max = m;
+
+	if ((cell->ambcell!=NULL)&&(cell->ambcell->ambvol!=NULL)) {
+		m = cell->ambcell->ambvol->get_maxcommit(chem_engine.conc_min, chem_engine.conc_max);
+		if (m<max) max = m;
+	}
+	return max;
+}
 
