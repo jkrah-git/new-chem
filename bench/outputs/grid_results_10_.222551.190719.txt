@@ -1,0 +1,8 @@
+world.run_world (x1) took ..
+0.000 (sec) Real Time and 0 (msec) CPU Time
+--
+world.run_world (x1000) took ..
+0.000 (sec) Real Time and 280 (msec) CPU Time
+--
+world.run_world (x10000) took ..
+3.000 (sec) Real Time and 2850 (msec) CPU Time

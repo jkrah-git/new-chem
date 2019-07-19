@@ -215,10 +215,9 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 // int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 // --------------------------
 // 'runvol'
-int	cli_eng_cleanmoles(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VOL
-	return cli->world-> chem_engine. clean_volume_moles(cli->local_vm. vol);
-}
+//int	cli_eng_cleanmoles(Concentration_CLI *cli, int argc, char **argv){
+//	NEED_CLI NEED_WORLD NEED_VOL	return cli->world-> chem_engine. clean_volume_moles(cli->local_vm. vol);
+//}
 // --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
@@ -357,7 +356,7 @@ int	load_cli_eng(Concentration_CLI *cli, int argc, char **argv){
 	sprintf(name, "get");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_get, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "react");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_react, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "runvol");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_runvol, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
-	sprintf(name, "cleanmoles"); r = cli-> addcmd(&cli-> eng_cmdlist,	cli_eng_cleanmoles, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
+	//sprintf(name, "cleanmoles"); r = cli-> addcmd(&cli-> eng_cmdlist,	cli_eng_cleanmoles, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enzstart");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enzstart, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "enznext");	r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_enznext, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);
 	sprintf(name, "ldr");		r = cli-> addcmd(&cli-> eng_cmdlist, 	cli_eng_ldr, (char*) name);				LOG("base_cmdlist[%s] = [%d]\n", name, r);

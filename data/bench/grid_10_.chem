@@ -1,0 +1,62 @@
+#### Start: bench/grid.sh 10 (Fri Jul 19 22:25:51 AEST 2019(
+# WORLD_BASE=default.chem
+f moles/moles2
+mole ld 4
+eng run addenz noop
+#### Loop
+world add 0 0
+f cellsetup
+world add 0 1
+f cellsetup
+world add 1 0
+f cellsetup
+world add 1 1
+f cellsetup
+world add 2 0
+f cellsetup
+world add 2 1
+f cellsetup
+world add 3 0
+f cellsetup
+world add 3 1
+f cellsetup
+world add 4 0
+f cellsetup
+world add 4 1
+f cellsetup
+world add 5 0
+f cellsetup
+world add 5 1
+f cellsetup
+world add 6 0
+f cellsetup
+world add 6 1
+f cellsetup
+world add 7 0
+f cellsetup
+world add 7 1
+f cellsetup
+world add 8 0
+f cellsetup
+world add 8 1
+f cellsetup
+world add 9 0
+f cellsetup
+world add 9 1
+f cellsetup
+world add 10 0
+f cellsetup
+world add 10 1
+f cellsetup
+#### End
+world commit
+world list vol
+#### End: bench/grid.sh 10 (Fri Jul 19 22:25:51 AEST 2019(
+
+# fill cahche
+world tick .00001 1
+# x1000
+world tick .00001 1000
+# x10000
+world tick .00001 10000
+quit

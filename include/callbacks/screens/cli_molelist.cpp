@@ -147,7 +147,6 @@ int cli_molelist(ChemDisplay *display, int argc, char **argv) {
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
 		molelist->set_vm(&cli->local_vm);
-		// todo: fix multiple vms
 		printf("src updated..\n");
 		return 0;
 	}

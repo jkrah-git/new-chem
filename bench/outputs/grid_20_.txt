@@ -1,0 +1,2209 @@
+::int load_cli_vm(Concentration_CLI*, int, char**).=========
+::int load_cli_eng(Concentration_CLI*, int, char**).=========
+::int cli_load_screen(ChemDisplay*, int, char**).=========
+::void eng_load_funcs(ChemEngine*).=====
+(main.start..)
+(main.setup..)
+(main.run..)
+#### Start: bench/grid.sh 20 (Fri Jul 19 22:24:10 AEST 2019(
+# WORLD_BASE=default.chem
+f moles/moles2
+# simples angles 0x37 = UpLeft
+# M[0x0]
+mole push
+mole addpep 0x7 0x11 0x12 0x13
+Run = [4]
+mole addpep 0x7 0x21 0x22 0x23
+Run = [4]
+mole addpep 0x7 0x11 0x12 0x13
+Run = [4]
+mole addpep 0x7 0x21 0x22 0x23
+Run = [4]
+# M[0x1]
+mole push
+mole addpep 0x7 0x11 0x12 0x13
+Run = [4]
+mole addpep 0x7 0x21 0x22 0x23
+Run = [4]
+mole addpep 0x7 0x31 0x32 0x33
+Run = [4]
+mole addpep 0x7 0x41 0x42 0x43
+Run = [4]
+# M[0x2]
+mole push
+mole addpep 0x3 0x7 0x11 0x12 0x13 0x14 0x15
+Run = [7]
+mole addpep 0x3 0x7 0x21 
+Run = [3]
+mole addpep 0x3 0x7 0x31 0x32 0x33 0x34 0x35
+Run = [7]
+mole addpep 0x3 0x7 0x41 
+Run = [3]
+# M[0x3]
+mole push
+mole addpep 0x3 0x7 0x11 0x12 0x13 0x14 0x15 0x16 0x18
+Run = [9]
+mole addpep 0x3 0x7 0x21 
+Run = [3]
+# mole addpep 0x3 0x7 0x31 0x32 0x33 0x34 0x35 0x35 0x38
+mole addpep 0x3 0x7 0x11 0x12 0x13 0x14 0x15 0x16 0x18
+Run = [9]
+mole addpep 0x3 0x7 0x41 
+Run = [3]
+# M[0x4]
+mole push
+mole addpep 0x91 0x92 0x93
+Run = [3]
+# M[0x5]
+# mole push
+# M[0x6]
+# mole push
+# M[0x7]
+# mole push
+mole ld 4
+eng run addenz noop
+::int cli_eng_run(Concentration_CLI*, int, char**).-------------
+enz[0xA9D4B0] added..
+Run = [1]
+#### Loop
+world add 0 0
+.............
+[selected_ambcell][0xA9D6B0] = CellPos[0xA9D6B0].[0].[0]
+[vm.vol] = <NULL>
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xA9D6B0] = CellPos[0xA9D6B0].[0].[0]
+[vm.vol] = <NULL>
+world selvol
+.............
+[selected_ambcell][0xA9D6B0] = CellPos[0xA9D6B0].[0].[0]
+[vm.vol] = AmbientCell[0xA9D6B0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xA9D6B0] = CellPos[0xA9D6B0].[0].[0]
+[vm.vol] = selected_ambcell.cell[0xAA1730].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 0 1
+.............
+[selected_ambcell][0xAA0130] = CellPos[0xAA0130].[0].[1]
+[vm.vol] = vol[0xAA1780]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA0130] = CellPos[0xAA0130].[0].[1]
+[vm.vol] = vol[0xAA1780]
+world selvol
+.............
+[selected_ambcell][0xAA0130] = CellPos[0xAA0130].[0].[1]
+[vm.vol] = AmbientCell[0xAA0130].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA0130] = CellPos[0xAA0130].[0].[1]
+[vm.vol] = selected_ambcell.cell[0xAA31D0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 1 0
+.............
+[selected_ambcell][0xAA2FB0] = CellPos[0xAA2FB0].[1].[0]
+[vm.vol] = vol[0xAA3220]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA2FB0] = CellPos[0xAA2FB0].[1].[0]
+[vm.vol] = vol[0xAA3220]
+world selvol
+.............
+[selected_ambcell][0xAA2FB0] = CellPos[0xAA2FB0].[1].[0]
+[vm.vol] = AmbientCell[0xAA2FB0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA2FB0] = CellPos[0xAA2FB0].[1].[0]
+[vm.vol] = selected_ambcell.cell[0xAA3520].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 1 1
+.............
+[selected_ambcell][0xAA3300] = CellPos[0xAA3300].[1].[1]
+[vm.vol] = vol[0xAA3570]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA3300] = CellPos[0xAA3300].[1].[1]
+[vm.vol] = vol[0xAA3570]
+world selvol
+.............
+[selected_ambcell][0xAA3300] = CellPos[0xAA3300].[1].[1]
+[vm.vol] = AmbientCell[0xAA3300].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA3300] = CellPos[0xAA3300].[1].[1]
+[vm.vol] = selected_ambcell.cell[0xAA3870].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 2 0
+.............
+[selected_ambcell][0xAA3650] = CellPos[0xAA3650].[2].[0]
+[vm.vol] = vol[0xAA38C0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA3650] = CellPos[0xAA3650].[2].[0]
+[vm.vol] = vol[0xAA38C0]
+world selvol
+.............
+[selected_ambcell][0xAA3650] = CellPos[0xAA3650].[2].[0]
+[vm.vol] = AmbientCell[0xAA3650].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA3650] = CellPos[0xAA3650].[2].[0]
+[vm.vol] = selected_ambcell.cell[0xAA3BC0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 2 1
+.............
+[selected_ambcell][0xAA39A0] = CellPos[0xAA39A0].[2].[1]
+[vm.vol] = vol[0xAA3C10]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA39A0] = CellPos[0xAA39A0].[2].[1]
+[vm.vol] = vol[0xAA3C10]
+world selvol
+.............
+[selected_ambcell][0xAA39A0] = CellPos[0xAA39A0].[2].[1]
+[vm.vol] = AmbientCell[0xAA39A0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA39A0] = CellPos[0xAA39A0].[2].[1]
+[vm.vol] = selected_ambcell.cell[0xAA3F10].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 3 0
+.............
+[selected_ambcell][0xAA3CF0] = CellPos[0xAA3CF0].[3].[0]
+[vm.vol] = vol[0xAA3F60]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA3CF0] = CellPos[0xAA3CF0].[3].[0]
+[vm.vol] = vol[0xAA3F60]
+world selvol
+.............
+[selected_ambcell][0xAA3CF0] = CellPos[0xAA3CF0].[3].[0]
+[vm.vol] = AmbientCell[0xAA3CF0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA3CF0] = CellPos[0xAA3CF0].[3].[0]
+[vm.vol] = selected_ambcell.cell[0xAA4260].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 3 1
+.............
+[selected_ambcell][0xAA4040] = CellPos[0xAA4040].[3].[1]
+[vm.vol] = vol[0xAA42B0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA4040] = CellPos[0xAA4040].[3].[1]
+[vm.vol] = vol[0xAA42B0]
+world selvol
+.............
+[selected_ambcell][0xAA4040] = CellPos[0xAA4040].[3].[1]
+[vm.vol] = AmbientCell[0xAA4040].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA4040] = CellPos[0xAA4040].[3].[1]
+[vm.vol] = selected_ambcell.cell[0xAA45B0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 4 0
+.............
+[selected_ambcell][0xAA4390] = CellPos[0xAA4390].[4].[0]
+[vm.vol] = vol[0xAA4600]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA4390] = CellPos[0xAA4390].[4].[0]
+[vm.vol] = vol[0xAA4600]
+world selvol
+.............
+[selected_ambcell][0xAA4390] = CellPos[0xAA4390].[4].[0]
+[vm.vol] = AmbientCell[0xAA4390].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA4390] = CellPos[0xAA4390].[4].[0]
+[vm.vol] = selected_ambcell.cell[0xAA4900].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 4 1
+.............
+[selected_ambcell][0xAA46E0] = CellPos[0xAA46E0].[4].[1]
+[vm.vol] = vol[0xAA4950]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA46E0] = CellPos[0xAA46E0].[4].[1]
+[vm.vol] = vol[0xAA4950]
+world selvol
+.............
+[selected_ambcell][0xAA46E0] = CellPos[0xAA46E0].[4].[1]
+[vm.vol] = AmbientCell[0xAA46E0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA46E0] = CellPos[0xAA46E0].[4].[1]
+[vm.vol] = selected_ambcell.cell[0xAA4C50].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 5 0
+.............
+[selected_ambcell][0xAA4A30] = CellPos[0xAA4A30].[5].[0]
+[vm.vol] = vol[0xAA4CA0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA4A30] = CellPos[0xAA4A30].[5].[0]
+[vm.vol] = vol[0xAA4CA0]
+world selvol
+.............
+[selected_ambcell][0xAA4A30] = CellPos[0xAA4A30].[5].[0]
+[vm.vol] = AmbientCell[0xAA4A30].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA4A30] = CellPos[0xAA4A30].[5].[0]
+[vm.vol] = selected_ambcell.cell[0xAA4FA0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 5 1
+.............
+[selected_ambcell][0xAA4D80] = CellPos[0xAA4D80].[5].[1]
+[vm.vol] = vol[0xAA4FF0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA4D80] = CellPos[0xAA4D80].[5].[1]
+[vm.vol] = vol[0xAA4FF0]
+world selvol
+.............
+[selected_ambcell][0xAA4D80] = CellPos[0xAA4D80].[5].[1]
+[vm.vol] = AmbientCell[0xAA4D80].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA4D80] = CellPos[0xAA4D80].[5].[1]
+[vm.vol] = selected_ambcell.cell[0xAA52F0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 6 0
+.............
+[selected_ambcell][0xAA50D0] = CellPos[0xAA50D0].[6].[0]
+[vm.vol] = vol[0xAA5340]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA50D0] = CellPos[0xAA50D0].[6].[0]
+[vm.vol] = vol[0xAA5340]
+world selvol
+.............
+[selected_ambcell][0xAA50D0] = CellPos[0xAA50D0].[6].[0]
+[vm.vol] = AmbientCell[0xAA50D0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA50D0] = CellPos[0xAA50D0].[6].[0]
+[vm.vol] = selected_ambcell.cell[0xAA5640].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 6 1
+.............
+[selected_ambcell][0xAA5420] = CellPos[0xAA5420].[6].[1]
+[vm.vol] = vol[0xAA5690]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA5420] = CellPos[0xAA5420].[6].[1]
+[vm.vol] = vol[0xAA5690]
+world selvol
+.............
+[selected_ambcell][0xAA5420] = CellPos[0xAA5420].[6].[1]
+[vm.vol] = AmbientCell[0xAA5420].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA5420] = CellPos[0xAA5420].[6].[1]
+[vm.vol] = selected_ambcell.cell[0xAA5990].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 7 0
+.............
+[selected_ambcell][0xAA5770] = CellPos[0xAA5770].[7].[0]
+[vm.vol] = vol[0xAA59E0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA5770] = CellPos[0xAA5770].[7].[0]
+[vm.vol] = vol[0xAA59E0]
+world selvol
+.............
+[selected_ambcell][0xAA5770] = CellPos[0xAA5770].[7].[0]
+[vm.vol] = AmbientCell[0xAA5770].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA5770] = CellPos[0xAA5770].[7].[0]
+[vm.vol] = selected_ambcell.cell[0xAA5CE0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 7 1
+.............
+[selected_ambcell][0xAA5AC0] = CellPos[0xAA5AC0].[7].[1]
+[vm.vol] = vol[0xAA5D30]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA5AC0] = CellPos[0xAA5AC0].[7].[1]
+[vm.vol] = vol[0xAA5D30]
+world selvol
+.............
+[selected_ambcell][0xAA5AC0] = CellPos[0xAA5AC0].[7].[1]
+[vm.vol] = AmbientCell[0xAA5AC0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA5AC0] = CellPos[0xAA5AC0].[7].[1]
+[vm.vol] = selected_ambcell.cell[0xAA6030].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 8 0
+.............
+[selected_ambcell][0xAA5E10] = CellPos[0xAA5E10].[8].[0]
+[vm.vol] = vol[0xAA6080]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA5E10] = CellPos[0xAA5E10].[8].[0]
+[vm.vol] = vol[0xAA6080]
+world selvol
+.............
+[selected_ambcell][0xAA5E10] = CellPos[0xAA5E10].[8].[0]
+[vm.vol] = AmbientCell[0xAA5E10].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA5E10] = CellPos[0xAA5E10].[8].[0]
+[vm.vol] = selected_ambcell.cell[0xAA6380].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 8 1
+.............
+[selected_ambcell][0xAA6160] = CellPos[0xAA6160].[8].[1]
+[vm.vol] = vol[0xAA63D0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA6160] = CellPos[0xAA6160].[8].[1]
+[vm.vol] = vol[0xAA63D0]
+world selvol
+.............
+[selected_ambcell][0xAA6160] = CellPos[0xAA6160].[8].[1]
+[vm.vol] = AmbientCell[0xAA6160].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA6160] = CellPos[0xAA6160].[8].[1]
+[vm.vol] = selected_ambcell.cell[0xAA66D0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 9 0
+.............
+[selected_ambcell][0xAA64B0] = CellPos[0xAA64B0].[9].[0]
+[vm.vol] = vol[0xAA6720]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA64B0] = CellPos[0xAA64B0].[9].[0]
+[vm.vol] = vol[0xAA6720]
+world selvol
+.............
+[selected_ambcell][0xAA64B0] = CellPos[0xAA64B0].[9].[0]
+[vm.vol] = AmbientCell[0xAA64B0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA64B0] = CellPos[0xAA64B0].[9].[0]
+[vm.vol] = selected_ambcell.cell[0xAA6A20].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 9 1
+.............
+[selected_ambcell][0xAA6800] = CellPos[0xAA6800].[9].[1]
+[vm.vol] = vol[0xAA6A70]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA6800] = CellPos[0xAA6800].[9].[1]
+[vm.vol] = vol[0xAA6A70]
+world selvol
+.............
+[selected_ambcell][0xAA6800] = CellPos[0xAA6800].[9].[1]
+[vm.vol] = AmbientCell[0xAA6800].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA6800] = CellPos[0xAA6800].[9].[1]
+[vm.vol] = selected_ambcell.cell[0xAA6D70].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 10 0
+.............
+[selected_ambcell][0xAA6B50] = CellPos[0xAA6B50].[10].[0]
+[vm.vol] = vol[0xAA6DC0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA6B50] = CellPos[0xAA6B50].[10].[0]
+[vm.vol] = vol[0xAA6DC0]
+world selvol
+.............
+[selected_ambcell][0xAA6B50] = CellPos[0xAA6B50].[10].[0]
+[vm.vol] = AmbientCell[0xAA6B50].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA6B50] = CellPos[0xAA6B50].[10].[0]
+[vm.vol] = selected_ambcell.cell[0xAA70C0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 10 1
+.............
+[selected_ambcell][0xAA6EA0] = CellPos[0xAA6EA0].[10].[1]
+[vm.vol] = vol[0xAA7110]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA6EA0] = CellPos[0xAA6EA0].[10].[1]
+[vm.vol] = vol[0xAA7110]
+world selvol
+.............
+[selected_ambcell][0xAA6EA0] = CellPos[0xAA6EA0].[10].[1]
+[vm.vol] = AmbientCell[0xAA6EA0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA6EA0] = CellPos[0xAA6EA0].[10].[1]
+[vm.vol] = selected_ambcell.cell[0xAA7410].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 11 0
+.............
+[selected_ambcell][0xAA71F0] = CellPos[0xAA71F0].[11].[0]
+[vm.vol] = vol[0xAA7460]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA71F0] = CellPos[0xAA71F0].[11].[0]
+[vm.vol] = vol[0xAA7460]
+world selvol
+.............
+[selected_ambcell][0xAA71F0] = CellPos[0xAA71F0].[11].[0]
+[vm.vol] = AmbientCell[0xAA71F0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA71F0] = CellPos[0xAA71F0].[11].[0]
+[vm.vol] = selected_ambcell.cell[0xAA7760].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 11 1
+.............
+[selected_ambcell][0xAA7540] = CellPos[0xAA7540].[11].[1]
+[vm.vol] = vol[0xAA77B0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA7540] = CellPos[0xAA7540].[11].[1]
+[vm.vol] = vol[0xAA77B0]
+world selvol
+.............
+[selected_ambcell][0xAA7540] = CellPos[0xAA7540].[11].[1]
+[vm.vol] = AmbientCell[0xAA7540].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA7540] = CellPos[0xAA7540].[11].[1]
+[vm.vol] = selected_ambcell.cell[0xAA7AB0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 12 0
+.............
+[selected_ambcell][0xAA7890] = CellPos[0xAA7890].[12].[0]
+[vm.vol] = vol[0xAA7B00]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA7890] = CellPos[0xAA7890].[12].[0]
+[vm.vol] = vol[0xAA7B00]
+world selvol
+.............
+[selected_ambcell][0xAA7890] = CellPos[0xAA7890].[12].[0]
+[vm.vol] = AmbientCell[0xAA7890].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA7890] = CellPos[0xAA7890].[12].[0]
+[vm.vol] = selected_ambcell.cell[0xAA7E00].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 12 1
+.............
+[selected_ambcell][0xAA7BE0] = CellPos[0xAA7BE0].[12].[1]
+[vm.vol] = vol[0xAA7E50]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA7BE0] = CellPos[0xAA7BE0].[12].[1]
+[vm.vol] = vol[0xAA7E50]
+world selvol
+.............
+[selected_ambcell][0xAA7BE0] = CellPos[0xAA7BE0].[12].[1]
+[vm.vol] = AmbientCell[0xAA7BE0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA7BE0] = CellPos[0xAA7BE0].[12].[1]
+[vm.vol] = selected_ambcell.cell[0xAA8150].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 13 0
+.............
+[selected_ambcell][0xAA7F30] = CellPos[0xAA7F30].[13].[0]
+[vm.vol] = vol[0xAA81A0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA7F30] = CellPos[0xAA7F30].[13].[0]
+[vm.vol] = vol[0xAA81A0]
+world selvol
+.............
+[selected_ambcell][0xAA7F30] = CellPos[0xAA7F30].[13].[0]
+[vm.vol] = AmbientCell[0xAA7F30].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA7F30] = CellPos[0xAA7F30].[13].[0]
+[vm.vol] = selected_ambcell.cell[0xAA84A0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 13 1
+.............
+[selected_ambcell][0xAA8280] = CellPos[0xAA8280].[13].[1]
+[vm.vol] = vol[0xAA84F0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA8280] = CellPos[0xAA8280].[13].[1]
+[vm.vol] = vol[0xAA84F0]
+world selvol
+.............
+[selected_ambcell][0xAA8280] = CellPos[0xAA8280].[13].[1]
+[vm.vol] = AmbientCell[0xAA8280].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA8280] = CellPos[0xAA8280].[13].[1]
+[vm.vol] = selected_ambcell.cell[0xAA87F0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 14 0
+.............
+[selected_ambcell][0xAA85D0] = CellPos[0xAA85D0].[14].[0]
+[vm.vol] = vol[0xAA8840]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA85D0] = CellPos[0xAA85D0].[14].[0]
+[vm.vol] = vol[0xAA8840]
+world selvol
+.............
+[selected_ambcell][0xAA85D0] = CellPos[0xAA85D0].[14].[0]
+[vm.vol] = AmbientCell[0xAA85D0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA85D0] = CellPos[0xAA85D0].[14].[0]
+[vm.vol] = selected_ambcell.cell[0xAA8B40].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 14 1
+.............
+[selected_ambcell][0xAA8920] = CellPos[0xAA8920].[14].[1]
+[vm.vol] = vol[0xAA8B90]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA8920] = CellPos[0xAA8920].[14].[1]
+[vm.vol] = vol[0xAA8B90]
+world selvol
+.............
+[selected_ambcell][0xAA8920] = CellPos[0xAA8920].[14].[1]
+[vm.vol] = AmbientCell[0xAA8920].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA8920] = CellPos[0xAA8920].[14].[1]
+[vm.vol] = selected_ambcell.cell[0xAA8E90].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 15 0
+.............
+[selected_ambcell][0xAA8C70] = CellPos[0xAA8C70].[15].[0]
+[vm.vol] = vol[0xAA8EE0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA8C70] = CellPos[0xAA8C70].[15].[0]
+[vm.vol] = vol[0xAA8EE0]
+world selvol
+.............
+[selected_ambcell][0xAA8C70] = CellPos[0xAA8C70].[15].[0]
+[vm.vol] = AmbientCell[0xAA8C70].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA8C70] = CellPos[0xAA8C70].[15].[0]
+[vm.vol] = selected_ambcell.cell[0xAA91E0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 15 1
+.............
+[selected_ambcell][0xAA8FC0] = CellPos[0xAA8FC0].[15].[1]
+[vm.vol] = vol[0xAA9230]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA8FC0] = CellPos[0xAA8FC0].[15].[1]
+[vm.vol] = vol[0xAA9230]
+world selvol
+.............
+[selected_ambcell][0xAA8FC0] = CellPos[0xAA8FC0].[15].[1]
+[vm.vol] = AmbientCell[0xAA8FC0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA8FC0] = CellPos[0xAA8FC0].[15].[1]
+[vm.vol] = selected_ambcell.cell[0xAA9530].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 16 0
+.............
+[selected_ambcell][0xAA9310] = CellPos[0xAA9310].[16].[0]
+[vm.vol] = vol[0xAA9580]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA9310] = CellPos[0xAA9310].[16].[0]
+[vm.vol] = vol[0xAA9580]
+world selvol
+.............
+[selected_ambcell][0xAA9310] = CellPos[0xAA9310].[16].[0]
+[vm.vol] = AmbientCell[0xAA9310].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA9310] = CellPos[0xAA9310].[16].[0]
+[vm.vol] = selected_ambcell.cell[0xAA9880].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 16 1
+.............
+[selected_ambcell][0xAA9660] = CellPos[0xAA9660].[16].[1]
+[vm.vol] = vol[0xAA98D0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA9660] = CellPos[0xAA9660].[16].[1]
+[vm.vol] = vol[0xAA98D0]
+world selvol
+.............
+[selected_ambcell][0xAA9660] = CellPos[0xAA9660].[16].[1]
+[vm.vol] = AmbientCell[0xAA9660].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA9660] = CellPos[0xAA9660].[16].[1]
+[vm.vol] = selected_ambcell.cell[0xAA9BD0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 17 0
+.............
+[selected_ambcell][0xAA99B0] = CellPos[0xAA99B0].[17].[0]
+[vm.vol] = vol[0xAA9C20]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA99B0] = CellPos[0xAA99B0].[17].[0]
+[vm.vol] = vol[0xAA9C20]
+world selvol
+.............
+[selected_ambcell][0xAA99B0] = CellPos[0xAA99B0].[17].[0]
+[vm.vol] = AmbientCell[0xAA99B0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA99B0] = CellPos[0xAA99B0].[17].[0]
+[vm.vol] = selected_ambcell.cell[0xAA9F20].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 17 1
+.............
+[selected_ambcell][0xAA9D00] = CellPos[0xAA9D00].[17].[1]
+[vm.vol] = vol[0xAA9F70]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAA9D00] = CellPos[0xAA9D00].[17].[1]
+[vm.vol] = vol[0xAA9F70]
+world selvol
+.............
+[selected_ambcell][0xAA9D00] = CellPos[0xAA9D00].[17].[1]
+[vm.vol] = AmbientCell[0xAA9D00].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAA9D00] = CellPos[0xAA9D00].[17].[1]
+[vm.vol] = selected_ambcell.cell[0xAAA270].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 18 0
+.............
+[selected_ambcell][0xAAA050] = CellPos[0xAAA050].[18].[0]
+[vm.vol] = vol[0xAAA2C0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAA050] = CellPos[0xAAA050].[18].[0]
+[vm.vol] = vol[0xAAA2C0]
+world selvol
+.............
+[selected_ambcell][0xAAA050] = CellPos[0xAAA050].[18].[0]
+[vm.vol] = AmbientCell[0xAAA050].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAA050] = CellPos[0xAAA050].[18].[0]
+[vm.vol] = selected_ambcell.cell[0xAAA5C0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 18 1
+.............
+[selected_ambcell][0xAAA3A0] = CellPos[0xAAA3A0].[18].[1]
+[vm.vol] = vol[0xAAA610]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAA3A0] = CellPos[0xAAA3A0].[18].[1]
+[vm.vol] = vol[0xAAA610]
+world selvol
+.............
+[selected_ambcell][0xAAA3A0] = CellPos[0xAAA3A0].[18].[1]
+[vm.vol] = AmbientCell[0xAAA3A0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAA3A0] = CellPos[0xAAA3A0].[18].[1]
+[vm.vol] = selected_ambcell.cell[0xAAA910].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 19 0
+.............
+[selected_ambcell][0xAAA6F0] = CellPos[0xAAA6F0].[19].[0]
+[vm.vol] = vol[0xAAA960]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAA6F0] = CellPos[0xAAA6F0].[19].[0]
+[vm.vol] = vol[0xAAA960]
+world selvol
+.............
+[selected_ambcell][0xAAA6F0] = CellPos[0xAAA6F0].[19].[0]
+[vm.vol] = AmbientCell[0xAAA6F0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAA6F0] = CellPos[0xAAA6F0].[19].[0]
+[vm.vol] = selected_ambcell.cell[0xAAAC60].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 19 1
+.............
+[selected_ambcell][0xAAAA40] = CellPos[0xAAAA40].[19].[1]
+[vm.vol] = vol[0xAAACB0]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAAA40] = CellPos[0xAAAA40].[19].[1]
+[vm.vol] = vol[0xAAACB0]
+world selvol
+.............
+[selected_ambcell][0xAAAA40] = CellPos[0xAAAA40].[19].[1]
+[vm.vol] = AmbientCell[0xAAAA40].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAAA40] = CellPos[0xAAAA40].[19].[1]
+[vm.vol] = selected_ambcell.cell[0xAAAFB0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 20 0
+.............
+[selected_ambcell][0xAAAD90] = CellPos[0xAAAD90].[20].[0]
+[vm.vol] = vol[0xAAB000]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAAD90] = CellPos[0xAAAD90].[20].[0]
+[vm.vol] = vol[0xAAB000]
+world selvol
+.............
+[selected_ambcell][0xAAAD90] = CellPos[0xAAAD90].[20].[0]
+[vm.vol] = AmbientCell[0xAAAD90].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAAD90] = CellPos[0xAAAD90].[20].[0]
+[vm.vol] = selected_ambcell.cell[0xAAB300].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+world add 20 1
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = vol[0xAAB350]
+f cellsetup
+# file: cellsetup
+# assumes new world pos is loaded and ready
+world addvol
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = vol[0xAAB350]
+world selvol
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = AmbientCell[0xAAB0E0].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 0
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 1
+vol addmole 2
+put[2.000] = [0.000]
+cell add
+cell selvol
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+mole ld 4
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 2
+vol addmole 1
+put[1.000] = [0.000]
+mole ld 3
+vol addmole 2
+put[2.000] = [0.000]
+#### End
+world commit
+world finish_reactions = [0]
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+world list vol
+=============== Pos[0, 0] ===============
+AmbientCell[0xA9D6B0]:CellPos[0xA9D6B0].[0].[0] Temperature[0.000/0.000] Vol[0xAA0350](3 conc's) Cell[0xAA1730](3 conc's) 
+Cell[0xAA1730] Amb[0xA9D6B0] Vol[0xAA1780](3):CellStatus[0xAA1738]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA0350]
+Conc[0xAA0560].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA0E20].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA16E0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA1780]
+Conc[0xAA17C0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA2280].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA2F40].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[0, 1] ===============
+AmbientCell[0xAA0130]:CellPos[0xAA0130].[0].[1] Temperature[0.000/0.000] Vol[0xAA01C0](3 conc's) Cell[0xAA31D0](3 conc's) 
+Cell[0xAA31D0] Amb[0xAA0130] Vol[0xAA3220](3):CellStatus[0xAA31D8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA01C0]
+Conc[0xAA0110].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA0230].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA0280].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA3220]
+Conc[0xAA02D0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA0320].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA3290].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[1, 0] ===============
+AmbientCell[0xAA2FB0]:CellPos[0xAA2FB0].[1].[0] Temperature[0.000/0.000] Vol[0xAA3040](3 conc's) Cell[0xAA3520](3 conc's) 
+Cell[0xAA3520] Amb[0xAA2FB0] Vol[0xAA3570](3):CellStatus[0xAA3528]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA3040]
+Conc[0xAA2F90].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA30B0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA3100].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA3570]
+Conc[0xAA3150].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA31A0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA35E0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[1, 1] ===============
+AmbientCell[0xAA3300]:CellPos[0xAA3300].[1].[1] Temperature[0.000/0.000] Vol[0xAA3390](3 conc's) Cell[0xAA3870](3 conc's) 
+Cell[0xAA3870] Amb[0xAA3300] Vol[0xAA38C0](3):CellStatus[0xAA3878]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA3390]
+Conc[0xAA32E0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3400].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA3450].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA38C0]
+Conc[0xAA34A0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA34F0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA3930].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[2, 0] ===============
+AmbientCell[0xAA3650]:CellPos[0xAA3650].[2].[0] Temperature[0.000/0.000] Vol[0xAA36E0](3 conc's) Cell[0xAA3BC0](3 conc's) 
+Cell[0xAA3BC0] Amb[0xAA3650] Vol[0xAA3C10](3):CellStatus[0xAA3BC8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA36E0]
+Conc[0xAA3630].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3750].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA37A0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA3C10]
+Conc[0xAA37F0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3840].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA3C80].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[2, 1] ===============
+AmbientCell[0xAA39A0]:CellPos[0xAA39A0].[2].[1] Temperature[0.000/0.000] Vol[0xAA3A30](3 conc's) Cell[0xAA3F10](3 conc's) 
+Cell[0xAA3F10] Amb[0xAA39A0] Vol[0xAA3F60](3):CellStatus[0xAA3F18]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA3A30]
+Conc[0xAA3980].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3AA0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA3AF0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA3F60]
+Conc[0xAA3B40].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3B90].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA3FD0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[3, 0] ===============
+AmbientCell[0xAA3CF0]:CellPos[0xAA3CF0].[3].[0] Temperature[0.000/0.000] Vol[0xAA3D80](3 conc's) Cell[0xAA4260](3 conc's) 
+Cell[0xAA4260] Amb[0xAA3CF0] Vol[0xAA42B0](3):CellStatus[0xAA4268]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA3D80]
+Conc[0xAA3CD0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3DF0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA3E40].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA42B0]
+Conc[0xAA3E90].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA3EE0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA4320].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[3, 1] ===============
+AmbientCell[0xAA4040]:CellPos[0xAA4040].[3].[1] Temperature[0.000/0.000] Vol[0xAA40D0](3 conc's) Cell[0xAA45B0](3 conc's) 
+Cell[0xAA45B0] Amb[0xAA4040] Vol[0xAA4600](3):CellStatus[0xAA45B8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA40D0]
+Conc[0xAA4020].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4140].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA4190].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA4600]
+Conc[0xAA41E0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4230].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA4670].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[4, 0] ===============
+AmbientCell[0xAA4390]:CellPos[0xAA4390].[4].[0] Temperature[0.000/0.000] Vol[0xAA4420](3 conc's) Cell[0xAA4900](3 conc's) 
+Cell[0xAA4900] Amb[0xAA4390] Vol[0xAA4950](3):CellStatus[0xAA4908]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA4420]
+Conc[0xAA4370].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4490].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA44E0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA4950]
+Conc[0xAA4530].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4580].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA49C0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[4, 1] ===============
+AmbientCell[0xAA46E0]:CellPos[0xAA46E0].[4].[1] Temperature[0.000/0.000] Vol[0xAA4770](3 conc's) Cell[0xAA4C50](3 conc's) 
+Cell[0xAA4C50] Amb[0xAA46E0] Vol[0xAA4CA0](3):CellStatus[0xAA4C58]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA4770]
+Conc[0xAA46C0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA47E0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA4830].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA4CA0]
+Conc[0xAA4880].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA48D0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA4D10].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[5, 0] ===============
+AmbientCell[0xAA4A30]:CellPos[0xAA4A30].[5].[0] Temperature[0.000/0.000] Vol[0xAA4AC0](3 conc's) Cell[0xAA4FA0](3 conc's) 
+Cell[0xAA4FA0] Amb[0xAA4A30] Vol[0xAA4FF0](3):CellStatus[0xAA4FA8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA4AC0]
+Conc[0xAA4A10].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4B30].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA4B80].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA4FF0]
+Conc[0xAA4BD0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4C20].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA5060].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[5, 1] ===============
+AmbientCell[0xAA4D80]:CellPos[0xAA4D80].[5].[1] Temperature[0.000/0.000] Vol[0xAA4E10](3 conc's) Cell[0xAA52F0](3 conc's) 
+Cell[0xAA52F0] Amb[0xAA4D80] Vol[0xAA5340](3):CellStatus[0xAA52F8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA4E10]
+Conc[0xAA4D60].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4E80].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA4ED0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA5340]
+Conc[0xAA4F20].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA4F70].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA53B0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[6, 0] ===============
+AmbientCell[0xAA50D0]:CellPos[0xAA50D0].[6].[0] Temperature[0.000/0.000] Vol[0xAA5160](3 conc's) Cell[0xAA5640](3 conc's) 
+Cell[0xAA5640] Amb[0xAA50D0] Vol[0xAA5690](3):CellStatus[0xAA5648]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA5160]
+Conc[0xAA50B0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA51D0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA5220].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA5690]
+Conc[0xAA5270].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA52C0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA5700].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[6, 1] ===============
+AmbientCell[0xAA5420]:CellPos[0xAA5420].[6].[1] Temperature[0.000/0.000] Vol[0xAA54B0](3 conc's) Cell[0xAA5990](3 conc's) 
+Cell[0xAA5990] Amb[0xAA5420] Vol[0xAA59E0](3):CellStatus[0xAA5998]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA54B0]
+Conc[0xAA5400].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5520].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA5570].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA59E0]
+Conc[0xAA55C0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5610].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA5A50].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[7, 0] ===============
+AmbientCell[0xAA5770]:CellPos[0xAA5770].[7].[0] Temperature[0.000/0.000] Vol[0xAA5800](3 conc's) Cell[0xAA5CE0](3 conc's) 
+Cell[0xAA5CE0] Amb[0xAA5770] Vol[0xAA5D30](3):CellStatus[0xAA5CE8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA5800]
+Conc[0xAA5750].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5870].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA58C0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA5D30]
+Conc[0xAA5910].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5960].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA5DA0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[7, 1] ===============
+AmbientCell[0xAA5AC0]:CellPos[0xAA5AC0].[7].[1] Temperature[0.000/0.000] Vol[0xAA5B50](3 conc's) Cell[0xAA6030](3 conc's) 
+Cell[0xAA6030] Amb[0xAA5AC0] Vol[0xAA6080](3):CellStatus[0xAA6038]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA5B50]
+Conc[0xAA5AA0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5BC0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA5C10].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA6080]
+Conc[0xAA5C60].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5CB0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA60F0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[8, 0] ===============
+AmbientCell[0xAA5E10]:CellPos[0xAA5E10].[8].[0] Temperature[0.000/0.000] Vol[0xAA5EA0](3 conc's) Cell[0xAA6380](3 conc's) 
+Cell[0xAA6380] Amb[0xAA5E10] Vol[0xAA63D0](3):CellStatus[0xAA6388]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA5EA0]
+Conc[0xAA5DF0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA5F10].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA5F60].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA63D0]
+Conc[0xAA5FB0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6000].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA6440].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[8, 1] ===============
+AmbientCell[0xAA6160]:CellPos[0xAA6160].[8].[1] Temperature[0.000/0.000] Vol[0xAA61F0](3 conc's) Cell[0xAA66D0](3 conc's) 
+Cell[0xAA66D0] Amb[0xAA6160] Vol[0xAA6720](3):CellStatus[0xAA66D8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA61F0]
+Conc[0xAA6140].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6260].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA62B0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA6720]
+Conc[0xAA6300].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6350].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA6790].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[9, 0] ===============
+AmbientCell[0xAA64B0]:CellPos[0xAA64B0].[9].[0] Temperature[0.000/0.000] Vol[0xAA6540](3 conc's) Cell[0xAA6A20](3 conc's) 
+Cell[0xAA6A20] Amb[0xAA64B0] Vol[0xAA6A70](3):CellStatus[0xAA6A28]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA6540]
+Conc[0xAA6490].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA65B0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA6600].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA6A70]
+Conc[0xAA6650].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA66A0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA6AE0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[9, 1] ===============
+AmbientCell[0xAA6800]:CellPos[0xAA6800].[9].[1] Temperature[0.000/0.000] Vol[0xAA6890](3 conc's) Cell[0xAA6D70](3 conc's) 
+Cell[0xAA6D70] Amb[0xAA6800] Vol[0xAA6DC0](3):CellStatus[0xAA6D78]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA6890]
+Conc[0xAA67E0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6900].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA6950].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA6DC0]
+Conc[0xAA69A0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA69F0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA6E30].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[10, 0] ===============
+AmbientCell[0xAA6B50]:CellPos[0xAA6B50].[10].[0] Temperature[0.000/0.000] Vol[0xAA6BE0](3 conc's) Cell[0xAA70C0](3 conc's) 
+Cell[0xAA70C0] Amb[0xAA6B50] Vol[0xAA7110](3):CellStatus[0xAA70C8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA6BE0]
+Conc[0xAA6B30].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6C50].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA6CA0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA7110]
+Conc[0xAA6CF0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6D40].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA7180].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[10, 1] ===============
+AmbientCell[0xAA6EA0]:CellPos[0xAA6EA0].[10].[1] Temperature[0.000/0.000] Vol[0xAA6F30](3 conc's) Cell[0xAA7410](3 conc's) 
+Cell[0xAA7410] Amb[0xAA6EA0] Vol[0xAA7460](3):CellStatus[0xAA7418]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA6F30]
+Conc[0xAA6E80].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA6FA0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA6FF0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA7460]
+Conc[0xAA7040].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7090].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA74D0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[11, 0] ===============
+AmbientCell[0xAA71F0]:CellPos[0xAA71F0].[11].[0] Temperature[0.000/0.000] Vol[0xAA7280](3 conc's) Cell[0xAA7760](3 conc's) 
+Cell[0xAA7760] Amb[0xAA71F0] Vol[0xAA77B0](3):CellStatus[0xAA7768]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA7280]
+Conc[0xAA71D0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA72F0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA7340].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA77B0]
+Conc[0xAA7390].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA73E0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA7820].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[11, 1] ===============
+AmbientCell[0xAA7540]:CellPos[0xAA7540].[11].[1] Temperature[0.000/0.000] Vol[0xAA75D0](3 conc's) Cell[0xAA7AB0](3 conc's) 
+Cell[0xAA7AB0] Amb[0xAA7540] Vol[0xAA7B00](3):CellStatus[0xAA7AB8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA75D0]
+Conc[0xAA7520].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7640].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA7690].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA7B00]
+Conc[0xAA76E0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7730].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA7B70].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[12, 0] ===============
+AmbientCell[0xAA7890]:CellPos[0xAA7890].[12].[0] Temperature[0.000/0.000] Vol[0xAA7920](3 conc's) Cell[0xAA7E00](3 conc's) 
+Cell[0xAA7E00] Amb[0xAA7890] Vol[0xAA7E50](3):CellStatus[0xAA7E08]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA7920]
+Conc[0xAA7870].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7990].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA79E0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA7E50]
+Conc[0xAA7A30].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7A80].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA7EC0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[12, 1] ===============
+AmbientCell[0xAA7BE0]:CellPos[0xAA7BE0].[12].[1] Temperature[0.000/0.000] Vol[0xAA7C70](3 conc's) Cell[0xAA8150](3 conc's) 
+Cell[0xAA8150] Amb[0xAA7BE0] Vol[0xAA81A0](3):CellStatus[0xAA8158]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA7C70]
+Conc[0xAA7BC0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7CE0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA7D30].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA81A0]
+Conc[0xAA7D80].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA7DD0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA8210].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[13, 0] ===============
+AmbientCell[0xAA7F30]:CellPos[0xAA7F30].[13].[0] Temperature[0.000/0.000] Vol[0xAA7FC0](3 conc's) Cell[0xAA84A0](3 conc's) 
+Cell[0xAA84A0] Amb[0xAA7F30] Vol[0xAA84F0](3):CellStatus[0xAA84A8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA7FC0]
+Conc[0xAA7F10].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8030].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA8080].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA84F0]
+Conc[0xAA80D0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8120].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA8560].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[13, 1] ===============
+AmbientCell[0xAA8280]:CellPos[0xAA8280].[13].[1] Temperature[0.000/0.000] Vol[0xAA8310](3 conc's) Cell[0xAA87F0](3 conc's) 
+Cell[0xAA87F0] Amb[0xAA8280] Vol[0xAA8840](3):CellStatus[0xAA87F8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA8310]
+Conc[0xAA8260].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8380].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA83D0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA8840]
+Conc[0xAA8420].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8470].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA88B0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[14, 0] ===============
+AmbientCell[0xAA85D0]:CellPos[0xAA85D0].[14].[0] Temperature[0.000/0.000] Vol[0xAA8660](3 conc's) Cell[0xAA8B40](3 conc's) 
+Cell[0xAA8B40] Amb[0xAA85D0] Vol[0xAA8B90](3):CellStatus[0xAA8B48]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA8660]
+Conc[0xAA85B0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA86D0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA8720].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA8B90]
+Conc[0xAA8770].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA87C0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA8C00].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[14, 1] ===============
+AmbientCell[0xAA8920]:CellPos[0xAA8920].[14].[1] Temperature[0.000/0.000] Vol[0xAA89B0](3 conc's) Cell[0xAA8E90](3 conc's) 
+Cell[0xAA8E90] Amb[0xAA8920] Vol[0xAA8EE0](3):CellStatus[0xAA8E98]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA89B0]
+Conc[0xAA8900].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8A20].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA8A70].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA8EE0]
+Conc[0xAA8AC0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8B10].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA8F50].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[15, 0] ===============
+AmbientCell[0xAA8C70]:CellPos[0xAA8C70].[15].[0] Temperature[0.000/0.000] Vol[0xAA8D00](3 conc's) Cell[0xAA91E0](3 conc's) 
+Cell[0xAA91E0] Amb[0xAA8C70] Vol[0xAA9230](3):CellStatus[0xAA91E8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA8D00]
+Conc[0xAA8C50].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8D70].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA8DC0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA9230]
+Conc[0xAA8E10].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA8E60].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA92A0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[15, 1] ===============
+AmbientCell[0xAA8FC0]:CellPos[0xAA8FC0].[15].[1] Temperature[0.000/0.000] Vol[0xAA9050](3 conc's) Cell[0xAA9530](3 conc's) 
+Cell[0xAA9530] Amb[0xAA8FC0] Vol[0xAA9580](3):CellStatus[0xAA9538]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA9050]
+Conc[0xAA8FA0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA90C0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA9110].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA9580]
+Conc[0xAA9160].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA91B0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA95F0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[16, 0] ===============
+AmbientCell[0xAA9310]:CellPos[0xAA9310].[16].[0] Temperature[0.000/0.000] Vol[0xAA93A0](3 conc's) Cell[0xAA9880](3 conc's) 
+Cell[0xAA9880] Amb[0xAA9310] Vol[0xAA98D0](3):CellStatus[0xAA9888]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA93A0]
+Conc[0xAA92F0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9410].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA9460].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA98D0]
+Conc[0xAA94B0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9500].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA9940].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[16, 1] ===============
+AmbientCell[0xAA9660]:CellPos[0xAA9660].[16].[1] Temperature[0.000/0.000] Vol[0xAA96F0](3 conc's) Cell[0xAA9BD0](3 conc's) 
+Cell[0xAA9BD0] Amb[0xAA9660] Vol[0xAA9C20](3):CellStatus[0xAA9BD8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA96F0]
+Conc[0xAA9640].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9760].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA97B0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA9C20]
+Conc[0xAA9800].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9850].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA9C90].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[17, 0] ===============
+AmbientCell[0xAA99B0]:CellPos[0xAA99B0].[17].[0] Temperature[0.000/0.000] Vol[0xAA9A40](3 conc's) Cell[0xAA9F20](3 conc's) 
+Cell[0xAA9F20] Amb[0xAA99B0] Vol[0xAA9F70](3):CellStatus[0xAA9F28]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA9A40]
+Conc[0xAA9990].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9AB0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA9B00].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAA9F70]
+Conc[0xAA9B50].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9BA0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAA9FE0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[17, 1] ===============
+AmbientCell[0xAA9D00]:CellPos[0xAA9D00].[17].[1] Temperature[0.000/0.000] Vol[0xAA9D90](3 conc's) Cell[0xAAA270](3 conc's) 
+Cell[0xAAA270] Amb[0xAA9D00] Vol[0xAAA2C0](3):CellStatus[0xAAA278]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAA9D90]
+Conc[0xAA9CE0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9E00].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAA9E50].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAA2C0]
+Conc[0xAA9EA0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAA9EF0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAA330].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[18, 0] ===============
+AmbientCell[0xAAA050]:CellPos[0xAAA050].[18].[0] Temperature[0.000/0.000] Vol[0xAAA0E0](3 conc's) Cell[0xAAA5C0](3 conc's) 
+Cell[0xAAA5C0] Amb[0xAAA050] Vol[0xAAA610](3):CellStatus[0xAAA5C8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAA0E0]
+Conc[0xAAA030].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA150].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAA1A0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAA610]
+Conc[0xAAA1F0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA240].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAA680].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[18, 1] ===============
+AmbientCell[0xAAA3A0]:CellPos[0xAAA3A0].[18].[1] Temperature[0.000/0.000] Vol[0xAAA430](3 conc's) Cell[0xAAA910](3 conc's) 
+Cell[0xAAA910] Amb[0xAAA3A0] Vol[0xAAA960](3):CellStatus[0xAAA918]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAA430]
+Conc[0xAAA380].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA4A0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAA4F0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAA960]
+Conc[0xAAA540].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA590].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAA9D0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[19, 0] ===============
+AmbientCell[0xAAA6F0]:CellPos[0xAAA6F0].[19].[0] Temperature[0.000/0.000] Vol[0xAAA780](3 conc's) Cell[0xAAAC60](3 conc's) 
+Cell[0xAAAC60] Amb[0xAAA6F0] Vol[0xAAACB0](3):CellStatus[0xAAAC68]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAA780]
+Conc[0xAAA6D0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA7F0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAA840].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAACB0]
+Conc[0xAAA890].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAA8E0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAAD20].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[19, 1] ===============
+AmbientCell[0xAAAA40]:CellPos[0xAAAA40].[19].[1] Temperature[0.000/0.000] Vol[0xAAAAD0](3 conc's) Cell[0xAAAFB0](3 conc's) 
+Cell[0xAAAFB0] Amb[0xAAAA40] Vol[0xAAB000](3):CellStatus[0xAAAFB8]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAAAD0]
+Conc[0xAAAA20].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAAB40].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAAB90].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAB000]
+Conc[0xAAABE0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAAC30].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAB070].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[20, 0] ===============
+AmbientCell[0xAAAD90]:CellPos[0xAAAD90].[20].[0] Temperature[0.000/0.000] Vol[0xAAAE20](3 conc's) Cell[0xAAB300](3 conc's) 
+Cell[0xAAB300] Amb[0xAAAD90] Vol[0xAAB350](3):CellStatus[0xAAB308]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAAE20]
+Conc[0xAAAD70].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAAE90].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAAEE0].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAB350]
+Conc[0xAAAF30].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAAF80].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAB3C0].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+=============== Pos[20, 1] ===============
+AmbientCell[0xAAB0E0]:CellPos[0xAAB0E0].[20].[1] Temperature[0.000/0.000] Vol[0xAAB170](3 conc's) Cell[0xAAB650](3 conc's) 
+Cell[0xAAB650] Amb[0xAAB0E0] Vol[0xAAB6A0](3):CellStatus[0xAAB658]: Energy[100.000/0.000] Health[1.000/0.000] temperature[0.000/0.000] = efficency[1.000]
+------------- Vol's
+... ambcell.ambvol(3 conc's) :ConcentrationVolume[0xAAB170]
+Conc[0xAAB0C0].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAB1E0].Molecule[0xAA05B0][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0xAAB230].Molecule[0xAA0E70][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0xAAB6A0]
+Conc[0xAAB280].Molecule[0xAA0390][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0xAAB2D0].Molecule[0xAA1810][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0xAAB710].Molecule[0xAA22D0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+===========================================
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+#### End: bench/grid.sh 20 (Fri Jul 19 22:24:10 AEST 2019(
+# fill cahche
+world tick .00001 1
+cache: NEW [0xAAB8F0]
+cache: NEW [0xAABAB0]
+cache: NEW [0xAABCB0]
+cache: NEW [0xAABE30]
+world.run_world (x1) took ..
+0.000 (sec) Real Time and 0 (msec) CPU Time
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+Run = [1]
+# x1000
+world tick .00001 1000
+world.run_world (x1000) took ..
+1.000 (sec) Real Time and 610 (msec) CPU Time
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+Run = [1000]
+# x10000
+world tick .00001 10000
+world.run_world (x10000) took ..
+6.000 (sec) Real Time and 6110 (msec) CPU Time
+.............
+[selected_ambcell][0xAAB0E0] = CellPos[0xAAB0E0].[20].[1]
+[vm.vol] = selected_ambcell.cell[0xAAB650].vol
+Run = [10000]
+quit

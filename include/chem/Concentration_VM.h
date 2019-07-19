@@ -20,7 +20,6 @@
 class Concentration_VM {
 public:
 	mylist<Peptide>				peptide_stack;
-	// todo vm.external mole_heap
 	mylist<Molecule>			molecule_stack;
 	mylist<Concentration>		concentration_stack;
 	MoleculeMatch				matchpos;

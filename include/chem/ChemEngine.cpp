@@ -762,13 +762,14 @@ int		ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_t
 	return n;
 }
 // ---------------------------- // ----------------------------
+/******************************************
 int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 	if (vol==NULL) return -1;
 	int n = 0;
 	return -49;
-	// todo: multi vol support
 	// clean out unsed conc's
 	mylist<Molecule> *mole_list = vol->get_mole_list();
+	if (mole_list==NULL) return -2;
 
 	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list-> gethead();
 	while (mole_item!=NULL) {
@@ -793,6 +794,8 @@ int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
 
 	return n;
 }
+/******************************************/
+
 
 /******************************
 //========================================================

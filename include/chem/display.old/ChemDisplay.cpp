@@ -787,11 +787,8 @@ void ChemDisplay::draw_pepdisp(ChemScreen *screen, ChemPepDisplay *pepdis, bool 
 void ChemDisplay::draw_moledisp(ChemScreen *screen, ChemMoleDisplay *moledis, bool mouseclick){
 	if (screen==NULL) return;
 	if (moledis==NULL) return;
-	//if (moledis-> mole == NULL) return;
-	//if (*moledis->mole==NULL) return;
 	//Molecule	*draw_mole(ChemScreen *screen, ChemDisplayCoords *coords, Molecule *mole, bool mouseclick, ChemDisplayColor *col);
 	// ----
-	// todo: draw_moledisp
 	if (moledis->mole!=NULL) {
 		char	txt[32];
 		sprintf(txt, "MoleDisp[%s]", moledis->name.get());

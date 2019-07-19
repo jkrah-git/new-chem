@@ -1,36 +1,11 @@
 
 
-int	ChemEngine::get_reactions(ConcentrationVolume *vol){
-
-for each enz,
-  for each actice_mole
-    for each passive_mole; 
- 	*reaction = search_enzyme_reaction( passive_conc_item-> item->getmole(), match_enz);
-
-        if MISS;
-          *reaction = save_enzyme_reaction(vol, passive_conc_item-> item-> getmole(), match_enz, &vm->matchpos.results_list);
-        enf if
-        reaction-> scale = (passive_conc_item-> item->get() * active_conc_item->item->get());
-    next passive
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ===================================
 NEXT TODO
+--- vars in input stream
+--- vary levels of text output (file vs interactive) (quiet vs verbose)
+
 --- list of buffers to find max commit.. eg.conc, temp, energy, 
     - cell_run, cell_maxcommit, call_commit
 --- txt[] every 'x' samples

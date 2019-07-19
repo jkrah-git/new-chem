@@ -92,8 +92,6 @@ public:
 
 	mylist<AmbientCell>::mylist_item<AmbientCell> 		*get_ambcell(CellPos *_pos);
 	AmbientCell			*add_ambcell(CellPos *_pos);
-	// todo: del_ambcell
-	int					del_ambcell(CellPos *_pos);
 
 
 	int	get_reactions(void){ return get_reactions(&chem_engine); };

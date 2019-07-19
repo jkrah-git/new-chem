@@ -237,8 +237,8 @@ int	Cell::run_cell(ChemEngine *eng, ConcentrationVolume *vol, ChemTime run_time)
 	vol-> commit(max_commit);
 	r = vol->clip_conc(eng-> conc_clip, eng-> conc_max);
 	if (r<0) { PRINT(".. vol-> clean_conc = [%d]\n", r); }
-	r = eng-> clean_volume_moles(vol);
-	if (r<0) { PRINT(".. clean_volume_moles(vol) = [%d]\n", r); }
+//	r = eng-> clean_volume_moles(vol);
+//	if (r<0) { PRINT(".. clean_volume_moles(vol) = [%d]\n", r); }
 	r = eng-> clear_all_hits();
 	if (r<0) { PRINT(".. clear_all_hits = [%d]\n", r); }
 
@@ -357,14 +357,6 @@ AmbientCell *World::add_ambcell(CellPos *_pos){
 	return cell_item-> item;
 };
 // -----------------------------------------------
-int 	World::del_ambcell(CellPos *_pos){
-	mylist<AmbientCell>::mylist_item<AmbientCell>  *ambcell = get_ambcell(_pos);
-//	if (ambcell==NULL)
-
-
-	return -49;
-}
-
 
 
 // ----------------------------------------------- // -----------------------------------------------

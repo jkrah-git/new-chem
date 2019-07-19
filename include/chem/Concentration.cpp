@@ -41,6 +41,11 @@ Concentration::~Concentration() 			{	mole = NULL; }
 Molecule	*Concentration::getmole(void)	{	return mole;	}
 */
 // -------------------------------
+ConcentrationVolume::ConcentrationVolume(){
+	mole_list = NULL;
+}
+// -------------------------------
+ConcentrationVolume::~ConcentrationVolume(){}
 // -------------------------------
 void Concentration::dump(){
 	printf("Concentration[0x%zX].mole[0x%zX]::",	(long unsigned int) this, (long unsigned int) mole);
@@ -49,94 +54,10 @@ void Concentration::dump(){
 	DUMP(mole);
 }
 // -------------------------------
-// -------------------------------
-/*****************
-// todo: major fix up.. why not just buf.take .. but not allow more that
-// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-ConcLevelType	Concentration::OLDtake(ConcAdjustType adj){
-	ConcLevelType	result = ( buf.get() * adj );
-	buf.remove(result);
-	return result;
-
-}
-// -------------------------------
-ConcLevelType	Concentration::put(ConcLevelType amount){
-	buf.add(amount);
-	return amount;
-}
-*****************/
-
-// -------------------------------
-/*
-ConcLevelType	Concentration::put(ConcLevelType amount){
-	ConcLevelType	result = amount;
-	buf.add(result);
-	return result;
-}
-*/
-
-// -------------------------------
 void	Concentration::commit(BufCommitType max_commit){
-	//buf.commit();
 	buf.commit(max_commit);
 }
-
-//------------------------------
-/********************* DELME
-void Concentration::test(){
-	printf("Concentration.test: == START ==\n");
-	printf("Concentration.test: PRE: ");	dump();
-	//------------
-	printf("Concentration.test: buf.test: "); buf.test();
-	printf("Concentration.test: POST: ");		dump();
-
-
-	// -------------
-	printf("Concentration.test: == END ==\n");
-}
-*********************/
 // -------------------------------
-/*
-// -------------------------------
-class ConcentrationVolume {
-	mylist<Molecule> 	mole_list;
-	mylist<Concentration> 	conc_list;
-
-public:
-
-	// ---
-	ConcentrationVolume();
-	virtual ~ConcentrationVolume();
-	// ----
-	void 	dump(void);
-	void	clear(void);
-	void 	dumpmoles(void) { mole_list.dump(); }
-	// ---------
-	Concentration	*molesearch(Molecule	*m);
-
-	mylist<Molecule>::mylist_item<Molecule> *search_molelist(Molecule *m){ return mole_list.search(m); };
-	mylist<Concentration>::mylist_item<Concentration> *search_conclist(Concentration *c){ return conc_list.search(c); };
-
-	ConcLevelType	get(Molecule	*m);
-	void			set(Molecule	*m, ConcLevelType new_val, ConcLevelType new_delta);
-
-	// NOTE..  take % (ConcAdjustType) but we put ConcLevelType
-	ConcLevelType	take(Molecule	*m, ConcAdjustType adj);
-	ConcLevelType	put(Molecule	*m, ConcLevelType amount);
-	// ---------
-	ChemTime		get_maxcommit(void);
-	void			commit(void);
-	//----
-};
-// -------------------------------
-
-*/
-ConcentrationVolume::ConcentrationVolume(){
-	mole_list = NULL;
-
-}
-
-ConcentrationVolume::~ConcentrationVolume(){}
 //--------------
 void ConcentrationVolume::dump(void){
 	printf("ConcentrationVolume[0x%zX].mole_list[0x%zX].count[%d]\n",	(long unsigned int) this, (long unsigned int) mole_list, conc_list.count());
@@ -228,17 +149,6 @@ ConcLevelType	ConcentrationVolume::get(Molecule	*m){
 	return conc->get();
 }
 //--------------
-/****************************
-ConcLevelType	ConcentrationVolume::OLD_vol_take(Molecule	*m, ConcAdjustType adj){
-	Concentration *conc = molesearch(m);
-	if (conc==NULL) return -1.0;
-//	return conc->OLDtake(adj);
-	conc-> buf.remove(adj);
-	return adj;
-}
-***********************/
-//--------------
-//--------------
 void ConcentrationVolume::take(Molecule	*m, ConcLevelType amount){
 	Concentration *conc = molesearch(m);
 	if (conc!=NULL)
@@ -250,11 +160,9 @@ void	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 	if (mole_list==NULL) return;// { return -2.0; }
 
 	Concentration *conc = molesearch(m);
-	//PRINT("search mole[0x%zX] = conc[0x%zX]\n", m, conc);
-	//DUMP(conc); NL
+	//PRINT("search mole[0x%zX] = conc[0x%zX]\n", m, conc);	DUMP(conc); NL
 
 	if (conc==NULL) {
-
 		// copy new_mole to mole_list
 		mylist<Molecule>::mylist_item<Molecule>	*new_mole = molesearch_list(m); // search_molelist(m);
 		if (new_mole==NULL) {
@@ -270,13 +178,8 @@ void	ConcentrationVolume::put(Molecule	*m, ConcLevelType amount){
 
 		conc = new_conc-> item;
 		conc -> setmole(new_mole-> item);
-		//new_conc-> item-> setmole(new_mole-> item);
-		//PRINT("new conc=[0x%zX]\n",  conc);
-		// conc-> dump();
 	}
-	//conc->put(amount);
 	conc-> buf.add(amount);
-	//return amount;
 }
 //--------------
 ChemTime ConcentrationVolume::get_maxcommit(ConcLevelType min_level, ConcLevelType max_level){
@@ -285,21 +188,6 @@ ChemTime ConcentrationVolume::get_maxcommit(ConcLevelType min_level, ConcLevelTy
 	mylist<Concentration>::mylist_item<Concentration> *item = conc_list.gethead();
 	while (item!=NULL) {
 		if (item-> item!=NULL) {
-
-			//--------------------
-			/***************************
-			ConcLevelType delta = item-> item->getdelta();
-			if (delta<0) {
-				ConcLevelType val = item-> item->get();
-				if (delta <= val) {
-					double m = -((double) val/delta);
-					if (m<max)
-						max = m;
-				} // endif (delta <= val)
-			} // endif (delta<0)
-			***************************/
-			//--------------------
-			//BufCommitType getmax(T floor, T ceiling) {
 			BufCommitType m =  item-> item->buf.getmax(min_level, max_level);
 			if (m<max)
 				max = m;
@@ -317,7 +205,7 @@ int	ConcentrationVolume::del_conc(mylist<Concentration>::mylist_item<Concentrati
 	if (conc_item-> item ==NULL) return -2;
 	conc_list.del(conc_item);
 
-	// todo: can't clean mole list as still used by upstream enzymes/reactions cache
+	// todo: X99 can't clean mole list as still used by upstream enzymes/reactions cache
 	/*
 	Molecule *m = conc_item-> item->getmole(); 	if (m==NULL) return -3;
 	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list.search(m);

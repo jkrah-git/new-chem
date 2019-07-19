@@ -11,7 +11,6 @@
 #include "ChemMenuButton.h"
 //class ChemMenuButton;
 
-// TODO: do I even need a menu - ie just use button_list on screen
 //class ChemDisplay;
 //------------------------------
 class ChemMenu {

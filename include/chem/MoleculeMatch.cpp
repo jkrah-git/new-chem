@@ -50,7 +50,6 @@ private:
 	PepRot		rotation;	//   4=(end), 5=(start), 6=(modified)
 	Molecule	*rotmole;
 
-	// todo:  int Molecule::rotateto(PepRot rotation, Molecule *dest)
 	void		rotatemole();
 
 public:
@@ -187,7 +186,6 @@ int	MoleculeMatch::nextpos(){
 	// nextpos() returns: -2 (no items) -1=(end), 0=(start), 1=(next_item),2=(nextX),3=(nextY),4=(nextRot)
 
 	// start new run ??
-	// todo: if (test_item==NULL) ??
 	if (rotation>3) {
 		rotation = 0;
 		// nb: rotemole also resets: test_item
@@ -260,7 +258,6 @@ int	MoleculeMatch::match_pep(Peptide *pep1, Peptide *pep2){
 // -------------------------------
 int	MoleculeMatch::match_item(void){
 	//	match_item(): returns:  -4=(END) -3=(NOMATCH) -2=(MISS) -1=(COLLISION) 0=(NEXT) 1=(MATCH)
-	// todo: how to signal (next_pep) back to next_mole
 	// ---------------------------------------------------------------------------
 	if (mole1 ==NULL) return -10;
 	if (mole2 ==NULL) return -11;
@@ -408,87 +405,6 @@ int	MoleculeMatch::match_mole(){
 
 }
 //----------------------------------
-
-// -------------------------------
-/*
-int	MoleculeMatchPos::OLDnextmatch_item(void){
-
-	// ---------------------------------------------------------------------------
-	//	nextmatch(): returns: -3=(null_item) -2=(end), -1=(notfound), 0=(found), 1=(match)
-	// ---------------------------------------------------------------------------
-	if (mole1 ==NULL) return -10;
-	if (mole2 ==NULL) return -11;
-	//if (rotmole ==NULL) return -12;
-	// both root and test items need to be set here
-
-	// nextpos
-	int result  = nextpos();
-	if (result <0) return result-10;
-	result = -1;
-
-	PepPosVecType	*test_item_pos = test_item-> item-> getpos();
-	if (test_item_pos ==NULL) return -13;
-
-	PeptidePos testpos;
-	testpos.dim[PEPPOS_X] = test_item_pos[PEPPOS_X] + current_pos.dim[PEPPOS_X];
-	testpos.dim[PEPPOS_Y] = test_item_pos[PEPPOS_Y] + current_pos.dim[PEPPOS_Y];
-	// todo: FIX vector adds
-	//testpos =   current_pos + test_item_pos;
-
-	// ------------
-	mylist<Peptide>::mylist_item<Peptide>  *test_pep = mole1-> testpos(&testpos);
-	// mylist<Peptide>::mylist_item<Peptide>  *test_pos(Peptide *new_pep);
-
-
-	if (test_pep!=NULL) {
-		result  = 0;
-		//PRINT("Colis @ "); testpos.dump();
-	//	PRINT("found pep[0x%x]..\n", test_pep-> item-> get() );
-		PRINT("found pep -> "); test_pep-> dump(); NL
-		PRINT("test_item-> "); test_item-> dump(); NL
-		//----------------
-		if (test_pep-> item-> match( test_item-> item-> get())) {
-			result = 1;
-			//PRINT("MATCH pep[0x%x]..\n", test_pep-> item-> get() );
-			//---------------------------------
-			// - active elements ... 0bXXsstttt  .. match 0bYYsseett
-			// - ss = match.strength = 0-3
-			// - eett = match. energy/temp deltas = (0-3) = { -1,0,1,2 }
-
-			//PepSig A = root_item-> item-> get();
-			PepSig A = test_pep-> item-> get();
-			PepSig B = test_item-> item-> get();
-			char bin0[32], bin1[32];
-			sprintb(bin0, (char) A, '0');
-			sprintb(bin1, (char) B, '0');
-			printf("####################################\n");
-			printf("Peptide::match [%s]->[%s]\n", bin0, bin1);
-
-			// 0b1100 0000 = 0xc0
-			// 0b0011 0000 = 0x30
-			// 0b0000 1100 = 0x0c
-			// 0b0000 0011 = 0x03
-			PepSig data = test_pep-> item-> get();
-
-			// 0bYYsseett
-			//data = data &  0x3f;
-			PepSig strength = (data &  0x30) >> 4;
-			PepSig energy = (data &  0x0c) >> 2;
-			PepSig temp = data &  0x03;
-
-			sprintb(bin0, (char) data, '0');		printf("data=[%s]\n", bin0);
-			sprintb(bin0, (char) strength, '0');	printf("strength=[%s]\n", bin0);
-			sprintb(bin0, (char) energy, '0');		printf("energy=[%s]\n", bin0);
-			sprintb(bin0, (char) temp, '0');		printf("temp=[%s]\n", bin0);
-			printf("####################################\n");
-
-
-			//---------------------------------
-		}
-	} // else keep looking for colis
-	return result;
-}
-*/
 //----------------------------------
 
 
