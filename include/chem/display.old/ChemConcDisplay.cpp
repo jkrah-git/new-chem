@@ -25,7 +25,6 @@ public:
 	int		get(int index, float *_data);
 };
 //-----------------------------
-******/
 CircBuffer::CircBuffer(){
 	size = 0;
 	next = 0;
@@ -142,6 +141,7 @@ void CircBuffer::calc_bounds(void){
 		if (data[i] < min) min = data[i];
 	}
 }
+******/
 
 
 /*****

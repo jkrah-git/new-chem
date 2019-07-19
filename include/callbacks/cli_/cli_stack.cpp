@@ -28,7 +28,7 @@ int	cli_stack(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
@@ -36,11 +36,11 @@ int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 	// printf("\n");
 	//-------
 	if (argc<1) {
-		vm-> dumpstacks();	 printf(".. use [pep|mole|conc to filter dump.\n");
+		cli->local_vm. dumpstacks();	 printf(".. use [pep|mole|conc to filter dump.\n");
 	} else {
-		if (strcmp(argv[0], "pep") ==0)  {	printf("peptide_stack ==> ");	 vm->  peptide_stack.dump();	 }
-		if (strcmp(argv[0], "mole") ==0) {	printf("molecule_stack ==> ");	 vm-> molecule_stack.dump();	 }
-		if (strcmp(argv[0], "conc") ==0) {	printf("concentration_stack ==> ");	 vm-> concentration_stack.dump();	 }
+		if (strcmp(argv[0], "pep") ==0)  {	printf("peptide_stack ==> ");	 cli->local_vm.  peptide_stack.dump();	 }
+		if (strcmp(argv[0], "mole") ==0) {	printf("molecule_stack ==> ");	 cli->local_vm. molecule_stack.dump();	 }
+		if (strcmp(argv[0], "conc") ==0) {	printf("concentration_stack ==> ");	 cli->local_vm. concentration_stack.dump();	 }
 	}
 
 	return 0;
@@ -49,7 +49,7 @@ int	cli_stack_dump(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
@@ -64,39 +64,39 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 			(strcmp(argv[0], "all") ==0) ){
 			printf("peptide_stack ==> clear\n");
 			// check if selected
-			if (vm-> pep != NULL) {
-				if ( vm-> peptide_stack.search(vm-> pep) != NULL ) {
-					vm-> pep = NULL;
+			if (cli->local_vm. pep != NULL) {
+				if ( cli->local_vm. peptide_stack.search(cli->local_vm. pep) != NULL ) {
+					cli->local_vm. pep = NULL;
 				}
 			}
 			//--
-			vm-> peptide_stack.clear();
+			cli->local_vm. peptide_stack.clear();
 		}
 		// -------------------------
 		if ((strcmp(argv[0], "mole") ==0) ||
 			(strcmp(argv[0], "all") ==0) ){
 			printf("molecule_stack ==> clear\n");
 			// check if selected
-			if (vm-> mole != NULL) {
-				if ( vm-> molecule_stack.search(vm-> mole) != NULL ) {
-					vm-> mole = NULL;
+			if (cli->local_vm. mole != NULL) {
+				if ( cli->local_vm. molecule_stack.search(cli->local_vm. mole) != NULL ) {
+					cli->local_vm. mole = NULL;
 				}
 			}
 			//--
-			vm-> molecule_stack.clear();
+			cli->local_vm. molecule_stack.clear();
 		}
 		// -------------------------
 		if ((strcmp(argv[0], "conc") ==0) ||
 			(strcmp(argv[0], "all") ==0) ){
 			printf("concentration_stack ==> clear\n");
 			// check if selected
-			if (vm-> conc != NULL) {
-				if ( vm-> concentration_stack.search(vm-> conc) != NULL ) {
-					vm-> conc = NULL;
+			if (cli->local_vm. conc != NULL) {
+				if ( cli->local_vm. concentration_stack.search(cli->local_vm. conc) != NULL ) {
+					cli->local_vm. conc = NULL;
 				}
 			}
 			//--
-			vm-> concentration_stack.clear();
+			cli->local_vm. concentration_stack.clear();
 		}
 	}
 
@@ -107,7 +107,7 @@ int	cli_stack_clear(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	load_cli_stack(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	// //Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	int r;

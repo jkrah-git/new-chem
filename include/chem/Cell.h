@@ -25,6 +25,7 @@ public:
 	CellStatus();
 	~CellStatus();
 	void 	dump(void);
+	// TODO: buf bounds
 	void 	commit(void){ energy.commit(); health.commit(); temperature.commit();  };
 	CellStatusType	efficiency(void){ return  (health.get() / (1+(temperature.get()*temperature.get()))); };
 };
@@ -89,27 +90,21 @@ public:
 	~World();
 	void dump(void);
 
-	AmbientCell 		*get_ambcell(CellPos *_pos);
+	mylist<AmbientCell>::mylist_item<AmbientCell> 		*get_ambcell(CellPos *_pos);
 	AmbientCell			*add_ambcell(CellPos *_pos);
 	// todo: del_ambcell
-	//AmbientCell			*del_ambcell(CellPos *_pos);
+	int					del_ambcell(CellPos *_pos);
 
-	// TODO: _world reactions
+
 	int	get_reactions(void){ return get_reactions(&chem_engine); };
 	int	run_reactions(ChemTime run_time){ return run_reactions(&chem_engine, run_time); };
 	int	finish_reactions(void){ return finish_reactions(&chem_engine); };
 	int	run_world(ChemTime run_time){ return run_world(&chem_engine, run_time); };
 
-
-
-
 	int	get_reactions(ChemEngine *eng);
 	int	run_reactions(ChemEngine *eng, ChemTime run_time);
 	int	finish_reactions(ChemEngine *eng);
 	int	run_world(ChemEngine *eng, ChemTime run_time);
-
-
-
 
 	ChemTime get_cell_maxcommit(Cell *cell);
 

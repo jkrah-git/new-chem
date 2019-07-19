@@ -327,14 +327,14 @@ void World::dump(void){
 
 };
 // -----------------------------------------------
-AmbientCell *World::get_ambcell(CellPos *_pos){
+mylist<AmbientCell>::mylist_item<AmbientCell> *World::get_ambcell(CellPos *_pos){
 	if (_pos==NULL) return NULL;
 
 	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell_item = ambcell_list.gethead();
 	while (cell_item!=NULL){
 		if (cell_item-> item!=NULL) {
 			if ( cell_item-> item-> pos == (*_pos))
-				return cell_item-> item;
+				return cell_item;
 		}
 
 		// next
@@ -346,7 +346,7 @@ AmbientCell *World::get_ambcell(CellPos *_pos){
 // -----------------------------------------------
 AmbientCell *World::add_ambcell(CellPos *_pos){
 	if (_pos==NULL) return NULL;
-	AmbientCell *cell = get_ambcell(_pos);
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *cell = get_ambcell(_pos);
 	// cell exists
 	if (cell!=NULL) return NULL;
 
@@ -355,8 +355,19 @@ AmbientCell *World::add_ambcell(CellPos *_pos){
 	if (cell_item-> item == NULL) { printf("cell_list.add->item failed\n"); return NULL; }
 	cell_item-> item-> pos = (*_pos);
 	return cell_item-> item;
-}
+};
 // -----------------------------------------------
+int 	World::del_ambcell(CellPos *_pos){
+	mylist<AmbientCell>::mylist_item<AmbientCell>  *ambcell = get_ambcell(_pos);
+//	if (ambcell==NULL)
+
+
+	return -49;
+}
+
+
+
+// ----------------------------------------------- // -----------------------------------------------
 int	World::get_reactions(ChemEngine *eng){
 	if (eng==NULL)	eng = &chem_engine;
 	int n = 0;
@@ -455,7 +466,7 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 	// clear eng hits
 	// ---------------------------------
 	int t = eng-> clear_all_hits();
-	if (t<0) PRINT(".. clear_all_hits = [%d]\n", t);
+	if (t<0) { PRINT(".. clear_all_hits = [%d]\n", t); }
 
 
 
@@ -465,21 +476,23 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 int	World::run_world(ChemEngine *eng, ChemTime run_time){
 	if (eng==NULL)	eng = &chem_engine;
 
-	PRINT("|--------   RUN WORLD [%.3f]    --------| \n", run_time);
-	PRINT(".. (tick)\n");
+//	PRINT("|--------   RUN WORLD [%.3f]    --------| \n", run_time);
+//	PRINT(".. (tick)\n");
 	eng-> next_tick();
 
 	int r = get_reactions(eng);
-	PRINT(".. get_reactions = [%d]\n", r);
+//	PRINT(".. get_reactions = [%d]\n", r);
 
 	int s = run_reactions(eng, run_time);
-	PRINT(".. run_reactions = [%d]\n", s);
+//	PRINT(".. run_reactions = [%d]\n", s);
 
 	int t = finish_reactions(eng);
-	PRINT(".. finish_reactions = [%d]\n", t);
+//	PRINT(".. finish_reactions = [%d]\n", t);
 
 
-	if ((r<0)||(s<0)) return -10;
+	if (r<0) return r-100;
+	if (s<0) return s-110;
+	if (t<0) return t-120;
 	return 0;
 }
 // -----------------------------------------------

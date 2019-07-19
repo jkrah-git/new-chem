@@ -41,7 +41,7 @@ int cli_conclist(ChemDisplay *display, int argc, char **argv) {
 	if (display==NULL) return -1;
 	Concentration_CLI *cli = display-> get_cli(); 	if (cli==NULL) return -2;
 	//------
-	Concentration_VM *vm = cli-> get_selected_vm();	//	if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();	//	if (vm==NULL) return -10;
 	//-------
 
 	//if (cli->display.current_screen==NULL) {
@@ -67,7 +67,7 @@ int cli_conclist(ChemDisplay *display, int argc, char **argv) {
 		conclist = screen-> add_conclist(argv[0]);
 		if (conclist==NULL) {	PRINT("failed to add conclist[%s]..\n", argv[0]);  return -3;  }
 		//conclist->set_mole_list(&vm->molecule_stack);
-		conclist->set_vm(vm);
+		conclist->set_vm(&cli->local_vm);
 		printf("new conclist[%s] OK..\n", argv[0]);
 		return 0;
 	}
@@ -130,7 +130,7 @@ int cli_conclist(ChemDisplay *display, int argc, char **argv) {
 
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
-		conclist->set_vm(vm);
+		conclist->set_vm(&cli->local_vm);
 		printf("src updated..\n");
 		return 0;
 	}

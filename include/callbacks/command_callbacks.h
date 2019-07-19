@@ -32,21 +32,20 @@ int _cli_world_print_selection(Concentration_CLI *cli, int argc, char **argv);
 
 //---------------------------------------------------------------------
 // ================================================================================================================
-#define NEED_CLI 	if (cli==NULL) 			{ printf("NULL cli\n"); return -1; }
-#define NEED_VM 	Concentration_VM 	*vm = cli-> get_selected_vm();	if (vm==NULL) { printf("NULL vm\n"); return -2; }
-#define NEED_VOL 	if (vm-> vol==NULL) 	{ printf("NULL vol\n"); return -3; }
-#define NEED_WORLD	if (cli-> world==NULL) { printf("NULL world\n"); return -4; }
-#define NEED_AMB	if (cli-> selected_ambcell ==NULL) { printf("need to select ambcell\n"); return -5; }
-#define NEED_CELL 	if (cli->selected_ambcell-> cell==NULL) { printf("need to select cell\n"); return -6; }
+#include "common.h"
+#define NEED_CLI 	if (cli==NULL) 							{ printf("NULL cli\n"); 					return -1; }
+#define NEED_WORLD	if (cli->world==NULL) 					{ printf("NULL world\n"); 					return -2; }
+#define NEED_MOLE 	if (cli->local_vm.mole==NULL) 			{ printf("Need to select mole first\n"); 	return -3; }
+#define NEED_CONC 	if (cli->local_vm.conc==NULL) 			{ printf("Need to select conc first\n"); 	return -4; }
+#define NEED_VOL 	if (cli->local_vm.vol==NULL) 			{ printf("Need to select vol first\n"); 	return -5; }
+#define NEED_AMB	if (cli->selected_ambcell ==NULL) 		{ printf("Need to select ambcell first\n"); return -6; }
+#define NEED_CELL 	if (cli->selected_ambcell-> cell==NULL) { printf("Need to select cell first\n"); 	return -7; }
+#define NEED_ENZ 	if (cli->selected_enz==NULL) 			{ printf("Need to select enzyme first\n"); 	return -8; }
 
 
-//#define NEED_CELL	if (cli->selected_ambcell ==NULL) { printf("NULL ambcell\n"); return -5; }
-//#define NEED_CELL 	Cell 	*cell = cli->selected_ambcell->cell;	if (cell==NULL) { printf("need to select bcell\n"); return -6; }
-//#define NEED_ENG 	if (cli-> chem_engine==NULL) { printf("NULL eng\n"); return -4; }
-// todo - cleanup
-#define NEED_ENG 	;
-
-
+//#define READI(i,c) { if ( sscanf(argv[c], "%d", &i) <0) {	printf("arg [%d] error: expected 'int' but got [%s].\n", c, argv[c]);	return -20;	} else { printf("read [%d]\n". i); } }
+#define READI(i,c) if ( sscanf(argv[c], "%d", &i) <1) {	printf("error: arg [%d] expected 'int' but got '%s'.\n", c, argv[c]);	return -20;	}
+#define READF(f,c) if ( sscanf(argv[c], "%f", &f) <1) {	printf("error: arg [%d] expected 'float' but got '%s'.\n", c, argv[c]);	return -20;	}
 
 //--------------- //---------------
 #endif /* COMMAND_CALLBACKS_H_ */

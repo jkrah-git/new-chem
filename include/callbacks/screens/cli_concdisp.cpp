@@ -68,9 +68,10 @@ int cli_concdisp(ChemDisplay *display, int argc, char **argv) {
 		if (concdisp==NULL) {	PRINT("failed to add concdisp[%s]..\n", argv[0]);  return -3;  }
 		//concdisp->set_mole_list(&vm->molecule_stack);
 		{
-			Concentration_VM *vm = cli-> get_selected_vm();
+			//Concentration_VM *vm = cli-> get_selected_vm();
 			//if (vm!=NULL) concdisp->set_conc(vm->conc);
-			if (vm!=NULL) concdisp->set_conc(vm->mole, vm->vol);
+			//if (vm!=NULL)
+			concdisp->set_conc(cli->local_vm.mole, cli->local_vm.vol);
 			if (cli->world!=NULL)
 				concdisp->set_lasttick(cli->world->chem_engine.get_tick());
 		}
@@ -139,14 +140,14 @@ int cli_concdisp(ChemDisplay *display, int argc, char **argv) {
 	// =================================
 	//-----------------
 	if (strcmp(argv[1], "src")==0) {
-		Concentration_VM *vm = cli-> get_selected_vm();
-		if (vm!=NULL) {
+		//Concentration_VM *vm = cli-> get_selected_vm();
+		//if (vm!=NULL) {
 			//concdisp->set_conc(vm-> conc);
-			concdisp->set_conc(vm->mole, vm-> vol);
+			concdisp->set_conc(cli->local_vm.mole, cli->local_vm.vol);
 			concdisp->buf.clear();
 			if (cli->world!=NULL)
 				concdisp->set_lasttick(cli->world->chem_engine.get_tick());
-		}
+		//}
 		//else printf("warn: vm = NULL\n");
 		//printf("src updated..[0x%zX]\n", (long unsigned int) vm);
 

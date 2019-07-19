@@ -48,10 +48,7 @@ public:
 	int							last_result;
 	World						*world;
 
-	// TODO consolidate to 'local_vm'
 	Concentration_VM			local_vm;
-	Concentration_VM			*selected_vm;
-	Concentration_VM			*get_selected_vm(void){ return selected_vm; };
 
 	// TODO Superclass / list of lists
 	mylist<CLI_Command>			base_cmdlist;
@@ -74,20 +71,10 @@ public:
 	char 						**args;
 
 	//---------------
-	//ChemDisplay 				display;
-
-
-
-
-//	int		run(mylist<CLI_Command> *cmd_list, int argc, char **argv);
-	int 	(*run_callto)(int argc, char **argv);
-
-	//void 	(*run_callback)(char *msg);
-	int		(*callback)(Concentration_CLI*, int, char**);
-
-
-	//Concentration_CLI(ConcentrationVolume &cvol); //, Concentration_VM &vm);
-	Concentration_CLI(); //, Concentration_VM &vm);
+	int 						(*run_callto)(int argc, char **argv);
+	int							(*callback)(Concentration_CLI*, int, char**);
+	//--------------------
+	Concentration_CLI();
 	virtual ~Concentration_CLI();
 	void	load_commands();
 	void 	dump();

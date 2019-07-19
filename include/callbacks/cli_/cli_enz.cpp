@@ -12,13 +12,11 @@
 //---------------------------
 //---------------------------//---------------------------
 int	cli_enz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	NEED_CLI
 	//-------
 	//PRINT(": argc[%d]", argc);
 	//for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	//printf("\n");
-	//-------
 	//-------
 	if (argc<1) {	cli->enz_cmdlist.dump();	return 0;	} // else
 	return 	cli-> run(&cli-> enz_cmdlist, argc,  &argv[0]);
@@ -27,8 +25,8 @@ int	cli_enz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_enz_dump(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	NEED_CLI
+
 	//-------
 	DUMP(cli->selected_enz);
 	if (cli->selected_enz!=NULL) {
@@ -40,17 +38,13 @@ int	cli_enz_dump(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_enz_clear(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//vm->concenz-> clear();
+	NEED_CLI
 	cli->selected_enz = NULL;
 	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_enz_list(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
 	NEED_CLI NEED_WORLD
 	//-------
 	cli->world-> chem_engine.enz_list.dump();
@@ -88,7 +82,7 @@ int	cli_enz_ld(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------------//---------------------------------
 int	load_cli_enz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
+	NEED_CLI
 	//-------
 	int r;
 	char name[32];

@@ -28,15 +28,15 @@ int	cli_pep(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_pep_clear(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm->pep = NULL;
+	cli->local_vm.pep = NULL;
 	return 0;
 }
 //---------------------------------//---------------------------------
 int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -45,19 +45,19 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 	//-------
 	mylist<Peptide>::mylist_item<Peptide>  *new_item;
 	if (argc==0) {
-		new_item = vm-> peptide_stack.add();
+		new_item = cli->local_vm. peptide_stack.add();
 		if (new_item ==NULL) return -10;
 		if (new_item-> item ==NULL) return -11;
 
-		if (vm-> pep==NULL) {
-			vm-> pep = new_item-> item;
+		if (cli->local_vm. pep==NULL) {
+			cli->local_vm. pep = new_item-> item;
 		} else {
-			*new_item-> item = *vm-> pep;
+			*new_item-> item = *cli->local_vm. pep;
 		}
 
 	} else {
 		for (int i=0; i<argc; i++) {
-			new_item = vm-> peptide_stack.add();
+			new_item = cli->local_vm. peptide_stack.add();
 			if (new_item ==NULL) return -10;
 			if (new_item-> item ==NULL) return -11;
 
@@ -76,29 +76,29 @@ int	cli_pep_push(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_pep_pop(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
 	//-------
-	mylist<Peptide>::mylist_item<Peptide>  *tail = vm-> peptide_stack.gettail();
+	mylist<Peptide>::mylist_item<Peptide>  *tail = cli->local_vm. peptide_stack.gettail();
 	if (tail ==NULL) return -10;
 	if (tail-> item ==NULL) return -11;
 
 	//*cli-> core-> pep = *tail-> item;
-	if (vm-> pep == tail-> item) {
-		vm-> pep = NULL;
+	if (cli->local_vm. pep == tail-> item) {
+		cli->local_vm. pep = NULL;
 	}
-	vm-> peptide_stack.del(tail);
+	cli->local_vm. peptide_stack.del(tail);
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -107,7 +107,7 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 	mylist<Peptide>::mylist_item<Peptide>  *item = NULL;
 
 	if (argc<1) {
-		item = vm-> peptide_stack.gettail();
+		item = cli->local_vm. peptide_stack.gettail();
 	} else {
 		int off;
 		if ( sscanf(argv[0], "%d", &off) <0) {
@@ -115,13 +115,13 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 			return -20;
 		}
 		//printf("..load [%d]\n", off);
-		item = vm-> peptide_stack.offset(off);
+		item = cli->local_vm. peptide_stack.offset(off);
 	}
 
 	// ----------- save
 	if (item ==NULL) return -10;
 	if (item-> item ==NULL) return -11;
-	vm-> pep = item-> item;
+	cli->local_vm. pep = item-> item;
 
 	return 0;
 }
@@ -129,7 +129,7 @@ int	cli_pep_ld(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -146,8 +146,8 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 		return -20;
 	}
 	PepSig sig = hex;
-	if (vm-> pep !=NULL) {
-		vm-> pep-> sig = sig;
+	if (cli->local_vm. pep !=NULL) {
+		cli->local_vm. pep-> sig = sig;
 	}
 
 	return 0;
@@ -156,7 +156,7 @@ int	cli_pep_hex(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	// LOG(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -180,11 +180,11 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 	}
 
 
-	if (vm-> pep !=NULL) {
+	if (cli->local_vm. pep !=NULL) {
 	//	cli-> core-> pep-> pos.dim[0] = posx;
 	//	cli-> core-> pep-> pos.dim[1] = posy;
 	//	PepPosVecType	*pos = cli-> core-> pep-> getpos();
-		vm-> pep-> setpos(posx, posy, 0);
+		cli->local_vm. pep-> setpos(posx, posy, 0);
 	}
 
 	return 0;
@@ -196,7 +196,7 @@ int	cli_pep_pos(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	load_cli_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	// //Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	int r;

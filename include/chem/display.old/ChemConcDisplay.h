@@ -12,7 +12,8 @@
 #include "ChemDisplayCoords.h"
 #include "MyString.h"
 #include "chem/ChemEngine.h"
-//----------------------------- todo: <T>
+//-----------------------------
+/*
 class CircBuffer {
 private:
 	// first run (num_items < size)
@@ -26,7 +27,6 @@ private:
 	float	max;
 	// get payload-offset from linea index ([0]=oldest [max]=newest)
 	int		circ_index(int index);
-//todo: txt[] - index tags - every 'x' samples
 public:
 	CircBuffer();
 	virtual ~CircBuffer();
@@ -42,6 +42,7 @@ public:
 	float		get_min(void){ return min; };
 	float		get_max(void){ return max; };
 };
+*/
 //-----------------------------
 
 //-----------------------------
@@ -53,7 +54,8 @@ private:
 	ChemStep				last_tick;
 public:
 
-	CircBuffer				buf;
+	//CircBuffer				buf;
+	CircularBuffer<float>	buf;
 	MyString				name;
 	ChemDisplayCoords		coords;
 	ChemDisplayColor 		col;

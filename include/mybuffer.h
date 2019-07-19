@@ -9,6 +9,7 @@
 #define MYBUFFER_H_
 typedef double BufCommitType;
 #include <stdio.h>
+#include <stdlib.h>
 
 //---------------------------------------------
 template <class T> class MyBuffer {
@@ -63,36 +64,143 @@ public:
 		return 1.0;
 	}
 
+	void 	commit(BufCommitType max) {
+		T change = delta * max;
+		value += change;
+		delta -= change;
+	}
+};
+
+//===============================================================
+
+template <class T> class CircularBuffer {
+private:
+	// first run (num_items < size)
+	// next runs (num_items = size)
+
+	int		size;
+	int		next;
+	int		num_items;
+	T	*data;
+	T	min;
+	T	max;
+	// get payload-offset from linea index ([0]=oldest [max]=newest)
+	int		circ_index(int index){
+		if (index>=num_items) return -2;
+		if (num_items < size) return index;
+		// from next -> (size-1) = 0 - (size-next)
+		// from 0 -> (next-1) = (size-next)
+		return (index + next) % size;
+
+	};
+//todo: txt[] - index tags - every 'x' samples
+public:
+	CircularBuffer(){
+		size = 0;
+		next = 0;
+		num_items = 0;
+		data = NULL;
+		min = 0;
+		max = 0;
+	};
+
+	virtual ~CircularBuffer(){
+		if (data!=NULL) free(data);
+	};
 
 
+	void	dump(void){
+		printf("CircularBuffer[0x%zX]:", (long unsigned int) this) ;
+		printf("Size[%d].Num[%d].Last[%d]:", size, num_items, next);
+		printf("Min[%.3f].Max[%.3f]\n", min, max);
+		printf(" *data[0x%zX]..\n", (long unsigned int) data) ;
+		if (data!=NULL) {
+			printf("RAW:");
+			for (int i=0; i<size; i++) {
+				printf("[%.3f]", data[i]);
+			}
+			printf("\nCOOKED:");
+			for (int i=0; i<num_items; i++) {
+				printf("[%.3f]", data[ circ_index(i) ]);
+			}
+			printf("\n");
+		}
 
-
-
-
-	void 	commit(BufCommitType max) {	T change = delta * max;		value += change; delta -= change; }
-
-
-/*
-	void test(void) {
-
-		printf("MyBuffer.test: == START ==\n");
-		printf("Pre : "); dump(); NL
-		add(1.5);	printf("+1.5 : "); dump(); NL
-		T v;
-		//v = get(); printf(".. get() = %f", v);	v = getdelta(); printf(".. getdelta() = %f\n", v);
-		v = get(); printf(".. get() = %f", v);	v = getdelta(); printf(".. getdelta() = %f, ", v);	v = getmax(); printf(".. max() = %f\n", v);
-
-		remove(3);	printf("-3 : "); dump(); NL
-		v = get(); printf(".. get() = %f", v);	v = getdelta(); printf(".. getdelta() = %f, ", v);	v = getmax(); printf(".. max() = %f\n", v);
-
-		commit(v); 	printf("comit (%3.3f): ", v); dump(); NL
-		v = get(); printf(".. get() = %f", v);	v = getdelta(); printf(".. getdelta() = %f\n", v);
-		printf("MyBuffer.test: == END ==\n");
 
 	}
-*/
+	int		setup(int _size){
+		if (data!=NULL) free(data);
+		if (_size>0) {
+			data = (T*) malloc(sizeof(T)*_size);
 
+			if (data==NULL) {
+				size = 0; next = 0; num_items = 0;
+				return -2;
+			} // else OK
+			size = _size;
+			clear();
+		}
+		return 0;
+
+	};
+
+	void	clear(void){
+		next = 0;
+		num_items = 0;
+		min = 0.0f;
+		max = 0.0f;
+		if (data==NULL) return;
+		for (int i=0; i<size; i++)
+			data[i] = 0;
+	};
+
+	T		last(void){
+		if (data==NULL) return 0;
+		if (next==0) {
+			return data[size-1];
+		}
+		return data[next-1];
+	};
+
+	void	add(T _data){
+		if (data==NULL) return;
+		data[next] = _data;
+		next++;
+
+		if (next >= size)
+			next = 0;
+
+		if (num_items<size)
+			num_items++;
+	};
+
+	int		get(int index, T *_data){
+		if (data==NULL)	return -1;
+		int ci = circ_index(index);
+		if (ci<0) return -2;
+		*_data = data[ci];
+		return 0;
+	};
+
+	int		getsize(void){  return size; };
+	int		count(void){ return num_items; };
+	T		get_min(void){ return min; };
+	T		get_max(void){ return max; };
+	void	calc_bounds(void){
+		if (size<1) { min = 0; max = 0;	return; }
+		//return;
+		min = data[0];
+		max = data[0];
+		for (int i=1; i<size; i++) {
+			if (data[i] > max) max = data[i];
+			if (data[i] < min) min = data[i];
+		}
+	};
 };
+
+
+
+
 
 
 #endif /* MYBUFFER_H_ */

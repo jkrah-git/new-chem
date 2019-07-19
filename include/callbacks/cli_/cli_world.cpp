@@ -21,8 +21,6 @@ int	cli_world(Concentration_CLI *cli, int argc, char **argv){
 //--------------//---------------------------
 int	cli_world_dump(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
-	//printf("------  ambcell_list ----\n");
-	//cli->world->ambcell_list.dump();
 	cli->world->dump();
 	return 0;
 }
@@ -35,16 +33,14 @@ int _cli_world_print_selection(Concentration_CLI *cli, int argc, char **argv) {
 	else 							{ cli->selected_ambcell->pos.dump(); NL	}
 
 	printf("[vm.vol] = ");
-	if (cli->selected_vm==NULL) { printf("<NULL vm>\n");	}
+	if (cli->local_vm.vol==NULL)  { printf("<NULL>\n");	}
 	else {
-		if (cli-> selected_vm-> vol==NULL)  { printf("<NULL>\n");	}
-		else {
-			if (cli-> selected_vm-> vol == cli->selected_ambcell->ambvol) {
-				printf("AmbientCell[0x%zX].vol\n", (PTR) cli-> selected_ambcell);	}
-			if ((cli->selected_ambcell-> cell!=NULL) && (cli-> selected_vm-> vol == &cli->selected_ambcell->cell-> vol)) {
-				printf("selected_ambcell.cell[0x%zX].vol\n", (PTR) cli->selected_ambcell->cell);
-			}
+		if (cli->local_vm.vol == cli->selected_ambcell->ambvol) {
+			printf("AmbientCell[0x%zX].vol\n", (PTR) cli-> selected_ambcell);	}
+		else if ((cli->selected_ambcell-> cell!=NULL) && (cli->local_vm.vol == &cli->selected_ambcell->cell-> vol)) {
+			printf("selected_ambcell.cell[0x%zX].vol\n", (PTR) cli->selected_ambcell->cell);
 		}
+		else printf("vol[0x%zX]\n", (PTR) cli->local_vm.vol);
 	}
 	return 0;
 }
@@ -86,10 +82,6 @@ int	cli_world_list(Concentration_CLI *cli, int argc, char **argv){
 	//----------------------------
 	if ((argc==1)&&(strcmp(argv[0], "heap")==0)){ cli->world->mole_list.dump(); return cli->world->mole_list.count(); }
 
-	//--------------------
-//	_cli_world_print_selection(cli);
-//	if (cli->selected_ambcell==NULL){ printf("selected_ambcell is NULL\n");	}
-//	else 							{ printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL	}
 
 	return 0;
 }
@@ -105,17 +97,11 @@ int	cli_world_add(Concentration_CLI *cli, int argc, char **argv){
 	p.dim[0] = x;
 	p.dim[1] = y;
 
-	//printf("pos=[0x%x, 0x%x]\n", x, y);
-	//p.dump();
-	//AmbientCell *World::add_cell(CellPos *_pos){
 	AmbientCell *amb = 	cli->world-> add_ambcell(&p);
 	if (amb==NULL) { printf("world-> add_cell[%d,%d] failed..\n", x, y); return -30; }
-	//amb->dump(); NL;
 
 	cli->selected_ambcell = amb;
 	//-----------
-	//if (cli->selected_ambcell==NULL) {	printf("selected_ambcell is NULL\n");	}
-	//else {	printf("selected_ambcell = "); cli->selected_ambcell->pos.dump(); NL }
 	return 0;
 }
 //---------------------------//---------------------------
@@ -143,7 +129,8 @@ int	cli_world_ld(Concentration_CLI *cli, int argc, char **argv){
 		CellPos pos;
 		if ((sscanf(argv[0], "%x", &pos.dim[CELLPOS_X]) <0)||
 			(sscanf(argv[1], "%x", &pos.dim[CELLPOS_Y]) <0))	{ printf("Bad Data\n"); return -20; }
-		ambcell = cli->world->get_ambcell(&pos);
+
+		item = cli->world->get_ambcell(&pos);
 	}// end argc==2
 	//-------------------
 	if (item !=NULL) {
@@ -159,48 +146,36 @@ int	cli_world_ld(Concentration_CLI *cli, int argc, char **argv){
 
 	return 0;
 }
-/*******************
-	if (item==NULL) return -10;
-	if (item->item ==NULL) return -11;
-	cli->selected_ambcell = item->item;
-	return 0;
-}
-*******************/
 //---------------------------//---------------------------
 //--------------//---------------------------
 int	cli_world_temp(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM
+	NEED_CLI NEED_WORLD
 	if (cli->selected_ambcell==NULL) { printf("Need to select ambcell\n"); return -10; }
 	if (argc>0) {
 		float f;
 		if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
-//		if (f<0) {
-		//printf("remove[%.3f] = [%.3f]\n", );
-//		}
-//		if (f>0) { printf("add[%.3f] = [%.3f]\n", cli->selected_ambcell->temperature.add(f)); }
-//		}
 		cli->selected_ambcell-> temperature.set(f, 0);
 	}
-
 	printf("ambcell.temp = [%.3f]\n", cli->selected_ambcell-> temperature.get());
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 //--------------//---------------------------
 int	cli_world_addvol(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM
+	NEED_CLI NEED_WORLD
 	if (cli->selected_ambcell==NULL) { printf("Need to select ambcell\n"); return -10; }
 	if (cli->selected_ambcell->ambvol!=NULL) { printf("ambcell already has amb-vol\n"); return -10; }
+
 	cli->selected_ambcell->ambvol = new ConcentrationVolume;//(ConcentrationVolume*) malloc(sizeof(ConcentrationVolume));
 	if (cli->selected_ambcell->ambvol==NULL) { printf("amb-cell Failed to add amb-vol\n"); return -10; }
-	//	cli.local_vol.set_molelist(&world.mole_list);
+	//	!! nb: world_molelist
 	cli->selected_ambcell->ambvol->set_molelist(&cli->world->mole_list);
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 //--------------//---------------------------
 int	cli_world_selvol(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM
+	NEED_CLI NEED_WORLD
 	if (cli->selected_ambcell==NULL) { printf("Need to select ambcell\n"); return -10; }
 	if (cli->selected_ambcell->ambvol==NULL) { printf("ambcell has no ambvol\n"); return -10; }
 	cli-> local_vm.vol = cli->selected_ambcell->ambvol;
@@ -248,15 +223,49 @@ int	cli_world_commit(Concentration_CLI *cli, int argc, char **argv){
 }
 
 //int	World::run_world(ChemEngine *eng, ChemTime run_time){
+// --------------------------
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 //--------------//---------------------------
 int	cli_world_tick(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
 	float f = 1.0;
-	if ((argc>0) && ( sscanf(argv[0], "%f" , &f) <0)) { printf("bad data..\n"); return -30; }
+	int repeat = 1;
+//	if ((argc>0) && ( sscanf(argv[0], "%f" , &f) <0)) { printf("bad data..\n"); return -30; }
+	if (argc>0) { READF(f,0); }
+	if (argc>1) { READI(repeat,1); }
 
-	int r = cli->world->run_world(f);
-	printf("world tick = [%d]\n", r);
-	return r;
+
+	if (repeat==1) {
+		int r = cli->world->run_world(f);
+		printf("world tick = [%d]\n", r);
+		return r;
+	}
+
+	//-------
+	clock_t 	start_ticks = clock();
+	time_t 		start_time;
+	time(&start_time);
+	int n = 0;
+
+	//-------
+	for (int i=0; i<repeat; i++) {
+		if (cli->world->run_world(f) >=0) n++;
+	}
+	//-------
+	clock_t end_ticks = clock();
+	time_t end_time;
+	time(&end_time);
+	//-------
+
+	long elapsed_ticks = ((long) (end_ticks - start_ticks)/1000);
+	//printf("start_t[%ld], end_t[%ld] , elapsed_t[%ld]\n", start_t, end_t, elapsed_t);
+	printf("world.run_world (x%d) took ..\n", repeat);
+	printf("%.3f (sec) Real Time and %ld (msec) CPU Time\n", difftime(end_time, start_time), elapsed_ticks);
+
+	return n;
+
 }
 //--------------//---------------------------
 //---------------------------//---------------------------//---------------------------------//---------------------------------

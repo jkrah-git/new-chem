@@ -11,6 +11,7 @@
 
 // ---------------------------------------------------
 #include "common.h"
+#include "debug.h"
 // simple noop
 int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 //	PRINT("########## START[NOOP] ##########\n");
@@ -79,6 +80,7 @@ int 	eng_ldconc(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_t
 int 	eng_addenz(Cell *cell,ChemEngine *eng, Concentration_VM *vm, ChemTime run_time, int argc, char **argv){
 	if (eng==NULL) { printf("vm is NULL\n"); return -10; }
 	if (vm==NULL) { printf("vm is NULL\n"); return -11; }
+
 	Molecule *m = vm->mole;
 	if (m==NULL) { printf("mole is NULL\n"); return -20; }
 	if (argc<1) { printf("no ChemFunc provided (use 'eng run')\n"); return -21; }
@@ -105,8 +107,4 @@ void	eng_load_funcs(ChemEngine *eng){
 	sprintf(name, "dump");			eng-> add_func(name, 	eng_dump);
 	sprintf(name, "addenz");		eng-> add_func(name, 	eng_addenz);
 	sprintf(name, "ldconc");		eng-> add_func(name, 	eng_ldconc);
-
-	//todo: 'ldconc= f(*m,*v)
-
-
 }

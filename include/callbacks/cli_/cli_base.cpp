@@ -11,32 +11,20 @@ int		cli_quit(Concentration_CLI *cli, int argc, char **argv){	exit(0);	}
 //---------------------------------//---------------------------------
 int		cli_wait(Concentration_CLI *cli, int argc, char **argv){
 	if (argc<1) { printf("usage: wait [msec]..\n");	 return -1;	 }
-	int v;
-	if ( sscanf(argv[0], "%d", &v) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
+	int v;	READI(v, 0)
+
 	int r = usleep(v*1000);
 	return r;
 }
 //---------------------------------//---------------------------------
+//#define DUMP(p); if (p==NULL) printf("<NULL>"); else p-> dump();
 //---------------------------------//---------------------------------
 int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	// printf("\n");
-	//-------
-
+	NEED_CLI
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
-	int count;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count;	READI(count, 0)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop[%d/%d]:[", c+1, count);
@@ -50,16 +38,11 @@ int		cli_loop(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
-	int count;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count;	READI(count, 0)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop.z[%d/%d]:[", c+1, count);
@@ -74,16 +57,11 @@ int		cli_loopz(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int		cli_loopnz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
-	int count;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count;	READI(count, 0)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop.nz[%d/%d]:[", c+1, count);
@@ -98,16 +76,11 @@ int		cli_loopnz(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int		cli_looplz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
-	int count;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count;	READI(count, 0)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop.lz[%d/%d]:[", c+1, count);
@@ -123,16 +96,11 @@ int		cli_looplz(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_loopnlz(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<2) { printf("usage: loop NUM commands..\n");	 return -1;	 }
-	int count;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count; READI(count, 0)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop.nlz[%d/%d]:[", c+1, count);
@@ -147,19 +115,12 @@ int		cli_loopnlz(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int		cli_loopeq(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<3) { printf("usage: loopeq COUNT eqVAL commands..\n");	 return -1;	 }
-	int count, val;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	if ( sscanf(argv[1], "%d", &val) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
+
+	int count; READI(count, 0)
+	int val; READI(val, 1)
+
 	// else..
 	int n=0;
 	for (int c=0; c<count; c++) {
@@ -175,20 +136,12 @@ int		cli_loopeq(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int		cli_loopneq(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	if (argc<3) { printf("usage: loopneq COUNT eqVAL commands..\n");	 return -1;	 }
-	int count, val;
-	if ( sscanf(argv[0], "%d", &count) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	if ( sscanf(argv[1], "%d", &val) <0) {
-		printf("bad count [%s].\n", argv[0]);
-		return -20;
-	}
-	// else..
+
+	int count; READI(count, 0)
+	int val; READI(val, 1)
+
 	int n=0;
 	for (int c=0; c<count; c++) {
 		printf("loop[%d/%d].neq[%d]:[", c+1, count, val);
@@ -205,14 +158,7 @@ int		cli_loopneq(Concentration_CLI *cli, int argc, char **argv){
 
 //---------------------------------//---------------------------------
 int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	 printf("\n");
-	//-------
+	NEED_CLI
 
 	// start at arrgv[0]
 	int start = 0;
@@ -227,7 +173,7 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 			//printf("CMD[%d]=", c);
 			if (start==end) printf("[%s]", argv[start]);
 			else { for (int u=start; u<end; u++) { printf("[%s]", argv[u]);	}		}
-			printf("=>");
+			printf("=>\n");
 
 			int r = cli-> run(&cli-> base_cmdlist, (end-start),  &argv[start]);
 			if (r<0) printf("Run = [%d]\n", r);
@@ -238,6 +184,7 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 	}
 	// terminate
 	end = argc;
+
 	// finish processing as if there were a final ';'
 	if (start < argc) {
 		c++;
@@ -247,7 +194,7 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 		for (int u=start; u<end; u++) {
 			printf("[%s]", argv[u]);
 		}
-		printf("=>");
+		printf("=>\n");
 
 		int r = cli-> run(&cli-> base_cmdlist, (end-start),  &argv[start]);
 		if (r<0) printf("Run = [%d]\n", r);
@@ -259,8 +206,6 @@ int		cli_multi(Concentration_CLI *cli, int argc, char **argv){
 
 //---------------------------------//---------------------------------
 int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	PRINT("cli_help : -- PING --\n");
 	//-------
@@ -275,15 +220,7 @@ int		cli_ping(Concentration_CLI *cli, int argc, char **argv){
 #define MAXCHAR 1000
 //---------------------------------//---------------------------------
 int		cli_file(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	//PRINT("cli_file : -- FILE --\n");
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	// printf("\n");
-	//-------
+	NEED_CLI
 
     char name[32];
     char filename[48];
@@ -320,185 +257,18 @@ int		cli_file(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int	cli_help(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	PRINT("cli_dump..\n");	DUMP(cli);	return 0;
+	NEED_CLI
+	PRINT("cli_dump..\n");	DUMP(cli);
+	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_basehelp(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
+	NEED_CLI
 	cli-> base_cmdlist_dump();
-	//PRINT("cli_dump..\n");	DUMP(cli);
 	return 0;
 }
 //---------------------------------//---------------------------------
-
-//---------------------------------//---------------------------------
-//int	cli_dump(Concentration_CLI *cli, int argc, char **argv){
-//=======================
-//===  DUMP commands  ===
-//=======================
-//int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
-//=======================
-//=======================
-//===  LOAD commands  ===
-//=======================
-//=======================
-/***************************************
-//---------------------------------//---------------------------------
-int	cli_load(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-
-	//-------
-	 PRINT(": argc[%d]", argc);
-	 for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	 printf("\n");
-	//-------
-	if (argc<1) {	cli-> load_cmdlist_dump();	return 0;	}
-
-	return 	cli-> run(&cli-> load_cmdlist, argc,  &argv[0]);
-}
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-// Concentration[0x1C6F740]
-int	cli_load_conc(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
-	//-------
-
-	if (argc!=1) {		PRINT("usage:  conc 0x1234567\n");		return 0;	}
-
-	long unsigned int ptr;
-	ptr = strtoul (argv[0], NULL, 0);
-	printf("load conc [0x%zX] ..\n", ptr);
-
-	//mylist<Concentration>::mylist_item<Concentration> *item = vm-> concvol->conc_list.search( (Concentration*) ptr);
-	mylist<Concentration>::mylist_item<Concentration> *conc_item = vm-> concvol-> search_conc( (Concentration*) ptr);
-	if (conc_item==NULL) return -11;
-	if (conc_item-> item == NULL) return -12;
-
-	vm-> conc = conc_item-> item;
-
-	return 0;
-}
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-// Molecule[0x17C4670]
-int	cli_load_mole(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm-> concvol==NULL) { printf("NULL vol\n"); return -11; }
-	//-------
-
-	if (argc!=1) {		PRINT("usage:  load mole 0x1234567\n");		return 0;	}
-
-	long unsigned int ptr;
-	 ptr = strtoul (argv[0], NULL, 0);
-	 printf("load conc [0x%zX] ..\n", ptr);
-
- 	//mylist<Molecule>::mylist_item<Molecule> *item = vm-> concvol->mole_list.search( (Molecule*) ptr);
- 	mylist<Molecule>::mylist_item<Molecule> *conc_item = vm-> concvol->search_mole( (Molecule*) ptr);
-	if (conc_item==NULL) return -10;
-	if (conc_item-> item == NULL) return -11;
-	vm-> mole = conc_item-> item;
-
-	return 0;
-}
-//---------------------------------//---------------------------------
-// Concentration[0x1C6F740]
-int	cli_load_pep(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-
-	if (argc!=1) {		PRINT("usage:  load pep 0x1234567\n");		return 0;	}
-	if (vm-> mole ==NULL) {		PRINT("err:  need to load mole first\n");		return 0;	}
-
-	long unsigned int ptr;
-	 ptr = strtoul (argv[0], NULL, 0);
-	 printf("load pep [0x%zX] ..\n", ptr);
-
-	mylist<Peptide>::mylist_item<Peptide> *item;
-	item = vm-> mole-> pep_list.search( (Peptide*) ptr);
-
-	if (item==NULL) return -10;
-	if (item-> item == NULL) return -11;
-	vm-> pep = item-> item;
-
-	return 0;
-}
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-//int	cli_load_commands(Concentration_CLI *cli, int argc, char **argv){
-//=======================
-//=======================
-//===  CLEAR commands  ===
-//=======================
-//=======================
-//---------------------------------//---------------------------------
-int	cli_clear(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-
-	//-------
-	// PRINT(": argc[%d]", argc);
-	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
-	// printf("\n");
-	//-------
-	if (argc<1) {
-		//cli-> core-> pep = NULL;
-		//cli-> core-> mole = NULL;
-		//cli-> core-> conc = NULL;
-		printf("usage: clear pep|mnle|conc|all\n");
-		return -1;
-	}
-	return 	cli-> run(&cli-> clear_cmdlist, argc,  &argv[0]);
-}
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-int	cli_clear_conc(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	vm-> conc = NULL;
-	return 0;
-}
-//---------------------------------//---------------------------------
-//---------------------------------//---------------------------------
-int	cli_clear_mole(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	vm-> mole = NULL;
-	return 0;
-}
-//---------------------------------//---------------------------------
-int	cli_clear_pep(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	vm-> pep = NULL;
-	return 0;
-}
-//---------------------------------//---------------------------------
-int	cli_clear_all(Concentration_CLI *cli, int argc, char **argv){
-	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//-------
-	vm-> conc = NULL;
-	vm-> mole = NULL;
-	vm-> pep = NULL;
-	return 0;
-}
-***************************************/
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv);

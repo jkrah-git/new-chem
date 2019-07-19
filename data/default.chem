@@ -1,39 +1,51 @@
 # ------------------------------
-# ------------------------------
 # Welcome to chems..
 # loading (screens and simplepeps..
 # ------------------------------
-eng clip 0.001 0.0001 1000
-screen off
+f moles/moles2
+f screens
+screen vm
+# f concdisp
+# -----------------------------
+w
+mole ld 4
+eng run addenz noop
+# -----------------
 world add 0 0
 world addvol
 cell add
-
-f moles/moles2
-f screens
-f concdisp
-screen vm
-# -----------------------------
-mole ld 4
-# ----
-eng run addenz noop
+f cellsetup
 # -----------------
-world ld 0
-#
-world selvol
-f reload
+world add 0 1
+world addvol
+cell add
+f cellsetup
+# -----------------
 
-cell selvol
-mole ld 4
-vol addmole 1
 mole ld 0
-vol addmole 1
-vol commit
-#f multivol
-# -----------------
-world list vol
-# -----------------
-#world tick 1
-# -----------------
-#world list vol
+world ld 0
+f cellsetup
 
+mole ld 1
+world ld 1
+f cellsetup
+#
+world commit
+world list vol
+#
+cell selvol
+mole push
+mole rand 100 100 0 255
+vol addmole 1
+
+mole push
+mole rand 100 100 0 255
+vol addmole 1
+
+mole push
+mole rand 100 100 0 255
+vol addmole 1
+
+world commit
+world list vol
+# world tick .1

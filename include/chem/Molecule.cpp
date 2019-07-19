@@ -343,7 +343,6 @@ PepAffinity	Molecule::affinity(void){
 		mylist<Peptide>::mylist_item<Peptide> *current_item = pep_list.gethead();
 		while (current_item !=NULL) {
 			if (current_item-> item != NULL) {
-				// todo: ?? do base pep reserves (ie single pep moles in  volume) ??
 				if (tail != NULL) {
 					PepAffinity aff = tail-> get_affinity(current_item-> item->sig);
 					//PRINT("Affinity [0x%x]->[0x%x] = [%f]\n", tail->sig, current_item-> item->sig, aff);

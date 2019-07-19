@@ -38,72 +38,66 @@ int		cli_dump_cli(Concentration_CLI *cli, int argc, char **argv){
 }
 //---------------------------------//---------------------------------
 int		cli_dump_core(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM	vm-> dump();	return 0;
+	NEED_CLI cli->local_vm.dump();	return 0;
 }
 //---------------------------------//---------------------------------
 int		cli_dump_stacks(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM	vm-> dumpstacks();	return 0;
+	NEED_CLI cli->local_vm.dumpstacks();	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int	cli_dump_moles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm-> vol==NULL) { printf("NULL vol\n"); return -11; }
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	if (cli->local_vm.vol==NULL) { printf("NULL vol\n"); return -11; }
 
 	//-------
-	vm-> vol->dumpmoles();
+	cli->local_vm.vol->dumpmoles();
 	//cli-> get_selected_vm()-> vol->dumpmoles();
 	return 0;
 }
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------
 int	cli_dump_regs(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm-> dumpregs();
+	cli->local_vm.dumpregs();
 //	cli-> get_selected_vm()-> dumpregs();
 	return 0;
 }
 //---------------------------------//---------------------------------
 int		cli_dump_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	if (vm-> vol==NULL) { printf("NULL vol\n"); return -11; }
-	//-------
-
-//	if (cli-> get_selected_vm()-> vol != NULL) {
-//		cli-> get_selected_vm()-> vol-> dump();
-	if (vm-> vol != NULL) {	vm-> vol-> dump();	return 0;	}
+	if (cli->local_vm.vol != NULL) {	cli->local_vm. vol-> dump();	return 0;	}
 	else	return -1;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_dump_conc(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//DUMP(cli-> get_selected_vm()-> conc)
-	DUMP(vm-> conc)
+	DUMP(cli->local_vm. conc)
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_dump_mole(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//DUMP(cli-> get_selected_vm()-> mole)
-	DUMP(vm-> mole)
+	DUMP(cli->local_vm. mole)
 	return 0;
 }
 //---------------------------------//---------------------------------
 //---------------------------------//---------------------------------
 int		cli_dump_pep(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	DUMP(vm-> pep) NL
+	DUMP(cli->local_vm. pep) NL
 	return 0;
 }
 //---------------------------------//---------------------------------

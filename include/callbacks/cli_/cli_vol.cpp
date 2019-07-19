@@ -12,7 +12,7 @@
 //---------------------------//---------------------------
 int	cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	//Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 	//PRINT(": argc[%d]", argc);
 	//for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
@@ -27,18 +27,18 @@ int	cli_vol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 int	cli_vol_dump(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	//ConcentrationVolume *vol = vm->vol; if (vol==NULL) return -11;
+	//////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	//ConcentrationVolume *vol = cli->local_vm.vol; if (vol==NULL) return -11;
 	//-------
-	DUMP(vm->vol);
+	DUMP(cli->local_vm.vol);
 	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ConcentrationVolume *vol = vm->vol; 			if (vol==NULL) return -11;
+	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	ConcentrationVolume *vol = cli->local_vm.vol; 			if (vol==NULL) return -11;
 	//-------
 	vol-> dumpmoles();
 	return 0;
@@ -46,8 +46,8 @@ int	cli_vol_dumpmoles(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------//---------------------------//---------------------------
 int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-	ConcentrationVolume *vol = vm->vol; 			if (vol==NULL) return -11;
+	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	ConcentrationVolume *vol = cli->local_vm.vol; 			if (vol==NULL) return -11;
 	//-------
 
 	vol->list();
@@ -76,19 +76,19 @@ int	cli_vol_list(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 int	cli_vol_clear(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm->vol-> clear();
+	cli->local_vm.vol-> clear();
 	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
-	mylist<Molecule> 		*mole_list = vm->vol-> get_mole_list();
+	mylist<Molecule> 		*mole_list = cli->local_vm.vol-> get_mole_list();
 	int n = 0;
 	mylist<Molecule>::mylist_item<Molecule>  *mole_item = mole_list->gethead();
 	while (mole_item!=NULL) {
@@ -106,7 +106,7 @@ int	cli_vol_listmoles(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	ChemEngine *eng = cli->chem_engine; if (eng==NULL) return -11;
 	//-------
 	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume>  *vol_item = NULL;
@@ -138,46 +138,46 @@ int	cli_vol_ld(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_commit(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_VOL
+	NEED_CLI  NEED_VOL
 //	if (cli==NULL) return -1;
-//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-//	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
+//	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	if (cli->local_vm.vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
 	float f = 1.0;
 
 	if ((argc>0) && (strcmp(argv[0], "max")==0)){
-		f = vm-> vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max);
+		f = cli->local_vm. vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max);
 	} else {
 		if ((argc>0) && (sscanf(argv[0], "%f", &f)<1)) { printf("Bad Data\n"); return -20; }
 	}
 
 	printf("vol.commit[%f]\n", f);
-	vm->vol->commit(f);
+	cli->local_vm.vol->commit(f);
 	return 0;
 }
 //---------------------------//---------------------------
 int	cli_vol_maxcommit(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
+	NEED_CLI  NEED_WORLD NEED_VOL
 	// BufCommitType getmax(T floor, T ceiling) {
 	printf("vol.max_commit = [%f]\n",
-			vm-> vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max) );
+			cli->local_vm. vol->get_maxcommit( cli->world->chem_engine.conc_min, cli->world->chem_engine.conc_max) );
 	return 0;
 }
 //---------------------------//---------------------------
 int	cli_vol_reset(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_VOL
+	NEED_CLI  NEED_VOL
 //	if (cli==NULL) return -1;
-//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
-	vm->vol-> reset();
+	cli->local_vm.vol-> reset();
 	return 0;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_VOL
+	NEED_CLI  NEED_VOL
 //	if (cli==NULL) return -1;
-//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	ConcLevelType conc_clip = cli->world->chem_engine.conc_clip;
@@ -191,20 +191,20 @@ int	cli_vol_clean(Concentration_CLI *cli, int argc, char **argv){
 		}
 	}
 
-	int n = vm-> vol-> clip_conc(conc_clip, conc_max);
+	int n = cli->local_vm. vol-> clip_conc(conc_clip, conc_max);
 	printf("clean(clip[%f], max[%f]) = [%d]\n", conc_clip, conc_max, n);
-	//n += cli->chem_engine->clean_volume_moles(vm-> vol);
+	//n += cli->chem_engine->clean_volume_moles(cli->local_vm. vol);
 	return n;
 }
 //---------------------------//---------------------------
 //---------------------------//---------------------------
 int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_VOL
+	NEED_CLI  NEED_VOL
 //	if (cli==NULL) return -1;
-//	Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
-//	if (vm->vol==NULL) { printf("vol is NULL\n"); return -11; }
+//	////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+//	if (cli->local_vm.vol==NULL) { printf("vol is NULL\n"); return -11; }
 	//-------
-	if (vm->mole==NULL) { printf("need to select mole first\n"); return -20; }
+	if (cli->local_vm.mole==NULL) { printf("need to select mole first\n"); return -20; }
 
 	float f = 10.0;
 
@@ -219,12 +219,12 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 	float res;
 	if (f <0) {
 		res  = 0;
-		vm-> vol->take(vm->mole, -f);
+		cli->local_vm. vol->take(cli->local_vm.mole, -f);
 		printf("take[%.3f] = [%.3f]\n", f, res);
 	}
 	else {
 		res  = 0;
-		vm-> vol->put(vm->mole, f);
+		cli->local_vm. vol->put(cli->local_vm.mole, f);
 		printf("put[%.3f] = [%.3f]\n", f, res);
 	}
 
@@ -238,7 +238,7 @@ int	cli_vol_addmole(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------------//---------------------------------
 int	load_cli_vol(Concentration_CLI *cli, int argc, char **argv){
 	if (cli==NULL) return -1;
-	// Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
+	// ////Concentration_VM *vm = cli-> get_selected_vm();		if (vm==NULL) return -10;
 	//-------
 
 	int r;

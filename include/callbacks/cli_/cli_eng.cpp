@@ -21,7 +21,8 @@ int	cli_eng(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'run'
 int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD //NEED_CELL
+	NEED_CLI NEED_WORLD
+	PRINT("-------------\n");
 	//  time
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -35,9 +36,12 @@ int	cli_eng_run(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli->world-> chem_engine. run(
-			cli->selected_ambcell-> cell,
-			cli-> get_selected_vm(), run_time, argc, next_argv);
+	Cell *cell= NULL;
+	if (cli->selected_ambcell !=NULL)
+		cell = cli->selected_ambcell->cell;
+
+
+	return cli->world-> chem_engine. run( cell, &cli->local_vm, run_time, argc, next_argv);
 
 
 }
@@ -63,15 +67,15 @@ int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'runvol'
 int	cli_eng_runmatch(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM NEED_VOL
+	NEED_CLI NEED_WORLD NEED_VOL
 	// ----------------------------
-	return cli->world-> chem_engine.get_reactions(vm->vol);
+	return cli->world-> chem_engine.get_reactions(cli->local_vm.vol);
 }
 // --------------------------
 // --------------------------
 // 'match'
 int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM NEED_VOL
+	NEED_CLI NEED_WORLD  NEED_VOL
 	// ----------------------------
 	float run_time = 1.0;
 	char **next_argv = &argv[0];
@@ -85,7 +89,7 @@ int	cli_eng_runfunc(Concentration_CLI *cli, int argc, char **argv){
 			argc--;
 		}
 	}
-	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, vm-> vol, run_time);
+	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, cli->local_vm.vol, run_time);
 }
 // --------------------------// --------------------------
 // int	ChemEngine::eng_tick(void){
@@ -128,8 +132,8 @@ int	cli_eng_maxtick(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'get'
 int	cli_eng_get(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM NEED_VOL
-	int r =  cli->world-> chem_engine. get_reactions(vm-> vol);
+	NEED_CLI NEED_WORLD NEED_VOL
+	int r =  cli->world-> chem_engine. get_reactions(cli->local_vm. vol);
 	printf("chem_engine. get_reactions(vol) = [%d]\n", r);
 	return r;
 
@@ -139,7 +143,7 @@ int	cli_eng_get(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'run'
 int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_VM NEED_VOL
+	NEED_CLI NEED_WORLD NEED_VOL
 
 	if (argc<1) {
 		printf("usage: eng react <run_time>\n");
@@ -154,7 +158,7 @@ int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
 		printf("run_time = [%f]\n", run_time);
 
 	}
-	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, vm-> vol, run_time);
+	return cli->world-> chem_engine. run_reactions(cli->selected_ambcell-> cell, cli->local_vm. vol, run_time);
 }
 // --------------------------
 #include <time.h>
@@ -163,7 +167,7 @@ int	cli_eng_react(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'runvol'
 int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
+	NEED_CLI NEED_WORLD NEED_VOL
 	// ----------------------------
 	float run_time = 1.0;
 	int 	repeat = 1;
@@ -189,7 +193,7 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 
 	//-------
 	for (int i=0; i<repeat; i++) {
-		int r = cli->world-> chem_engine.run_volume(cli->selected_ambcell-> cell, vm->vol, run_time);
+		int r = cli->world-> chem_engine.run_volume(cli->selected_ambcell-> cell, cli->local_vm.vol, run_time);
 		if (r>=0)
 			n++;
 		//printf("chem_engine.run_volume[%d] = [%d]\n", i, r);
@@ -212,29 +216,29 @@ int	cli_eng_runvol(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'runvol'
 int	cli_eng_cleanmoles(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD NEED_VOL
-	return cli->world-> chem_engine. clean_volume_moles(vm-> vol);
+	NEED_CLI NEED_WORLD NEED_VOL
+	return cli->world-> chem_engine. clean_volume_moles(cli->local_vm. vol);
 }
 // --------------------------
 // 'enzstart'
 int	cli_eng_enzstart(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_ENG
-	Concentration_VM 	*vm = cli-> get_selected_vm();
-	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
+	NEED_CLI
+	//Concentration_VM 	*vm = cli-> get_selected_vm();
+	// if (vm==NULL) { printf("Need to select vm\n"); return -11; }
 
 	if (cli-> selected_enz==NULL) { printf("Need to select enz\n"); return -10; }
-	if (vm->conc==NULL) { printf("Need to select conc\n"); return -11; }
+	if (cli->local_vm.conc==NULL) { printf("Need to select conc\n"); return -11; }
 	//------------------
-	int r =  cli-> selected_enz->match_start(vm-> conc->getmole(), vm);
+	int r =  cli-> selected_enz->match_start(cli->local_vm. conc->getmole(), &cli->local_vm);
 	return r;
 }
 // --------------------------
 // --------------------------
 int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD
+	NEED_CLI NEED_WORLD
 	//Concentration_VM 	*vm = cli-> get_selected_vm();
 	if (cli-> selected_enz==NULL) { printf("Need to select enz\n"); return -10; }
-	if (vm==NULL) { printf("Need to select vm\n"); return -11; }
+	//if (vm==NULL) { printf("Need to select vm\n"); return -11; }
 	//------------------
 	//  time
 	float run_time = 1.0;
@@ -250,11 +254,11 @@ int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 		}
 	}
 	//------------
-	ChemFunc *f =cli-> selected_enz->match_next(vm);
+	ChemFunc *f =cli-> selected_enz->match_next(&cli->local_vm);
 	int r = -1;
 	if ((f!=NULL) && (f->operation!=NULL)) {
 		r = f->operation(
-				cli->selected_ambcell-> cell, &cli->world-> chem_engine, vm, run_time, 0, NULL);
+				cli->selected_ambcell-> cell, &cli->world-> chem_engine, &cli->local_vm, run_time, 0, NULL);
 	}
 
 	return r;
@@ -262,7 +266,7 @@ int	cli_eng_enznext(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'ldr - load reaction'
 int	cli_eng_ldr(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_ENG
+	NEED_CLI NEED_WORLD
 
 
 	mylist<ChemEnzReactionHit>::mylist_item<ChemEnzReactionHit>  *reaction_item = NULL;
@@ -300,7 +304,7 @@ int	cli_eng_ldr(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'ldr - load reaction'
 int	cli_eng_clip(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_ENG
+	NEED_CLI NEED_WORLD
 	float conc_clip = cli->world->chem_engine.conc_clip;
 	float conc_min = cli->world->chem_engine.conc_min;
 	float conc_max = cli->world->chem_engine.conc_max;
@@ -327,7 +331,7 @@ int	cli_eng_clip(Concentration_CLI *cli, int argc, char **argv){
 // --------------------------
 // 'ldr - load reaction'
 int	cli_eng_clear(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_WORLD NEED_ENG
+	NEED_CLI NEED_WORLD
 
 	int r = cli->world->chem_engine. clear_all_hits();
 	printf(" clear_all_hits() = [%d]\n", r);

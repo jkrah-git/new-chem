@@ -18,9 +18,9 @@ typedef unsigned long int  ChemStep;
 #define CHEM_ENG_REACT_TTL	3
 // MIN/MAX are used to calc max_commits
 #define CHEM_ENG_MIN_CONC	0.0
-#define CHEM_ENG_MAX_CONC	100.00
+#define CHEM_ENG_MAX_CONC	1000.00
 // CLIP used for conc.removal
-#define CHEM_ENG_CLIP_CONC	0.01
+#define CHEM_ENG_CLIP_CONC	0.001
 
 // ==================================
 // - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
@@ -76,14 +76,14 @@ public:
 //----------------------------
 class ChemEnzReactionHit {
 public:
-	Molecule				*m1;		// assumed in current col
-	ChemEnzyme				*enz;		// assumed in current
-	ChemStep				ttl; 		// TODO BUG: ttl is used to signal active hits.. but not vol aware
+	Molecule				*m1;
+	ChemEnzyme				*enz;
+	ChemStep				ttl;
 	mylist<MatchPos>				matchpos_list;
 	mylist<ChemEnzReactionHitList>	hit_list;
 
 	// ChemTime	scale;
-	ChemEnzReactionHit(); //{ m1=NULL; enz = NULL; scale = 0.0; ttl = 0; }
+	ChemEnzReactionHit();
 	void		dump(void);
 	ChemEnzReactionHitList *search_vol(ConcentrationVolume *vol);
 	ChemEnzReactionHitList *add_vol(ConcentrationVolume *vol);
@@ -98,7 +98,8 @@ class ChemEngine {
 private:
 	// search  reactions(M1,enz) / reset ttl
 	ChemEnzReactionHit 		*search_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz);
-	ChemEnzReactionHit		*save_enzyme_reaction(ConcentrationVolume *vol, Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
+//	ChemEnzReactionHit		*save_enzyme_reaction(ConcentrationVolume *vol, Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
+	ChemEnzReactionHit		*save_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
 
 	int					count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
 	int					scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);

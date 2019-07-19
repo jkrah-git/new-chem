@@ -191,7 +191,7 @@ Concentration_CLI::Concentration_CLI(){ //ConcentrationVolume &cvol){ //, Concen
 
 	//local_vol.set_molelist(&world->mole_list);
 	local_vm.vol = NULL; //&local_vol;
-	selected_vm = &local_vm;
+	//selected_vm = &local_vm;
 
 
 	load_commands();

@@ -15,17 +15,13 @@ int	cli_cell(Concentration_CLI *cli, int argc, char **argv){
 //--------------//---------------------------
 int	cli_cell_dump(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB
-	//printf("(AmbientCell[0x%zX])->" , (long unsigned int) cli->selected_ambcell);
 	cli->selected_ambcell->dump(); NL
-//	if (cli->selected_ambcell-> cell!=NULL)
-//		cli->selected_ambcell-> cell->dump();
 	return 0;
 }
 //---------------------------//---------------------------
 //--------------//---------------------------
 int	cli_cell_dumpvol(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB
-	//printf("(AmbientCell[0x%zX])->" , (long unsigned int) cli->selected_ambcell);
 	cli->selected_ambcell->dump(); NL
 	if (cli->selected_ambcell-> cell!=NULL)
 		cli->selected_ambcell-> cell->vol.list();
@@ -54,8 +50,8 @@ int	cli_cell_add(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_energy(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB NEED_CELL
 	if (argc>0) {
-		float f;
-		if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
+		float f;	READF(f, 0)
+		//if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
 		cli->selected_ambcell->cell->status.energy.set(f, 0);
 	}
 	printf("cell.energy = [%.3f]\n", cli->selected_ambcell->cell->status.energy.get());
@@ -66,8 +62,8 @@ int	cli_cell_energy(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_health(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB NEED_CELL
 	if (argc>0) {
-		float f;
-		if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
+		float f;	READF(f, 0)
+		//if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
 		cli->selected_ambcell->cell->status.health.set(f, 0);
 	}
 	printf("cell.health = [%.3f]\n", cli->selected_ambcell->cell->status.health.get());
@@ -78,8 +74,8 @@ int	cli_cell_health(Concentration_CLI *cli, int argc, char **argv){
 int	cli_cell_temp(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD NEED_AMB NEED_CELL
 	if (argc>0) {
-		float f;
-		if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
+		float f;	READF(f, 0)
+		//if (sscanf(argv[0], "%f", &f) <1) { printf("bad data\n"); return -20; }
 		cli->selected_ambcell->cell->status.temperature.set(f, 0);
 	}
 	printf("cell.temp = [%.3f]\n", cli->selected_ambcell->cell->status.temperature.get());
@@ -104,34 +100,35 @@ int	cli_cell_unselvol(Concentration_CLI *cli, int argc, char **argv){
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 //--------------//---------------------------
 int	cli_cell_applyconc(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_AMB NEED_CELL NEED_WORLD
+	NEED_CLI NEED_AMB NEED_CELL NEED_WORLD
 
 	mylist<Concentration>::mylist_item<Concentration>  *item = NULL;
 
 	float t = 1.0;
 	if (argc<1) {
-		item = vm-> concentration_stack.gettail();
+		item = cli->local_vm. concentration_stack.gettail();
 		if (item ==NULL) {	printf("conc stack is empty\n");	return -30; }
 	} else {
-		int off;
-		if (sscanf(argv[0], "%d", &off) <0) {	printf("bad offset [%s].\n", argv[0]);	return -20; }
-		item = vm-> concentration_stack.offset(off);	if (item ==NULL) {	printf("conc load[%d] failed\n", off);	return -31; }
-		if ((argc>1) && (sscanf(argv[1], "%f", &t) <0)) { printf("bad time [%s].\n", argv[1]); return -20; }
+		int off; READI(off,0)
+		item = cli->local_vm. concentration_stack.offset(off);	if (item ==NULL) {	printf("conc load[%d] failed\n", off);	return -31; }
+		if (argc>1) { READF(t, 1) }
 	}
 
 
 	if (item-> item ==NULL) {	printf("null item->item\n");	return -31; }
 	printf("run_time = [%.3f]\n", t);
-	//item-> item->dump();
-	return cli->selected_ambcell-> cell-> apply_concentration(&cli->world->chem_engine, vm->vol, item-> item, &cli->selected_ambcell-> cell->status, t);
-	return 0;
+//	int r =  cli->selected_ambcell-> cell-> apply_concentration(&cli->world->chem_engine, cli->local_vm.vol, item-> item, &cli->selected_ambcell-> cell->status, t);
+	int r =  cli->selected_ambcell-> cell-> apply_concentration(&cli->world->chem_engine, &cli->selected_ambcell->cell->vol, item-> item, &cli->selected_ambcell-> cell->status, t);
+	printf("apply_concentration= %d\n", r);
+	return r;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------
 //--------------//---------------------------
 // 	void Cell::commit(void){ energy.commit(); health.commit(); temperature.commit();  };
 int	cli_cell_commit(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_AMB NEED_CELL
+	NEED_CLI  NEED_AMB NEED_CELL
 	if (argc==0) {
+		// TODO: vol and/or status commit
 		cli->selected_ambcell-> cell->status.commit();
 		//cli->selected_ambcell-> cell->vol.commit();
 		printf("cell commit..\n");
@@ -144,7 +141,7 @@ int	cli_cell_commit(Concentration_CLI *cli, int argc, char **argv){
 //--------------//---------------------------
 // int	Cell:get_reactions(ChemEngine *eng, AmbientCell *ambcell);
 int	cli_cell_get(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD NEED_AMB NEED_CELL
+	NEED_CLI  NEED_WORLD NEED_AMB NEED_CELL
 	if (argc==0) {
 		int r = cli->selected_ambcell-> cell-> get_reactions(&cli->world->chem_engine);
 		printf(" cell->get_reactions = [%d]\n", r);
@@ -155,17 +152,13 @@ int	cli_cell_get(Concentration_CLI *cli, int argc, char **argv){
 //--------------//---------------------------
 // int	Cell:run_reactions(ChemEngine *eng, AmbientCell *ambcell, ChemTime run_time);
 int	cli_cell_run(Concentration_CLI *cli, int argc, char **argv){
-	NEED_CLI NEED_VM NEED_WORLD NEED_AMB NEED_CELL
+	NEED_CLI  NEED_WORLD NEED_AMB NEED_CELL
 	float t = 1.0f;
 
-	if ((argc>0) && (sscanf(argv[0], "%f", &t)<1)) { printf("Bad Data\n"); return -20; }
-
-	//int r = cli->selected_ambcell-> cell->run_reactions(&cli->world->chem_engine, cli->selected_ambcell, t);
-//	int	run_cell(ChemEngine *eng, ConcentrationVolume *vol, AmbientCell *ambcell, ChemTime run_time);
-
+	//if ((argc>0) && (sscanf(argv[0], "%f", &t)<1)) { printf("Bad Data\n"); return -20; }
+	READF(t, 0)
 
 	int r = cli->selected_ambcell-> cell->run_cell(&cli->world->chem_engine, t);
-
 	printf(" cell->run_reactions[%f] = [%d]\n", t, r);
 
 	return r;
