@@ -33,7 +33,10 @@ run_test()
 	
 }
 
-for I in 1 5 10 20; do
+TIMES="$*"
+[ -z "$TIMES" ] && TIMES="1 5 10 20"
+
+for I in $TIMES; do
 	mk_test $I
 	run_test $I
 done
