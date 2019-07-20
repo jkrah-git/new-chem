@@ -119,6 +119,7 @@ private:
 	mylist_item<T>	*head;
 	mylist_item<T>	*tail;
 	bool			autoalloc;
+	int				counter;
 
 	//-----
 	mylist_item<T> 	*add(T *element, bool ignore_auto);
@@ -130,6 +131,7 @@ private:
 template <class T> mylist<T>::mylist() {
 	//PRINT("constructor..\n");
 	autoalloc = true; head = NULL;	tail = NULL;
+	counter = 0;
 	//init();
 };
 template <class T> mylist<T>::mylist(bool _auto) {
@@ -159,6 +161,8 @@ template <class T> mylist<T>::~mylist() {	clear();	};
 }
 */// --------------------------
 template <class T> int mylist<T>::count() {
+	return counter;
+
 	int c=0;
 	mylist_item<T>	*item = head;
 	while (item!=NULL) {
@@ -190,6 +194,7 @@ template <class T> void mylist<T>::clear() {
 		del_item = head;
 	}
 	tail = NULL;
+	counter = 0;
 };
 // --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
@@ -238,6 +243,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool ig
 		tail = new_item;
 
 	}
+	counter++;
 	return new_item;
 };
 // --------------------------
@@ -284,7 +290,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	} else { // not head
 		parent = del_item-> prev;
 		if (parent==NULL) {
-			PRINT("!!! Warning - del_item's parent not found in list...\n");
+			PRINT("ERR: del_item's parent not found in list...\n");
 			return NULL;
 		}
 	}
@@ -317,6 +323,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 
 	LOG("free[0x%zX].listitem\n", (long unsigned int) del_item);
 	delete del_item;
+	counter--;
 	return parent;
 
 }

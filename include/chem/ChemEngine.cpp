@@ -143,9 +143,15 @@ ChemEnzReactionHit::ChemEnzReactionHit(){
 void ChemEnzReactionHit::dump(void){
 	printf("ChemEnzReactionHit[0x%zX]:ttl[%ld]  m1[0x%zX].enz[0x%zX]\n",
 			(long unsigned int) this, ttl, (long unsigned int) m1, (long unsigned int) enz);
-	matchpos_list.dump();
+	if (matchpos_list.count() == 0)
+		printf("- NO MATCHES -\n");
+	else
+		matchpos_list.dump();
 
-	hit_list.dump();
+	if (hit_list.count() == 0)
+		printf("- NO HITS -\n");
+	else
+		hit_list.dump();
 }
 // ----------------------------
 ChemEnzReactionHitList *ChemEnzReactionHit::search_vol(ConcentrationVolume *vol){
@@ -368,25 +374,6 @@ int		ChemEngine::count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *ma
 	}
 	return n;
 }
-/**********************************
-	int n = 0;
-	mylist<ChemEnzReactionHit>::mylist_item<ChemEnzReactionHit> *reaction_item = reaction_list.gethead();
-	while ((reaction_item!=NULL) && (reaction_item-> item!=NULL)) {
-		if ((reaction_item->item-> enz == match_enz) &&
-			(reaction_item->item-> ttl == max_tick)) {
-
-			n += reaction_item->item->matchpos_list.count();
-		}
-		//---------
-		reaction_item = reaction_item->next;
-	}
-
-	return n;
-}
-**********************************/
-// Conc[0xA88EF0].Molecule[0xA764D0][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
-// Conc[0xA89A40].Molecule[0xA88FF0][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[0.967].Delta[0.000]
-// Conc[0xA8A700].Molecule[0xA89AB0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[1.867].Delta[0.000]
 
 
 //-------------------------------------------------
@@ -394,7 +381,7 @@ int ChemEngine::scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *mat
 	if (vol==NULL) return -1;
 	if (match_enz==NULL) return -2;
 	int enz_hits = count_enzyme_reactions(vol, match_enz);
-	PRINT("enz_hits = [%d]\n", enz_hits);
+//	PRINT("enz_hits vol[0x%zX] enz[0x%zX] = [%d]\n", (PTR) vol, (PTR) match_enz, enz_hits);
 	if (enz_hits<2) return 0;
 
 	int n=0;
@@ -405,21 +392,8 @@ int ChemEngine::scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *mat
 
 			//mylist<ChemEnzReactionHitList>::mylist_item<ChemEnzReactionHitList>
 			ChemEnzReactionHitList	*hit = reaction_item->item-> search_vol(vol);
-			//if ((hit_item!=NULL) && (hit_item-> item != NULL)) { hit_item-> item->scale /= enz_hits;	}
 			if (hit!=NULL) { hit-> scale /= enz_hits;	}
 
-
-			/***************
-				*hit_item = reaction_item->item-> hit_list.gethead();
-				while (hit_item!=NULL) {
-				if ((hit_item-> item != NULL) &&
-					(hit_item-> item->vol == vol)) {
-					hit_item-> item->scale /= enz_hits;
-				}
-				//-------------
-				hit_item = hit_item-> next;
-			} // end while (reaction_item!=NULL)
-			**********************/
 		} // end match
 		// ----------
 		reaction_item = reaction_item->next;
@@ -427,52 +401,6 @@ int ChemEngine::scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *mat
 	return n;
 }
 
-/**********************************
-	int n=0;
-	mylist<ChemEnzReactionHit>::mylist_item<ChemEnzReactionHit> *reaction_item = reaction_list.gethead();
-	while (reaction_item!=NULL) {
-		if ((reaction_item-> item  != NULL) &&
-			(reaction_item-> item->enz == match_enz) &&
-			(reaction_item-> item-> ttl == max_tick)) {
-			//PRINT("(PRE ) reaction[0x%zX].enz[0x%zX]==[0x%zX]-> conc_scale /enz_hits[%d]= [%.3f]\n",					(PTR) reaction_item-> item, (PTR) reaction_item-> item->enz, (PTR) match_enz,					enz_hits, reaction_item->item-> scale);
-			reaction_item-> item-> scale /= enz_hits; ///=  enz_hits;
-			//PRINT("(POST) reaction[0x%zX]-> conc_scale /enz_hits[%d]= [%.3f]\n", (PTR) reaction_item-> item,					enz_hits, reaction_item->item-> scale);
-			n++;
-		}
-		// ----------
-		reaction_item = reaction_item->next;
-	}
-	return n;
-}
-**********************************/
-//-------------------------------------------------
-//-------------------------------------------------
-/*************************************
-int ChemEngine::scale_reactions(ChemEnzyme *_enz, int enz_hits){
-	if (_enz==NULL) return -1;
-	if (enz_hits<1) return -2;
-	if (enz_hits==1) return 0;
-
-	int n=0;
-	mylist<ChemEnzReactionHit>::mylist_item<ChemEnzReactionHit> *reaction_item = reaction_list.gethead();
-	while (reaction_item!=NULL) {
-		if ((reaction_item-> item  != NULL) &&
-			(reaction_item-> item->enz == _enz) &&
-			(reaction_item-> item-> ttl >= max_tick)) {
-			PRINT("(PRE ) reaction[0x%zX].enz[0x%zX]==[0x%zX]-> conc_scale /enz_hits[%d]= [%.3f]\n",
-					(PTR) reaction_item-> item, (PTR) reaction_item-> item->enz, (PTR) _enz,
-					enz_hits, reaction_item->item-> scale);
-			reaction_item-> item-> scale /= enz_hits; ///=  enz_hits;
-			PRINT("(POST) reaction[0x%zX]-> conc_scale /enz_hits[%d]= [%.3f]\n", (PTR) reaction_item-> item,
-					enz_hits, reaction_item->item-> scale);
-			n++;
-		}
-		// ----------
-		reaction_item = reaction_item->next;
-	}
-	return n;
-}
-*************************************/
 //-------------------------------------------------
 int	ChemEngine::next_tick(void){
 	tick++;
@@ -770,135 +698,7 @@ int		ChemEngine::run_volume(Cell *cell, ConcentrationVolume *vol, ChemTime run_t
 	return n;
 }
 // ---------------------------- // ----------------------------
-/******************************************
-int	ChemEngine::clean_volume_moles(ConcentrationVolume *vol) {
-	if (vol==NULL) return -1;
-	int n = 0;
-	return -49;
-	// clean out unsed conc's
-	mylist<Molecule> *mole_list = vol->get_mole_list();
-	if (mole_list==NULL) return -2;
 
-	mylist<Molecule>::mylist_item<Molecule> *mole_item = mole_list-> gethead();
-	while (mole_item!=NULL) {
-		if (mole_item-> item!=NULL) {
-			//ChemEnzyme *enz = search_enz(mole_item-> item);
-			//if ((search_enz(mole_item-> item)==NULL) && (search_reactions(mole_item-> item)==NULL)) {
-			if ((vol->_molesearch(mole_item-> item)==NULL) &&
-				(search_enz(mole_item-> item)==NULL) &&
-				(search_reactions(mole_item-> item)==NULL)) {
-				n++;
-				mylist<Molecule>::mylist_item<Molecule> *next_item = mole_item->next;
-				mole_item = mole_list->del(mole_item);
-				if (mole_item==NULL) {
-					mole_item = next_item;
-					continue;
-				}
-			}
-		}
-		//-----------
-		mole_item = mole_item-> next;
-	}
-
-	return n;
-}
-******************************************/
-
-
-/******************************
-//========================================================
-Concentration_VM *ChemEngine::add_vm(void){
-
-	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.add();
-	if (vm_item==NULL) { return NULL; }
-	if (vm_item-> item==NULL) { vm_list.del(vm_item); return NULL; }
-	// (else)  pep_item-> item  is good
-	//vm_item-> item-> name.set(_title);
-	return vm_item-> item;
-	return NULL;
-}
-//---------------------------------//---------------------------------//---------------------------------
-int	ChemEngine::del_vm(Concentration_VM *_vm){
-	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.search(_vm);
-	if (vm_item==NULL) return -2;
-	vm_list.del(vm_item);
-	return 0;
-}
-*/
-//---------------------------------//---------------------------------//---------------------------------
-//int	ChemEngine::pop_vm(void){
-// warning pop returns dead pointer!!! (to test if it was being used)
-/**************
-int ChemEngine::pop_vm(Concentration_VM *_vm){
-
-	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.gettail();
-	if (vm_item==NULL) return -1;
-
-	if ((vm_item-> item != NULL)&& (vm_item-> item ==_vm)) {
-		vm_list.del(vm_item);
-		vm_item = vm_list.gettail();
-		if ((vm_item!=NULL) && (vm_item-> item !=NULL))
-			selected_vm = vm_item-> item;
-		else
-			selected_vm = NULL;
-	} else {
-		vm_list.del(vm_item);
-	}
-	return 0;
-}
-
-
-//---------------------------------//---------------------------------//---------------------------------
-int	ChemEngine::list_vms(Concentration_VM *_selected_vm){
-	int c=0;
-	mylist<Concentration_VM>::mylist_item<Concentration_VM> *vm_item = vm_list.gethead();
-	while ((vm_item!=NULL)&&(vm_item-> item!=NULL)) {
-
-		if (vm_item-> item == _selected_vm) 	printf("Concentration_VM[0x%zX]*\n", (long unsigned int) vm_item-> item);
-		else 							printf("Concentration_VM[0x%zX]\n", (long unsigned int) vm_item-> item);
-		//
-		vm_item = vm_item->next;
-		c++;
-	}
-	//------
-	return c;
-}
-//========================================================
-//========================================================
-ConcentrationVolume *ChemEngine::add_vol(void){
-
-	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.add();
-	if (vol_item==NULL) { return NULL; }
-	if (vol_item-> item==NULL) { vol_list.del(vol_item); return NULL; }
-	// (else)  pep_item-> item  is good
-	//vol_item-> item-> name.set(_title);
-	return vol_item-> item;
-	return NULL;
-}
-//---------------------------------//---------------------------------//---------------------------------
-int	ChemEngine::del_vol(ConcentrationVolume *_vol){
-	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.search(_vol);
-	if (vol_item==NULL) return -2;
-	vol_list.del(vol_item);
-	return 0;
-}
-
-//---------------------------------//---------------------------------//---------------------------------
-int	ChemEngine::list_vols(ConcentrationVolume *_vol){
-	int c=0;
-	mylist<ConcentrationVolume>::mylist_item<ConcentrationVolume> *vol_item = vol_list.gethead();
-	while ((vol_item!=NULL)&&(vol_item-> item!=NULL)) {
-
-		if (vol_item-> item == _vol) 	printf("ConcentrationVolume[0x%zX]*\n", (long unsigned int) vol_item-> item);
-		else 							printf("ConcentrationVolume[0x%zX]\n", (long unsigned int) vol_item-> item);
-		//
-		vol_item = vol_item->next;
-		c++;
-	}
-	//------
-	return c;
-}
-***************/
 //=================================
 // --------------
 void ChemEngine::load_funcs(void){

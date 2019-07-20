@@ -1,9 +1,24 @@
-============ logger ================..
-# loop 254 eng runvol .005 100
-# f testcell
-[0]># eng runvol 0.00001 1000000
-run_time = [0.000010]
-repeat = [1000000]
-chem_engine.run_volume[1000000] took ..
-16.000 (sec) Real Time and 14540 (msec) CPU Time
-[1000000]># 
+
+Conc[0x80ABD0].Molecule[0x7F94D0][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0x80B7A0].Molecule[0x80AF50][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[1.000].Delta[0.000]
+Conc[0x80C060].Molecule[0x80B810][0x07][0x11][0x12][0x13][0x07][..]/[0x10] = Level[2.000].Delta[0.000]
+... cell.vol (3 conc's) :ConcentrationVolume[0x80C120]
+Conc[0x80C0B0].Molecule[0x7F94D0][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+Conc[0x80CC00].Molecule[0x80C1B0][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[1.000].Delta[0.000]
+Conc[0x80D8C0].Molecule[0x80CC70][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[2.000].Delta[0.000]
+----------------
+[10000]>#  world tick .00001 10000
+world.run_world (x10000) took ..
+0.000 (sec) Real Time and 120 (msec) CPU Time
+
+ loop 297 f vol_add_rand_mole
+
+[10000]># world tick .00001 10000
+world.run_world (x10000) took ..
+1.000 (sec) Real Time and 840 (msec) CPU Time
+
+
+[10000]># world tick .00001 10000
+world.run_world (x10000) took ..
+4.000 (sec) Real Time and 4130 (msec) CPU Time
+
