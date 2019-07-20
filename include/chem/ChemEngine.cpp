@@ -143,15 +143,16 @@ ChemEnzReactionHit::ChemEnzReactionHit(){
 void ChemEnzReactionHit::dump(void){
 	printf("ChemEnzReactionHit[0x%zX]:ttl[%ld]  m1[0x%zX].enz[0x%zX]\n",
 			(long unsigned int) this, ttl, (long unsigned int) m1, (long unsigned int) enz);
-	if (matchpos_list.count() == 0)
-		printf("- NO MATCHES -\n");
-	else
+	int m = matchpos_list.count();
+	if (m==0)
+		printf("NOMATCH -\n");
+	else {
+		printf("[%d] MATCHES -\n", m);
 		matchpos_list.dump();
+	}
 
-	if (hit_list.count() == 0)
-		printf("- NO HITS -\n");
-	else
-		hit_list.dump();
+	int v= hit_list.count();
+	printf("[%d] VOLS -\n", v);
 }
 // ----------------------------
 ChemEnzReactionHitList *ChemEnzReactionHit::search_vol(ConcentrationVolume *vol){

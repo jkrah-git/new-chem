@@ -74,7 +74,8 @@ public:
 	// ---
 	void 		print(void);
 	void		dump(void);
-	void		test(void);
+//	void		test(void);
+	void 		dump_table(void);
 };
 // -----------------------
 

@@ -1,0 +1,27 @@
+CHEM PROCESS
+- dna/rna, protiens, lipids, carbs
+====================================
+
+energy
+- respond to current level
+  - increase 
+  - reduce
+
+temperature
+- respond to current level
+  - increase 
+  - reduce??
+
+health
+- respond to current level
+  - increase 
+  - reduce
+
+
+membrane
+- gradient
+- pump in/out
+
+transcribe
+- sub match
+- 

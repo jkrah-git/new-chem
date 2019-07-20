@@ -281,5 +281,24 @@ bool Peptide::operator ==(const Peptide& p) {
 	return ((sig == p.sig) && (pos==p.pos));
 }
 // ---------------------// ---------------------
+void Peptide::dump_table(void){
+
+	for (int a=0; a<256; a++) {
+		for (int b=0; b<256; b++) {
+			Peptide p(a);
+			//Pa.sig = a;
+			//Pb.sig = b;
+			// PepRot 		get_rot(PepSig tail_sig);
+			PepRot 			rot = p.get_rot((PepSig) b);
+
+			//PepAffinity get_affinity(PepSig _sig);
+			PepAffinity		aff =  p.get_affinity((PepSig) b);
+			printf("pepa=0x%x pepb=0x%x rot=%d aff=%f\n", a, b, rot, aff);
+
+		}
+	}
+
+}
+
 // ---------------------
 

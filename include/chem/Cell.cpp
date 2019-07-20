@@ -317,12 +317,13 @@ public:
 // -----------------------------------------------
 World::World(){
 	chem_engine.set_moledb(&moledb);
+	age = 0.0;
 
 };
 World::~World(){};
 // -----------------------------------------------
 void World::dump(void){
-	printf("World[0x%zX]\n", (long unsigned int) this);
+	printf("World[0x%zX] Age[%f]\n", (long unsigned int) this, age);
 	printf("==== cells ====\n");	ambcell_list.dump();
 	printf("==== moles ====\n");	moledb.dump();
 	printf("==== chem_engine ====\n");	chem_engine.dump();
@@ -403,7 +404,7 @@ int	World::run_reactions(ChemEngine *eng, ChemTime run_time){
 // -----------------------------------------------
 #include "common.h"
 // -----------------------------------------------
-int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
+ChemTime	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 	if (eng==NULL)	eng = &chem_engine;
 	int n = 0;
 
@@ -455,7 +456,6 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 		ambcell_item = ambcell_item->next;
 	}
 	// ---------------------------------
-
 	// ---------------------------------
 	// clear eng hits
 	// ---------------------------------
@@ -464,7 +464,7 @@ int	World::finish_reactions(ChemEngine *eng){ //, ChemTime run_time){
 
 
 
-	return n;
+	return max_commit;
 }
 // -----------------------------------------------
 int	World::run_world(ChemEngine *eng, ChemTime run_time){
@@ -480,13 +480,15 @@ int	World::run_world(ChemEngine *eng, ChemTime run_time){
 	int s = run_reactions(eng, run_time);
 //	PRINT(".. run_reactions = [%d]\n", s);
 
-	int t = finish_reactions(eng);
+
+	ChemTime max_commit = finish_reactions(eng);
 //	PRINT(".. finish_reactions = [%d]\n", t);
+	age += (run_time*max_commit);
 
 
 	if (r<0) return r-100;
 	if (s<0) return s-110;
-	if (t<0) return t-120;
+	if (max_commit<1.0) return 1;
 	return 0;
 }
 // -----------------------------------------------

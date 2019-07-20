@@ -81,6 +81,7 @@ MyBuffer<CellStatusType> 	temperature;
 //#include "MoleDB.h"
 // -----------------------------------------------
 class World {
+	ChemTime				age;
 public:
 	ChemEngine				chem_engine;
 	//mylist<Molecule>		mole_list;
@@ -102,7 +103,7 @@ public:
 
 	int	get_reactions(ChemEngine *eng);
 	int	run_reactions(ChemEngine *eng, ChemTime run_time);
-	int	finish_reactions(ChemEngine *eng);
+	ChemTime	finish_reactions(ChemEngine *eng);
 	int	run_world(ChemEngine *eng, ChemTime run_time);
 
 	ChemTime get_cell_maxcommit(Cell *cell);
