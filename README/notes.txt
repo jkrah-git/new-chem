@@ -31,11 +31,6 @@ NEXT TODO
 	-- Thought: accept limited lifespan of program (mem) - for never expire molecache
 	-- ie.. global_molecache
 
---- Engine/Vol/Vm?? - vm.match contains M1 = parent mole
-	- Engine owns (dedicated?) vol .. (shared molelist/enz)
-	- VM Push inherits parent volume
-	- Reaction - concentration - min(m1,m2)	
--- World!!
 
 ===================================================================
 --------- try to describe ----
@@ -70,7 +65,7 @@ Ideas have been driven by
  - Lots of Concentrations that can directly interact (enzymes) - (fast interaction)
  - multi-volume context and interaction - extra-cellular-space? - (slow interaction)
  - nested volumes ??
- - eventual special (sense/action) volumes for interaction with world
+ - eventual special (sense/action) volumes (maybe enzymes) for interaction with world
 
 ===================================================================
 Old Notes

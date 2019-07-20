@@ -10,7 +10,8 @@
 //===============================================
 #include "Concentration_VM.h"
 #include "../MyString.h"
-#include "LogPipe.h"
+//#include "LogPipe.h"
+#include "MoleDB.h"
 class Cell;
 class ChemEngine;
 //===============================================
@@ -41,11 +42,11 @@ public:
 //----------------------------
 class ChemEnzyme {
 private:
-	Molecule 	mole;
+	Molecule 	*mole;
 	ChemFunc	*chemfunc;
 
 public:
-	Molecule 	*get_mole(void) { return &mole; };
+	Molecule 	*get_mole(void) { return mole; };
 	ChemFunc 	*get_func(void) { return chemfunc; };
 	//---------
 	ChemEnzyme();
@@ -96,16 +97,19 @@ public:
 // ----------------------------
 class ChemEngine {
 private:
+
+
 	// search  reactions(M1,enz) / reset ttl
 	ChemEnzReactionHit 		*search_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz);
-//	ChemEnzReactionHit		*save_enzyme_reaction(ConcentrationVolume *vol, Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
 	ChemEnzReactionHit		*save_enzyme_reaction(Molecule *m1, ChemEnzyme *match_enz, mylist<MatchPos> *pos_list);
-
-	int					count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
-	int					scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
+	int						count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
+	int						scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz);
 	//-----------------------------------
 	ChemStep				tick;
 	ChemStep				max_tick;
+	//mylist<Molecule> 		*mole_list;
+	MoleDB					*moledb;
+
 public:
 	mylist<ChemFunc>		func_list;
 	mylist<ChemEnzyme>		enz_list;
@@ -120,6 +124,7 @@ public:
 	ChemEngine();
 	virtual ~ChemEngine();
 	void				dump(void);
+	void				set_moledb(MoleDB  *_moledb) { moledb = _moledb; };
 	ChemStep			get_tick(void){ return tick; }
 	ChemStep			get_maxtick(void){ return max_tick; }
 	void				set_maxtick(ChemStep _max_tick){ max_tick = _max_tick; }

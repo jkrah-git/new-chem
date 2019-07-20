@@ -69,13 +69,14 @@ void Cell::dump(void) {
 	status.dump(); NL
 }
 
-#undef PRINT
-#define PRINT if (false) printf
-
+//#undef PRINT
+//#define PRINT if (false) printf
+//#define PRINTAC printf("::%s.", __PRETTY_FUNCTION__); printf
+#define PRINTAC if (false) printf
 // -----------------------------------------------
 int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Concentration *conc, CellStatus *targ_status,  ChemTime run_time){
 	if ((eng==NULL) || (targ_vol==NULL) || (conc==NULL) || (targ_status==NULL)) return -1;
-	Molecule *mole = conc->getmole(); if (mole==NULL) { PRINT("ERR: Conc has no mole\n"); return -2; }
+	Molecule *mole = conc->getmole(); if (mole==NULL) { PRINTAC("ERR: Conc has no mole\n"); return -2; }
 
 	//--------------------------------
 	//ConcLevelType val = conc->getval();
@@ -85,9 +86,9 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 	conc->buf.setval(targ_vol->get(mole));
 	//ConcLevelType new_val = val + delta;
 
-		PRINT("===============\n");
-		PRINT("run_time = [%.3f]\n", run_time);
-		PRINT("delta = [%.3f]\n", delta);
+		PRINTAC("===============\n");
+		PRINTAC("run_time = [%.3f]\n", run_time);
+		PRINTAC("delta = [%.3f]\n", delta);
 	if (delta==0) return 0;
 	//mole-> dump();
 
@@ -97,34 +98,34 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 
 	CellStatusType cell_eff = targ_status-> efficiency();
 	CellStatusType mole_affinity = mole->affinity();
-		PRINT("cell_eff = [%f]\n", cell_eff);
-		PRINT("mole_affinity = [%f]\n", mole_affinity);
-		PRINT("current_energy  = [%f]\n", current_energy);
+		PRINTAC("cell_eff = [%f]\n", cell_eff);
+		PRINTAC("mole_affinity = [%f]\n", mole_affinity);
+		PRINTAC("current_energy  = [%f]\n", current_energy);
 
 	CellStatusType total_energy = mole_affinity * delta * run_time;
 	ConcLevelType total_ammount = cell_eff * delta * run_time;
-		PRINT("total_energy  = [%f]\n", total_energy);
-		PRINT("total_ammount = [%f]\n", total_ammount);
+		PRINTAC("total_energy  = [%f]\n", total_energy);
+		PRINTAC("total_ammount = [%f]\n", total_ammount);
 
 	// ========================
 	// BufCommitType getmax(T floor, T ceiling) {
 	BufCommitType conc_max_commit = conc->buf.getmax(eng->conc_min, eng->conc_max);
-		PRINT("conc_max_commit  = [%f]\n", conc_max_commit);
+		PRINTAC("conc_max_commit  = [%f]\n", conc_max_commit);
 
 
 	if (conc_max_commit<=0) return -3;
 	if (conc_max_commit<=1) {
 		total_ammount *= conc_max_commit;
 		total_energy *= conc_max_commit;
-		PRINT("scaling total_ammount (for conc_max_commit)= [%f]\n", total_ammount);
-		PRINT("scaling total_energy (for conc_max_commit)= [%f]\n", total_energy);
+		PRINTAC("scaling total_ammount (for conc_max_commit)= [%f]\n", total_ammount);
+		PRINTAC("scaling total_energy (for conc_max_commit)= [%f]\n", total_energy);
 	}
 
 	// if total_energy <0 - takeE
 	if (total_energy < -current_energy) {
 		total_ammount *= (current_energy/-total_energy);
 		total_energy = -current_energy;
-		PRINT("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
+		PRINTAC("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
 	}
 
 
@@ -133,7 +134,7 @@ int	Cell::apply_concentration(ChemEngine *eng, ConcentrationVolume *targ_vol, Co
 	if (total_energy < -current_energy) {
 		total_ammount *= (current_energy/-total_energy);
 		total_energy = -current_energy;
-		PRINT("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
+		PRINTAC("scaling total_ammount (for total_energy)= [%f]\n", total_ammount);
 	}
 
 	if (delta>0) {
@@ -315,6 +316,7 @@ public:
 */
 // -----------------------------------------------
 World::World(){
+	chem_engine.set_moledb(&moledb);
 
 };
 World::~World(){};
@@ -322,7 +324,7 @@ World::~World(){};
 void World::dump(void){
 	printf("World[0x%zX]\n", (long unsigned int) this);
 	printf("==== cells ====\n");	ambcell_list.dump();
-	printf("==== moles ====\n");	mole_list.dump();
+	printf("==== moles ====\n");	moledb.dump();
 	printf("==== chem_engine ====\n");	chem_engine.dump();
 
 };

@@ -54,25 +54,26 @@ public:
 //----------------------------
 ChemEnzyme::ChemEnzyme() {	chemfunc=NULL;	}
 void ChemEnzyme::set(Molecule *_mole, ChemFunc *_func){
-	if (_mole!=NULL) {
-		_mole-> rotateto(0, &mole);
-	}
+	//if (_mole!=NULL) {		_mole-> rotateto(0, &mole);	}
+	mole = _mole;
 	chemfunc = _func;
 }
 ChemEnzyme::~ChemEnzyme(){};
 //----------------------------
 void ChemEnzyme::dump(){
-	printf("ChemEnzyme::[0x%zX] mole[0x%zX][%d] ",	(long unsigned int) this, (long unsigned int) &mole,
-			mole.pep_list.count());
+
+	int c = -1;
+	if (mole!=NULL) c = mole->pep_list.count();
+	printf("ChemEnzyme::[0x%zX] mole[0x%zX][%d] ",	(PTR) this, (PTR) mole, c);
 	DUMP(chemfunc);
 
 
 };
 //----------------------------
 int	ChemEnzyme::match_start(Molecule *m1, Concentration_VM *vm){
-	if ((m1==NULL)||(vm==NULL)) return -1;
+	if ((mole==NULL)||(m1==NULL)||(vm==NULL)) return -1;
 	// set(M!, M2)
-	vm->matchpos.set(m1, &mole);
+	vm->matchpos.set(m1, mole);
 	return vm->matchpos.start();
 };
 //----------------------------
@@ -183,6 +184,7 @@ ChemEngine::ChemEngine() {
 	conc_min = CHEM_ENG_MIN_CONC;
 	conc_max = CHEM_ENG_MAX_CONC;
 	conc_clip = CHEM_ENG_CLIP_CONC;
+	moledb = NULL;
 	load_funcs();
 
 }
@@ -285,16 +287,20 @@ int ChemEngine::del_enz(Molecule *_mole){
 }
 // ----------------------------
 ChemEnzyme *ChemEngine::add_enz(Molecule *_mole, ChemFunc *_func){
-	if (_mole==NULL) return NULL;
-	ChemEnzyme *result = search_enz(_mole);
-	if (result!=NULL) return NULL;
-	// (else) result = NULL
+	if (moledb==NULL) { PRINT("ERR: eng moledb is NULL\n"); return NULL; }
+	Molecule *m = moledb->get(_mole);
+	if (m==NULL) { PRINT("moledb->get(_mole) failed\n"); return NULL; }
+
+	//---
+	{	ChemEnzyme *result = search_enz(m);
+		if (result!=NULL) return NULL;
+	}
 
 	mylist<ChemEnzyme>::mylist_item<ChemEnzyme> *enz_item = enz_list.add();
 	if (enz_item==NULL) { return NULL; }
 	if (enz_item-> item==NULL) { enz_list.del(enz_item); return NULL; }
 
-	enz_item-> item->set(_mole, _func);
+	enz_item-> item->set(m, _func);
 	//enz_item-> item-> name.set(_title);
 	return enz_item-> item;
 
@@ -378,11 +384,17 @@ int		ChemEngine::count_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *ma
 	return n;
 }
 **********************************/
+// Conc[0xA88EF0].Molecule[0xA764D0][0x91][0x92][0x93][    ][    ][..]/[0x03] = Level[1.000].Delta[0.000]
+// Conc[0xA89A40].Molecule[0xA88FF0][0x03][0x07][0x11][0x12][0x13][..]/[0x14] = Level[0.967].Delta[0.000]
+// Conc[0xA8A700].Molecule[0xA89AB0][0x03][0x07][0x11][0x12][0x13][..]/[0x18] = Level[1.867].Delta[0.000]
+
+
 //-------------------------------------------------
 int ChemEngine::scale_enzyme_reactions(ConcentrationVolume *vol, ChemEnzyme *match_enz){
 	if (vol==NULL) return -1;
 	if (match_enz==NULL) return -2;
 	int enz_hits = count_enzyme_reactions(vol, match_enz);
+	PRINT("enz_hits = [%d]\n", enz_hits);
 	if (enz_hits<2) return 0;
 
 	int n=0;
@@ -550,11 +562,13 @@ int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 	 *    if (enc-> conc) found then 'search each (other) conc' for match. and save hit's
 	 */
 
+	//PRINT("vol=[0x%zX]\n", vol);
 	int n=0;
 	// ==== for each enz
 	mylist<ChemEnzyme>::mylist_item<ChemEnzyme> *enz_item = enz_list.gethead();
 	while (enz_item!=NULL) {
 		if (enz_item-> item !=NULL) {
+			//PRINT("enz=[0x%zX]\n---> ", enz_item-> item);			enz_item-> item->dump(); NL
 			// for each active_conc_item (outer conc loop)
 			mylist<Concentration>::mylist_item<Concentration> *active_conc_item = conc_list->gethead();
 			while (active_conc_item!=NULL) {
@@ -585,45 +599,39 @@ int	ChemEngine::get_reactions(ConcentrationVolume *vol){
 
 									} else {
 										//----------------------------------------------
-						//				printf("cache: MISS\n");
+										//printf("cache: MISS\n");
 										//----------------------------------------------
 										// get matches - need count for scaling
 										//----------------------------------------------
 										Concentration_VM	*vm = new Concentration_VM;
-										if (vm!=NULL) {
-
+										if (vm==NULL) { printf("cache: ERR: new vm failed\n");  }
+										else {
 											int r =  match_enz-> match_start(passive_conc_item-> item-> getmole(), vm);
-											if (r>=0) {
+											if (r<0) { printf("cache: ERR: match_start returned [%d])..\n", r); }
+											else  {
 												int c = 0;
+												// get (and count) all match results's
 												while(match_enz-> match_next(vm)!=NULL) c++;
 												//----------------------------------------------
 												reaction = save_enzyme_reaction(passive_conc_item-> item-> getmole(), match_enz, &vm->matchpos.results_list);
+												// if (c<1) no matches ese
 												if (c>0) {
-													//reaction = save_enzyme_reaction(vol, passive_conc_item-> item-> getmole(), match_enz, &vm->matchpos.results_list);
-
-													if (reaction!=NULL) {
+													if (reaction==NULL) {	printf("cache: ERR:Save reaction failed..\n");	}
+													else  {
 														n++;
 														reaction_hit = reaction->add_vol(vol);
-														if (reaction_hit==NULL) { printf(" reaction->add_vol(vol) failed (already exists?)\n"); return -40; }
-
-													} else {	printf("cache: ERR:Save reaction failed..\n");	}
+														if (reaction_hit==NULL) { printf(" reaction->add_vol(vol) failed (already exists?)\n"); }
+													}
 												}
-											/*	else { //  c<=0
-													printf("cache: ERR: No matches returned..\n");
-												} */
-											} else {  // r<0
-												printf("cache: ERR: match_start returned [%d])..\n", r);
 											}
-											delete vm;
-										} else { printf("cache: ERR: new vm failed\n");  }
+										}
+										delete vm;
 									//----------------------------------------------
 									} // end cache MISS
 									//---------------------
 									// new wee need to scale
 									// enzyme hits ------------------------------
 
-
-									//if (reaction==NULL)   {
 									// No reactio - save miss.
 									if (reaction_hit==NULL)   {
 									//	PRINT("cache: ERR: Skipping NUL Reaction for conc[0x%zX]..\n", (PTR) passive_conc_item->item);

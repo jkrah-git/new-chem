@@ -42,7 +42,7 @@ int	cli_cell_add(Concentration_CLI *cli, int argc, char **argv){
 	cli->selected_ambcell->cell-> ambcell = cli->selected_ambcell;
 
 	// ** Important ** (set upstream molelist)
-	cli->selected_ambcell->cell->vol.set_molelist(&cli->world->mole_list);
+	cli->selected_ambcell->cell->vol.set_molelist(&cli->world->moledb.mole_list);
 	return 0;
 }
 //---------------------------//---------------------------

@@ -80,7 +80,7 @@ int	cli_world_list(Concentration_CLI *cli, int argc, char **argv){
 	}
 	//----------------------------
 	//----------------------------
-	if ((argc==1)&&(strcmp(argv[0], "heap")==0)){ cli->world->mole_list.dump(); return cli->world->mole_list.count(); }
+	if ((argc==1)&&(strcmp(argv[0], "heap")==0)){ cli->world->moledb.dump(); return cli->world->moledb.mole_list.count(); }
 
 
 	return 0;
@@ -197,7 +197,7 @@ int	cli_world_addvol(Concentration_CLI *cli, int argc, char **argv){
 	cli->selected_ambcell->ambvol = new ConcentrationVolume;//(ConcentrationVolume*) malloc(sizeof(ConcentrationVolume));
 	if (cli->selected_ambcell->ambvol==NULL) { printf("amb-cell Failed to add amb-vol\n"); return -10; }
 	//	!! nb: world_molelist
-	cli->selected_ambcell->ambvol->set_molelist(&cli->world->mole_list);
+	cli->selected_ambcell->ambvol->set_molelist(&cli->world->moledb.mole_list);
 	return 0;
 }
 //---------------------------//---------------------------//---------------------------------//---------------------------------

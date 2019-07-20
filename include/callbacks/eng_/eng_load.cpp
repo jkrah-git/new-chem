@@ -48,9 +48,8 @@ int 	eng_noop(Cell *cell, ChemEngine *eng, Concentration_VM *vm, ChemTime run_ti
 //	int r = cell-> apply_concentration(eng, &cell-> vol, &c, &cell-> status,  run_time);
 
 	int r = cell-> apply_concentration(eng, vol, &c, &cell-> status,  run_time);
-
 	if (r<0) { PRINT("cell-> apply_concentration returned[%d] m1=[0x%zX]\n", r, (PTR) m1); return -20; }
-	cell->status.temperature.remove(0.001);
+	//cell->status.temperature.remove(0.001);
 
 //	printf("=========== match (start) ============\n");
 //	vm-> matchpos.dump();

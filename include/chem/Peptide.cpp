@@ -159,7 +159,7 @@ PepAffinity Peptide::get_affinity(PepSig _sig) {
 			  = creates overall region charge
 
 			---------------------
-			(F) CHARGE AFFINITY (-1,0,1) F =
+			(F) CHARGE AFFINITY (-1,0,1) F = abs(sig1-sig2)/255.0
 			---------------------
 			[---- -qQ-]
 			[---- -qQ-]

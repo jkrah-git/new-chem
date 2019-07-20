@@ -59,7 +59,7 @@ int	cli_eng_list(Concentration_CLI *cli, int argc, char **argv){
 	NEED_CLI NEED_WORLD
 //	DUMP(cli->world.chem_engine)
 	int r = cli->world-> chem_engine.reaction_list.count();
-	printf("Found [%d] reactions..\n", r);
+	printf("Found [%d] cache entries..\n", r);
 	cli->world-> chem_engine.reaction_list.dump();
 	return r;
 }

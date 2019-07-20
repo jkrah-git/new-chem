@@ -78,12 +78,13 @@ MyBuffer<CellStatusType> 	temperature;
 
 };
 // -----------------------------------------------
-
+//#include "MoleDB.h"
 // -----------------------------------------------
 class World {
 public:
 	ChemEngine				chem_engine;
-	mylist<Molecule>		mole_list;
+	//mylist<Molecule>		mole_list;
+	MoleDB					moledb;
 	mylist<AmbientCell>		ambcell_list;
 	//-------------
 	World();
