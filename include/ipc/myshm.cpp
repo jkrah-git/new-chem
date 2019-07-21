@@ -37,20 +37,20 @@
 
 
 //----------------------------------------------------------------
-MYLOCK::MYLOCK(void)
+MyLock::MyLock(void)
 {
 	num_readers = NULL;
 	semfd = -1;
 }
 
 
-MYLOCK::~MYLOCK(void)
+MyLock::~MyLock(void)
 {
 
 
 }
 //----------------------------------------------------------------
-int MYLOCK::initlock(char *fname, bool _new)
+int MyLock::initlock(char *fname, bool _new)
 {
 	key_t key;
 	
@@ -90,7 +90,7 @@ int MYLOCK::initlock(char *fname, bool _new)
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------
-void MYLOCK::dumplock(char *buf)
+void MyLock::dumplock(char *buf)
 {
 	int	_wr,_nr;
 	char	msg[128];
@@ -119,7 +119,7 @@ void MYLOCK::dumplock(char *buf)
 	return;
 }
 //----------------------------------------------------------------
-int MYLOCK::open_reader(void)
+int MyLock::open_reader(void)
 { 
 	if (num_readers==NULL) return -1;
 	int r;
@@ -143,7 +143,7 @@ int MYLOCK::open_reader(void)
 	return 0;
 }
 //-------                                                                            
-int MYLOCK::close_reader(void)
+int MyLock::close_reader(void)
 {
 	if (num_readers==NULL) return -1;
 	int r;
@@ -168,7 +168,7 @@ int MYLOCK::close_reader(void)
 	return 0;
 }
 //------
-int MYLOCK::open_writer(void)
+int MyLock::open_writer(void)
 {
 	if (num_readers==NULL) return -1;
 	int r;
@@ -178,7 +178,7 @@ int MYLOCK::open_writer(void)
 	return r;
 }
 //----------------------------------------------------------------
-int MYLOCK::close_writer(void)
+int MyLock::close_writer(void)
 {
 	if (num_readers==NULL) return -1;
 	int r;
@@ -221,8 +221,8 @@ int MYLOCK::close_writer(void)
 
 ShMem::ShMem(void)
 {
-	lock_fname[0] = '\0';
-	shmem_fname[0] = '\0';
+//	lock_fname[0] = '\0';
+//	shmem_fname[0] = '\0';
 	shmem_fd = -1;
 	size = NULL;
 	ptr = NULL;
@@ -241,7 +241,7 @@ ShMem::~ShMem(void)
 void ShMem::dump(void){
 
 	//--  ShMem::newshm(char *_ftokname, char *_shmname, size_t _size, bool _new)
-	printf("ShMem-> shmem_fname[%s], lock_fname[%s]\n", shmem_fname, lock_fname);
+	printf("ShMem[0x%zX] shmem_fname[%s] lock_fname[%s] : ", (PTR) this, shmem_fname.get(), lock_fname.get());
 	printf("nr[0x%zX]=", (PTR) num_readers);
 	if (num_readers==NULL) printf("<NULL>");
 	else printf("[%d]", (*num_readers) );
@@ -249,7 +249,6 @@ void ShMem::dump(void){
 	printf(", size[0x%zX]=", (PTR) size);
 	if (size==NULL) printf("<NULL>");
 	else printf("[%ld]", (*size) );
-
 
 	printf(", fd=[%d], ptr[0x%zX]\n", shmem_fd, (PTR) ptr);
 
@@ -259,13 +258,16 @@ void ShMem::dump(void){
 int ShMem::openshm(char *_shmname, size_t _size, bool _new)
 {
 
-	PRINT("openshm(%s, %d, %d)..\n", _shmname, _size, _new);
+	//PRINT("openshm(%s, %d, %d)..\n", _shmname, _size, _new);
 
 	//------------
 	// set FileNames
-	sprintf(shmem_fname, "%s", _shmname);
-	sprintf(lock_fname, "/dev/shm/%s", _shmname);
-	//sprintf(lock_fname, "/tmp/%s.lock", _shmname);
+	//sprintf(shmem_fname, "%s", _shmname);
+	//sprintf(lock_fname, "/dev/shm/%s", _shmname);
+	char lfname[128];
+	sprintf(lfname, "/dev/shm/%s", _shmname);
+	shmem_fname.set(_shmname);
+	lock_fname.set(lfname);
 
 	//----------------
 	size_t meta = sizeof(int) + sizeof(size_t);
@@ -274,33 +276,33 @@ int ShMem::openshm(char *_shmname, size_t _size, bool _new)
 	// create or open file
 	if (_new)
 	{
-		shm_unlink(shmem_fname);
+		shm_unlink(shmem_fname.get());
 		//-------
 		// NEW File ..
-		if ( (shmem_fd = shm_open(shmem_fname, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR | 0666)) <0)
-		{	sprintf(err, "ShMem.newshm.shm_open(%s) failed[%s]", shmem_fname, strerror(errno));
-			PREF("newshm.shm_open(%s) failed[%s]\n", shmem_fname, strerror(errno));
+		if ( (shmem_fd = shm_open(shmem_fname.get(), O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR | 0666)) <0)
+		{	sprintf(err, "ShMem.newshm.shm_open(%s) failed[%s]", shmem_fname.get(), strerror(errno));
+			PRINT("newshm.shm_open(%s) failed[%s]\n", shmem_fname.get(), strerror(errno));
 			return shmem_fd-10;
 		}
 		// TRUNCATE File ..
 		if ( ftruncate(shmem_fd, _size + meta)==-1)
 		{	closeshm(true);
 			sprintf(err, "ShMem.newshm.ftruncate failed");
-			PREF("newshm.ftruncate failed\n");
+			PRINT("newshm.ftruncate failed\n");
 			return -2;
 		}
 	} else {
-		if ( (shmem_fd = shm_open(shmem_fname,  O_RDWR , S_IRUSR | S_IWUSR)) <0) {
-			sprintf(err, "ShMem.openshm.shm_open(%s) failed[%s]", shmem_fname, strerror(errno));
-			PREF("openshm.shm_open(%s) failed[%s]\n", shmem_fname, strerror(errno));
+		if ( (shmem_fd = shm_open(shmem_fname.get(),  O_RDWR , S_IRUSR | S_IWUSR)) <0) {
+			sprintf(err, "ShMem.openshm.shm_open(%s) failed[%s]", shmem_fname.get(), strerror(errno));
+			PRINT("openshm.shm_open(%s) failed[%s]\n", shmem_fname.get(), strerror(errno));
 			return shmem_fd-10; 
 		}
 	}
 
-	int l = initlock(lock_fname, _new);
+	int l = initlock(lock_fname.get(), _new);
 	if (l<0)	{
-		sprintf(err, "ShMem.openshm.lockinit(%s) failed [%s][%d]", lock_fname, strerror(errno), l);
-		PREF("openshm.lockinit(%s) failed.\n%s\n", lock_fname, strerror(errno));
+		sprintf(err, "ShMem.openshm.lockinit(%s) failed [%s][%d]", lock_fname.get(), strerror(errno), l);
+		PRINT("openshm.lockinit(%s) failed.\n%s\n", lock_fname.get(), strerror(errno));
 		return -10;
 	}
 
@@ -310,7 +312,7 @@ int ShMem::openshm(char *_shmname, size_t _size, bool _new)
 	void *r = mmap(NULL, _size, PROT_READ | PROT_WRITE, MAP_SHARED, shmem_fd, 0);
 	if (r==MAP_FAILED) {
 		sprintf(err, "ShMem.newshm.mmap failed");
-		PREF("newshm.mmap failed\n");
+		PRINT("newshm.mmap failed\n");
 		return -3;
 	}
 
@@ -326,19 +328,21 @@ int ShMem::openshm(char *_shmname, size_t _size, bool _new)
 	}
 
 
-	PREF("newshm.opensmem OK\n");
+	PRINT("newshm.opensmem OK\n");
 	//dump();
 	return 0;
 }
 //------------------------------------------------------------
 void ShMem::closeshm(bool _del)
 {
+	if (shmem_fd<0) return;
 	unmapshm();
-	if (_del) shm_unlink(shmem_fname);
+	if (_del) shm_unlink(shmem_fname.get());
 	close(shmem_fd);
 	shmem_fd = -1;
-	lock_fname[0] = '\0';
-	shmem_fname[0] = '\0';
+	//lock_fname[0] = '\0';
+	//shmem_fname[0] = '\0';
+
 
 }
 //------------------------------------------------------------

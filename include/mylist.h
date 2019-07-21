@@ -359,7 +359,6 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
 	/*
-
 	char ch;
 	if (autoalloc) ch='A';
 	else ch = 'M';
@@ -427,9 +426,9 @@ template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: pre: ");	dump(); //printf("\n");
 	//------------
 	mylist_item<T> *newitem = NULL;
-	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) NL}
-	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) NL}
-	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) NL}
+//	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) NL}
+//	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) NL}
+//	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) NL}
 
 	/*
 	dump(); // printf("\n");

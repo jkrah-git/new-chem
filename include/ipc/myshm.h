@@ -25,6 +25,7 @@
 #include <sys/sem.h>    // sem
 #include <sys/ipc.h>    // ftok
 #include <sys/wait.h>   // signals
+#include "MyString.h"
 
 //------------------------------------------
 // union for semtcl
@@ -36,7 +37,7 @@ union semun {
 };
 
 //------------------------------------------
-class MYLOCK {
+class MyLock {
 protected:
 		int		*num_readers;
 		int		semfd;
@@ -44,8 +45,8 @@ protected:
 
 
 	public:
-		MYLOCK(void);
-		~MYLOCK(void);
+		MyLock(void);
+		~MyLock(void);
 		void 	dump(void);
 		int		initlock(char *fname, bool _new);
 		void	dumplock(char *buf);
@@ -55,11 +56,14 @@ protected:
 		int		close_writer(void);
 };
 //---------------------------------	
-class ShMem : public MYLOCK {
+class ShMem : public MyLock {
 //class ShMem  {
 	protected:
-		char	lock_fname[128];
-		char	shmem_fname[128];
+//		char	lock_fname[128];
+//		char	shmem_fname[128];
+	MyString	lock_fname;
+	MyString	shmem_fname;
+
 		int		shmem_fd;
 		size_t	*size;
 		void	*ptr;	// mmap() + sizeof(int) + sizeof(size_t)

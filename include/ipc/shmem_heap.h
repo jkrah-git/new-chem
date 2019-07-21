@@ -5,9 +5,10 @@
  *      Author: jkrah
  */
 
-#ifndef SHMEM_HEAP_H_
-#define SHMEM_HEAP_H_
-#include "../ipc/myshm.h"
+#ifndef SHMEM_HEAP_H2_
+#define SHMEM_HEAP_H2_
+#include "myshm.h"
+#include "mylist.h"
 
 /*
  * Shmem_Heap::open_page also maps..
@@ -16,17 +17,17 @@
 
 
 //=================================================
-class shMem_Page_Entry {
+class shMem_Page {
 public:
 	int						pageid;
 	ShMem 					*shmem;
-	shMem_Page_Entry		*next;
-	shMem_Page_Entry();
-	virtual ~shMem_Page_Entry();
+	//-----------------
+	shMem_Page();
+	virtual ~shMem_Page();
 	void dump();
 };
 //=================================================
-
+/*
 class shMem_Page_List {
 public:
 	shMem_Page_Entry 	*head;
@@ -36,21 +37,22 @@ public:
 	int		add_page(int pageid, ShMem *shmem);
 };
 //=================================================
-
+*/
 //-------------------------------------
 class Shmem_Heap  {
 private:
 	size_t		object_size;		//
 	size_t		page_size;			// number of objects in page
-	size_t		top_page;			// number pages in heap
+	size_t		num_pages;			// number pages in heap
 	char		fname[128];
 
 public:
-	shMem_Page_List	page_list;
+//	shMem_Page_List	page_list;
+	mylist<shMem_Page> 	page_list;
 
 	inline size_t 	get_object_size(void) { return object_size; };
 	inline size_t 	get_page_size(void) { 	return page_size; };
-	inline int 		get_top_page(void){ 	return top_page; }
+	inline int 		get_num_pages(void){ 	return num_pages; }
 	inline int		page_bytes(void){ 		return (object_size * page_size); }
 
 
@@ -60,8 +62,8 @@ public:
 
 	void	dump(void);
 	void	init(char *_name, size_t _object_size, size_t _page_size, int _top_page);
-
-	ShMem 	*open_page(size_t page, bool _new);				//		open_page will also map..
+	size_t	add_page(void);
+	ShMem 	*open_page(size_t page);				//		open_page will also map..
 	int		destroy_page(size_t page);
 
 };
@@ -69,4 +71,4 @@ public:
 
 //=================================================
 
-#endif /* SHMEM_HEAP_H_ */
+#endif /* SHMEM_HEAP_H2_ */

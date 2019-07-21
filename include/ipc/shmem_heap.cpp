@@ -11,33 +11,31 @@
 
 #undef PREF
 #define PREF //printf("(Shmem_Heap::) "); printf
+#include "common.h"
 
 /*
 //=================================================
 class shMem_Page_Entry {
 	int						pageid;
 	ShMem 					*shmem;
-	shMem_Page_Entry		*next;
 
 	shMem_Page_Entry();
 	virtual ~shMem_Page_Entry();
 };
 */
 //=================================================
-shMem_Page_Entry::shMem_Page_Entry(){
+shMem_Page::shMem_Page(){
 		pageid = -1;
 		shmem = NULL;
-		next = NULL;
 }
 
-shMem_Page_Entry::~shMem_Page_Entry(){ }
+shMem_Page::~shMem_Page(){ }
 //-------------------------
-void shMem_Page_Entry::dump(){
-	printf("shMem_Page_Entry[0x%X] Page[%d]  (Next[0x%X]): --> ", this, pageid, next);
+void shMem_Page::dump(){
+	printf("shMem_Page[0x%zX] Page[%d]): --> ", (PTR) this, pageid);
 	if (shmem!=NULL)
 		shmem-> dump();
 	else printf("\n");
-
 }
 
 //=================================================
@@ -50,6 +48,7 @@ class shMem_Page_List {
 };
 */
 //=================================================
+/*
 shMem_Page_List::shMem_Page_List(){
 	head = NULL;
 };
@@ -96,7 +95,7 @@ int	shMem_Page_List::add_page(int pageid, ShMem *shmem){
 
 	return 0;
 }
-
+*/
 
 //-------------------------------------
 /*
@@ -133,7 +132,7 @@ public:
 Shmem_Heap::Shmem_Heap(){
 	object_size = 0;
 	page_size = 0;
-	top_page = 0;
+	num_pages = 0;
 	fname[0] = '\0';
 	//page_list ==NULL;
 
@@ -151,9 +150,9 @@ void		Shmem_Heap::dump(void){
 	//int kb = (object_size * page_size)/1024;
 
 	int pb = page_bytes();
-	printf("object_size[0x%x] x page_size[0x%x] = (%d)bytes\n", object_size, page_size, pb);
-	printf("top_page[%d]. Total[%d]b\n", top_page, pb * (top_page));
-	printf("-> List (head)[0x%X] -> \n", page_list);
+	printf("object_size[0x%zx] x page_size[0x%zx] = (%d)bytes\n", (PTR) object_size, (PTR) page_size, pb);
+	printf("top_page[%d]. Total[%d]b\n", (int) num_pages, (int) (pb * (num_pages)));
+	printf("-> List (head)[0x%zX] -> \n", (PTR) page_list.gethead());
 	page_list.dump();
 
 };
@@ -178,41 +177,38 @@ void	Shmem_Heap::init(char *_name, size_t _object_size, size_t _page_size, int _
 	sprintf(fname, "%s", _name);
 	object_size = _object_size;
 	page_size = _page_size;
-	top_page = _top_page;
+	num_pages = _top_page;
 }
 
 //=====================================================================================================
-ShMem *Shmem_Heap::open_page(size_t page, bool _new){
+ShMem *Shmem_Heap::open_page(size_t page){
 	// int		newshm(char *_shmname, size_t size, bool _new);
 
-	PREF("open_page(%d, %d)..\n", page, _new);
+	PRINT("open_page(%d, %d)..\n", page, _new);
 
 	//--------------
 	//---- check sizes and name
-	int pb = page_bytes();
-	if ((pb<=0) ||
+	int pbytes = page_bytes();
+	if ((pbytes<=0) ||
 		(strlen(fname) <=0) ||
-		(top_page==0)) {
-		PREF("Shmem_Heap::open_page. error.null size\n");
+		(num_pages==0)) {
+		PRINT("Shmem_Heap::open_page. error.null size\n");
 		return NULL;
 	}
-
 	//--------------
-	// exit if "not exist" and "not new"
-	if ((!_new) && (page >= top_page))
-		return NULL;
-
 	//--------------
 	ShMem *shmem = new ShMem;
 	if (shmem == NULL) return NULL;
 
+
 	char pname[128];
 	sprintf(pname, "%s.page.%d", fname, page);
 
+
 	//-------------- OPEN
-	int r = shmem-> openshm(pname, pb, _new);
+	int r = shmem-> openshm(pname, pbytes, _new);
 	if (r<0) {
-		PREF("open_page(%d, %d)=[%s](%d)b = [%d] [%s]\n", page, _new, pname, pb, r, shmem-> get_err());
+		PREF("open_page(%d, %d)=[%s](%d)b = [%d] [%s]\n", page, _new, pname, pbytes, r, shmem-> get_err());
 		delete shmem;
 		return NULL;
 	}
@@ -234,8 +230,8 @@ int	Shmem_Heap::destroy_page(size_t page){
 	delete p;
 	*/
 
-	shMem_Page_Entry *item = page_list.head;
-	shMem_Page_Entry *last_item = NULL;
+	shMem_Page *item = page_list.head;
+	shMem_Page *last_item = NULL;
 
 	while (item!=NULL) {
 
