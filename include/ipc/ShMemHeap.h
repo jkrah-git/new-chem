@@ -44,6 +44,10 @@ template <class T>
 struct ItemFrame {
 	size_t		id;
 	T			item;
+	void dump(void) {
+		printf("ItemFrame[0x%zX]: ID=[%ld]\n", (PTR) this, id);
+		item.dump();
+	}
 };
 
 
@@ -78,12 +82,13 @@ public:
 //	T		*get_page(int _page);
 	ItemFrame<T> 		*create_page(void);
 	ItemFrame<T> 		*get_page(int _page);
+	ItemFrame<T> 		*search_page(int _page, int _id);
 
 
 	int		close_page(int _page);
 	int		destroy_page(int _page);
 
-	int 	add_item(T *item);
+	ItemFrame<T> *add_item(T *item);
 	T		*get_item(int id);
 
 	//-------
@@ -284,20 +289,49 @@ template <class T> int ShMemArray<T>::destroy_page(int page){
 	info->num_pages--;
 	return 0;
 }
-//----------------------------------------------
-template <class T> int ShMemArray<T>::add_item(T *item){
+template <class T> ItemFrame<T> *ShMemArray<T>::search_page(int page, int id) {
 	// upstream should open_writer before calling this
 	if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
 	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 	//---------------
-	if (item==NULL) return -1;
-	int page = shmem_list.count();
+	if ((page<0) || (page >= info-> num_pages)) { return NULL; }
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return NULL; }
 
+	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+	for (int i=0; i< info->page_size; i++) {
+		ItemFrame<T> *f = &buf[i];
+		if (f->id == id) return f;
+		if ((f->id <0) && (id<0)) return f;
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------
+template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
+	//---------------
+	if (item==NULL) return NULL;
+	//int page = shmem_list.count();
+
+	ItemFrame<T> *frame  =  NULL;
 	// search each page for empty item
+	for (int p=0; p< info->num_pages; p++) {
+		frame = search_page(p, -1);
+		if (frame !=NULL) break;
+	}
 
+	if (frame==NULL) { PRINT("no free frame found.\n"); return NULL; }
+	frame->id = info->next_id++;
+	memcpy(&frame->item, item, sizeof(T));
+	//(*frame->item) = (*item);
+	info->num_items++;
 	//
 
-	return -1;
+	return frame;
 }
 //----------------------------------------------
 template <class T> T *ShMemArray<T>::get_item(int id){
