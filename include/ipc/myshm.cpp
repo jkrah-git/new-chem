@@ -250,7 +250,7 @@ void ShMem::dump(void){
 	if (size==NULL) printf("<NULL>");
 	else printf("[%ld]", (*size) );
 
-	printf(", fd=[%d], ptr[0x%zX]\n", shmem_fd, (PTR) ptr);
+	printf(", fd=[%d], ptr[0x%zX]", shmem_fd, (PTR) ptr);
 
 }
 //----------------------------------------------------------------
@@ -328,7 +328,7 @@ int ShMem::openshm(char *_shmname, size_t _size, bool _new)
 	}
 
 
-	PRINT("newshm.opensmem OK\n");
+	//PRINT("newshm.opensmem OK\n");
 	//dump();
 	return 0;
 }

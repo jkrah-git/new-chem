@@ -19,6 +19,26 @@
 //#include "MoleculeMatchPos.h"
 //class MoleculeMatchPos;
 
+/*
+#include "ipc/ShMemHeap.h"
+
+class ShmMoleculeIndex {
+	int 	id;
+	int 	page;
+	size_t 	offset;
+};
+
+class ShmMolecule {
+	int		len;
+	Peptide	*head;
+	//-------------
+	ShmMolecule();
+	~ShmMolecule()
+	void dump(void);
+	size_t	get_size;
+};
+*/
+
 // -------------------------------
 class Molecule {
 private:

@@ -109,60 +109,102 @@ void test_shm_close(bool _del) {
 	object.closeshm(_del);
 }
 //----------------------------------------------
+//========================================================================================================================
 #include "ipc/ShMemHeap.h"
 #include "chem/Molecule.h"
-ShMemHeap<Molecule>	mole_heap;
 
-//void test_shm_heap(void) {	mole_heap.dump();}
+struct TestItem {
+	char	text[128];
+	int		i;
+	float	f;
+	void	init(void) {
+		for (int u=0; u<128; u++) text[u] = '\0';
+		i =0; f=0;
+	}
+	void	dump(void) { printf("TestItem: text[%s] i[%d] f[%f]\n", text, i, f);	};
+};
+
+
+ShMemArray<TestItem>	item_array;
+
+//void test_shm_heap(void) {	item_array.dump();}
 //------------------------------
 void test_shm_heap_create(void) {
-
-	int r = mole_heap.create_info(&shm_name[0], 32);
-	PRINT("create_info = [%d]\n",r);
-	mole_heap.dump();
+	ShMemArrayInfo *info = item_array.create_info(&shm_name[0], 32);
+	PRINT("| create_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
 }
 //------------------------------
 void test_shm_heap_destroy(void) {
-	mole_heap.open_info(&shm_name[0]);
-	mole_heap.dump();
-	mole_heap.destroy_info();
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
+
+	item_array.destroy_info();
 	PRINT("destroy_info\n");
 }
 //------------------------------
 void test_shm_heap_open(void){
-	int r = mole_heap.open_info(&shm_name[0]);
-	PRINT("open_info = [%d]\n", r);
-	mole_heap.dump();
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
+
+	item_array.dump();
 }
 //------------------------------
 void test_shm_heap_create_page(void){
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
-	int r = mole_heap.open_info(&shm_name[0]);
-	PRINT("open_info = [%d]\n", r);
-	PRINT("-------------\n");
-	if (r<0) return;
-	Molecule *mpage = mole_heap.create_page(0);
 
-	PRINT("create_page = [%d][0x%zX]\n", r, (PTR) mpage);
+	int p = info->num_pages;
+	ItemFrame<TestItem> *item = item_array.create_page();
+	PRINT("create_page = [0x%zX]\n", (PTR) item);
 	PRINT("-------------\n");
-	if (mpage!=NULL) {
-		Molecule *m = &mpage[0];
-		m-> dump();
+	if (item!=NULL) {
+		TestItem *i = &item[0].item;
+		sprintf(i->text, "(New Page [%d])", p);
+		i->i =  info->num_pages;
+		i->f =  info->num_pages/2;
+		i-> dump();
 	}
 
 };
 //------------------------------
 //------------------------------
 void test_shm_heap_destroy_page(void){
-	PRINT("-------------\n");
-	int r = mole_heap.open_info(&shm_name[0]);
-	PRINT("open_info = [%d]\n", r);		if (r<0) return;
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
 
-	r  = mole_heap.destroy_page(0);
-	PRINT("destroy_page = [%d]\n", r);
-	PRINT("-------------\n");
+	//ShMemArrayInfo	*info = item_array.get_info();
+	if (info->num_pages>0) {
+		int p = info->num_pages-1;
+		int r  = item_array.destroy_page(p);
+		PRINT("destroy_page[%d] = [%d]\n",p,  r);
+	}
 };
+//------------------------------
+void test_shm_heap_get_page(int p){
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
+
+	ItemFrame<TestItem>  *heap= item_array.get_page(p);
+	if (heap!=NULL) {
+		ItemFrame<TestItem>  *f = &heap[0];
+		printf("item[0].id = [%ld]\n", f->id);
+		f->item.dump();
+	}
+
+
+}
 //------------------------------
 void test_shm_heap_close(void){};
 //------------------------------
@@ -186,6 +228,11 @@ int main(int argc, char **argv) {
 		if (strcmp(argv[1], "open")==0) 	{ test_shm_heap_open(); }
 		if (strcmp(argv[1], "create_page")==0) 	{ test_shm_heap_create_page(); }
 		if (strcmp(argv[1], "destroy_page")==0) 	{ test_shm_heap_destroy_page(); }
+		if (strcmp(argv[1], "get_page")==0) 	{
+			int p = 0;
+			if ((argc>2)&& ( sscanf(argv[2], "%d", &p) <1)) { PRINT("bad page[%s]\n", argv[2]); return -1; }
+			test_shm_heap_get_page(p);
+		}
 
 		if (strcmp(argv[1], "close")==0) 	{ test_shm_heap_close(); }
 		if (strcmp(argv[1], "read")==0) 	{ test_shm_heap_read(); }
