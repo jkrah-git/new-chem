@@ -45,7 +45,7 @@ struct ItemFrame {
 	size_t		id;
 	T			item;
 	void dump(void) {
-		printf("ItemFrame[0x%zX]: ID=[%ld]\n", (PTR) this, id);
+		printf("ItemFrame[0x%zX]: ID=[%ld]  :: ", (PTR) this, id);
 		item.dump();
 	}
 };
@@ -83,13 +83,14 @@ public:
 	ItemFrame<T> 		*create_page(void);
 	ItemFrame<T> 		*get_page(int _page);
 	ItemFrame<T> 		*search_page(int _page, int _id);
-
+	void				dump_page(int _page);
 
 	int		close_page(int _page);
 	int		destroy_page(int _page);
 
 	ItemFrame<T> *add_item(T *item);
-	T		*get_item(int id);
+	ItemFrame<T> *get_item(int id);
+
 
 	//-------
 };
@@ -307,6 +308,23 @@ template <class T> ItemFrame<T> *ShMemArray<T>::search_page(int page, int id) {
 
 	return NULL;
 }
+//----------------------------------------------
+template <class T> void ShMemArray<T>::dump_page(int page){
+		// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return; }
+	//---------------
+	if ((page<0) || (page >= info-> num_pages)) { return ; }
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return; }
+
+	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+	for (int i=0; i< info->page_size; i++) {
+		ItemFrame<T> *f = &buf[i];
+		printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+	}
+
+}
 
 //----------------------------------------------
 template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
@@ -334,7 +352,20 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 	return frame;
 }
 //----------------------------------------------
-template <class T> T *ShMemArray<T>::get_item(int id){
+template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
+
+	// upstream should open_writer before calling this
+		if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
+		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
+		//---------------
+
+		ItemFrame<T> *frame  =  NULL;
+		// search each page for empty item
+		for (int p=0; p< info->num_pages; p++) {
+			frame = search_page(p, id);
+			if (frame !=NULL) return frame;
+		}
+
 	return NULL;
 }
 //----------------------------------------------

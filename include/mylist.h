@@ -136,6 +136,7 @@ template <class T> mylist<T>::mylist() {
 };
 template <class T> mylist<T>::mylist(bool _auto) {
 	autoalloc = _auto; head = NULL;	tail = NULL;
+	counter = 0;
 };
 template <class T> mylist<T>::~mylist() {	clear();	};
 

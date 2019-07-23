@@ -206,6 +206,25 @@ void test_shm_heap_get_page(int p){
 
 }
 //------------------------------
+void test_shm_heap_dump_page(int p){
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
+
+
+	item_array.dump_page(p);
+	/*****
+	ItemFrame<TestItem>  *heap= item_array.get_page(p);
+	if (heap!=NULL) {
+		ItemFrame<TestItem>  *f = &heap[0];
+		printf("item[0].id = [%ld]\n", f->id);
+		f->item.dump();
+	}
+	*********/
+
+}
+//------------------------------
 void test_shm_heap_add_item(void){
 	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
@@ -220,8 +239,35 @@ void test_shm_heap_add_item(void){
 	if (f==NULL) { PRINT("add_item  returned [0x%zX]..\n", (PTR) f); return; }
 
 	f-> dump();
+};
+//------------------------------
+//------------------------------
+void test_shm_heap_get_item(int id){
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
 
+	ItemFrame<TestItem>  *f = item_array.get_item(id);
+	if (f==NULL) { PRINT("get_item  returned [0x%zX]..\n", (PTR) f); return; }
+	f-> dump();
+};
+//------------------------------
+//------------------------------
+void test_shm_heap_del_item(int id){
+	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
+	PRINT("| info-> "); info-> dump();
+	PRINT("-------------\n");
 
+	TestItem  item;
+	sprintf(item.text, "Test Item [%d] added by add_item()..", info->num_items);
+	item.f = 0.001;
+	item.i = info->num_items +10;
+	ItemFrame<TestItem>  *f = item_array.add_item(&item);
+	if (f==NULL) { PRINT("add_item  returned [0x%zX]..\n", (PTR) f); return; }
+
+	f-> dump();
 };
 //------------------------------
 void test_shm_heap_read(void){};
@@ -249,7 +295,22 @@ int main(int argc, char **argv) {
 			if ((argc>2)&& ( sscanf(argv[2], "%d", &p) <1)) { PRINT("bad page[%s]\n", argv[2]); return -1; }
 			test_shm_heap_get_page(p);
 		}
+		if (strcmp(argv[1], "dump_page")==0) 	{
+			int p = 0;
+			if ((argc>2)&& ( sscanf(argv[2], "%d", &p) <1)) { PRINT("bad page[%s]\n", argv[2]); return -1; }
+			test_shm_heap_dump_page(p);
+		}
 		if (strcmp(argv[1], "add_item")==0) 	{ test_shm_heap_add_item(); }
+
+		if (strcmp(argv[1], "get_item")==0) 	{
+			int id = 0;
+			if ((argc>2)&& ( sscanf(argv[2], "%d", &id) <1)) { PRINT("bad id[%s]\n", argv[2]); return -1; }
+			test_shm_heap_get_item(id);
+		}
+
+
+
+
 
 		if (strcmp(argv[1], "read")==0) 	{ test_shm_heap_read(); }
 		if (strcmp(argv[1], "write")==0) 	{ test_shm_heap_write(); }

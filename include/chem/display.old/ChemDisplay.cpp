@@ -657,8 +657,8 @@ void ChemDisplay::draw_conc_displ(ChemScreen *screen, ChemConcDisplay *conc_disp
 		}
 	}
 	Concentration *cp = conc_display-> get_conc();
-	Molecule *m = NULL;
-	if (cp!=NULL) m = cp->getmole();
+//	Molecule *m = NULL;
+//	if (cp!=NULL) m = cp->getmole();
 
 	gfx.color(200,200,200);
 
@@ -1013,7 +1013,7 @@ void ChemDisplay::draw_molelist(ChemScreen *screen, Concentration_CLI *cli, Chem
 
 	// Concentration_VM  *vm = cli-> get_selected_vm();
 
-	Molecule *selected_mole = cli->local_vm.mole;
+	//Molecule *selected_mole = cli->local_vm.mole;
 	//if (vm!=NULL) selected_mole = vm-> mole;
 	// Draw CElls -----------------------------------
 	int c = start;
