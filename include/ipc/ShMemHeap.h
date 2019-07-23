@@ -42,14 +42,19 @@ struct ShMemArrayInfo {
 
 template <class T>
 struct ItemFrame {
-	size_t		id;
+	int		id;
 	T			item;
 	void dump(void) {
-		printf("ItemFrame[0x%zX]: ID=[%ld]  :: ", (PTR) this, id);
+		printf("ItemFrame[0x%zX]: ID=[%d]  :: ", (PTR) this, id);
 		item.dump();
 	}
 };
-
+/*
+struct ItemLocation {
+	int 	page;
+	int 	index;
+};
+*/
 
 // --------------------------------------------
 template <class T> class ShMemArray {
@@ -58,9 +63,6 @@ private:
 	ShMem			info_shm;
 	ItemFrame<T>	*open_page(ShMem *page_shmem, int _page);
 
-
-
-
 public:
 
 	mylist<ShMem> 	shmem_list;
@@ -68,30 +70,28 @@ public:
 	ShMemArray();
 	virtual ~ShMemArray();
 	void	dump(void);
-//	size_t	get_object_size(void) { return object_size; };
-//	size_t	get_page_size(void) { return page_size; };
-//	size_t	get_num_pages(void) { return num_pages; };
 	ShMemArrayInfo	*get_info(void){ return info; };
-
-	ShMemArrayInfo		*create_info(const char *name, int _page_size);
-	ShMemArrayInfo		*open_info(const char *name);
+	ShMemArrayInfo	*create_info(const char *name, int _page_size);
+	ShMemArrayInfo	*open_info(const char *name);
 	int		close_info(void);
 	void	destroy_info(void);
 
-//	T 		*create_page(void);
-//	T		*get_page(int _page);
 	ItemFrame<T> 		*create_page(void);
 	ItemFrame<T> 		*get_page(int _page);
 	ItemFrame<T> 		*search_page(int _page, int _id);
 	void				dump_page(int _page);
-
-	int		close_page(int _page);
-	int		destroy_page(int _page);
+	int					close_page(int _page);
+	int					destroy_page(int _page);
 
 	ItemFrame<T> *add_item(T *item);
 	ItemFrame<T> *get_item(int id);
+	int			del_item(int id);
 
-
+	int			destroy(void);
+	int			get_size_free_block(int page);
+	int			find_free_block(int page, int size);
+	int			write(int page, int dest, int num, T *item_array);
+	T			*read(int page, int src);
 	//-------
 };
 //----------------------------------------------
@@ -113,6 +113,10 @@ template <class T> void ShMemArray<T>::dump(void) {
 	printf(".. %d shm.pages ..\n", shmem_list.count());
 	shmem_list.dump();
 
+	for (int i=0; i< info->num_pages; i++) {
+		printf("-- page %d --\n", i);
+		dump_page(i);
+	}
 }
 //----------------------------------------------
 #include <string.h>
@@ -135,9 +139,6 @@ template <class T> ShMemArrayInfo *ShMemArray<T>::create_info(const char *name, 
 
 	strncpy(info->name, name, 127);
 	info->name[127] = '\0';
-//	info-> frame_size = sizeof(T);
-//	info-> frame_size = sizeof(ItemFrame);
-	//ItemFrame
 
 	info-> page_size = _page_size;
 	info->num_pages = 0;
@@ -168,37 +169,12 @@ template <class T> ShMemArrayInfo *ShMemArray<T>::open_info(const char *name){
 
 	return info;
 }
-
-/*
-	int c = 0;
-	// 	mylist<ShMem>::mylist_item<ShMem> *shmem_item =	shmem_list.add();
-	mylist<ShMem>::mylist_item<ShMem> *shmem_item =	shmem_list.gethead();
-	while (shmem_item != NULL) {
-		if (shmem_item-> item != NULL) {
-
-		}
-
-		//-------
-		shmem_item = shmem_item->next;
-	}
-
-	return 0;
-}
 //----------------------------------------------
-*/
 
 template <class T> void ShMemArray<T>::destroy_info(void) {
-
-//	if (info_shm.shmem_fd >=0)
-//		info_shm.closeshm(true);
-//	info = NULL;
-
-	//if ((info!=NULL) && (strlen(info->name)>0)) {
 		info = NULL;
 		info_shm.closeshm(true);
-//	}
 }
-
 //----------------------------------------------
 
 template <class T> ItemFrame<T>  *ShMemArray<T>::create_page(void){
@@ -224,14 +200,8 @@ template <class T> ItemFrame<T>  *ShMemArray<T>::create_page(void){
 	ItemFrame<T> *heap  = (ItemFrame<T>*) shmem_item->item-> get_ptr();
 	if (heap==NULL)  { PRINT("ERR: newshm.ptr returned NULL [%s]\n", info_shm.get_err()); return NULL; }
 
-//	info-> page_size = _page_size;
-//	info->num_pages = 0;
-
-	//T t;
 	for (int i=0; i < info-> page_size; i++) {
 		ItemFrame<T> *dest = &heap[i];
-		//memcpy(dest, &t, sizeof(t));
-		//dest-> init();
 		dest->id = -1;
 	}
 	info->num_pages++;
@@ -243,13 +213,7 @@ template <class T> ItemFrame<T> *ShMemArray<T>::open_page(ShMem *page_shmem, int
 	if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
 	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 	//---------------
-
-
-	if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
-	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 	if (page_shmem==NULL) { PRINT("ERR: NULL page_shmem\n"); return NULL; }
-//	if ((name==NULL) || (strlen(name)<1)) return -1;
-//	if ((_obj_size<1) ||(_page_size<1)) return -2;
 
 	char page_name[128];
 	sprintf(page_name, "%s.%d", info->name, _page);
@@ -341,11 +305,10 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 		frame = search_page(p, -1);
 		if (frame !=NULL) break;
 	}
-
 	if (frame==NULL) { PRINT("no free frame found.\n"); return NULL; }
+
 	frame->id = info->next_id++;
 	memcpy(&frame->item, item, sizeof(T));
-	//(*frame->item) = (*item);
 	info->num_items++;
 	//
 
@@ -353,12 +316,10 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 }
 //----------------------------------------------
 template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
-
 	// upstream should open_writer before calling this
 		if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
 		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 		//---------------
-
 		ItemFrame<T> *frame  =  NULL;
 		// search each page for empty item
 		for (int p=0; p< info->num_pages; p++) {
@@ -369,9 +330,130 @@ template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
 	return NULL;
 }
 //----------------------------------------------
+template <class T> int ShMemArray<T>::del_item(int id){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	ItemFrame<T> *frame  =  get_item(id);
+	if (frame==NULL) { PRINT("item[%d] not found\n", id); return -3; }
+	frame->id = -1;
+	bzero(&frame->item, sizeof(T));
 
+	info->num_items--;
+	return 0;
+}
+//----------------------------------------------
+template <class T> int ShMemArray<T>::destroy(void){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	int n=info->num_pages;
+	int top =  info->num_pages;
+	for (int i=0; i < top; i++) {
+		PRINT("..destroying page[%d]\n", i);
+		destroy_page(i);
+	}
+	destroy_info();
 
+	return n+1;
+}
+//----------------------------------------------
+template <class T> int ShMemArray<T>::get_size_free_block(int page){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	if ((page<0) || (page >= info-> num_pages)) { return -3; }
 
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return -4; }
+
+	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+	int n = 0;
+	int best = 0;
+	for (int i=0; i< info->page_size; i++) {
+		ItemFrame<T> *f = &buf[i];
+		printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+		if (f->id <0) {
+			//if (n==0) { n = i; }
+			//else  { n++; }
+			n++;
+			if (n>best)
+				best = n;
+		} else {
+			if (n!=0) n=0;
+		}
+	}
+	return best;
+}
+//----------------------------------------------
+template <class T> int ShMemArray<T>::find_free_block(int page, int size){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	if ((page<0) || (page >= info-> num_pages)) { return -3; }
+	if ((size<0) || (size >= info->page_size))  { return -4; }
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return -4; }
+
+	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+	int n = 0;
+	for (int i=0; i< info->page_size; i++) {
+		ItemFrame<T> *f = &buf[i];
+		printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+		if (f->id <0) {
+			n++;
+			if (n==size) return i-n+1;
+		} else {
+			n=0;
+		}
+	}
+	return -10;
+}
+//----------------------------------------------
+template <class T> int ShMemArray<T>::write(int page, int dest, int num, T *item_array){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	if ((page<0) || (page >= info-> num_pages)) { return -3; }
+	if ((dest<0) || (dest >= info-> page_size)) { return -4; }
+	if ((num<0) || ((dest+num) > info-> page_size)) { return -5; }
+
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return -6; }
+
+	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+
+	for (int i=dest; i< (dest+num); i++) {
+		ItemFrame<T> *f = &buf[i];
+		//printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+		if (f->id >=0) return -7;
+	}
+
+	for (int i=dest; i< (dest+num); i++) {
+		ItemFrame<T> *frame = &buf[i];
+		 frame->id = info->next_id++;
+		memcpy(&frame->item, &item_array[i-dest], sizeof(T));
+		info->num_items++;
+	}
+
+	return 0;
+}
+//----------------------------------------------
+template <class T> T *ShMemArray<T>::read(int page, int src){
+	// upstream should open_writer before calling this
+	if (info==NULL) { PRINT("ERR: NULL info\n"); return -1; }
+	if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return -2; }
+	//---------------
+	if ((page<0) || (page >= info-> num_pages)) { return -3; }
+	mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+
+	return NULL;
+}
 
 
 #endif /* SHMEMHEAP_H_ */
