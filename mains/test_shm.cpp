@@ -3,24 +3,11 @@
 
 #include <stdio.h>
 #include <string.h>
-//#include "test_shm.h"
 #include "debug.h"
 #include "ipc/myshm.h"
 #include "ipc/ShMemHeap.h"
 #include "chem/Molecule.h"
-
-
-class ShMemBlock {
-	int		page;
-	int		start;
-	int		len;
-};
-
-class ShMoleHeap {
-private:
-	ShMemArray<Peptide>	pep_array;
-	ShMemArray<ShMemBlock>	mole_array;
-};
+#include "shchem/ShMemMoleHeap.h"
 
 //---------------------------------------------------
 #undef DUMP
@@ -40,18 +27,21 @@ struct TestItem {
 // --------------------------------
 
 	char 		shm_name[] = "test_shm";
-	ShMemArray<TestItem>	item_array;
+	ShMemArray<TestItem>		item_array;
+	ShMemBlockHeap<TestItem>	item_heap;
+
+
 
 //------------------------------
 void test_shm_heap_create_info(void) {
-	ShMemArrayInfo *info = item_array.create_info(&shm_name[0], 8);
+	ShMemArrayInfo *info = item_array.create(&shm_name[0], 8, true);
 	PRINT("| create_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
 }
 //------------------------------
 void test_shm_heap_destroy_info(void) {
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -61,7 +51,7 @@ void test_shm_heap_destroy_info(void) {
 }
 //------------------------------
 void test_shm_heap_open_info(void){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -70,7 +60,7 @@ void test_shm_heap_open_info(void){
 }
 //------------------------------
 void test_shm_heap_create_page(void){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -91,7 +81,7 @@ void test_shm_heap_create_page(void){
 //------------------------------
 //------------------------------
 void test_shm_heap_destroy_page(int p){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -105,7 +95,7 @@ void test_shm_heap_destroy_page(int p){
 };
 //------------------------------
 void test_shm_heap_get_page(int p){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -121,7 +111,7 @@ void test_shm_heap_get_page(int p){
 }
 //------------------------------
 void test_shm_heap_dump_page(int p){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -140,7 +130,7 @@ void test_shm_heap_dump_page(int p){
 }
 //------------------------------
 void test_shm_heap_add_item(void){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -157,7 +147,7 @@ void test_shm_heap_add_item(void){
 //------------------------------
 //------------------------------
 void test_shm_heap_get_item(int id){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -169,7 +159,7 @@ void test_shm_heap_get_item(int id){
 //------------------------------
 //------------------------------
 void test_shm_heap_del_item(int id){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -181,7 +171,7 @@ void test_shm_heap_del_item(int id){
 //------------------------------
 //------------------------------
 void test_shm_heap_destroy_all(void){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -191,7 +181,7 @@ void test_shm_heap_destroy_all(void){
 };
 //------------------------------
 void get_size_free_block(int p){
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -201,7 +191,7 @@ void get_size_free_block(int p){
 }
 //------------------------------
 void find_free_block(int page, int size) {
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -212,7 +202,7 @@ void find_free_block(int page, int size) {
 }
 
 void test_block_add(void) {
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| open_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -240,14 +230,14 @@ void test_block_add(void) {
 void test_blocks(void){
 	int r;
 
-	ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	if (info!=NULL) {
 		r = item_array.destroy();
 		PRINT("destroy = [%d]\n", r);
 	}
-	info = item_array.create_info(&shm_name[0], 5);
+	info = item_array.create(&shm_name[0], 5, true);
 
-	//ShMemArrayInfo *info = item_array.open_info(&shm_name[0]);
+	//ShMemArrayInfo *info = item_array.open(&shm_name[0]);
 	PRINT("| create_info =[0x%zX]\n", (PTR) info); if (info==NULL) return;
 	PRINT("| info-> "); info-> dump();
 	PRINT("-------------\n");
@@ -284,6 +274,104 @@ void test_blocks(void){
 
 //==================================================
 int main(int argc, char **argv) {
+
+	// new main
+	{
+
+		if ((argc==2) && (strcmp(argv[1], "create")==0)) {
+			int r = item_heap.create("test_heap", 3, 5);
+			PRINT(" item_heap.create = [%d]\n", r);
+		} else {
+			int r = item_heap.open("test_heap");
+			PRINT(" item_heap.open = [%d]\n", r);
+		}
+
+		/*
+		 	int p = info->num_pages;
+	ItemFrame<TestItem> *item = item_array.create_page();
+	PRINT("create_page = [0x%zX]\n", (PTR) item);
+	PRINT("-------------\n");
+	if (item!=NULL) {
+		TestItem *i = &item[0].item;
+		sprintf(i->text, "(New Page [%d])", p);
+		i->i =  info->num_pages;
+		i->f =  info->num_pages/2;
+		i-> dump();
+	}
+
+		 */
+
+		if (argc>1) {
+			if (strcmp(argv[1], "destroy")==0) 	{	item_heap.destroy(); }
+			//-------------
+			// ShMemBlock *ShMemBlockHeap<T>::find_block(int item_page, int offset){
+			if (strcmp(argv[1], "find_block")==0) 	{
+				int offset = 3;
+				int page = 0;
+				if ((argc>2)  &&(sscanf(argv[2], "%d", &offset)<0)) { PRINT("Bad param\n"); return -1; }
+				if ((argc>3)  &&(sscanf(argv[3], "%d", &page)<0)) { PRINT("Bad param\n"); return -1; }
+
+				ShMemBlock *b = item_heap.find_block(page, offset);
+				PRINT("find_block(%d, %d) = [0x%zX]\n", page, offset, (PTR) b);
+				if (b!=NULL) { b-> dump(); NL }
+				return 0;
+
+			}
+
+			//find_free_block(int item_page, int size){
+			//-------------
+			if (strcmp(argv[1], "add_block")==0) 	{
+				int size = 3;
+				if ((argc>2)  &&(sscanf(argv[2], "%d", &size)<0)) { PRINT("Bad param\n"); return -1; }
+				int r = item_heap.new_block(size, NULL);
+				PRINT("new_block = [%d]\n", r);
+				ShMemBlock *item_block = item_heap.get_block(r);
+				TestItem *item = item_heap.get_item(item_block);
+				PRINT("item_heap.get_item (new_block) = [0x%ZX]\n", (PTR) item);
+				if (item!=NULL) {
+					for (int i=0; i<size; i++) {
+						TestItem *it = &item[i];
+						sprintf(it->text, "item[%d]in block[id: %d size: %d]", i, r, size);
+					}
+
+				}
+
+
+				return r;
+			}
+			//-------------
+			// template <class T>ShMemBlock *ShMemBlockHeap<T>::get_block(int id){
+			// template <class T>T *ShMemBlockHeap<T>::get_item(ShMemBlock *block){
+			if (strcmp(argv[1], "get_block")==0) 	{
+				int id = 0;
+				if ((argc>2)  &&(sscanf(argv[2], "%d", &id)<0)) { PRINT("Bad param\n"); return -1; }
+
+				ShMemBlock *item_block = item_heap.get_block(id);
+				PRINT("get_block(%d) = [0x%zX]\n", id, (PTR) item_block);
+
+				if (item_block!=NULL) {
+					item_block->dump();
+					TestItem *item = item_heap.get_item(item_block);
+					PRINT("get_item(block) = [0x%zX]\n", (PTR) item);
+					if (item !=NULL) {
+						for (int i=0; i< item_block->size; i++) {
+									item[i].dump();
+						}
+					}
+				}
+
+				return 0;
+			}
+			//-------------
+		}
+
+		item_heap.dump();
+		return 0;
+
+
+	}
+
+	// -----old main
 	if (argc<2) {
 		test_shm_heap_open_info();
 		//printf("args: create, destroy, open, close, read, write\n");

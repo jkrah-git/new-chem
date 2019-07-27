@@ -46,8 +46,16 @@ MyLock::MyLock(void)
 
 MyLock::~MyLock(void)
 {
-
-
+	/*
+	if (semfd>=0) {
+		union semun arg;
+		arg.val = 1;
+		PRINT("WARNING: experimental sem del..\n");
+		 if ((semctl(semfd, SEMID_MX, IPC_RMID, arg)) == -1) {
+			 PRINT("semctl(IPC+RMID) failed\n..");
+		 }
+	}
+*/
 }
 //----------------------------------------------------------------
 int MyLock::initlock(char *fname, bool _new)
