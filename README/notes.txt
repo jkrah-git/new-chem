@@ -1,0 +1,294 @@
+
+
+
+===================================
+NEXT TODO
+--- vars in input stream
+--- vary levels of text output (file vs interactive) (quiet vs verbose)
+
+--- list of buffers to find max commit.. eg.conc, temp, energy, 
+    - cell_run, cell_maxcommit, call_commit
+--- txt[] every 'x' samples
+-- world (eng, (master)molelist, (master)ambcell_list(pos, *ambvol, *cell, temp))
+   - cell(status(enery,health,temperature), VOL)
+-- CLI - colourd text
+	- benchmarks
+-- save-state / save-history to file
+---- finish base rendering
+	- move all disply_list *objs's to 'stack_id / other_id??'
+		- (mouseclick) will require *ptr-> index lookups .. grrr..
+		- needed for crashproof vm changes
+!!	- or: reload_vm()
+	- refresh_graphs
+	- vol.external_mole_list??
+
+--- NEW rendering
+	-- World - ambient/cell 
+		-- Volume
+  		-- eng/enz
+	
+	----------------------------------------------------------
+	-- Thought: accept limited lifespan of program (mem) - for never expire molecache
+	-- ie.. global_molecache
+
+
+===================================================================
+--------- try to describe ----
+1. Intro..
+Ideas have been driven by 
+ - Genetics
+ - BioChem
+ - Neuroscience
+ 
+2. The Model Objects
+2.1 Peptide
+ - like an element - cant be divided
+ - rules based joining to form 'structure' (see. Molecule)
+ - rules based positional information (2D/3D/n'D )
+ - rules based (active/passive) matching (see. Enzyme)
+ - trying to keep it so the rules can be changed 
+
+2.2 Molecule
+ - Natural form has predefined structure (joining rules)
+ - also possible to build 'unatural' structures (testing)
+ - Active/Passive peptide sites - positional matching (see. Enzyme)
+
+2.3 Enzymes
+ - Passive/Active Molecues are matched (and cached) 
+ - Active Molecule - triggers (callback) function
+
+2.4 Concentration
+ - Due to (massive) parallel nature of problem - using front/back buffer with commit
+ - Concentration => Molecule (val, adjust)
+
+2.4 Concentration Volume
+ - Lots of Concentrations that can directly interact (enzymes) - (fast interaction)
+ - multi-volume context and interaction - extra-cellular-space? - (slow interaction)
+ - nested volumes ??
+ - eventual special (sense/action) volumes (maybe enzymes) for interaction with world
+
+===================================================================
+Old Notes
+Chem Conc Engine
+
+* Main Clock / FB
+  - update interval
+    - variable (sub processes) ?
+
+* chem 
+  - 2d structure but expandable to (N`d)
+  - chem structure + physical map
+  - periodic table  = affiliation strengths?
+   - active sites 
+
+* active sites 
+  - Part A/B - m1=(base) m2=(active)
+  - Sub matches.. (other chems active sites)
+  
+* Cells 
+  -  (isolated) mix of conc's
+  - expandable & nestable (organelle's vs skeletal)
+  - chem process (reactions)
+
+* chem process
+  - (core) has full access to cell energy + chems
+  - expander class's 
+    - (size,pos) - relative to parent cell ?
+    - 
+  - multiple match reactants (O),(A,B,C ..)
+  - chem ops on cell
+
+* chem ops (core)
+  - conditional on (A,B,C ..) / cell.energy
+  - scale on (A,B,C ..) / cell.energy
+  - split (ABCD)= AD+BC
+  - join  (A,B,C..) = ABC.. (or ACB?)
+  - endo (J)/exo (S) thermic? (energy (E), temp (T) , charge (Q)
+
+  
+  
+-----------------------------
+TODO 1. chem structure
+ -----------------------------
+ Done
+   - 2d but expandable to (N`d)
+   - chem structure 
+   - physical map  
+    - periodic table  = affiliation strengths (for rotation)
+		- rot masks
+    - Base Concentration - buffer Template
+    - ConcentrationVolume 
+      - add/test/take chemicals
+  -----------------------------------
+  Later..				
+	- streams based log handler  		
+    - peps sharing position - with energy penalty
+  -----------------------------------
+  - ?? 0bX..... = 2x127 sets  (OR) 0bXX.... = 4x64 sets 
+  - active elements ... 0bXXsstttt  .. match 0bYYsseett 
+  - ss = match.strength = 0-3
+  - eett = match. energy/temp deltas = (0-3) = { -1,0,1,2 }  
+  ==================================
+  - think about matches ..  
+  ==================================
+  - thermodynamics = energy,temp
+  - conc.volume-> match.CACHE (strength,delta energy/temp)
+    - clean .. check each A/B .. if not in CV then remove from cache
+  - conc.root.process
+    -- for all other -> conc.match
+
+    =======================
+  - console
+    =======================
+
+    =======================
+  - conc.match (c2); (M1, M2)
+    =======================
+    - for each (pos,rot) = 
+    - collis.map = (each cell=) empty, (exposed/active) = matched /unmatched , inactive/hidden
+      - check collis, check both have active cells 
+      - for each peptite 
+        - peptide.match (A,B)
+        - endo/exo thermic ?
+        - pep match strength/energy
+      - overall M1-M2 reaction  = strength, delta energy, delta temp  (cached) 
+        - M1-M2 reactioe.threshold ?? (use TEMPERATURE ??)
+        - eg. mole.reac.streanth = 10  (temp > -10)   
+        
+    =======================
+  - peptide pair interacton - eg : void Molecule::testrot(void)
+    =======================
+  - pep reaction/interaction : activ temperature, dela enrgy, delta temp
+  - activ temp (AT) = sum pep.match
+  
+  - ?? match pep vs code peps ??
+  - multiple match reactants (O),(A,B,C ..)
+    - sub (match) process..
+    
+  ============================
+  - IPC / multithread
+  - multi-conc or multi-vols ??
+  ============================
+  - shmem - pages
+    - *object = *page, (OBJ) *obj
+    - page.mutex / open.r/w close.r/w
+
+  - mult-vol
+  - each conc = is it own thread - and shared mem with conv.vol
+  - conc = <pageitem> (page, (conc*) list.head)
+  	- ie.. each ConcVol has its own r/w mutx ??
+    - conc.vol commit = main shm/write
+    - 
+=================
+[Z--- -QqR] <- REACT BITS  
+=================
+---------------   
+(R) ROT BIT (0-3)
+---------------   
+[---- ---R](1) (new pep) 
+[---- ---R](2) (tail)
+---------------   
+	if (R1=0)||(R2=0)||(Q1=0)||(Q2=0) rot=0
+	else (R1,R2,Q1,Q2=1) (F!=0)
+	if (q1=q2) ie (F=-1)(same/repel) then ROT=2
+		if q1=0 then ROT=1
+		if q2=1 then ROT=3
+	
+---------------------------------------------
+Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[2]
+Peptide[0x7FFF153B5140].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5150].[0].[0].rot[1]
+Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[1]
+Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[3]
+Peptide[0x7FFF153B5110].dump =>[00000011]->sig(0x3())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[3]
+Peptide[0x7FFF153B5140].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5150].[0].[0].rot[2]
+Peptide[0x7FFF153B5110].dump =>[00000111]->sig(0x7())PeptidePos[0x7FFF153B5120].[0].[0].rot[0]
+::int test_rot().X.addpep(Y) ==> X.Rot[2]
+Tally.rot[0]=[60]
+Tally.rot[1]=[1]
+Tally.rot[2]=[2]
+Tally.rot[3]=[1]
+---------------------------------------------
+With this model rotations are rare, and early terminations possible. 
+
+---------------   
+(Qq) CHARGE BITS
+---------------   
+0b[---- -qQ-]
+---------------   
+Q = charged / pep charge
+q = polarity (0=-) (1=+) / 
+  = creates overall region charge
+
+---------------------
+(F) CHARGE AFFINITY (-1,0,1) F = 
+---------------------
+[---- -qQ-]
+[---- -qQ-]
+---------------------
+   if (Q1=0 or Q2=0) - (F=0),  ie neutral(0,x)  
+elseif (q1 != q2)	- (F=+1), ie opposites (+/-) (attract) 
+elseif (q1 == q2)	- (F=-1), ie same(-/-)     	(repel)
+
+-------------
+(E+) ENERGY DELTA
+-------------
+E+ = F x reaction rate
+   = (+F)= (join)=(exo)(E+),  (split)=(endo)(E-)
+   = (-F)= (join)=(endo)(E-), (split)=(exo)(E+)
+   = (0) = no energy change
+
+---------------
+(Z) REACTIVE/MATCH BIT 
+---------------
+[Z--- ----]
+[Z--- ----]
+if (Z1) (test) (~Z2) ..
+====================================================================
+
+[0--- ----] GENE(store)
+[1--- ----] PROTIEN(funcs) -> match-map 
+
+[Z--- -QqR] <- REACT BITS 
+[Z--- -QqR] <- REACT BITS
+[0-xx x---] <- DATA BITs (3xbits/pep) (8xgroups)
+[00xx x---] Start
+[Z1xx x---] end
+
+xxx			(simple opcodes)
+xxx xxx 	(more ad
+xxx xxx ...
+
+NB: CLI = (*core, menus, display)
+
+ConcEngine 
+  - enz_func    =(Name, Molecule* (func(vm*, argc , argv))
+  - opcode_func =(Opcode*, (func(vm*, argc , argv))
+  - help files (help/*.txt)
+  
+  --------------------------
+  - conc_func(Name, Opcode*, Molecule*, (int=enzf(VM *vm, argc , argv)) (+ how to encode/transcribe??)
+  --------------------------
+  - bound (mole/opcode) via CLI 
+  
+	
+---- match_funcs (enz) 
+  -- (vs) opcode (VM) 
+  -- think about transcode/script
+  -- ConcEngine
+-----
+
+-- port cli cmds???
+	- start VM commands .. callbacks ?
+
+3.  funcs - (if match then while (load payload) {execute payload })
+		- transcribe(payload) 
+
+
+
+  
+  
+

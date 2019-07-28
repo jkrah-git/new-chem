@@ -1,0 +1,108 @@
+#### Start: results/grid.sh 3 10 (Fri Jul 19 21:17:14 AEST 2019(
+# WORLD_BASE=default.chem
+f moles/moles2
+f screens
+screen vm
+mole ld 4
+eng run addenz noop
+#### Loop
+world add 0 0
+f cellsetup
+world add 0 1
+f cellsetup
+world add 0 2
+f cellsetup
+world add 0 3
+f cellsetup
+world add 0 4
+f cellsetup
+world add 0 5
+f cellsetup
+world add 0 6
+f cellsetup
+world add 0 7
+f cellsetup
+world add 0 8
+f cellsetup
+world add 0 9
+f cellsetup
+world add 0 10
+f cellsetup
+world add 1 0
+f cellsetup
+world add 1 1
+f cellsetup
+world add 1 2
+f cellsetup
+world add 1 3
+f cellsetup
+world add 1 4
+f cellsetup
+world add 1 5
+f cellsetup
+world add 1 6
+f cellsetup
+world add 1 7
+f cellsetup
+world add 1 8
+f cellsetup
+world add 1 9
+f cellsetup
+world add 1 10
+f cellsetup
+world add 2 0
+f cellsetup
+world add 2 1
+f cellsetup
+world add 2 2
+f cellsetup
+world add 2 3
+f cellsetup
+world add 2 4
+f cellsetup
+world add 2 5
+f cellsetup
+world add 2 6
+f cellsetup
+world add 2 7
+f cellsetup
+world add 2 8
+f cellsetup
+world add 2 9
+f cellsetup
+world add 2 10
+f cellsetup
+world add 3 0
+f cellsetup
+world add 3 1
+f cellsetup
+world add 3 2
+f cellsetup
+world add 3 3
+f cellsetup
+world add 3 4
+f cellsetup
+world add 3 5
+f cellsetup
+world add 3 6
+f cellsetup
+world add 3 7
+f cellsetup
+world add 3 8
+f cellsetup
+world add 3 9
+f cellsetup
+world add 3 10
+f cellsetup
+#### End
+world commit
+world list vol
+#### End: results/grid.sh 3 10 (Fri Jul 19 21:17:14 AEST 2019(
+
+# fill cahche
+world tick .00001 1
+# x1000
+world tick .00001 1000
+# x10000
+world tick .00001 10000
+quit

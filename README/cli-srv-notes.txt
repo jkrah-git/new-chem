@@ -1,0 +1,16 @@
+
+## basic daemon overview
+
+mole_d
+- mole_db 
+- shared mem (mole_list)
+
+world_d
+- world_db
+- engine controller
+
+engine_d
+- (localised) vols
+- fork sheduler
+
+## 

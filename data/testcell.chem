@@ -1,0 +1,44 @@
+# testcell
+screen vm
+eng ldr 0
+# thse should all be moved to vm commands
+mole ld 0
+conc fromvol
+conc push
+# ------- +1
+conc set 0 1
+cell applyconc
+vol list
+cell dump
+# ------- -1
+conc set 0 -1
+cell applyconc
+vol list
+cell dump
+# ------- -1 again
+conc set 0 -1
+cell applyconc
+vol list
+cell dump
+# conc set 0 -1
+# cell applyconc
+#
+vol clear
+cell commit
+# ---------
+conc set 0 1
+cell applyconc
+vol commit
+vol list
+# ---------
+conc set 0 -2
+cell applyconc
+vol list
+# ---------
+cell applyconc
+vol list
+vol maxcommit
+# ---------
+# conc set 0 -2
+# cell applyconc
+

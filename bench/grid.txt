@@ -1,0 +1,39 @@
+# each cell has 2 vols with 3 conc each (4/0/1) (4/2/3)
+#############################
+[jkrah@desktop src]$ results/grid.sh 3 3 > data/grid.chem
+[jkrah@desktop src]$ ../cli/chem.proj 'f grid' | grep -B1  'CPU'
+world.run_world (x1) took ..
+0.000 (sec) Real Time and 0 (msec) CPU Time
+--
+world.run_world (x1000) took ..
+0.000 (sec) Real Time and 210 (msec) CPU Time
+--
+world.run_world (x10000) took ..
+2.000 (sec) Real Time and 2020 (msec) CPU Time
+
+
+#############################
+[jkrah@desktop src]$ results/grid.sh 3 10 > data/grid.chem
+[jkrah@desktop src]$ ../cli/chem.proj 'f grid' | grep -B1  'CPU'
+world.run_world (x1) took ..
+0.000 (sec) Real Time and 0 (msec) CPU Time
+--
+world.run_world (x1000) took ..
+0.000 (sec) Real Time and 210 (msec) CPU Time
+--
+world.run_world (x10000) took ..
+2.000 (sec) Real Time and 2390 (msec) CPU Time
+
+#############################
+[jkrah@desktop src]$ results/grid.sh 3 100 > data/grid.chem
+[jkrah@desktop src]$ ../cli/chem.proj 'f grid' | grep -B1  'CPU'
+world.run_world (x1) took ..
+0.000 (sec) Real Time and 0 (msec) CPU Time
+--
+world.run_world (x1000) took ..
+0.000 (sec) Real Time and 230 (msec) CPU Time
+--
+world.run_world (x10000) took ..
+2.000 (sec) Real Time and 1980 (msec) CPU Time
+
+#############################

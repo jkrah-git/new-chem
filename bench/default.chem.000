@@ -1,0 +1,19 @@
+# ------------------------------
+# Welcome to chems..
+# loading (screens and simplepeps..
+# ------------------------------
+f moles/moles2
+f screens
+# f concdisp
+screen vm
+# -----------------------------
+mole ld 4
+eng run addenz noop
+# -----------------
+## world add 0 0
+## f cellsetup
+#
+## world commit
+## world list vol
+# -----------------
+# world tick .1

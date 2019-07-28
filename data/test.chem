@@ -1,13 +1,30 @@
-# basic 1U mole
-mole push
-pep push 0x41 0x41 0x41 0x42 0x67 0x3f
-mole build
-stack clear pep
+screen vm
+screen vm render match
 
-# new conc
+### M8
+# mole push
+# mole addpep 0x81 0x81 0x83
+
+# enzyme 
+eng run addenz noop
+vol addmole 1
+mole getenz
+
+# base chem
+mole ld 6
+vol addmole 1
+
+vol commit
 conc push
-conc adj 1 0
-conc tovol
-conc pop
-conc fromvol
+conc adj -10
+# ----------------------------------
+eng runvol .1
 
+# loop this bit
+# try to remove M6(Passive)
+conc tovol
+eng runvol .1
+eng runvol .1
+eng runvol .1
+vol addmole 1
+eng runvol .1

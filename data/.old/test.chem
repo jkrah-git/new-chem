@@ -1,0 +1,41 @@
+# basic 1U mole
+
+## create a new empty mole on stack (and selected)
+mole push
+# stack dump mole = Molecule[0x10B54D0]
+# dump regs       =     mole[0x10B54D0]
+# dump mole
+
+## push some peps onto stack
+pep push 0x41 0x41 0x41 0x42 0x67 0x3f
+# stack dump pep
+
+mole build
+# dump mole
+
+stack clear pep
+# stack dump pep
+
+# new conc
+conc push
+# dump conc - it contains (M1) mole but no conc
+conc adj 1 0
+# dump conc - it now has conc
+conc tovol
+# dump conc = Concentration[0x22341C0].mole[0x2229960]
+# dump vol  = Concentration[0x2234920].mole[0x22347F0]
+
+# remove conc from stack
+conc pop
+
+# load onc from vol
+conc fromvol  
+
+# dump conc = Concentration[0x2234920].mole[0x22347F0]
+# dump vol = Concentration[0x2234920].mole[0x22347F0]
+
+## clearing
+stack clear all
+clear all
+dump regs
+stack dump

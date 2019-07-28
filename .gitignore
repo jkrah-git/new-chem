@@ -1,6 +1,3 @@
-Release/*
-Debug/*
-.settings/*
 *.swp
-out.txt
-.cproject
+data/bench/*.*
+bench/outputs/*.*

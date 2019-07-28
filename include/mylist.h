@@ -5,7 +5,6 @@
  *      Author: jkrah
  */
 
-
 #ifndef MYLIST_H_
 #define MYLIST_H_
 //==========================================================
@@ -14,17 +13,10 @@
 
 //#define DEBUG
 #include "../include/debug.h"
-
-
 //#ifdef LOG
 //#undef LOG
 //#endif
 
-//#ifdef DEBUG
-//#define LOG printf("##-- %s.", __PRETTY_FUNCTION__); printf
-//#else
-//#define LOG if (false) printf
-//#endif
 //---------------------------------------------
 template <class T> class mylist {
 
@@ -41,11 +33,13 @@ public:
 		virtual ~mylist_item(){		item = NULL; prev = NULL; next = NULL; }
 		// --------------------------------------
 		void 		dump(void) {
+			/*
 			printf("mylist_item[0x%zX].item[0x%zX].next[0x%zX].prev[0x%zX] ->",
 					(long unsigned int) this,
 					(long unsigned int) item,
 					(long unsigned int) next,
 					(long unsigned int) prev);
+			*/
 			if (item==NULL) printf("NULL\n");
 			else item-> dump();
 		}
@@ -93,22 +87,22 @@ public:
 
 	//---------------
 	// ---
+
 	mylist(); //{ mylist(true); };
 	mylist(bool _auto);
 	virtual ~mylist();
 	mylist_item<T>	*gethead(void){ return head; };
 	mylist_item<T>	*gettail(void){ return tail; };
-	//mylist_item<T>	*getpar(mylist_item<T> *list_item);
-
 
 	void 		dump(void);
-
+	void		init(void){ 	autoalloc = true; head = NULL;	tail = NULL;	 };
 	// --------------------
 	//void		clear(bool do_subitem);
 	//void			clear(void){ clear(false); };
 	int				count();
 	void			clear();
 	mylist_item<T> 	*add(void);
+	//mylist_item<T> 	*count(int c);
 	mylist_item<T> 	*add(T *element){ return add(element, false); };
 	//mylist_item<T> 	*del(mylist_item<T> *item, bool do_subitem);
 	mylist_item<T> 	*del(mylist_item<T> *item); //'{	return del(item, false);	}
@@ -125,18 +119,24 @@ private:
 	mylist_item<T>	*head;
 	mylist_item<T>	*tail;
 	bool			autoalloc;
+	int				counter;
 
 	//-----
 	mylist_item<T> 	*add(T *element, bool ignore_auto);
 
 };
+
+// --------------------------
 //---------------------------------------------
 template <class T> mylist<T>::mylist() {
 	//PRINT("constructor..\n");
 	autoalloc = true; head = NULL;	tail = NULL;
+	counter = 0;
+	//init();
 };
 template <class T> mylist<T>::mylist(bool _auto) {
 	autoalloc = _auto; head = NULL;	tail = NULL;
+	counter = 0;
 };
 template <class T> mylist<T>::~mylist() {	clear();	};
 
@@ -161,8 +161,9 @@ template <class T> mylist<T>::~mylist() {	clear();	};
 	return parent;
 }
 */// --------------------------
-// --------------------------
 template <class T> int mylist<T>::count() {
+	return counter;
+
 	int c=0;
 	mylist_item<T>	*item = head;
 	while (item!=NULL) {
@@ -194,6 +195,7 @@ template <class T> void mylist<T>::clear() {
 		del_item = head;
 	}
 	tail = NULL;
+	counter = 0;
 };
 // --------------------------	// --------------------------
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(void) {
@@ -242,6 +244,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::add(T *element, bool ig
 		tail = new_item;
 
 	}
+	counter++;
 	return new_item;
 };
 // --------------------------
@@ -288,7 +291,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 	} else { // not head
 		parent = del_item-> prev;
 		if (parent==NULL) {
-			PRINT("!!! Warning - del_item's parent not found in list...\n");
+			PRINT("ERR: del_item's parent not found in list...\n");
 			return NULL;
 		}
 	}
@@ -321,6 +324,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 
 	LOG("free[0x%zX].listitem\n", (long unsigned int) del_item);
 	delete del_item;
+	counter--;
 	return parent;
 
 }
@@ -330,7 +334,7 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::del(mylist<T>::mylist_i
 
 
 template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *start, int steps){
-	if (steps==0) return start;
+	//if (steps==0) return start;
 	mylist_item<T> *item = NULL;
     int c = steps;
 
@@ -341,11 +345,12 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 			item = item-> prev;
 		}
 	} else {
-		// steps>0
+		// steps>=0
 		if (start==NULL) start = head;
 		item = start;
-		while ((item!=NULL) && (c-->0)) {
+		while ((item!=NULL) && (c>0)) {
 			item = item-> next;
+			c--;
 		}
 	}
 	return item;
@@ -354,16 +359,15 @@ template <class T> mylist<T>::mylist_item<T> *mylist<T>::offset(mylist_item<T> *
 
 // --------------------------
 template <class T> void mylist<T>::dump(void) {
-
+	/*
 	char ch;
 	if (autoalloc) ch='A';
 	else ch = 'M';
-
 	printf("mylist[0x%zX].dump.head[0x%zX].tail[0x%zX].auto[%c]\n",
 			(long unsigned int) this,
 			(long unsigned int) head,
 			(long unsigned int) tail, ch);
-
+*/
 	if (head!=NULL) {
 		//printf("\n");
 		mylist_item<T>	*item = head;
@@ -371,7 +375,7 @@ template <class T> void mylist<T>::dump(void) {
 			item-> dump(); 	printf("\n");
 			item = item-> next;
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 };
@@ -423,9 +427,9 @@ template <class T> void mylist<T>::test(T *e1, T *e2, T *e3) {
 	printf("mylist.test: pre: ");	dump(); //printf("\n");
 	//------------
 	mylist_item<T> *newitem = NULL;
-	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) NL}
-	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) NL}
-	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) NL}
+//	if (e1!=NULL) { printf("mylist.test:add(&e1) : "); newitem = add(e1); DUMP(newitem) NL}
+//	if (e3!=NULL) { printf("mylist.test:add(&e2) : "); newitem = add(e2); DUMP(newitem) NL}
+//	if (e2!=NULL) { printf("mylist.test:add(&e3) : "); newitem = add(e3); DUMP(newitem) NL}
 
 	/*
 	dump(); // printf("\n");
