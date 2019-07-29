@@ -25,20 +25,30 @@ struct ShMemBlock {
 // --------------------------------------------
  */
 
-
+// --------------------------------------------
 class ShMemMoleHeap {
 private:
-	ShMemArray<Peptide>			pep_array;
-	ShMemArray<ShMemBlock>		mole_array;
-
+	ShMemBlockHeap<Peptide>		pep_heap;
 public:
+	//--------------
 	ShMemMoleHeap();
 	virtual ~ShMemMoleHeap();
 	void	dump(void);
-	int		create_infos(char *name, int mole_page_size, int pep_page_size);
-	int		new_mole(int size, ShMemBlock *block);
-	int		get_mole(int id, ShMemBlock *block);
-	Peptide	*get_pepheap(ShMemBlock *block);
+	int		create(char *name, int mole_page_size, int pep_page_size);
+	int		open(char *name);
+	void	destroy(void);
+/*
+ * 	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
+	ShMemBlock *get_block(int id);
+	T			*get_item(ShMemBlock *block);
+ */
+	ShMemBlock				*get_mole(Molecule *mole);
+	ShMemBlock				*get_mole(int id);
+	ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
+	Peptide					*get_pepheap(ShMemBlock *block);
 };
+// --------------------------------------------
+
+
 
 #endif /* SHMEMMOLEHEAP_H_ */

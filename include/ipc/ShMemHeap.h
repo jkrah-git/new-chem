@@ -575,12 +575,14 @@ template <class T> T *ShMemArray<T>::read(int page, int src){
 }
 
 // --------------------------------------------
-
+// ===============================================================================================================================
 template <class T> class ShMemBlockHeap {
 private:
 	ShMemArray<T>			item_array;
 	ShMemArray<ShMemBlock>	block_array;
 
+	ShMemBlock	*find_block(int item_page, int offset);
+	int		find_free_block(int page, int size);
 public:
 	ShMemBlockHeap();
 	virtual ~ShMemBlockHeap();
@@ -589,12 +591,10 @@ public:
 	int		open(char *name);
 	void 	destroy(void);
 	//-------------
-	ShMemBlock	*find_block(int item_page, int offset);
-	int		find_free_block(int page, int size);
-	//int		new_block(int size, ShMemBlock *block);
-	int		new_block(int size, T *item_data);
+	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
 	ShMemBlock *get_block(int id);
 	T			*get_item(ShMemBlock *block);
+	T			*get_item(int block_id);
 };
 
 //----------------------------------------------
@@ -670,14 +670,16 @@ template <class T>ShMemBlock *ShMemBlockHeap<T>::find_block(int item_page, int o
 	mylist<ShMem>::mylist_item<ShMem> *block_page_item = block_array.shmem_list.gethead();
 	while (block_page_item!=NULL) {
 
+
 		ItemFrame<ShMemBlock> *block_frame =  (ItemFrame<ShMemBlock> *) block_page_item->item->get_ptr();
 		if (block_frame!=NULL) {
 			for (int i=0; i < block_info->page_size; i++) {
 				ItemFrame<ShMemBlock> *f = &block_frame[i];
+				//PRINT("test frame[%d] :", i); f-> dump();
 				if ((f->id >=0) &&
 					(item_page ==   f->item.page) &&
 					(offset >= 		f->item.start) &&
-					(offset <  		f->item.start + block_frame->item.size)) {
+					(offset <  		f->item.start + f->item.size)) {
 					return &f->item;
 				}
 			}
@@ -733,13 +735,13 @@ template <class T>int ShMemBlockHeap<T>::find_free_block(int item_page, int size
 
 //----------------------------------------------
 // -1 = bad_info, -3 bad size, -4 new_page_err
-template <class T>int ShMemBlockHeap<T>::new_block(int size, T *item_data){
+template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size, T *item_data){
 	ShMemArrayInfo *block_info = block_array.get_info();
 	ShMemArrayInfo *item_info = item_array.get_info();
-	if ((block_info==NULL)||(item_info==NULL)) return -1;
+	if ((block_info==NULL)||(item_info==NULL)) return NULL;
 	//---------------------
 	//if (block==NULL) return -2;
-	if ((size<1)||(size>= item_info->page_size)) return -3;
+	if ((size<1)||(size> item_info->page_size)) return NULL;
 	// tryo to find best home for new block of items
 
 	//ShMemBlock new_block;
@@ -762,7 +764,7 @@ template <class T>int ShMemBlockHeap<T>::new_block(int size, T *item_data){
 
 	if ((found_page<0) || (found_slot<0)) {
 		T *new_page = item_array.create_bpage();
-		if (new_page==NULL) { PRINT("ERR: item_array.create_bpage returned NULL\n"); return -5; }
+		if (new_page==NULL) { PRINT("ERR: item_array.create_bpage returned NULL\n"); return NULL; }
 		found_slot = 0;
 		found_page  = item_array.shmem_list.count()-1;
 		//found_page = new_page->id;
@@ -773,7 +775,7 @@ template <class T>int ShMemBlockHeap<T>::new_block(int size, T *item_data){
 	ItemFrame<ShMemBlock> *block_frame = block_array.add_item(NULL);
 
 
-	if (block_frame==NULL) { PRINT("block_array.add_item failed..\n"); return -4; };
+	if (block_frame==NULL) { PRINT("block_array.add_item failed..\n"); return NULL; };
 	block_frame->item.page = found_page;
 	block_frame->item.start = found_slot;
 	block_frame->item.size = size;
@@ -781,7 +783,7 @@ template <class T>int ShMemBlockHeap<T>::new_block(int size, T *item_data){
 	PRINT(" ---- FINAL block_frame -->\n"); 	block_frame->dump();
 
 
-	return block_frame->id;
+	return block_frame;
 
 }
 //----------------------------------------------
@@ -798,6 +800,7 @@ template <class T>ShMemBlock *ShMemBlockHeap<T>::get_block(int id){
 
 // int
 // T		*get_item(ShMemBlock *block);
+//----------------------------------------------
 
 template <class T>T *ShMemBlockHeap<T>::get_item(ShMemBlock *block){
 	ShMemArrayInfo *block_info = block_array.get_info();
@@ -823,8 +826,16 @@ template <class T>T *ShMemBlockHeap<T>::get_item(ShMemBlock *block){
 	return &item_array[block->start];
 
 }
+//----------------------------------------------
 
-
-
+template <class T>T *ShMemBlockHeap<T>::get_item(int block_id){
+	ShMemArrayInfo *block_info = block_array.get_info();
+	ShMemArrayInfo *item_info = item_array.get_info();
+	if ((block_info==NULL)||(item_info==NULL)) return NULL;
+	//---------------------
+	ShMemBlock *block = get_block(block_id);
+	if (block==NULL) return NULL;
+	return get_item(block);
+}
 
 #endif /* SHMEMHEAP_H_ */
