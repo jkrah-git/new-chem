@@ -8,7 +8,7 @@
 #ifndef SHMEMMOLEHEAP_H_
 #define SHMEMMOLEHEAP_H_
 #include "ipc/myshm.h"
-#include "ipc/ShMemHeap.h"
+#include "ipc/ShMemBlockHeap.h"
 #include "chem/Molecule.h"
 
 /*
@@ -42,7 +42,7 @@ public:
 	ShMemBlock *get_block(int id);
 	T			*get_item(ShMemBlock *block);
  */
-	ShMemBlock				*get_mole(Molecule *mole);
+	ItemFrame<ShMemBlock>	*get_mole(Molecule *mole);
 	ShMemBlock				*get_mole(int id);
 	ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
 	Peptide					*get_pepheap(ShMemBlock *block);

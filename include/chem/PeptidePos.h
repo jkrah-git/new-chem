@@ -12,9 +12,8 @@
 // some indexes
 #define PEPPOS_X 	0
 #define PEPPOS_Y 	1
-//#define PEPPOS_ROT 	2
 
-// type = int
+
 typedef int PepPosVecType;
 
 //
@@ -23,7 +22,7 @@ typedef int PepPosVecType;
 // ----------------------------------------------
 class PeptidePos {
 public:
-	PepPosVecType	*dim;
+	PepPosVecType	dim[PepPosVecMax];
 	//----
 	void		init();
 	void		dump();

@@ -11,31 +11,19 @@
 #include "mylist.h"
 #include "common.h"
 
-template <class T> class ShMemArray;
 
-/*
-struct ItemLocation {
-	int 	page;
-	int 	index;
-};
-
-class ShMoleHeap {
-private:
-	ShMemArray<Peptide>	pep_array;
-	ShMemArray<ShMemBlock>	mole_array;
-};
-*/
-
-// --------------------------------------------
-struct ShMemBlock {
-//	int		id;
-	int		page;
-	int		start;
-	int		size; // start+size must be < page_length
-	ShMemBlock() {};
-	void	dump(void) {
-		printf("ShMemBlock[0x%zX] page[%d] start[%d] size[%d] end=(start+size)[%d]\n", (PTR) this, page, start, size, start+size);
+template <class T> struct HexDump {
+	void	dump(T *object) {
+		if (object==NULL) { printf("NULL\n"); }
+		else {
+			unsigned char *p =  (unsigned char *) object;
+			for (int i=0; i< sizeof(T); i++) {
+				printf("%02X ", (unsigned) p[i]);
+			}
+			printf("\n");
+		}
 	}
+
 };
 
 
@@ -56,7 +44,7 @@ struct ShMemArrayInfo {
 				(PTR) this, name, f, num_items, next_id, page_size, num_pages);
 	}
 };
-
+// --------------------------------------------
 template <class T> struct ItemFrame {
 	int		id;
 	T			item;
@@ -387,13 +375,13 @@ template <class T> void ShMemArray<T>::dump_page(int page){
 		ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			ItemFrame<T> *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump(); NL
 		}
 	} else {
 		T *buf =  (T*) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			T *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
+			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump(); NL
 		}
 
 	}
@@ -576,6 +564,7 @@ template <class T> T *ShMemArray<T>::read(int page, int src){
 
 // --------------------------------------------
 // ===============================================================================================================================
+/*
 template <class T> class ShMemBlockHeap {
 private:
 	ShMemArray<T>			item_array;
@@ -591,6 +580,7 @@ public:
 	int		open(char *name);
 	void 	destroy(void);
 	//-------------
+	ItemFrame<ShMemBlock>		*find_block(int size, T *item_data);
 	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
 	ShMemBlock *get_block(int id);
 	T			*get_item(ShMemBlock *block);
@@ -703,22 +693,6 @@ template <class T>int ShMemBlockHeap<T>::find_free_block(int item_page, int size
 	if ((size<0)||(size >= item_info->page_size)) return -3;
 
 
-/****************
-	 ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
-	int n = 0;
-	for (int i=0; i< info->page_size; i++) {
-		ItemFrame<T> *f = &buf[i];
-		printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump();
-		if (f->id <0) {
-			n++;
-			if (n==size) return i-n+1;
-		} else {
-			n=0;
-		}
-	}
-	return -10;
-
-***************/
 	int n=0;
 	for (int i=0; i < item_info->page_size; i++) {
 		ShMemBlock *test_offset = find_block(item_page, i);
@@ -732,7 +706,21 @@ template <class T>int ShMemBlockHeap<T>::find_free_block(int item_page, int size
 	}
 	return -10;
 }
+//----------------------------------------------
+// -1 = bad_info, -3 bad size, -4 new_page_err
+template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::find_block(int size, T *item_data){
+	ShMemArrayInfo *block_info = block_array.get_info();
+	ShMemArrayInfo *item_info = item_array.get_info();
+	if ((block_info==NULL)||(item_info==NULL)) return NULL;
+	//---------------------
+	//if (block==NULL) return -2;
+	if ((size<1)||(size> item_info->page_size)) return NULL;
 
+	for (int i=0; i< block_info->num_pages; i++) {}
+
+
+	return NULL;
+}
 //----------------------------------------------
 // -1 = bad_info, -3 bad size, -4 new_page_err
 template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size, T *item_data){
@@ -837,5 +825,7 @@ template <class T>T *ShMemBlockHeap<T>::get_item(int block_id){
 	if (block==NULL) return NULL;
 	return get_item(block);
 }
+
+*************************/
 
 #endif /* SHMEMHEAP_H_ */

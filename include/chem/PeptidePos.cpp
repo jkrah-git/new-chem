@@ -36,63 +36,50 @@ public:
  */
 PeptidePos::PeptidePos() {
 
-	dim = (PepPosVecType*) malloc (sizeof(PepPosVecType) * PepPosVecMax);
+//	dim = (PepPosVecType*) malloc (sizeof(PepPosVecType) * PepPosVecMax);
 	//LOG("malloc[0x%zX]\n",  (long unsigned int) dim);
 	init();
 }
 // ---------------------
 void PeptidePos::init() {
-	if (dim!=NULL) {
 		for (int i=0; i<PepPosVecMax; i++) {
 			dim[i] = 0;
 		}
-	}
 }
 // ---------------------
 PeptidePos::~PeptidePos() {
 	//printf("::PeptidePos.free[0x%zX]\n",  (long unsigned int) dim);
 	//LOG("free[0x%zX]\n",  (long unsigned int) dim);
-	if (dim!=NULL)  free(dim);
+	//if (dim!=NULL)  free(dim);
 }
 // ---------------------
 void PeptidePos::dump(){
 	printf("PeptidePos[0x%zX].", (long unsigned int) this);
 
-	if (dim==NULL) {
-		printf("NULL");
-	}
-	else {
-		for (int i=0; i<PepPosVecMax; i++) {
-			printf("[%d]", dim[i]);
-			if ((i+1) <PepPosVecMax)
-				printf(".");
-		}
+	for (int i=0; i<PepPosVecMax; i++) {
+		printf("[%d]", dim[i]);
+		if ((i+1) <PepPosVecMax)
+			printf(".");
 	}
 }
 // ---------------------
 PeptidePos &PeptidePos::operator +(const PeptidePos &p) {
-	if ((dim != NULL) && (p.dim != NULL)){
 		for (int i=0; i<PepPosVecMax; i++){
 			dim[i] += p.dim[i];
 		}
-	}
 	return *this;
 }
 // ---------------------
 PeptidePos &PeptidePos::operator +(const PeptidePos *p) {
-	if ((dim != NULL) &&
-		(p != NULL) && 	(p-> dim != NULL)	){
 		for (int i=0; i<PepPosVecMax; i++){
 			dim[i] += p->dim[i];
 		}
-	}
 	return *this;
 }
 
 
 PeptidePos &PeptidePos::operator +(const PepPosVecType* v){
-	if ((dim != NULL) &&
-		(v != NULL) ){
+	if (v != NULL){
 		for (int i=0; i<PepPosVecMax; i++){
 			dim[i] += v[i];
 		}
@@ -101,29 +88,22 @@ PeptidePos &PeptidePos::operator +(const PepPosVecType* v){
 }
 // ---------------------// ---------------------
 PeptidePos &PeptidePos::operator =(const PeptidePos &p) {
-	if ((dim != NULL) && (p.dim != NULL)){
 		for (int i=0; i<PepPosVecMax; i++){
 			dim[i] = p.dim[i];
 		}
-	}
 	return *this;
 }
 //PeptidePos& operator =(const PepPosVecType *v);
 // ---------------------// ---------------------
 PeptidePos &PeptidePos::operator =(const PepPosVecType *v) {
-	if (dim!=NULL ){
-		for (int i=0; i<PepPosVecMax; i++){
-			if (v==NULL) dim[i] = 0;
-			else		 dim[i] = v[i];
-		}
+	for (int i=0; i<PepPosVecMax; i++){
+		if (v==NULL) dim[i] = 0;
+		else		 dim[i] = v[i];
 	}
 	return *this;
 }
 // ---------------------
 bool PeptidePos::operator ==(const PeptidePos& p) {
-	//printf("PeptidePos::operator1 ==\n");
-	//if ((dim==NULL) || (p.dim==NULL)) return false;
-
 	for (int i=0; i<PepPosVecMax; i++) {
 		//printf("PeptidePos::operator2 == [%d]==[%d]\n", dim[i], p.dim[i]);
 		if (dim[i] != p.dim[i])

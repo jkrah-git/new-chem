@@ -204,7 +204,7 @@ int	cli_mole_build(Concentration_CLI *cli, int argc, char **argv){
 	int c=0;
 	mylist<Peptide>::mylist_item<Peptide>  *item = cli->local_vm. peptide_stack.gethead();
 	while ((item!=NULL) && (item-> item!=NULL)) {
-		r = cli->local_vm. mole->addpep(item-> item-> get());
+		r = cli->local_vm. mole->addpep(item-> item-> getsig());
 		if (r<0) { LOG("addpep = [%d]\n", r); }
 		else { c++; }
 		// ---

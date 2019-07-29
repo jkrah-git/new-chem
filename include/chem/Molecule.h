@@ -62,6 +62,8 @@ public:
 	int			rand(int count, int tries, PepSig min, PepSig max);
 	PepAffinity 	affinity(void);
 
+	int			build(PepSig *array, int size);
+
 };
 // -------------------------------
 

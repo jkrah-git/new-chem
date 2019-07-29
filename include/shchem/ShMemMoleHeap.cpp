@@ -46,14 +46,61 @@ int	ShMemMoleHeap::open(char *name) {	return pep_heap.open(name);	}
 // --------------------------------------------
 void ShMemMoleHeap::destroy(void){	pep_heap.destroy();	}
 // --------------------------------------------
+//ItemFrame<ShMemBlock> 	*get_mole(Molecule *mole);
+ItemFrame<ShMemBlock> *ShMemMoleHeap::get_mole(Molecule *mole){
+	if (mole==NULL) return NULL;
+	int pc = mole->pep_list.count();
+	if (pc <1) return NULL;
+
+	Peptide *array = (Peptide*) malloc(sizeof(Peptide)* pc);
+	if (array==NULL) {
+		PRINT("Maloc(size(%ld)x count(%d) failed..\n", sizeof(Peptide),pc); return NULL;
+	}
+
+	int c=0;
+	mylist<Peptide>::mylist_item<Peptide> *next_item = mole-> pep_list.gethead();
+	while (next_item !=NULL) {
+		//PRINT("item="); DUMP(next_item-> item); NL
+		if (next_item-> item !=NULL) {
+			//array[c++].pos = next_item-> item->pos
+			memcpy(&array[c], next_item-> item, sizeof(Peptide));
+			PRINT("array[%d] =", c);  array[c].dump(); NL
+			c++;
+		}
+		//--------
+		next_item = next_item->next;
+	}
+	ItemFrame<ShMemBlock> *result = NULL;
+	if (c==pc) {
+		result = pep_heap.find_block(pc, array);
+	}
+	else {
+		PRINT("ERR: array.count[%d] != peplist.count[%d]\n", c, pc);
+	}
+
+	free(array);
+	return result;
+}
+
+//ShMemBlock				*get_mole(int id);
+//Peptide					*get_pepheap(ShMemBlock *block);
+
+// --------------------------------------------
+//ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
 ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 	if (mole==NULL) return NULL;
 //	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
 	int size = mole->pep_list.count();
 	if (size<1) return NULL;
+
+	ItemFrame<ShMemBlock>	*search_mole = 	get_mole(mole);
+	if (search_mole!=NULL) return search_mole;
+
+
+
 	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size, NULL);
 	if (mole_block==NULL) { PRINT("new_block failed..\n"); return NULL; }
-	Peptide *heap = pep_heap.get_item(mole_block->id);
+	Peptide *heap = pep_heap.get_items(mole_block->id);
 	if (heap==NULL) { PRINT("get_item failed..\n"); return NULL; }
 
 	int c=0;

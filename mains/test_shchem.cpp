@@ -2,7 +2,7 @@
 #include <string.h>
 #include "debug.h"
 #include "ipc/myshm.h"
-#include "ipc/ShMemHeap.h"
+#include "ipc/ShMemBlockHeap.h"
 #include "chem/Molecule.h"
 #include "shchem/ShMemMoleHeap.h"
 
@@ -34,7 +34,47 @@ int main(int argc, char **argv) {
 	if (argc>1) {
 		if (strcmp(argv[1], "destroy")==0) 	{	mole_heap.destroy(); }
 		//-------------
+		if (strcmp(argv[1], "table")==0) 	{	dump_peptide_table(); }
+		//-------------
+		if (strcmp(argv[1], "add_mole")==0)	{
+
+				PepSig array[] = { 0x01, 0x02, 0x03 };
+				Molecule mole;
+				int r = mole.build(array, 3);
+				PRINT("mole.build = [%d]\n",r );
+				mole.dump();
+
+				ItemFrame<ShMemBlock> *block = mole_heap.new_mole(&mole);
+				PRINT("mole_heap.new_mole = [0x%zX]\n", (PTR) block );
+				DUMP(block);
+		}
+		//-------------
+		//-------------
+		if (strcmp(argv[1], "find_mole")==0)	{
+
+				PepSig array[] = { 0x01, 0x02, 0x03 };
+				Molecule mole;
+				int r = mole.build(array, 3);
+			//	PRINT("mole.build = [%d]\n",r );
+			//	mole.dump();
+
+
+				ItemFrame<ShMemBlock> *block = mole_heap.get_mole(&mole);
+				PRINT("mole_heap.get_mole = [0x%zX]\n", (PTR) block );
+				DUMP(block);
+		}
+		//-------------
 	}
+
+	/*
+	ShMemBlock				*get_mole(Molecule *mole);
+	ShMemBlock				*get_mole(int id);
+	ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
+	Peptide					*get_pepheap(ShMemBlock *block);
+	*/
+
+
+
 	return 0;
 }
 

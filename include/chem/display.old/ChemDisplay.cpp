@@ -335,12 +335,12 @@ Peptide *ChemDisplay::draw_pep(ChemScreen *screen, ChemDisplayCoords *coords, Pe
 
 
 	char str[64];
-	sprintf(str, "0x%x", pep-> get());
+	sprintf(str, "0x%x", pep-> getsig());
 	gfx.color(200,200,200);
 	gfx.text(str,x-gfx.line_height/2,y+gfx.line_height/2);
 
 	// list pep deails also
-	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> get(), pep->pos.dim[PEPPOS_X], pep->pos.dim[PEPPOS_Y], pep->rot);
+	sprintf(str, "sig[0x%x].pos[%d,%d].rot[%d]", pep-> getsig(), pep->pos.dim[PEPPOS_X], pep->pos.dim[PEPPOS_Y], pep->rot);
 	gfx.printg(str);
 
 	//-------------
@@ -938,7 +938,7 @@ void ChemDisplay::draw_peplist(ChemScreen *screen, Concentration_CLI *cli, ChemP
 		//	else txtcol = peplistDisplay->col;
 
 			//txtcol.set(col-> r, col-> g, col-> b);
-			sprintf(label, "[0x%X]", pep_item-> item->get());
+			sprintf(label, "[0x%X]", pep_item-> item->getsig());
 			c++;
 			pep_item = pep_item-> next;
 		} else {

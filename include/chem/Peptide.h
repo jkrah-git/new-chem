@@ -41,13 +41,12 @@ public:
 	// TODO X99: if really going public then rm these setter/getters
 //	void  		set(PepSig newsig) { sig = newsig; };
 	void  		setrot(PepRot newrot) { rot = newrot; };
-	PepSig 		get(){	return sig;	};
+	PepSig 		getsig(){	return sig;	};
 	PepRot		getrot(void){	return rot;	}
-
-
 	void		setpos(PepPosVecType posx, PepPosVecType posy);
 	void		setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot);
 	PepPosVecType	*getpos(void); //{ return pos.pos; };
+
 	bool		testpos(Peptide *pep) { return pos == pep-> pos; }
 	bool		testpos(PeptidePos *_pos) { return (pos == *_pos); };
 	//--------------------------------
@@ -75,9 +74,9 @@ public:
 	void 		print(void);
 	void		dump(void);
 //	void		test(void);
-	void 		dump_table(void);
 };
 // -----------------------
+void 		dump_peptide_table(void);
 
 
 // ----------------------- // -----------------------

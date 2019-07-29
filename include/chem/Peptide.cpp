@@ -91,10 +91,8 @@ void Peptide::print(void){
 }
 
 void Peptide::setpos(PepPosVecType posx, PepPosVecType posy){
-	if (pos.dim!=NULL)	{
 		pos.dim[PEPPOS_X] = posx;
 		pos.dim[PEPPOS_Y] = posy;
-	}
 }
 void Peptide::setpos(PepPosVecType posx, PepPosVecType posy, PepRot rot){
 	setpos(posx, posy);
@@ -281,11 +279,12 @@ bool Peptide::operator ==(const Peptide& p) {
 	return ((sig == p.sig) && (pos==p.pos));
 }
 // ---------------------// ---------------------
-void Peptide::dump_table(void){
+void dump_peptide_table(void){
 
 	for (int a=0; a<256; a++) {
 		for (int b=0; b<256; b++) {
 			Peptide p(a);
+
 			//Pa.sig = a;
 			//Pb.sig = b;
 			// PepRot 		get_rot(PepSig tail_sig);
@@ -293,7 +292,7 @@ void Peptide::dump_table(void){
 
 			//PepAffinity get_affinity(PepSig _sig);
 			PepAffinity		aff =  p.get_affinity((PepSig) b);
-			printf("pepa=0x%x pepb=0x%x rot=%d aff=%f\n", a, b, rot, aff);
+			printf("pepA:0x%.2x pepB:0x%.2x rot:%d aff:%f\n", a, b, rot, aff);
 
 		}
 	}

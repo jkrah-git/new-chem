@@ -81,7 +81,7 @@ void Molecule::print_short(int num_pep){
 			if ((pep_item == NULL)|| (pep_item-> item == NULL)) {
 				printf("[    ]");
 			} else {
-				printf("[0x%.2x]", pep_item->item-> get());
+				printf("[0x%.2x]", pep_item->item-> getsig());
 				pep_item = pep_item->next;
 			}
 		} //next i
@@ -293,7 +293,6 @@ void Molecule::getbounds(PeptidePos *min, PeptidePos *max){
 			if (pos!=NULL) {
 				if (min != NULL) {
 					for (int i=0; i<PepPosVecMax; i++)
-						// if (next_item-> item-> pos.dim[i] < min-> dim[i])
 						if (pos[i] < min-> dim[i])
 							min-> dim[i] = pos[i];
 
@@ -324,7 +323,7 @@ int	Molecule::rand(int count, int tries, PepSig min, PepSig max){
 		int r = -1;
 		while ((t<tries)&&(r<0)) {
 			p.randsig(min, max);
-			r = addpep(p.get());
+			r = addpep(p.getsig());
 			t++;
 		}
 		if (r<-0)
@@ -356,6 +355,15 @@ PepAffinity	Molecule::affinity(void){
 	}
 	return sum_affinity;
 
+}
+
+int	Molecule::build(PepSig *array, int size) {
+	if ((array==NULL) || (size<1)) return -1;
+	int n=0;
+	for (int i=0; i<size; i++)
+		if (addpep(array[i]) >=0) n++;
+
+	return n;
 }
 
 //-------------------------------
