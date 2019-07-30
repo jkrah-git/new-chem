@@ -1,16 +1,24 @@
-
 ## basic daemon overview
 
+IPS messages ??
+
 mole_d
-- mole_db 
-- shared mem (mole_list)
+- mole_heap
+- add_mole/get_mole/ later.. defrag ..
+	-- todo
+	-- mole_heap  / test locks
+
+
+engine_d
+- (localised) vols
+- fork sheduler
+
+
+
 
 world_d
 - world_db
 - engine controller
 
-engine_d
-- (localised) vols
-- fork sheduler
 
 ## 

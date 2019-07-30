@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "debug.h"
-#include "ipc/myshm.h"
-#include "ipc/ShMemBlockHeap.h"
-#include "chem/Molecule.h"
+//#include "ipc/myshm.h"
+//#include "ipc/ShMemBlockHeap.h"
+//#include "chem/Molecule.h"
 #include "shchem/ShMemMoleHeap.h"
 
 //---------------------------------------------------
