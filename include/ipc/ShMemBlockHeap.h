@@ -44,6 +44,7 @@ public:
 	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
 	ShMemBlock *get_block(int id);
 	T			*get_items(ShMemBlock *block);
+	// this one has to fetch block from id first (slower)
 	T			*get_items(int block_id);
 };
 // --------------------------------------------

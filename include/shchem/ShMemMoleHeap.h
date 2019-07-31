@@ -7,45 +7,32 @@
 
 #ifndef SHMEMMOLEHEAP_H_
 #define SHMEMMOLEHEAP_H_
+#include "ipc/MessageQue.h"
 #include "ipc/myshm.h"
 #include "ipc/ShMemBlockHeap.h"
 #include "chem/Molecule.h"
 
-/*
- // --------------------------------------------
-struct ShMemBlock {
-	int		id;
-	int		page;
-	int		start;
-	int		size; // start+size must be < page_length
-	void	dump(void) {
-		printf("ShMemBlock[0x%zX].id[%d] : page[%d] start[%d] size[%d] end=(start+size)[%d]\n", (PTR) this, id, page, size, start, start+size);
-	}
-};
-// --------------------------------------------
- */
+
 
 // --------------------------------------------
 class ShMemMoleHeap {
 private:
 	ShMemBlockHeap<Peptide>		pep_heap;
+	MessageQue					msgq;
 public:
 	//--------------
 	ShMemMoleHeap();
 	virtual ~ShMemMoleHeap();
 	void	dump(void);
-	int		create(char *name, int mole_page_size, int pep_page_size);
+	int		create(char *name, int mole_page_size, int pep_page_size, int msgq_maxmsg, int msgq_msgsize);
 	int		open(char *name);
 	void	destroy(void);
-/*
- * 	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
-	ShMemBlock *get_block(int id);
-	T			*get_item(ShMemBlock *block);
- */
-	ItemFrame<ShMemBlock>	*get_mole(Molecule *mole);
-	ShMemBlock				*get_mole(int id);
+
+	ItemFrame<ShMemBlock>	*find_mole(Molecule *mole);
 	ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
-	Peptide					*get_pepheap(ShMemBlock *block);
+	ShMemBlock				*get_mole(int id){ return pep_heap.get_block(id); };
+	Peptide					*get_peps(ShMemBlock *block){ return pep_heap.get_items(block); };
+	Peptide					*get_peps(int block_id){ return pep_heap.get_items(block_id); };
 };
 // --------------------------------------------
 
