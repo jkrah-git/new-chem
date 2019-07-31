@@ -27,8 +27,8 @@ struct ShMemBlock {
 // --------------------------------------------
 template <class T> class ShMemBlockHeap {
 private:
-	ShMemArray<T>			item_array;
 	ShMemArray<ShMemBlock>	block_array;
+	ShMemArray<T>			item_array;
 
 	ShMemBlock	*find_block(int item_page, int offset);
 	int		find_free_block(int page, int size);
