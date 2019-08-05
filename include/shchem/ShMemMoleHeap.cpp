@@ -36,12 +36,12 @@ ShMemMoleHeap::~ShMemMoleHeap() {	}
 void ShMemMoleHeap::dump(void){
 	printf("ShMemMoleHeap[0x%zX]:\n", (PTR) this);
 	pep_heap.dump();
-	msgq.dump();
+//	msgq.dump();
 }
 // --------------------------------------------
 
-int	ShMemMoleHeap::create(char *name, int mole_page_size, int pep_page_size, int msgq_maxmsg, int msgq_msgsize){
-	if ((name==NULL)||(mole_page_size<1)||(pep_page_size<1)||(msgq_maxmsg<1)||(msgq_msgsize<1)) return -1;
+int	ShMemMoleHeap::create(char *name, int mole_page_size, int pep_page_size){ //, int msgq_maxmsg, int msgq_msgsize){
+	if ((name==NULL)||(mole_page_size<1)||(pep_page_size<1)) return -1; //||(msgq_maxmsg<1)||(msgq_msgsize<1)) return -1;
 
 	int r = pep_heap.create(name, mole_page_size, pep_page_size);
 	PRINT("ERR: pep_heap.create(name[%s], mole_page_size[%d], pep_page_size[%d]) returned [%d]\n",
@@ -128,9 +128,9 @@ ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 
 
 
-	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size, NULL);
+	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size);
 	if (mole_block==NULL) { PRINT("new_block failed..\n"); return NULL; }
-	Peptide *heap = pep_heap.get_items(mole_block->id);
+	Peptide *heap = pep_heap.get_items(&mole_block->item);
 	if (heap==NULL) { PRINT("get_item failed..\n"); return NULL; }
 
 	int c=0;

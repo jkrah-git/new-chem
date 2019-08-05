@@ -5,7 +5,7 @@
 //#include "ipc/ShMemBlockHeap.h"
 //#include "chem/Molecule.h"
 
-#include "ipc/ShMemBlockBufHeap.h"
+//#include "ipc/ShMemBlockBufHeap.h"
 #include "shchem/ShMemMoleHeap.h"
 
 //---------------------------------------------------
@@ -33,14 +33,14 @@ void	build_moles(Molecule *m1, Molecule *m2, Molecule *m3) {
 //---------------------------------------------------
 //---------------------------------------------------
 			ShMemMoleHeap mole_heap;
-			ShMemBlockBufHeap<float>	 buf_heap;
+//			ShMemBlockBufHeap<float>	 buf_heap;
 //---------------------------------------------------
 int main(int argc, char **argv) {
 	//-------
 	// PRINT(": argc[%d]", argc);
 	// for (int i=0; i< argc; i++) {	printf(", argv[%d]=[%s]", i, argv[i]);	}
 	// printf("\n");
-	if ((argc==2) && (strcmp(argv[1], "create")==0)) {	int r = mole_heap.create("mole_heap", 2, 4, 10, 256); 	PRINT(" mole_heap.create = [%d]\n", r);	}
+	if ((argc==2) && (strcmp(argv[1], "create")==0)) {	int r = mole_heap.create("mole_heap", 2, 4); 	PRINT(" mole_heap.create = [%d]\n", r);	}
 	else {												int r = mole_heap.open("mole_heap");					PRINT(" mole_heap.open = [%d]\n", r);	}
 	if (argc<2) {	mole_heap.dump();	return 0;	}
 

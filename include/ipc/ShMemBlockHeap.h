@@ -41,7 +41,7 @@ public:
 	void 	destroy(void);
 	//-------------
 	ItemFrame<ShMemBlock>		*find_block(int size, T *item_data);
-	ItemFrame<ShMemBlock>		*new_block(int size, T *item_data);
+	ItemFrame<ShMemBlock>		*new_block(int size);	//, T *item_data);
 	ShMemBlock *get_block(int id);
 	T			*get_items(ShMemBlock *block);
 	// this one has to fetch block from id first (slower)
@@ -210,7 +210,7 @@ template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::find_block(int size,
 }
 //----------------------------------------------
 // -1 = bad_info, -3 bad size, -4 new_page_err
-template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size, T *item_data){
+template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size){ //, T *item_data){
 	ShMemArrayInfo *block_info = block_array.get_info();
 	ShMemArrayInfo *item_info = item_array.get_info();
 	if ((block_info==NULL)||(item_info==NULL)) return NULL;
@@ -220,7 +220,6 @@ template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size, 
 	// tryo to find best home for new block of items
 
 	//ShMemBlock new_block;
-
 
 	int found_page = -1;
 	int found_slot = -1;

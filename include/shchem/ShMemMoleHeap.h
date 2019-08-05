@@ -18,13 +18,13 @@
 class ShMemMoleHeap {
 private:
 	ShMemBlockHeap<Peptide>		pep_heap;
-	MessageQue					msgq;
+	//MessageQue					msgq;
 public:
 	//--------------
 	ShMemMoleHeap();
 	virtual ~ShMemMoleHeap();
 	void	dump(void);
-	int		create(char *name, int mole_page_size, int pep_page_size, int msgq_maxmsg, int msgq_msgsize);
+	int		create(char *name, int mole_page_size, int pep_page_size); //, int msgq_maxmsg, int msgq_msgsize);
 	int		open(char *name);
 	void	destroy(void);
 

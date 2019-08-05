@@ -36,21 +36,27 @@ struct ShMemArrayInfo {
 	int			page_size;			// number of items in page
 	int			num_pages;			// number pages in heap
 	bool		framed;
+	int			head;
+	int			tail;
 
 	void	dump(void) {
 		char f[] = "UnFramed";
 		if (framed) sprintf(f, "Framed");
-		printf("ShMemArrayInfo[0x%zX]: name[%s][%s] num_items[%d] next_id[%d] page_size[%d] num_pages[%d]\n",
-				(PTR) this, name, f, num_items, next_id, page_size, num_pages);
+		printf("ShMemArrayInfo[0x%zX]: name[%s][%s] num_items[%d] next_id[%d] page_size[%d] num_pages[%d] head[%d] tail[%d]\n",
+				(PTR) this, name, f, num_items, next_id, page_size, num_pages, head, tail);
 	}
 };
 // --------------------------------------------
 template <class T> struct ItemFrame {
 	int		id;
-	T			item;
+	int		parent;
+	int		child;
+	T		item;
 	void dump(void) {
-		printf("ItemFrame[0x%zX]: ID=[%d]  :: ", (PTR) this, id);
+		printf("ItemFrame[0x%zX]: ID=[%d] parent[%d] child[%d] :: ", (PTR) this, id, parent, child);
+#ifndef SHMEMHEAP_NODUMP
 		item.dump();
+#endif
 	}
 };
 
@@ -123,7 +129,9 @@ template <class T> void ShMemArray<T>::dump(void) {
 	if (info!=NULL) {
 		for (int i=0; i< info->num_pages; i++) {
 			printf("-- page %d --\n", i);
+#ifndef SHMEMHEAP_NODUMP
 			dump_page(i);
+#endif
 		}
 	}
 }
@@ -150,9 +158,12 @@ template <class T> ShMemArrayInfo *ShMemArray<T>::create(const char *name, int _
 	info->name[127] = '\0';
 
 	info-> page_size = _page_size;
-	info->num_pages = 0;
-	info->num_items = 0;
-	info->next_id = 0;
+	info-> num_pages = 0;
+	info-> num_items = 0;
+	info-> next_id = 0;
+	info-> head = -1;
+	info-> tail = -1;
+
 	info->framed = framed;
 	return info;
 }
@@ -219,6 +230,8 @@ template <class T> ItemFrame<T>  *ShMemArray<T>::create_page(void){
 	for (int i=0; i < info-> page_size; i++) {
 		ItemFrame<T> *dest = &heap[i];
 		dest->id = -1;
+		dest->parent = -1;
+		dest->child = -1;
 	}
 	info->num_pages++;
 	return heap;
@@ -375,13 +388,17 @@ template <class T> void ShMemArray<T>::dump_page(int page){
 		ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			ItemFrame<T> *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump(); NL
+			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+			f-> dump(); NL
 		}
 	} else {
 		T *buf =  (T*) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			T *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); f-> dump(); NL
+			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+#ifndef SHMEMHEAP_NODUMP
+			f-> dump(); NL
+#endif
 		}
 
 	}
@@ -413,7 +430,23 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 		}
 	}
 
-	frame->id = info->next_id++;
+	int id = info-> next_id++;
+	if (info-> head < 0) {
+		info-> head = id;
+	}
+
+	if (info-> tail >=0) {
+		PRINT("searching for tail[%d]\n", info-> tail);
+		ItemFrame<T> *tail_frame = get_item(info-> tail);
+		if (tail_frame!=NULL) {
+			tail_frame->child = id;
+		}
+	}
+
+	frame->id = id;
+	frame->parent = info-> tail;
+	frame->child = -1;
+	info-> tail = id;
 
 	if (item==NULL) bzero(&frame->item, sizeof(T));
 	else 	memcpy(&frame->item, item, sizeof(T));
@@ -429,12 +462,28 @@ template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
 		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 		//---------------
 		if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return NULL; }
+/*
 		ItemFrame<T> *frame  =  NULL;
 		// search each page for empty item
 		for (int p=0; p< info->num_pages; p++) {
 			frame = search_page(p, id);
 			if (frame !=NULL) return frame;
 		}
+*/
+		int item = info->head;
+		while (item>=0) {
+			PRINT(".. searching[%d]\n", item);
+			ItemFrame<T> *item_frame = get_item(item);
+			if (item_frame==NULL) break;
+			item_frame->dump(); NL
+			if (id == item_frame->id)
+				return item_frame;
+
+			break;
+			item = item_frame->child;
+		}
+
+
 
 	return NULL;
 }
