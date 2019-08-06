@@ -115,7 +115,6 @@ ItemFrame<ShMemBlock> *ShMemMoleHeap::find_mole(Molecule *mole){
 	free(array);
 	return result;
 }
-
 // --------------------------------------------
 ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 	if (mole==NULL) return NULL;
@@ -125,8 +124,6 @@ ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 
 	ItemFrame<ShMemBlock>	*search_mole = 	find_mole(mole);
 	if (search_mole!=NULL) return search_mole;
-
-
 
 	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size);
 	if (mole_block==NULL) { PRINT("new_block failed..\n"); return NULL; }
@@ -146,9 +143,7 @@ ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 		// ---------
 		pep_item = pep_item->next;
 	}
-
 	return mole_block;
-
 }
 // --------------------------------------------
 //ShMemBlock *ShMemMoleHeap::get_mole(int id){}

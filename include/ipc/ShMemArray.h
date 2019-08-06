@@ -49,11 +49,12 @@ struct ShMemArrayInfo {
 // --------------------------------------------
 template <class T> struct ItemFrame {
 	int		id;
+	int		index;	// = page*page_size + local_index
 	int		parent;
 	int		child;
 	T		item;
 	void dump(void) {
-		printf("ItemFrame[0x%zX]: ID=[%d] parent[%d] child[%d] :: ", (PTR) this, id, parent, child);
+		printf("ItemFrame[0x%zX]: ID=[%d] index[%d] parent[%d] child[%d] :: ", (PTR) this, id, index, parent, child);
 #ifndef SHMEMHEAP_NODUMP
 		item.dump();
 #endif
@@ -89,8 +90,9 @@ public:
 	T			 		*search_bpage(int _page, int _id);
 
 	// add_item (framed=true)
-	ItemFrame<T> 		*add_item(T *item);
+	ItemFrame<T> 		*get_index(int index);
 	ItemFrame<T> 		*get_item(int id);
+	ItemFrame<T> 		*add_item(T *item);
 	int					del_item(int id);
 
 	// common (framed/unframed)
@@ -227,11 +229,18 @@ template <class T> ItemFrame<T>  *ShMemArray<T>::create_page(void){
 	ItemFrame<T> *heap  = (ItemFrame<T>*) shmem_item->item-> get_ptr();
 	if (heap==NULL)  { PRINT("ERR: newshm.ptr returned NULL [%s]\n", info_shm.get_err()); return NULL; }
 
+/* 	int		id;
+	int		index;	// = page*page_size + local_index
+	int		parent;
+	int		child;
+ */
+	int base = info->num_pages * info->page_size;
 	for (int i=0; i < info-> page_size; i++) {
 		ItemFrame<T> *dest = &heap[i];
-		dest->id = -1;
-		dest->parent = -1;
-		dest->child = -1;
+		dest-> id = -1;
+		dest-> index = base+i;
+		dest-> parent = -1;
+		dest-> child = -1;
 	}
 	info->num_pages++;
 	return heap;
@@ -368,8 +377,17 @@ template <class T> ItemFrame<T> *ShMemArray<T>::search_page(int page, int id) {
 	ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
 	for (int i=0; i< info->page_size; i++) {
 		ItemFrame<T> *f = &buf[i];
+		/*
 		if (f->id == id) return f;
 		if ((f->id <0) && (id<0)) return f;
+		*/
+		if ((f->id == id) ||
+			((f->id <0) && (id<0))){
+			f-> index = (page*info->page_size) + i;
+			return f;
+		}
+
+
 	}
 
 	return NULL;
@@ -404,6 +422,50 @@ template <class T> void ShMemArray<T>::dump_page(int page){
 	}
 
 }
+//----------------------------------------------
+template <class T> ItemFrame<T> *ShMemArray<T>::get_index(int index){
+	// upstream should open_writer before calling this
+		if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
+		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
+		//---------------
+		if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return NULL; }
+		if ((index<0) || (index >= info->num_pages * info->page_size)) { PRINT("ERR: bad index[%d]", index); return NULL; }
+		if (info-> page_size <= 0) return NULL;
+
+		int page = index / info-> page_size;
+		int pos = index % info-> page_size;
+		PRINT("index[%d] = page[%d] pos[%d]\n", index, page, pos);
+
+		if ((page<0) || (page >= info-> num_pages)) { return NULL; }
+		if ((pos<0) || (pos>= info-> page_size)) { return NULL; }
+
+		mylist<ShMem>::mylist_item<ShMem> *shmem_item = shmem_list.offset(page);
+		if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.page(%d)\n", page); return NULL; }
+
+		ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
+		return &buf[pos];
+
+}
+//----------------------------------------------
+template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
+	// upstream should open_writer before calling this
+		if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
+		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
+		//---------------
+		if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return NULL; }
+
+		ItemFrame<T> *item =  get_index(info->head);
+		while (item != NULL) {
+			PRINT(".. searching[%d]\n", item-> id);
+			if (id == item->id)
+				return item;
+			item = get_index(item->child);
+		}
+
+
+
+	return NULL;
+}
 
 //----------------------------------------------
 template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
@@ -424,6 +486,7 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 	if (frame==NULL) {
 		PRINT("no free frame found.creatign new\n");
 		frame = create_page();
+
 		if (frame==NULL) {
 			PRINT("create page failed.\n");
 			return NULL;
@@ -431,22 +494,26 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 	}
 
 	int id = info-> next_id++;
+
+	// head - if first item
 	if (info-> head < 0) {
-		info-> head = id;
+		info-> head = frame-> index;
 	}
 
-	if (info-> tail >=0) {
+	// update (tail)-> child
+	if (info-> tail>=0) {
 		PRINT("searching for tail[%d]\n", info-> tail);
-		ItemFrame<T> *tail_frame = get_item(info-> tail);
+		ItemFrame<T> *tail_frame = get_index(info-> tail);
+
 		if (tail_frame!=NULL) {
-			tail_frame->child = id;
+			tail_frame-> child = frame-> index;
 		}
 	}
 
 	frame->id = id;
 	frame->parent = info-> tail;
 	frame->child = -1;
-	info-> tail = id;
+	info-> tail = frame-> index;
 
 	if (item==NULL) bzero(&frame->item, sizeof(T));
 	else 	memcpy(&frame->item, item, sizeof(T));
@@ -454,38 +521,6 @@ template <class T> ItemFrame<T> * ShMemArray<T>::add_item(T *item){
 	//
 
 	return frame;
-}
-//----------------------------------------------
-template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
-	// upstream should open_writer before calling this
-		if (info==NULL) { PRINT("ERR: NULL info\n"); return NULL; }
-		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
-		//---------------
-		if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return NULL; }
-/*
-		ItemFrame<T> *frame  =  NULL;
-		// search each page for empty item
-		for (int p=0; p< info->num_pages; p++) {
-			frame = search_page(p, id);
-			if (frame !=NULL) return frame;
-		}
-*/
-		int item = info->head;
-		while (item>=0) {
-			PRINT(".. searching[%d]\n", item);
-			ItemFrame<T> *item_frame = get_item(item);
-			if (item_frame==NULL) break;
-			item_frame->dump(); NL
-			if (id == item_frame->id)
-				return item_frame;
-
-			break;
-			item = item_frame->child;
-		}
-
-
-
-	return NULL;
 }
 //----------------------------------------------
 template <class T> int ShMemArray<T>::del_item(int id){
@@ -496,9 +531,36 @@ template <class T> int ShMemArray<T>::del_item(int id){
 	if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return -3; }
 	ItemFrame<T> *frame  =  get_item(id);
 	if (frame==NULL) { PRINT("item[%d] not found\n", id); return -3; }
+
+
+	// check child
+	if (frame->child >=0) {
+		ItemFrame<T> *child_frame = get_index(frame->child);
+		if (child_frame!=NULL) {
+			child_frame-> parent = frame-> parent;
+		}
+	}
+
+	// check parent
+	if (frame->parent >=0) {
+		ItemFrame<T> *parent_frame = get_index(frame->parent);
+		if (parent_frame!=NULL) {
+			parent_frame-> child = frame-> child;
+		}
+	}
+
+	// check head
+	if (frame->index == info->head) {
+		info->head = frame->child;
+	}
+
+	// check tail
+	if (frame->index == info->tail) {
+		info->tail = frame->parent;
+	}
+
 	frame->id = -1;
 	bzero(&frame->item, sizeof(T));
-
 	info->num_items--;
 	return 0;
 }

@@ -41,6 +41,7 @@ public:
 	void 	destroy(void);
 	//-------------
 	ItemFrame<ShMemBlock>		*find_block(int size, T *item_data);
+	int							del_block(int id);
 	ItemFrame<ShMemBlock>		*new_block(int size);	//, T *item_data);
 	ShMemBlock *get_block(int id);
 	T			*get_items(ShMemBlock *block);
@@ -208,26 +209,40 @@ template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::find_block(int size,
 
 	return NULL;
 }
+template <class T>int ShMemBlockHeap<T>::del_block(int id){
+	ShMemArrayInfo *block_info = block_array.get_info();
+	ShMemArrayInfo *item_info = item_array.get_info();
+	if ((block_info==NULL)||(item_info==NULL)) return -1;
+	//---------------------
+	ItemFrame<ShMemBlock> *block_frame = block_array.get_item(id);
+	if (block_frame==NULL) return-2;
+
+	// zero out items
+	T *item_array = get_items(&block_frame-> item);
+	if (item_array!=NULL) {
+		for (int u=0; u< block_frame-> item.size; u++) {
+			memset(&item_array[u], 0, sizeof(T));
+		}
+	}
+
+	// del blocl
+	return block_array.del_item(id);
+}
 //----------------------------------------------
 // -1 = bad_info, -3 bad size, -4 new_page_err
-template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size){ //, T *item_data){
+template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size){
 	ShMemArrayInfo *block_info = block_array.get_info();
 	ShMemArrayInfo *item_info = item_array.get_info();
 	if ((block_info==NULL)||(item_info==NULL)) return NULL;
 	//---------------------
-	//if (block==NULL) return -2;
 	if ((size<1)||(size> item_info->page_size)) return NULL;
 	// tryo to find best home for new block of items
-
-	//ShMemBlock new_block;
 
 	int found_page = -1;
 	int found_slot = -1;
 	for (int i=0; i< item_info->num_pages; i++) {
 		int r = find_free_block(i, size);
 		PRINT("find_free_block(%d,%d) = [%d]\n", i, size, r);
-
-
 		if (r>=0) {
 			found_page = i;
 			found_slot = r;
@@ -243,11 +258,9 @@ template <class T>ItemFrame<ShMemBlock> *ShMemBlockHeap<T>::new_block(int size){
 		found_page  = item_array.shmem_list.count()-1;
 		//found_page = new_page->id;
 	}
-
+	//-----------------------------
 	PRINT("========= found_page[%d] found_slot[%d] =======\n", found_page, found_slot);
-
 	ItemFrame<ShMemBlock> *block_frame = block_array.add_item(NULL);
-
 
 	if (block_frame==NULL) { PRINT("block_array.add_item failed..\n"); return NULL; };
 	block_frame->item.page = found_page;

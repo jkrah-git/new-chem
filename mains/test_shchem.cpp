@@ -12,19 +12,19 @@
 void	build_moles(Molecule *m1, Molecule *m2, Molecule *m3) {
 	if (m1!=NULL) {
 		PepSig array[] = { 0x01, 0x02, 0x03 };
-		int r = m1-> build(array, 3);
+		m1-> build(array, 3);
 	//	PRINT("m1.build = [%d]\n",r );
 	//	m1-> dump();
 	}
 	if (m2!=NULL) {
 		PepSig array[] = { 0x11, 0x12 };
-		int r = m2-> build(array, 2);
+		m2-> build(array, 2);
 	//	PRINT("m2.build = [%d]\n",r );
 	//	m2-> dump();
 	}
 	if (m3!=NULL) {
 		PepSig array[] = { 0x20 };
-		int r = m3-> build(array, 1);
+		m3-> build(array, 1);
 	//	PRINT("m3.build = [%d]\n",r );
 	//	m3-> dump();
 	}
@@ -64,6 +64,9 @@ int main(int argc, char **argv) {
 			PRINT("===========\n");
 			PRINT("mole_heap.new_mole(%s) = [0x%zX]\n", argv[2], (PTR) block_frame );
 			DUMP(block_frame);
+			PRINT("===========\n");
+			mole_heap.dump();
+			PRINT("===========\n");
 		}
 		//-------------
 		//-------------
@@ -95,8 +98,33 @@ int main(int argc, char **argv) {
 				}
 
 			}
-		}
+		} // end find mole
 		//-------------
+		//-------------
+		if (strcmp(argv[1], "del_mole")==0)	{
+			if (argc==2) {
+				printf("usage: find_mole m1 | m2 | m3\n");
+				return 0;
+			}
+
+			ItemFrame<ShMemBlock> *block_frame = NULL;
+			if (strcmp(argv[2], "m1")==0) block_frame = mole_heap.find_mole(&m1);
+			if (strcmp(argv[2], "m2")==0) block_frame = mole_heap.find_mole(&m2);
+			if (strcmp(argv[2], "m3")==0) block_frame = mole_heap.find_mole(&m3);
+			PRINT("===========\n");
+			PRINT("mole_heap.del_mole = [0x%zX]\n", (PTR) block_frame );
+			DUMP(block_frame);
+			if (block_frame!=NULL) {
+				int r = mole_heap.del_mole(block_frame->id);
+				PRINT("mole_heap.del_mole = [%d]\n", r);
+
+			}
+		} // end find mole
+		//-------------
+
+
+
+
 	}
 
 

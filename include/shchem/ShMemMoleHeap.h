@@ -18,7 +18,6 @@
 class ShMemMoleHeap {
 private:
 	ShMemBlockHeap<Peptide>		pep_heap;
-	//MessageQue					msgq;
 public:
 	//--------------
 	ShMemMoleHeap();
@@ -30,6 +29,7 @@ public:
 
 	ItemFrame<ShMemBlock>	*find_mole(Molecule *mole);
 	ItemFrame<ShMemBlock> 	*new_mole(Molecule *mole);
+	int						del_mole(int id){ return pep_heap.del_block(id); };
 	ShMemBlock				*get_mole(int id){ return pep_heap.get_block(id); };
 	Peptide					*get_peps(ShMemBlock *block){ return pep_heap.get_items(block); };
 	Peptide					*get_peps(int block_id){ return pep_heap.get_items(block_id); };
