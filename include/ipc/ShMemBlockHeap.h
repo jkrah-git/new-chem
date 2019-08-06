@@ -15,6 +15,7 @@
 // --------------------------------------------
 struct ShMemBlock {
 //	int		id;
+	// todo: combine page/start into 'index'
 	int		page;
 	int		start;
 	int		size; // start+size must be < page_length
