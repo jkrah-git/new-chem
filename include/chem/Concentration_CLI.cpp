@@ -206,33 +206,59 @@ int	Concentration_CLI::addcmd(mylist<CLI_Command> *cmd_list, int 	(*op)(Concentr
 	return 0;
 }
 
+///**********
+int split(int *argc, char ***argv, char *line) {
+	char	*word; //, *argv[MAX_ARGS];
+	*argc = 0;
+	word = strtok (line," \n");
+	if (word!=NULL) {
+		for (int i=0; i<MAX_ARGS; i++) {
+			(*argc)++;
+			*argv[i] = word;
+			word = strtok (NULL," \n");
+			if (word==NULL) break;
+		}
+	}
+	// check split results
+	if (*argc<1) {
+		return -1;
+	}
 
+	return 0;
+}
+
+//**********/
 //---------------------------------
 int	Concentration_CLI::runline(mylist<CLI_Command> *cmd_list, char *line) {
 	if ((cmd_list==NULL) || (line==NULL)) return -100;
 
 	// make a local copy
-	char buf[MAX_LINELEN];
-	strncpy(buf, line, MAX_LINELEN);
-
-
+//	char buf[MAX_LINELEN];
+//	strncpy(buf, line, MAX_LINELEN);
 	char	*word, *argv[MAX_ARGS];
-	int c = 0;
+	int argc = 0;
 	word = strtok (line," \n");
 	if (word!=NULL) {
 		for (int i=0; i<MAX_ARGS; i++) {
-			c++;
+			argc++;
 			argv[i] = word;
 			word = strtok (NULL," \n");
 			if (word==NULL) break;
 		}
 	}
 	// check split results
-	if (c<1) {
+	if (argc<1) {
 		return -10;
 	}
+/********************************
+	int argc = 0;
+	char	*argv[MAX_ARGS];
+	char 	**v = &argv;
+	split(&argc, &v, line);
+****************************/
 
-	return run(cmd_list, c, argv);
+
+	return run(cmd_list, argc, argv);
 	//return r;
 }
 /*******************************

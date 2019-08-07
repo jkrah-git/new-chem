@@ -46,6 +46,7 @@ struct ShMemArrayInfo {
 				(PTR) this, name, f, num_items, next_id, page_size, num_pages, head, tail);
 	}
 };
+
 // --------------------------------------------
 template <class T> struct ItemFrame {
 	int		id;
@@ -383,7 +384,7 @@ template <class T> ItemFrame<T> *ShMemArray<T>::search_page(int page, int id) {
 		*/
 		if ((f->id == id) ||
 			((f->id <0) && (id<0))){
-			f-> index = (page*info->page_size) + i;
+			//f-> index = (page*info->page_size) + i;
 			return f;
 		}
 

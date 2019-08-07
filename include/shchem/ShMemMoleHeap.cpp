@@ -124,12 +124,15 @@ ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 
 	ItemFrame<ShMemBlock>	*search_mole = 	find_mole(mole);
 	if (search_mole!=NULL) return search_mole;
+	PRINT("********************\n");
 
 	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size);
 	if (mole_block==NULL) { PRINT("new_block failed..\n"); return NULL; }
 	Peptide *heap = pep_heap.get_items(&mole_block->item);
 	if (heap==NULL) { PRINT("get_item failed..\n"); return NULL; }
 
+
+	PRINT("********************\n");
 	int c=0;
 	mylist<Peptide>::mylist_item<Peptide> *pep_item = mole->pep_list.gethead();
 	while (pep_item!=NULL) {
