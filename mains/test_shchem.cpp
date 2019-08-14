@@ -34,19 +34,14 @@ void	build_moles(Molecule *m1, Molecule *m2, Molecule *m3) {
 //---------------------------------------------------
 			ShMemMoleHeap mole_heap;
 			Molecule m1,m2,m3;
-
-
 //			ShMemBlockBufHeap<float>	 buf_heap;
 //---------------------------------------------------
-//int 	run_callto(int argc, char **argv);
 char  **get_possible_args(void){ return NULL; };
 // --------------------------
 char 	**build_args(void){
-
 	build_moles(&m1, &m2, &m3);
-
-	return NULL; };
-int 	main2(int argc, char **argv);
+	return NULL;
+};
 //-----------------------------------
 int 	run(int argc, char **argv){
 
@@ -149,7 +144,7 @@ int 	run(int argc, char **argv){
 
 
 //---------------------------------------------------
-
+/******************************
 int main2(int argc, char **argv) {
 	//-------
 	 PRINT(": argc[%d]", argc);
@@ -259,5 +254,5 @@ int main2(int argc, char **argv) {
 
 	return 0;
 }
-
+******************************/
 //------------------------------------

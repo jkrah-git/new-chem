@@ -128,6 +128,8 @@ ItemFrame<ShMemBlock> 	*ShMemMoleHeap::new_mole(Molecule *mole) {
 
 	ItemFrame<ShMemBlock> *mole_block = pep_heap.new_block(size);
 	if (mole_block==NULL) { PRINT("new_block failed..\n"); return NULL; }
+
+
 	Peptide *heap = pep_heap.get_items(&mole_block->item);
 	if (heap==NULL) { PRINT("get_item failed..\n"); return NULL; }
 
