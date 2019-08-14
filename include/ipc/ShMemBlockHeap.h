@@ -23,7 +23,7 @@ struct ShMemBlock {
 	ShMemBlock() {};
 	void	dump(void) {
 		//printf("ShMemBlock[0x%zX] page[%d] start[%d] size[%d] end=(start+size)[%d]\n", (PTR) this, page, start, size, start+size);
-		printf("ShMemBlock[0x%zX] index[%d] size[%d] end=(start+size)[%d]\n", (PTR) this, index, size, index+size);
+		printf("ShMemBlock[0x%zX] index[%d] size[%d] end=(start+size)[%d]", (PTR) this, index, size, index+size);
 	}
 };
 

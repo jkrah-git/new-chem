@@ -42,7 +42,7 @@ struct ShMemArrayInfo {
 	void	dump(void) {
 		char f[] = "UnFramed";
 		if (framed) sprintf(f, "Framed");
-		printf("ShMemArrayInfo[0x%zX]: name[%s][%s] num_items[%d] next_id[%d] page_size[%d] num_pages[%d] head[%d] tail[%d]\n",
+		printf("ShMemArrayInfo[0x%zX]: name[%s][%s] num_items[%d] next_id[%d] page_size[%d] num_pages[%d] head[%d] tail[%d]",
 				(PTR) this, name, f, num_items, next_id, page_size, num_pages, head, tail);
 	}
 };
@@ -407,17 +407,20 @@ template <class T> void ShMemArray<T>::dump_page(int page){
 		ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			ItemFrame<T> *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+			//printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+			printf("Item[%d/%d]:", i, info-> page_size-1);
 			f-> dump(); NL
 		}
 	} else {
 		T *buf =  (T*) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
 			T *f = &buf[i];
-			printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+			//printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
+			printf("Item[%d/%d]:", i, info-> page_size-1);
 #ifndef SHMEMHEAP_NODUMP
-			f-> dump(); NL
+			f-> dump();
 #endif
+			NL
 		}
 
 	}
