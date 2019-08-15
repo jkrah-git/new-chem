@@ -132,9 +132,9 @@ template <class T> void ShMemArray<T>::dump(void) {
 	if (info!=NULL) {
 		for (int i=0; i< info->num_pages; i++) {
 			printf("-- page %d --\n", i);
-#ifndef SHMEMHEAP_NODUMP
+//#ifndef SHMEMHEAP_NODUMP
 			dump_page(i);
-#endif
+//#endif
 		}
 	}
 }
@@ -404,20 +404,28 @@ template <class T> void ShMemArray<T>::dump_page(int page){
 	if ((shmem_item==NULL)||(shmem_item->item==NULL)) { PRINT("ERR: NULL shmem_list.off(%d)\n", page); return; }
 
 	if (info-> framed) {
+
 		ItemFrame<T> *buf =  (ItemFrame<T> *) shmem_item->item->get_ptr();
 		for (int i=0; i< info->page_size; i++) {
-			ItemFrame<T> *f = &buf[i];
 			//printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
 			printf("Item[%d/%d]:", i, info-> page_size-1);
-			f-> dump(); NL
+			ItemFrame<T> *f = &buf[i];
+#ifdef SHMEMHEAP_NODUMP
+			printf("id[%d]", f->id);
+#else
+			f-> dump();
+#endif
+			NL
 		}
 	} else {
+#ifndef SHMEMHEAP_NODUMP
 		T *buf =  (T*) shmem_item->item->get_ptr();
+#endif
 		for (int i=0; i< info->page_size; i++) {
-			T *f = &buf[i];
 			//printf("Item %d/%d of Page %d/%d ", i, info-> page_size-1, page, info->num_pages-1); NL
 			printf("Item[%d/%d]:", i, info-> page_size-1);
 #ifndef SHMEMHEAP_NODUMP
+			T *f = &buf[i];
 			f-> dump();
 #endif
 			NL
