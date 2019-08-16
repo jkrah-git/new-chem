@@ -120,6 +120,66 @@ int ShMemVolHeap::del_vol(int vol_id){
 	return vol_heap.del_item(vol_id);
 }
 //-----------------------------------
+//int								get_vol(int val_page, int val_item);
+//int								get_free_val(void);
+//-----------------------------------
+ItemFrame<ShMemConcentration> *ShMemVolHeap::find_conc(int val_index){
+	ShMemArrayInfo		*conc_info = conc_heap.get_info();
+	if (conc_info==NULL) return NULL;
+	//---------------------
+	PRINT(" Start: val_index[%d],...\n", val_index);
+	//-- for each conc PAGE
+	mylist<ShMem>::mylist_item<ShMem> *conc_page = conc_heap.shmem_list.gethead();
+	while (conc_page!=NULL) {
+		ItemFrame<ShMemConcentration> *conc_frame =  (ItemFrame<ShMemConcentration> *) conc_page->item->get_ptr();
+		if (conc_frame!=NULL) {
+			for (int i=0; i < conc_info->page_size; i++) {
+				ItemFrame<ShMemConcentration> *cf = &conc_frame[i];
+				PRINT(" Testing val[%d]-> conc[%d].val_index[%d] ..\n", i, cf->id, cf-> item.val_index);
+				if ((cf->id >=0) &&
+					(cf-> item.val_index == val_index))
+						return cf;
+			}
+		}
+		//------
+		conc_page = conc_page->next;
+	}
+	//-- end block_pages
+	return NULL;
+}
+//-----------------------------------
+int	ShMemVolHeap::get_free_val(void){
+	ShMemArrayInfo		*conc_val_info = conc_val_heap.get_info();	if (conc_val_info==NULL) return -1;
+	ShMemArrayInfo		*conc_delta_info = conc_delta_heap.get_info();	if (conc_delta_info==NULL) return -1;
+	//---------------------
+	int free_item = -1;
+	//-- for each conc PAGE
+	for (int p=0; p<conc_val_heap.shmem_list.count(); p++) {
+		for (int i=0; i < conc_val_info->page_size; i++) {
+			int test_item = (p * conc_val_info->page_size) +i;
+			if (find_conc(test_item)==NULL) {
+				free_item = test_item;
+				break;
+			}
+		} // next item
+	} // next page
+
+	if (free_item<0) {
+		ConcLevelType *new_val_page = conc_val_heap.create_bpage();
+		if (new_val_page==NULL) { PRINT("ERR: conc_val_heap.create_bpage returned NULL\n"); return NULL; }
+
+		ConcLevelType *new_delta_page = conc_delta_heap.create_bpage();
+		if (new_delta_page==NULL) { PRINT("ERR: conc_delta_heap.create_bpage returned NULL\n"); return NULL; }
+
+		free_item  = (conc_val_heap.shmem_list.count()-1 )*conc_val_info->page_size;
+	}
+
+	return free_item;
+
+}
+//-----------------------------------
+
+
 //-----------------------------------
 ItemFrame<ShMemConcentration> *ShMemVolHeap::get_conc(int vol_id, int mole_id){
 	if (mole_heap==NULL) return NULL;
@@ -128,11 +188,15 @@ ItemFrame<ShMemConcentration> *ShMemVolHeap::get_conc(int vol_id, int mole_id){
 	ItemFrame<ShMemVolume> *vol_frame = vol_heap.get_item(vol_id);	if (vol_frame==NULL) return NULL;
 	ShMemBlock *mole_block = mole_heap->get_mole(mole_id);			if (mole_block==NULL) return NULL;
 	//-----------
-
 	int	 conc_id =  vol_frame -> item.head_conc;
-	while (conc_id >0) {
+	while (conc_id >=0) {
 		ItemFrame<ShMemConcentration> *conc_frame = conc_heap.get_item(conc_id);
-		if (conc_frame==NULL) break;
+		//PRINT("==>"); DUMP(conc_frame) NL
+		if (conc_frame==NULL) {
+			PRINT("ERR: conc[%d[ returned NULL\n", conc_id);
+			break;
+		}
+		//conc_frame->item.dump();
 		if (conc_frame->item. mole_id == mole_id)
 			return conc_frame;
 		//--------
@@ -157,29 +221,37 @@ ItemFrame<ShMemConcentration> *ShMemVolHeap::add_conc(int vol_id, int mole_id){
 	if (conc_frame==NULL) return NULL;
 	conc_frame->item.mole_id = mole_id;
 
-	// TODO  add val/delta items
+	int val_index = get_free_val();
+	//PRINT("val_index = [%d]\n",val_index );
+	if (val_index<0) {
+		PRINT("ERR: get_free_val() failed [%d]\n", val_index);
+		return NULL;
+	}
 
+	conc_frame->item.val_index = val_index;
 	//---  update list details (vol.head/tail conc.parent/child)
 	if ((vol_frame->item.head_conc <0) || (vol_frame->item.tail_conc <0)) {
-		conc_frame->item.parent = -1;
-		conc_frame->item.child = -1;
 		vol_frame->item.head_conc = conc_frame->id;
-		vol_frame->item.tail_conc = conc_frame->id;
+		conc_frame->item.parent = -1;
+		//conc_frame->item.child = -1;
+		//vol_frame->item.tail_conc = conc_frame->id;
 	} else {
 		ItemFrame<ShMemConcentration> *tail_conc_frame = conc_heap.get_item(vol_frame->item.tail_conc);
 		if (tail_conc_frame==NULL) { PRINT("ERR: NULL tail_conc_frame\n"); return NULL; }
 		tail_conc_frame->item.child =  conc_frame->id;
 		conc_frame->item.parent = tail_conc_frame->id;
-		conc_frame->item.child = -1;
-		vol_frame->item.tail_conc =  conc_frame->id;
 	}
-
+	conc_frame->item.child = -1;
+	vol_frame->item.tail_conc =  conc_frame->id;
 
 	return conc_frame;
 }
 //-----------------------------------
 int ShMemVolHeap::del_conc(int vol_id, int mole_id){
-	return -1;
+	ItemFrame<ShMemConcentration> *conc_frame = get_conc(vol_id, mole_id);
+	if (conc_frame==NULL) return -1;
+	return conc_heap.del_item(conc_frame->id);
+
 }
 //-----------------------------------
 

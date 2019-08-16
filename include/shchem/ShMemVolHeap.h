@@ -67,9 +67,8 @@ private:
 	ShMemArray<ConcLevelType>			conc_val_heap;	// unframed[val_index]
 	ShMemArray<ConcLevelType>			conc_delta_heap;// unframed[val_index]
 
-	ItemFrame<ShMemConcentration> *get_conc(int vol_id, int mole_id);		// return conc_id
-	ItemFrame<ShMemConcentration> *add_conc(int vol_id, int mole_id);		// return conc_id
-	int			del_conc(int vol_id, int mole_id);		// return - ok, or -1 err
+	ItemFrame<ShMemConcentration>	*find_conc(int val_index);
+	int								get_free_val(void);
 
 
 public:
@@ -83,6 +82,14 @@ public:
 	// to start with you need get a vol_id
 	int				new_vol(void);
 	int				del_vol(int vol_id);
+	ItemFrame<ShMemConcentration> *get_conc(int vol_id, int mole_id);		// return conc_id
+	ItemFrame<ShMemConcentration> *add_conc(int vol_id, int mole_id);		// return conc_id
+	int			del_conc(int vol_id, int mole_id);		// return - ok, or -1 err
+
+
+
+
+
 	int				set(int vol_id, int mole_id, ConcLevelType val, ConcLevelType delta);
 	int				adj(int vol_id, int mole_id, ConcLevelType adj);
 	ConcLevelType	get(int vol_id, int mole_id);

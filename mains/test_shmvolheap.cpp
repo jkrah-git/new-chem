@@ -230,6 +230,47 @@ int 	run(int argc, char **argv){
 		}
 		//-------------
 		//===============================
+		//ItemFrame<ShMemConcentration> *get_conc(int vol_id, int mole_id);		// return conc_id
+		//ItemFrame<ShMemConcentration> *add_conc(int vol_id, int mole_id);		// return conc_id
+		//int			del_conc(int vol_id, int mole_id);		// return - ok, or -1 err
+		//-------------
+		if (strcmp(argv[0], "get_conc")==0)	{
+			if (argc<3) {
+				printf("usage: get_conc Vol_ID Mole_ID\n");
+				return 0;
+			}
+			int v,m;
+			if (sscanf(argv[1], "%d", &v)<1) { printf("Bad data[%s]\n", argv[1]); return -5; }
+			if (sscanf(argv[2], "%d", &m)<1) { printf("Bad data[%s]\n", argv[2]); return -5; }
+			//int r = vol_heap.del_vol(v);
+			//PRINT("vol_heap.del_vol(%d) = [%d]\n", v, r);
+			ItemFrame<ShMemConcentration> *cf = vol_heap.get_conc(v,m);
+			PRINT("vol_heap.get_conc v(%d), m(%d) = ", v, m);
+			if (cf==NULL) { printf ("NULL..\n"); }
+			else {
+				cf-> dump(); NL cf-> item.dump(); NL
+			}
+		}
+		//-------------
+		//-------------
+		if (strcmp(argv[0], "add_conc")==0)	{
+			if (argc<3) {
+				printf("usage: add_conc Vol_ID Mole_ID\n");
+				return 0;
+			}
+			int v,m;
+			if (sscanf(argv[1], "%d", &v)<1) { printf("Bad data[%s]\n", argv[1]); return -5; }
+			if (sscanf(argv[2], "%d", &m)<1) { printf("Bad data[%s]\n", argv[2]); return -5; }
+			//int r = vol_heap.del_vol(v);
+			//PRINT("vol_heap.del_vol(%d) = [%d]\n", v, r);
+			ItemFrame<ShMemConcentration> *cf = vol_heap.add_conc(v,m);
+			PRINT("vol_heap.add_conc v(%d), m(%d) = ", v, m);
+			if (cf==NULL) { printf ("NULL..\n"); }
+			else {
+				cf-> dump(); NL cf-> item.dump(); NL
+			}
+		}
+		//-------------
 
 
 	}
@@ -238,3 +279,19 @@ int 	run(int argc, char **argv){
 }
 
 //------------------------------------
+/*
+create
+add_mole m1
+add_mole m2
+add_mole m3
+add_vol
+add_conc 0 0
+
+
+
+
+
+
+
+//------------------------------------
+*/

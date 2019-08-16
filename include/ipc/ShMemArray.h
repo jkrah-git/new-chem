@@ -441,12 +441,12 @@ template <class T> ItemFrame<T> *ShMemArray<T>::get_index(int index){
 		if (strlen(info->name)<1) { PRINT("ERR: info no name\n"); return NULL; }
 		//---------------
 		if (!info->framed) { PRINT("ERR: framed op on unframed heap"); return NULL; }
-		if ((index<0) || (index >= info->num_pages * info->page_size)) { PRINT("ERR: bad index[%d]", index); return NULL; }
+		if ((index<0) || (index >= info->num_pages * info->page_size)) { PRINT("ERR: bad index[%d]\n", index); return NULL; }
 		if (info-> page_size <= 0) return NULL;
 
 		int page = index / info-> page_size;
 		int pos = index % info-> page_size;
-		PRINT("index[%d] = page[%d] pos[%d]\n", index, page, pos);
+	//	PRINT("index[%d] = page[%d] pos[%d]\n", index, page, pos);
 
 		if ((page<0) || (page >= info-> num_pages)) { return NULL; }
 		if ((pos<0) || (pos>= info-> page_size)) { return NULL; }
@@ -468,9 +468,10 @@ template <class T> ItemFrame<T> *ShMemArray<T>::get_item(int id){
 
 		ItemFrame<T> *item =  get_index(info->head);
 		while (item != NULL) {
-			PRINT(".. searching[%d]\n", item-> id);
+		//	PRINT(".. searching[%d]\n", item-> id);
 			if (id == item->id)
 				return item;
+			if (item->child <0) break;
 			item = get_index(item->child);
 		}
 
